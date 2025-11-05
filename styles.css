@@ -130,3 +130,41 @@ footer {
   margin-top: 12px;
   font-family: "Red Hat Display", sans-serif;
 }
+
+
+/* === Responsive Design for Mobile === */
+@media (max-width: 768px) {
+  body {
+    padding: 0 20px;
+  }
+
+  .headline {
+    font-size: 28px;
+    line-height: 1.4;
+  }
+
+  .subtext {
+    font-size: 13px;
+  }
+
+  .profile-img {
+    width: 200px;
+    height: 200px;
+    border-radius: 40px;
+  }
+
+  header {
+    padding: 16px 20px;
+  }
+
+  .header-content {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  footer {
+    margin-top: 60px;
+    padding: 0 20px 40px;
+  }
+}
+

@@ -1,4 +1,4 @@
-# Its all a test
-## site created in part by AI.
+# It's all Coming together
+## Portfolio site
 
-Building a site and trying to deploy it.
+I need this file to deploy with Netlify (netlify.toml)

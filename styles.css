@@ -1,3 +1,45 @@
+/* === Social Icon Styles === */
+.social-icons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.social-link {
+  display: inline-block;
+  transition: filter 0.3s ease;
+}
+
+.social-icon {
+  width: 20px;
+  height: 20px;
+  filter: brightness(0) saturate(100%) invert(48%) sepia(8%) saturate(266%) hue-rotate(49deg) brightness(95%) contrast(92%);
+  /* This gives a base tone close to #777C6D */
+}
+
+/* === Instagram Icon specific coloring === */
+.social-icon.instagram {
+  filter: brightness(0) saturate(100%) invert(47%) sepia(6%) saturate(526%) hue-rotate(49deg) brightness(92%) contrast(87%);
+}
+
+/* === Hover Color === */
+.social-link:hover .social-icon {
+  filter: brightness(0) saturate(100%) invert(60%) sepia(88%) saturate(1100%) hue-rotate(359deg) brightness(102%) contrast(105%);
+  /* #FF9D00 on hover */
+}
+
+/* === Adjust Header Icons Layout === */
+header .social-icons {
+  justify-content: flex-end;
+  gap: 14px;
+}
+
+footer .social-icons {
+  margin-top: 16px;
+}
+
+
 /* === Font Styles === */
 .rosarivo-regular {
   font-family: "Rosarivo", cursive;
@@ -167,4 +209,6 @@ footer {
     padding: 0 20px 40px;
   }
 }
+
+
 

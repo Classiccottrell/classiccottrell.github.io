@@ -1,4 +1,4 @@
-# It's all Coming together
+# It's all coming together.
 ## Portfolio site
 
-I need this file to deploy with Netlify (netlify.toml)
+netlify.toml is just by Netlify to deploy the site.

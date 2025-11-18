@@ -1,5 +1,4 @@
-<body>
-  <footer>
+<footer>
   <h3 class="name-footer">Matthew A. Cottrell</h3>
   <p class="title-footer">Product design and Strategy</p>
 
@@ -14,15 +13,3 @@
 
   <p class="copyright">© 2009–2025 Matthew A. Cottrell. All rights reserved.</p>
 </footer>
-</body>
-
-<script>
-  // Load header and footer dynamically
-  async function loadPartials() {
-    const header = await fetch("header.html");
-    const footer = await fetch("footer.html");
-    document.getElementById("header").innerHTML = await header.text();
-    document.getElementById("footer").innerHTML = await footer.text();
-  }
-  loadPartials();
-</script>

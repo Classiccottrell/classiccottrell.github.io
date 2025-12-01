@@ -1,48 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Matthew A. Cottrell</title>
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Rosarivo:ital@0;1&display=swap" rel="stylesheet">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Matthew A. Cottrell</title>
 
-    <link rel="icon" href="img/favicon.png" />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Rosarivo:ital@0;1&display=swap"
+    rel="stylesheet">
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    
+  <link rel="icon" href="img/favicon.png" />
 
-<div id="header"></div>
+  <!-- CSS -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
 
-
-    <main>
-      <div class="profile-section">
-        <img src="img/Imag-Matthew.png" alt="Matthew A. Cottrell" class="profile-img" />
-      </div>
-
-      <section class="intro">
-        <h2 class="headline rosarivo-regular">
-            I design world-class enterprise products that feel effortless to use.
-        </h2>
-        <p class="subtext red-hat">
-          Currently seven years into designing enterprise IT software, I’ve learned how to make complex systems feel simple.
-        </p>
-      </section>
-    </main>
+<body class="home-page">
 
 
-      <div id="footer"></div>
+  <div id="header"></div>
 
 
-  </body>
+  <main class="home-grid">
+    <div class="profile-section">
+      <img src="img/Imag-Matthew.png" alt="Matthew A. Cottrell" class="profile-img" />
+    </div>
 
- <script>
+    <nav class="hero-nav">
+      <a href="art.html" class="hero-link rosarivo-regular-italic">Art</a>
+      <!-- TODO: Add Work link -->
+      <!-- <a href="index.html" class="hero-link rosarivo-regular-italic">Work</a> -->
+    </nav>
+
+    <section class="intro">
+      <h2 class="headline rosarivo-regular">
+        I help products create world-class enterprise products that feel effortless to use.
+      </h2>
+      <p class="subtext red-hat">
+        Currently seven years into designing enterprise IT software, I’ve learned how to make complex systems feel
+        simple.
+      </p>
+    </section>
+  </main>
+
+
+  <div id="footer"></div>
+
+
+</body>
+
+<script>
   // Load header and footer dynamically
   async function loadPartials() {
     const header = await fetch("header.html");

@@ -11,5 +11,12 @@
     </a>
   </div>
 
-  <p class="copyright">© 2009–2025 Matthew A. Cottrell. All rights reserved.</p>
+  <p class="copyright">© 2009–<span id="current-year"></span> Matthew A. Cottrell. All rights reserved.</p>
+  <div class="footer-links">
+    <a href="sandbox.html" class="footer-link">Sandbox</a>
+  </div>
 </footer>
+
+<script>
+  document.getElementById("current-year").textContent = new Date().getFullYear();
+</script>

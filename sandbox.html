@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sandbox - Matthew A. Cottrell</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Rosarivo:ital@0;1&display=swap"
+        rel="stylesheet">
+
+    <link rel="icon" href="img/favicon.png" />
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- CodeFlask & Prism -->
+    <script src="https://unpkg.com/codeflask/build/codeflask.min.js"></script>
+</head>
+
+<body class="sandbox-page">
+
+    <div id="header"></div>
+
+    <main class="sandbox-container">
+        <!-- Left: Display Area -->
+        <div class="sandbox-display">
+            <iframe id="sandbox-frame" title="Sandbox Output"></iframe>
+        </div>
+
+        <!-- Right: Code Editor -->
+        <div class="sandbox-editor">
+            <div class="editor-tabs">
+                <button class="tab-btn active" data-tab="html">HTML</button>
+                <button class="tab-btn" data-tab="css">CSS</button>
+                <button class="tab-btn" data-tab="js">JS</button>
+                <button class="tab-btn" data-tab="api">API</button>
+                <button id="run-btn" class="run-btn">Run ▶</button>
+            </div>
+
+            <div class="editor-content">
+                <div id="code-html" class="code-area active"></div>
+                <div id="code-css" class="code-area"></div>
+                <div id="code-js" class="code-area"></div>
+                <div id="code-api" class="code-area"></div>
+            </div>
+        </div>
+    </main>
+
+    <div id="footer"></div>
+
+    <script>
+        // Load header and footer
+        async function loadPartials() {
+            const header = await fetch("header.html");
+            const footer = await fetch("footer.html");
+            document.getElementById("header").innerHTML = await header.text();
+            document.getElementById("footer").innerHTML = await footer.text();
+        }
+        loadPartials();
+
+        // Initialize CodeFlask
+        const flaskHTML = new CodeFlask('#code-html', { language: 'html', lineNumbers: true });
+        const flaskCSS = new CodeFlask('#code-css', { language: 'css', lineNumbers: true });
+        const flaskJS = new CodeFlask('#code-js', { language: 'js', lineNumbers: true });
+        const flaskAPI = new CodeFlask('#code-api', { language: 'js', lineNumbers: true });
+
+        // Tab Switching
+        const tabs = document.querySelectorAll('.tab-btn:not(#run-btn)');
+        const areas = document.querySelectorAll('.code-area');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class
+                tabs.forEach(t => t.classList.remove('active'));
+                areas.forEach(a => a.classList.remove('active'));
+
+                // Add active class
+                tab.classList.add('active');
+                document.getElementById(`code-${tab.dataset.tab}`).classList.add('active');
+            });
+        });
+
+        // Default Code
+        const defaultHTML = `<div style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;">
+  <canvas id="myChart"></canvas>
+</div>`;
+
+        const defaultCSS = `body {
+  font-family: sans-serif;
+  padding: 20px;
+  background-color: #f9f9f9;
+}`;
+
+        const defaultJS = `// Fetch Weather Data from OpenMeteo API
+// Latitude and Longitude for San Francisco
+const lat = 37.7749;
+const lon = -122.4194;
+
+fetch(\`https://api.open-meteo.com/v1/forecast?latitude=\${lat}&longitude=\${lon}&hourly=temperature_2m&timezone=America%2FLos_Angeles\`)
+  .then(response => response.json())
+  .then(data => {
+    const times = data.hourly.time.slice(0, 24).map(t => new Date(t).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
+    const temps = data.hourly.temperature_2m.slice(0, 24);
+
+    const ctx = document.getElementById('myChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: times,
+        datasets: [{
+          label: 'Temperature (°C) - Next 24 Hours',
+          data: temps,
+          borderColor: '#437057',
+          backgroundColor: 'rgba(67, 112, 87, 0.2)',
+          borderWidth: 2,
+          fill: true,
+          tension: 0.4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'top',
+          },
+          title: {
+            display: true,
+            text: 'San Francisco Weather Forecast'
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: false
+          }
+        }
+      }
+    });
+  })
+  .catch(error => console.error('Error fetching data:', error));`;
+
+        // Set default values
+        flaskHTML.updateCode(defaultHTML);
+        flaskCSS.updateCode(defaultCSS);
+        flaskJS.updateCode(defaultJS);
+        flaskAPI.updateCode("// API Endpoint used: https://api.open-meteo.com/v1/forecast");
+
+        // Run Functionality
+        document.getElementById('run-btn').addEventListener('click', () => {
+            const html = flaskHTML.getCode();
+            const css = flaskCSS.getCode();
+            const js = flaskJS.getCode();
+
+            const frame = document.getElementById('sandbox-frame');
+            const doc = frame.contentDocument || frame.contentWindow.document;
+
+            const content = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <script src="https://cdn.jsdelivr.net/npm/chart.js"><\/script>
+          <style>${css}<\/style>
+        </head>
+        <body>
+          ${html}
+          <script>
+            try {
+              ${js}
+            } catch (e) {
+              console.error(e);
+              document.body.innerHTML += '<pre style="color:red">' + e + '</pre>';
+            }
+          <\/script>
+        </body>
+        </html>
+      `;
+
+            doc.open();
+            doc.write(content);
+            doc.close();
+        });
+
+        // Initial Run
+        setTimeout(() => document.getElementById('run-btn').click(), 1000);
+    </script>
+</body>
+
+</html>

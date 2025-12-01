@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Art - Matthew A. Cottrell</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Rosarivo:ital@0;1&display=swap"
+    rel="stylesheet">
+
+  <link rel="icon" href="img/favicon.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+
+  <div id="header"></div>
+
+  <main id="art-main">
+
+    <!-- Section 1: The Gentlemen -->
+    <section class="art-entry">
+      <div class="art-visual-wrapper bg-white">
+        <div class="art-visual" style="background-image: url('img/gents-lg.png');"></div>
+      </div>
+      <div class="art-content">
+        <blockquote class="art-quote rosarivo-regular-italic">
+          “You’re embarrassing yourself here lads. Kids stab, girls shoot, boys punch. Grown-ups fight with their heads.
+          That’s where the real battle is up here, in the gray. Now, wake up, lads. Life’s quick. You’re slow. Life’s
+          hard on a bone top.”
+        </blockquote>
+        <div class="art-details red-hat">
+          <div class="detail-row">
+            <span class="detail-label">Film</span>
+            <span class="detail-value">The Gentlemen</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Director</span>
+            <span class="detail-value">Guy Ritchie</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Character</span>
+            <span class="detail-value">Coach</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Run Time</span>
+            <span class="detail-value">1h 53m</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Actor</span>
+            <span class="detail-value">Colin Farrell</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Year</span>
+            <span class="detail-value">2019</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Taxi Driver -->
+    <section class="art-entry">
+      <div class="art-visual-wrapper bg-white">
+        <div class="art-visual" style="background-image: url('img/taxi-lg.png');"></div>
+      </div>
+      <div class="art-content">
+        <blockquote class="art-quote rosarivo-regular-italic">
+          “You talkin' to me?”
+        </blockquote>
+        <div class="art-details red-hat">
+          <div class="detail-row">
+            <span class="detail-label">Film</span>
+            <span class="detail-value">Taxi Driver</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Director</span>
+            <span class="detail-value">Martin Scorsese</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Character</span>
+            <span class="detail-value">Travis Bickle</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Run Time</span>
+            <span class="detail-value">1h 54m</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Actor</span>
+            <span class="detail-value">Robert De Niro</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Year</span>
+            <span class="detail-value">1976</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Apocalypse Now -->
+    <section class="art-entry">
+      <div class="art-visual-wrapper bg-black">
+        <div class="art-visual" style="background-image: url('img/apoc-lg.png');"></div>
+      </div>
+      <div class="art-content">
+        <blockquote class="art-quote rosarivo-regular-italic">
+          “I've seen horrors. Horrors that you have seen. But you have no right to call me a murderer, you have a right
+          to kill me.”
+        </blockquote>
+        <div class="art-details red-hat">
+          <div class="detail-row">
+            <span class="detail-label">Film</span>
+            <span class="detail-value">Apocalypse Now</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Director</span>
+            <span class="detail-value">Francis Ford Coppola</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Character</span>
+            <span class="detail-value">Colonel Kurtz</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Run Time</span>
+            <span class="detail-value">2h 27m</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Actor</span>
+            <span class="detail-value">Marlon Brando</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Year</span>
+            <span class="detail-value">1979</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="footer"></div>
+
+  <script>
+    // Load header and footer dynamically
+    async function loadPartials() {
+      const header = await fetch("header.html");
+      const footer = await fetch("footer.html");
+      document.getElementById("header").innerHTML = await header.text();
+      document.getElementById("footer").innerHTML = await footer.text();
+    }
+    loadPartials();
+  </script>
+</body>
+
+</html>

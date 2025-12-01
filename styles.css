@@ -1,8 +1,47 @@
-/* === Font Styles === */
+/* =========================================
+   Root Design Tokens
+========================================= */
+:root {
+  /* --- Brand Colors --- */
+  --brand-primary: #777C6D;
+  --brand-primary-hover: #437057;
+  --brand-primary-active: #496F8D;
+  --brand-accent: #437057;
+
+  /* --- Neutral Scale (Warm) --- */
+  --neutral-50: #F9F5F1;
+  --neutral-100: #F0E9E1;
+  --neutral-200: #E3DBD2;
+  --neutral-300: #CFC6BD;
+  --neutral-400: #A9A29A;
+  --neutral-500: #77736F;
+  --neutral-600: #5A5854;
+  --neutral-700: #3C3C3C;
+  --neutral-800: #2C2C2C;
+  --neutral-900: #1A1A1A;
+
+  /* --- Text --- */
+  --text-main: var(--neutral-800);
+  --text-secondary: var(--neutral-600);
+  --text-footer: #444;
+  --text-copyright: #888;
+
+  /* --- Backgrounds --- */
+  --bg-page: var(--neutral-50);
+
+  /* --- Shadows / Rounding --- */
+  --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.05);
+  --radius-large: 60px;
+  --radius-medium: 40px;
+  --radius-small: 8px;
+}
+
+/* =========================================
+   Fonts
+========================================= */
 .rosarivo-regular {
   font-family: "Rosarivo", cursive;
   font-weight: 400;
-  font-style: normal;
 }
 
 .rosarivo-regular-italic {
@@ -15,16 +54,20 @@
   font-family: "Red Hat Display", sans-serif;
 }
 
-/* === Page Layout === */
+/* =========================================
+   Global Page Layout
+========================================= */
 body {
-  background-color: #f9f5f1;
-  color: #2c2c2c;
+  background-color: var(--bg-page);
+  color: var(--text-main);
   margin: 0;
   padding: 0;
   text-align: center;
 }
 
-/* === Header === */
+/* =========================================
+   Header
+========================================= */
 header {
   padding: 20px 40px;
 }
@@ -39,22 +82,119 @@ header {
   font-family: "Red Hat Display", sans-serif;
   font-weight: 400;
   font-size: 14px;
-  color: #222;
+  color: var(--neutral-900);
   margin: 0;
 }
 
-.header-link img {
-  width: 20px;
-  height: 20px;
-  transition: filter 0.3s ease;
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
 }
 
-/* === Main Content === */
+/* Hide header nav links only on the home page */
+body.home-page .header-left .nav-links {
+  display: none;
+}
+
+.top-name a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* =========================================
+   Navigation Links
+========================================= */
+.nav-links {
+  display: flex;
+  gap: 20px;
+}
+
+.header-link {
+  font-family: "Red Hat Display", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--neutral-900);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.header-link:hover {
+  color: var(--brand-primary-hover);
+}
+
+.header-link:active {
+  color: var(--brand-primary-active);
+}
+
+/* =========================================
+   Main Content
+========================================= */
 main {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-top: 40px;
+}
+
+/* --- Home Page Grid Layout --- */
+.home-grid {
+  display: grid;
+  grid-template-columns: 1fr auto auto 1fr;
+  /* Center content block */
+  grid-template-areas:
+    ". img nav ."
+    ". intro intro .";
+  column-gap: 20px;
+  /* Reduced gap between img and nav */
+  row-gap: 40px;
+  justify-items: center;
+  max-width: 1200px;
+  margin: 40px auto 0;
+  width: 100%;
+}
+
+/* Assign grid areas */
+.home-grid .profile-section {
+  grid-area: img;
+  justify-self: end;
+  /* Align image to the right of its cell */
+  margin-bottom: 0;
+  /* Override previous margin */
+}
+
+.home-grid .hero-nav {
+  grid-area: nav;
+  justify-self: start;
+  /* Align nav to the left of its cell */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.home-grid .intro {
+  grid-area: intro;
+  text-align: center;
+  max-width: 900px;
+  justify-self: center;
+  /* Ensure intro is centered within its span */
+}
+
+/* --- Hero Navigation Links --- */
+.hero-link {
+  font-size: 80px;
+  /* Large size as per screenshot */
+  line-height: 1;
+  color: var(--brand-accent);
+  /* Green color from screenshot */
+  text-decoration: none;
+  transition: opacity 0.3s ease;
+}
+
+.hero-link:hover {
+  opacity: 0.8;
 }
 
 .profile-section {
@@ -65,14 +205,16 @@ main {
   width: 280px;
   height: 280px;
   object-fit: cover;
-  border-radius: 60px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  border-radius: var(--radius-large);
+  box-shadow: var(--shadow-soft);
 }
 
-/* === Text === */
+/* =========================================
+   Text
+========================================= */
 .headline {
   font-size: 42px;
-  color: #3c3c3c;
+  color: var(--neutral-700);
   line-height: 1.3;
   max-width: 900px;
   margin: 0 auto 20px auto;
@@ -80,11 +222,13 @@ main {
 
 .subtext {
   font-size: 14px;
-  color: #5a5a5a;
+  color: var(--text-secondary);
   margin-top: 10px;
 }
 
-/* === Footer === */
+/* =========================================
+   Footer
+========================================= */
 footer {
   margin-top: 80px;
   text-align: center;
@@ -103,7 +247,11 @@ footer {
   font-size: 13px;
   font-weight: 400;
   margin: 0;
-  color: #444;
+  color: var(--text-footer);
+}
+
+footer .social-icons {
+  margin-top: 8px;
 }
 
 .linkedin-link {
@@ -111,12 +259,21 @@ footer {
   margin: 16px 0;
 }
 
-/* === Social Icon Styles === */
+.copyright {
+  font-size: 10px;
+  color: var(--text-copyright);
+  margin-top: 12px;
+  font-family: "Red Hat Display", sans-serif;
+}
+
+/* =========================================
+   Social Icons
+========================================= */
 .social-icons {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
+  gap: 10px;
 }
 
 .social-link {
@@ -124,58 +281,33 @@ footer {
   transition: filter 0.3s ease;
 }
 
+/* Base icon tint = brand primary */
 .social-icon {
   width: 20px;
   height: 20px;
   filter: brightness(0) saturate(100%) invert(48%) sepia(8%) saturate(266%) hue-rotate(49deg) brightness(95%) contrast(92%);
-  /* This gives a base tone close to #777C6D */
 }
 
-/* === Instagram Icon specific coloring === */
+/* Instagram Icon specific coloring */
 .social-icon.instagram {
   filter: brightness(0) saturate(100%) invert(47%) sepia(6%) saturate(526%) hue-rotate(49deg) brightness(92%) contrast(87%);
 }
 
-/* === Hover Color === */
+/* Hover & Active States */
 .social-link:hover .social-icon {
-  filter: brightness(0) saturate(100%) invert(60%) sepia(88%) saturate(1100%) hue-rotate(359deg) brightness(102%) contrast(105%);
-  /* #FF9D00 on hover */
+  filter: brightness(0) saturate(100%) invert(39%) sepia(18%) saturate(1225%) hue-rotate(99deg) brightness(95%) contrast(86%);
+  /* var(--brand-primary-hover) */
 }
 
-/* === Adjust Header Icons Layout === */
-header .social-icons {
-  justify-content: flex-end;
-  gap: 14px;
-}
-
-footer .social-icons {
-  margin-top: 16px;
+.social-link:active .social-icon {
+  filter: brightness(0) saturate(100%) invert(45%) sepia(18%) saturate(1204%) hue-rotate(169deg) brightness(94%) contrast(88%);
+  /* var(--brand-primary-active) */
 }
 
 
-
-.linkedin-icon {
-  width: 20px;
-  height: 20px;
-  transition: filter 0.3s ease;
-}
-
-/* === Hover Effects === */
-.linkedin-link:hover .linkedin-icon,
-.header-link:hover .linkedin-icon {
-  filter: brightness(0) saturate(100%) invert(56%) sepia(86%) saturate(949%) hue-rotate(359deg) brightness(102%) contrast(105%);
-  /* Equivalent to #FF9D00 tint */
-}
-
-.copyright {
-  font-size: 10px;
-  color: #888;
-  margin-top: 12px;
-  font-family: "Red Hat Display", sans-serif;
-}
-
-
-/* === Responsive Design for Mobile === */
+/* =========================================
+   Responsive Design
+========================================= */
 @media (max-width: 768px) {
   body {
     padding: 0 20px;
@@ -193,7 +325,7 @@ footer .social-icons {
   .profile-img {
     width: 200px;
     height: 200px;
-    border-radius: 40px;
+    border-radius: var(--radius-medium);
   }
 
   header {
@@ -201,8 +333,36 @@ footer .social-icons {
   }
 
   .header-content {
-    flex-direction: row;
     justify-content: space-between;
+  }
+
+  /* Mobile Grid Layout */
+  .home-grid {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "img"
+      "intro"
+      "nav";
+    row-gap: 10px;
+    /* Reduced gap significantly */
+    padding: 0;
+  }
+
+  .home-grid .profile-section {
+    justify-self: center;
+  }
+
+  .home-grid .hero-nav {
+    justify-self: center;
+    align-items: center;
+    margin-top: 0px;
+    /* Remove top margin */
+    margin-bottom: 20px;
+  }
+
+  .hero-link {
+    font-size: 48px;
+    /* Smaller on mobile */
   }
 
   footer {
@@ -211,5 +371,299 @@ footer .social-icons {
   }
 }
 
+/* =========================================
+   Sandbox Page
+========================================= */
+.sandbox-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
 
+.sandbox-container {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  /* Override global main column direction */
+  align-items: stretch;
+  /* Override global main center alignment */
+  width: 100%;
+  height: calc(100vh - 160px);
+  /* Adjust based on header/footer height */
+  margin-top: 0;
+  border-top: 1px solid var(--neutral-300);
+}
 
+.sandbox-display {
+  flex: 1;
+  background: white;
+  border-right: 1px solid var(--neutral-300);
+  position: relative;
+}
+
+#sandbox-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.sandbox-editor {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--neutral-100);
+}
+
+.editor-tabs {
+  display: flex;
+  background: var(--neutral-200);
+  padding: 0 10px;
+  border-bottom: 1px solid var(--neutral-300);
+}
+
+.tab-btn {
+  padding: 10px 20px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-family: "Red Hat Display", sans-serif;
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-bottom: 2px solid transparent;
+}
+
+.tab-btn.active {
+  color: var(--brand-primary);
+  border-bottom-color: var(--brand-primary);
+  background: var(--neutral-100);
+}
+
+.run-btn {
+  margin-left: auto;
+  background: var(--brand-primary);
+  color: white;
+  border-radius: 4px;
+  padding: 6px 16px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  font-size: 12px;
+  transition: background 0.3s;
+}
+
+.run-btn:hover {
+  background: var(--brand-primary-hover);
+}
+
+.editor-content {
+  flex: 1;
+  position: relative;
+}
+
+.code-area {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: var(--neutral-100);
+  display: none;
+  /* Hidden by default */
+}
+
+.code-area.active {
+  display: block;
+}
+
+/* CodeFlask Overrides (Optional) */
+.codeflask {
+  background: transparent !important;
+}
+
+.codeflask textarea {
+  color: var(--text-main) !important;
+}
+
+/* Footer Link */
+.footer-links {
+  margin-top: 10px;
+}
+
+.footer-link {
+  font-family: "Red Hat Display", sans-serif;
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-decoration: none;
+}
+
+.footer-link:hover {
+  color: var(--brand-primary);
+}
+
+/* =========================================
+   Art Page
+========================================= */
+/* =========================================
+   Art Page - Single Layout
+========================================= */
+
+/* --- Common Art Entry Styles --- */
+.art-entry {
+  position: relative;
+  margin-bottom: 80px;
+  width: 100%;
+  /* Layout: Two-column Flex */
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 40px;
+  max-width: 1000px;
+  margin: 0 auto 100px;
+  padding: 0 20px;
+}
+
+.art-visual-wrapper {
+  position: relative;
+  overflow: hidden;
+  flex: 1;
+  max-width: 50%;
+  /* Uniform Sizing */
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  /* Frame thickness */
+  border-radius: var(--radius-small);
+}
+
+/* Background Colors */
+.bg-white {
+  background-color: #ffffff;
+}
+
+.bg-black {
+  background-color: #000000;
+}
+
+.art-visual {
+  width: 100%;
+  height: 100%;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: all 0.5s ease;
+}
+
+.art-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  padding-top: 20px;
+  /* Align with top of image visually */
+  min-width: 0;
+  /* Prevent flex child from overflowing */
+}
+
+.art-quote {
+  font-size: 20px;
+  color: var(--neutral-800);
+  line-height: 1.4;
+  margin: 0 0 20px 0;
+  max-width: 100%;
+  align-self: flex-start;
+}
+
+.art-details {
+  font-size: 14px;
+  color: var(--neutral-700);
+  background: transparent;
+  backdrop-filter: none;
+  box-shadow: none;
+  padding: 0;
+  width: 100%;
+  border-top: 1px solid var(--neutral-300);
+  padding-top: 20px;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+  gap: 20px;
+  /* Ensure space between label and value */
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.detail-label {
+  font-weight: 600;
+  color: var(--neutral-500);
+  flex-shrink: 0;
+  /* Prevent label from squishing */
+}
+
+.detail-value {
+  text-align: right;
+  font-weight: 400;
+  word-break: break-word;
+  /* Allow long text to wrap */
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 768px) {
+  .art-entry {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 0 10px;
+    /* Reduce padding on mobile */
+  }
+
+  .art-visual-wrapper {
+    max-width: 100%;
+    width: 100%;
+    padding: 20px;
+    /* Smaller frame on mobile */
+  }
+
+  .art-visual {
+    min-height: auto;
+    /* Let aspect ratio handle height */
+  }
+
+  .art-content {
+    width: 100%;
+    /* Full width */
+    align-items: center;
+    text-align: center;
+    padding-top: 0;
+  }
+
+  .art-quote {
+    align-self: center;
+    text-align: center;
+  }
+
+  .art-details {
+    text-align: center;
+    width: 100%;
+  }
+
+  .detail-row {
+    justify-content: space-between;
+    text-align: left;
+    /* Reset text align for rows */
+  }
+
+  .detail-value {
+    text-align: right;
+  }
+}

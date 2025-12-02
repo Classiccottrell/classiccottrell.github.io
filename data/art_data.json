@@ -1,0 +1,38 @@
+[
+    {
+        "id": 1,
+        "quote": "“You’re embarrassing yourself here lads. Kids stab, girls shoot, boys punch. Grown-ups fight with their heads. That’s where the real battle is up here, in the gray. Now, wake up, lads. Life’s quick. You’re slow. Life’s hard on a bone top.”",
+        "film": "The Gentlemen",
+        "director": "Guy Ritchie",
+        "character": "Coach",
+        "runTime": "1h 53m",
+        "actor": "Colin Farrell",
+        "year": 2019,
+        "image": "img/gents-lg.png",
+        "bgClass": "bg-white"
+    },
+    {
+        "id": 2,
+        "quote": "“You talkin' to me?”",
+        "film": "Taxi Driver",
+        "director": "Martin Scorsese",
+        "character": "Travis Bickle",
+        "runTime": "1h 54m",
+        "actor": "Robert De Niro",
+        "year": 1976,
+        "image": "img/taxi-lg.png",
+        "bgClass": "bg-white"
+    },
+    {
+        "id": 3,
+        "quote": "“I've seen horrors. Horrors that you have seen. But you have no right to call me a murderer, you have a right to kill me.”",
+        "film": "Apocalypse Now",
+        "director": "Francis Ford Coppola",
+        "character": "Colonel Kurtz",
+        "runTime": "2h 27m",
+        "actor": "Marlon Brando",
+        "year": 1979,
+        "image": "img/apoc-lg.png",
+        "bgClass": "bg-black"
+    }
+]

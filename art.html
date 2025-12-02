@@ -23,125 +23,31 @@
 
   <main id="art-main">
 
-    <!-- Section 1: The Gentlemen -->
-    <section class="art-entry">
-      <div class="art-visual-wrapper bg-white">
-        <div class="art-visual" style="background-image: url('img/gents-lg.png');"></div>
+    <!-- View Switcher & Chart Section -->
+    <section class="art-controls"
+      style="width: 100%; max-width: 1000px; margin: 0 auto 40px; padding: 0 20px; display: flex; flex-direction: column; gap: 20px;">
+      <div class="view-switcher" style="display: flex; gap: 10px; justify-content: flex-end;">
+        <button id="btn-view-grid" class="tab-btn active" onclick="switchView('grid')">Grid View</button>
+        <button id="btn-view-timeline" class="tab-btn" onclick="switchView('timeline')">Timeline View</button>
       </div>
-      <div class="art-content">
-        <blockquote class="art-quote rosarivo-regular">
-          “You’re embarrassing yourself here lads. Kids stab, girls shoot, boys punch. Grown-ups fight with their heads.
-          That’s where the real battle is up here, in the gray. Now, wake up, lads. Life’s quick. You’re slow. Life’s
-          hard on a bone top.”
-        </blockquote>
-        <div class="art-details red-hat">
-          <div class="detail-row">
-            <span class="detail-label">Film</span>
-            <span class="detail-value">The Gentlemen</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Director</span>
-            <span class="detail-value">Guy Ritchie</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Character</span>
-            <span class="detail-value">Coach</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Run Time</span>
-            <span class="detail-value">1h 53m</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Actor</span>
-            <span class="detail-value">Colin Farrell</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Year</span>
-            <span class="detail-value">2019</span>
-          </div>
-        </div>
+
+      <!-- React Chart Container (Hidden by default in Grid view, or shown if Timeline is default) -->
+      <div id="art-chart-container" style="display: none;">
+        <div id="art-chart-root"></div>
       </div>
     </section>
 
-    <!-- Section 2: Taxi Driver -->
-    <section class="art-entry">
-      <div class="art-visual-wrapper bg-white">
-        <div class="art-visual" style="background-image: url('img/taxi-lg.png');"></div>
-      </div>
-      <div class="art-content">
-        <blockquote class="art-quote rosarivo-regular">
-          “You talkin' to me?”
-        </blockquote>
-        <div class="art-details red-hat">
-          <div class="detail-row">
-            <span class="detail-label">Film</span>
-            <span class="detail-value">Taxi Driver</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Director</span>
-            <span class="detail-value">Martin Scorsese</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Character</span>
-            <span class="detail-value">Travis Bickle</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Run Time</span>
-            <span class="detail-value">1h 54m</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Actor</span>
-            <span class="detail-value">Robert De Niro</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Year</span>
-            <span class="detail-value">1976</span>
-          </div>
-        </div>
-      </div>
-    </section>
+    <!-- Art Grid Container -->
+    <div id="art-grid">
+      <!-- Content will be injected here by JS -->
+    </div>
 
-    <!-- Section 3: Apocalypse Now -->
-    <section class="art-entry">
-      <div class="art-visual-wrapper bg-black">
-        <div class="art-visual" style="background-image: url('img/apoc-lg.png');"></div>
-      </div>
-      <div class="art-content">
-        <blockquote class="art-quote rosarivo-regular">
-          “I've seen horrors. Horrors that you have seen. But you have no right to call me a murderer, you have a right
-          to kill me.”
-        </blockquote>
-        <div class="art-details red-hat">
-          <div class="detail-row">
-            <span class="detail-label">Film</span>
-            <span class="detail-value">Apocalypse Now</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Director</span>
-            <span class="detail-value">Francis Ford Coppola</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Character</span>
-            <span class="detail-value">Colonel Kurtz</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Run Time</span>
-            <span class="detail-value">2h 27m</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Actor</span>
-            <span class="detail-value">Marlon Brando</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Year</span>
-            <span class="detail-value">1979</span>
-          </div>
-        </div>
-      </div>
-    </section>
   </main>
 
   <div id="footer"></div>
+
+  <!-- Load React Widget -->
+  <script type="module" src="./dist/assets/main.js"></script>
 
   <script>
     // Load header and footer dynamically
@@ -152,6 +58,90 @@
       document.getElementById("footer").innerHTML = await footer.text();
     }
     loadPartials();
+
+    // Art Page Logic
+    let artData = [];
+
+    async function loadArtData() {
+      try {
+        const response = await fetch('data/art_data.json');
+        artData = await response.json();
+        renderGrid(artData);
+      } catch (error) {
+        console.error('Error loading art data:', error);
+      }
+    }
+
+    function renderGrid(data) {
+      const gridContainer = document.getElementById('art-grid');
+      gridContainer.innerHTML = data.map(item => `
+        <section class="art-entry">
+          <div class="art-visual-wrapper ${item.bgClass}">
+            <div class="art-visual" style="background-image: url('${item.image}');"></div>
+          </div>
+          <div class="art-content">
+            <blockquote class="art-quote rosarivo-regular">
+              ${item.quote}
+            </blockquote>
+            <div class="art-details red-hat">
+              <div class="detail-row">
+                <span class="detail-label">Film</span>
+                <span class="detail-value">${item.film}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Director</span>
+                <span class="detail-value">${item.director}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Character</span>
+                <span class="detail-value">${item.character}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Run Time</span>
+                <span class="detail-value">${item.runTime}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Actor</span>
+                <span class="detail-value">${item.actor}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Year</span>
+                <span class="detail-value">${item.year}</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      `).join('');
+    }
+
+    // View Switcher Logic
+    window.switchView = function (view) {
+      const gridBtn = document.getElementById('btn-view-grid');
+      const timelineBtn = document.getElementById('btn-view-timeline');
+      const chartContainer = document.getElementById('art-chart-container');
+      const gridContainer = document.getElementById('art-grid');
+
+      if (view === 'timeline') {
+        gridBtn.classList.remove('active');
+        timelineBtn.classList.add('active');
+        chartContainer.style.display = 'block';
+        // Optional: Hide grid in timeline view? User asked for "Chart at the top", 
+        // but "View Switcher" implies toggling. I'll keep grid visible or toggle it?
+        // User said: "give me the ability to switch between the current art.html and the new page we are creating."
+        // "New Art page... add a chart at the top".
+        // Let's interpret "Timeline View" as showing the Chart AND the Grid, 
+        // and "Grid View" as just the Grid (or maybe Chart is hidden).
+        // Actually, let's make Timeline View show the Chart, and Grid View hide it.
+        // The Grid is the main content.
+      } else {
+        gridBtn.classList.add('active');
+        timelineBtn.classList.remove('active');
+        chartContainer.style.display = 'none';
+      }
+    };
+
+    // Initialize
+    loadArtData();
   </script>
 </body>
 

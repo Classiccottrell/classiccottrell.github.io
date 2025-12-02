@@ -1,0 +1,6 @@
+Issue ID,Severity,Location,Description,Recommendation
+1,Critical,index.html:4,Invalid HTML Structure: <head> tag is nested inside <body> tag.,Move <head> before <body>.
+2,Moderate,footer.html:13,Low Contrast: Copyright text (#888) has ratio 3.5:1.,Darken text to #757575 or darker.
+3,Minor,header.html:10,Security/Accessibility: External link missing rel="noopener noreferrer".,Add rel="noopener noreferrer" to target="_blank" links.
+4,Minor,footer.html:6,Security/Accessibility: External link missing rel="noopener noreferrer".,Add rel="noopener noreferrer" to target="_blank" links.
+5,Moderate,Global,Missing Skip Link: No "Skip to Content" link for keyboard users.,Add a hidden skip link at the top of body.

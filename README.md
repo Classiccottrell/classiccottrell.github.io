@@ -1,87 +1,94 @@
 # ClassicCottrell Portfolio Site
 
-A modern, component-based personal portfolio website for Matthew A. Cottrell, built with React and Vite. This project uses Storybook for UI component development and is deployed on Netlify.
+A minimal, fast-loading personal portfolio website hosted on **GitHub Pages**, featuring reusable headers/footers, responsive layouts, and simple HTML/CSS/JS architecture.
 
 ---
 
-## 🚀 URLs
-
-- **Live Site:** [https://classiccottrell.github.io](https://classiccottrell.github.io)
-- **Storybook:** [https://classiccottrell.github.io/storybook](https://classiccottrell.github.io/storybook)
-
----
-
-## 🛠 Tech Stack
-
-- **Framework:** [React](https://reactjs.org/)
-- **Build Tool:** [Vite](https://vitejs.dev/)
-- **Component Library:** [Material-UI](https://mui.com/)
-- **Component Development:** [Storybook](https://storybook.js.org/)
-- **Deployment:** [Netlify](https://www.netlify.com/)
+## 🚀 Features
+- Reusable `header.html` and `footer.html` loaded with JavaScript
+- Mobile-responsive layout
+- Google Fonts integration
+- Social icons (LinkedIn + Instagram)
+- Lightweight HTML/CSS (no frameworks)
+- Easy to maintain and extend
 
 ---
 
 ## 📁 Project Structure
-
 ```
 classiccottrell.github.io/
 │
-├── src/
-│   ├── ArtChart.jsx
-│   └── main.jsx
-├── stories/
-│   ├── ArtCard.stories.js
-│   ├── Colors.stories.js
-│   └── Typography.stories.js
-├── .storybook/
-├── art.html
 ├── index.html
-├── vite.config.js
-├── package.json
-└── netlify.toml
+├── about.html          (or other future pages)
+├── header.html         (reusable site header)
+├── footer.html         (reusable site footer)
+├── styles.css
+├── script.js           (loads header/footer)
+│
+└── img/
+    ├── Imag-Matthew.png
+    ├── linked.svg
+    └── instagram.svg
 ```
 
 ---
 
-## ⚙️ Available Scripts
+## 🛠 Local Development (with http-server)
+To view the site locally and allow inline HTML imports:
 
-In the project directory, you can run:
+### **1. Navigate to the project folder:**
+```bash
+cd /path/to/classiccottrell.github.io
+```
 
-- `npm run dev`: Runs the app in development mode with Vite.
-- `npm run build`: Builds the app for production.
-- `npm run storybook`: Starts the Storybook development server.
-- `npm run build-storybook`: Builds Storybook for deployment.
+### **2. Start the local server:**
+If installed globally:
+```bash
+http-server .
+```
+Or using npx:
+```bash
+npx http-server .
+```
+Your site will be visible at:
+```
+http://localhost:8080
+```
+
+### **3. Verify includes:**
+- `header.html` loads
+- `footer.html` loads
+- Icons/images appear
+- No console errors
 
 ---
 
-## 🛠 Local Development
+## 💾 Deployment (GitHub Pages)
+After making changes:
 
-To get a local copy up and running, follow these steps:
-
-### 1. Clone the repository:
+### **1. Stage changes**
 ```bash
-git clone https://github.com/classiccottrell/classiccottrell.github.io.git
-cd classiccottrell.github.io
+git add .
 ```
 
-### 2. Install NPM packages:
+### **2. Commit**
 ```bash
-npm install
+git commit -m "Update site"
 ```
 
-### 3. Start the development server:
+### **3. Push**
 ```bash
-npm run dev
+git push
 ```
-Your site will be available at `http://localhost:5173` (or the next available port).
-
-To view your components in Storybook, run:
-```bash
-npm run storybook
+Your live site will update automatically:
 ```
+https://classiccottrell.github.io
+```
+(Propagation usually takes 10–60 seconds.)
 
 ---
 
-## 💾 Deployment
-
-This site is automatically deployed via Netlify from the `main` branch. Pushing to `main` will trigger a new deployment.
+## 📱 Responsive Design Notes
+Mobile adjustments use media queries in `styles.css`, for example:
+```css
+@

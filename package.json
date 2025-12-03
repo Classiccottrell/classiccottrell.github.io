@@ -6,7 +6,7 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && npm run build-storybook -o dist/storybook",
     "preview": "vite preview"
   },
   "dependencies": {

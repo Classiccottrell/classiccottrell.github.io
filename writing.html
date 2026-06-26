@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Writing - Matthew A. Cottrell</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Rosarivo:ital@0;1&family=Inter:wght@300..700&display=swap"
+    rel="stylesheet">
+
+  <link rel="icon" href="img/favicon.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body class="writing-page">
+  <script>(function(){if(localStorage.getItem('theme')==='shadcn')document.body.classList.add('theme-shadcn');}());</script>
+
+  <div id="header"></div>
+
+  <main>
+    <ul class="writing-list">
+      <li>
+        <article class="writing-card">
+          <p class="writing-card-date">June 18, 2026</p>
+          <h2 class="writing-card-title">The Disposable Architecture of Tomorrow</h2>
+          <p class="writing-card-subtitle">What a roll of packing tape tells us about the future of AI</p>
+          <a href="https://classiccottrell.substack.com/p/the-disposable-architecture-of-tomorrow" target="_blank" class="writing-card-link header-link">Read on Substack &rarr;</a>
+        </article>
+      </li>
+    </ul>
+  </main>
+
+  <div id="footer"></div>
+
+  <script>
+    async function loadPartials() {
+      const header = await fetch("header.html");
+      const footer = await fetch("footer.html");
+      document.getElementById("header").innerHTML = await header.text();
+      document.getElementById("footer").innerHTML = await footer.text();
+      var btn = document.getElementById('theme-toggle-btn');
+      if (btn) btn.addEventListener('click', function() {
+        var isActive = document.body.classList.toggle('theme-shadcn');
+        localStorage.setItem('theme', isActive ? 'shadcn' : 'default');
+      });
+    }
+    loadPartials();
+  </script>
+</body>
+
+</html>

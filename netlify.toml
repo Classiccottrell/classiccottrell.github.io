@@ -2,3 +2,15 @@
 [build]
   publish = "."
   command = ""
+
+# Always revalidate HTML and the stylesheet so published styling changes
+# show up immediately instead of being served from a stale cache.
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/styles.css"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"

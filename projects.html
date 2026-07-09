@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projects - Matthew A. Cottrell</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Rosarivo:ital@0;1&family=Inter:wght@300..700&display=swap"
+    rel="stylesheet">
+
+  <link rel="icon" href="img/favicon.png" />
+  <link rel="stylesheet" href="styles.css?v=20260709" />
+</head>
+
+<body class="projects-page">
+  <script>(function(){if(localStorage.getItem('theme')==='shadcn')document.body.classList.add('theme-shadcn');}());</script>
+
+  <div id="header"></div>
+
+  <main class="project-prose">
+    <p class="writing-card-date">Ongoing</p>
+    <h1 class="project-title rosarivo-regular">The Agent Workspace Template</h1>
+    <p class="project-subtitle">A folder that turns an AI chat tool into an operating environment.</p>
+
+    <section>
+      <p>Every new AI project started the same way. Copy the agents folder. Copy
+      the skills. Re-add the MCP servers. Re-explain my whole life to a fresh
+      chat window. The work compounded; the setup never did.</p>
+
+      <p>The tools get smarter every month. The workspace around them stays
+      dumb. What I wanted was closer to a wood shop than a chat: one bench,
+      tools on the wall, sawdust swept up by someone else overnight.</p>
+    </section>
+
+    <section>
+      <h2>What it is</h2>
+      <p>One folder. Clone it, run one script, and you are operating:</p>
+      <ul>
+        <li><strong>An orchestrator and five scoped agents.</strong> The root
+        agent breaks work down and hands it to a specialist: architect, coder,
+        engineering manager, archivist, curator. Each one owns a directory and
+        nothing else.</li>
+        <li><strong>Vault Brain, a second brain in plain Markdown.</strong> Clip
+        a web page in your browser and a background job reads it overnight,
+        files it into a wiki, and cross-links it to everything you already
+        know. Raw notes get the same treatment. Nothing evaporates in chat
+        history.</li>
+        <li><strong>Background jobs that keep it honest.</strong> Daily ingest,
+        a Friday close-out that summarizes the week, a Monday job that starts
+        the next one, and a health check every four hours. When something
+        breaks, the system says so before you notice.</li>
+      </ul>
+      <p>It works with Claude Code or the Gemini CLI, and picks up the GitHub
+      CLI and Playwright when they are installed, so the agents push code and
+      test pages as shell commands instead of burning tokens on plumbing.
+      Built for the Mac first; the agents and the vault run anywhere the CLI
+      does.</p>
+    </section>
+
+    <section>
+      <h2>The UX thinking</h2>
+      <p><strong>One owner per layer.</strong> Delivery owns the projects,
+      automation owns the schedule, knowledge owns the vault. Nothing falls
+      between the cracks because every crack has a name on it.</p>
+
+      <p><strong>Boring formats win.</strong> The vault is plain Markdown and
+      the files are the store. If I walk away from every tool in this stack
+      tomorrow, the knowledge walks with me.</p>
+
+      <p><strong>The system reports its own health.</strong> Trust in
+      automation is a UX problem, and visibility is the fix. A status page
+      tells me which job failed while I slept and what to do about it, and the
+      docs ship with a failure-mode playbook: what breaks, why, and the exact
+      prompt to hand a model to fix it.</p>
+    </section>
+
+    <section>
+      <p>The future of a workspace is not a grand digital mansion you maintain
+      forever. It is a bench you clone in a minute, that sharpens its own
+      tools, and that remembers everything you put down on it.</p>
+
+      <p class="project-cta">
+        <!-- verify: confirm the public repo URL before publishing -->
+        <a href="https://classiccottrell.github.io/Agent_Workspace_Template/" target="_blank" class="header-link">See the live system overview &rarr;</a>
+      </p>
+    </section>
+  </main>
+
+  <div id="footer"></div>
+
+  <script>
+    async function loadPartials() {
+      const header = await fetch("header.html");
+      const footer = await fetch("footer.html");
+      document.getElementById("header").innerHTML = await header.text();
+      document.getElementById("footer").innerHTML = await footer.text();
+      var btn = document.getElementById('theme-toggle-btn');
+      if (btn) btn.addEventListener('click', function() {
+        var isActive = document.body.classList.toggle('theme-shadcn');
+        localStorage.setItem('theme', isActive ? 'shadcn' : 'default');
+      });
+    }
+    loadPartials();
+  </script>
+</body>
+
+</html>

@@ -3,10 +3,14 @@
 ========================================= */
 :root {
   /* --- Brand Colors --- */
-  --brand-primary: #777C6D;
-  --brand-primary-hover: #437057;
-  --brand-primary-active: #496F8D;
+  /* ClassicCottrell design system (app/globals.css): forest green primary
+     on the warm-cream neutral scale below. */
+  --brand-primary: #437057;
+  --brand-primary-hover: #35573F;
+  --brand-primary-active: #2C4A3A;
   --brand-accent: #437057;
+  --accent-surface: #E2EBE4;
+  --destructive: #B4462F;
 
   /* --- Neutral Scale (Warm) --- */
   --neutral-50: #F9F5F1;
@@ -800,4 +804,68 @@ body.theme-shadcn {
   .writing-card-title {
     font-size: 20px;
   }
+}
+/* =========================================
+   Projects Page
+========================================= */
+.projects-page .project-prose {
+  font-family: "Red Hat Display", "Inter", system-ui, sans-serif;
+  max-width: 660px;
+  margin: 0 auto;
+  padding: 40px clamp(20px, 5vw, 48px) 80px;
+  text-align: left;
+}
+
+.project-title {
+  font-size: 2.4rem;
+  line-height: 1.15;
+  margin: 8px 0 4px;
+  color: var(--text-main);
+}
+
+.project-subtitle {
+  font-size: 1.15rem;
+  color: var(--text-secondary);
+  margin: 0 0 36px;
+}
+
+.project-prose h2 {
+  font-family: "Rosarivo", Georgia, serif;
+  font-weight: 400;
+  font-size: 1.5rem;
+  margin: 40px 0 12px;
+  color: var(--brand-primary);
+}
+
+.project-prose p,
+.project-prose li {
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: var(--text-main);
+}
+
+.project-prose ul {
+  padding-left: 22px;
+}
+
+.project-prose li {
+  margin-bottom: 14px;
+}
+
+.project-cta {
+  margin-top: 32px;
+  padding: 18px 22px;
+  background: var(--accent-surface);
+  border-radius: var(--radius-small);
+  display: inline-block;
+}
+
+.project-cta a {
+  color: var(--brand-primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.project-cta a:hover {
+  color: var(--brand-primary-hover);
 }

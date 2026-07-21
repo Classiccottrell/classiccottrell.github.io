@@ -10,31 +10,31 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Rosarivo:ital@0;1&family=Inter:wght@300..700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Rosarivo:ital@0;1&display=swap"
     rel="stylesheet">
 
   <link rel="icon" href="img/favicon.png" />
-  <link rel="stylesheet" href="styles.css?v=20260627" />
+  <link rel="stylesheet" href="styles.css?v=20260720" />
 </head>
 
 <body>
-  <script>(function(){if(localStorage.getItem('theme')==='shadcn')document.body.classList.add('theme-shadcn');}());</script>
+  <script>(function(){var t=localStorage.getItem('site-theme');if(!['default','bolder','shadcn','brutal'].includes(t))t='default';document.documentElement.setAttribute('data-theme',t);}());</script>
 
   <div id="header"></div>
 
   <main id="art-main">
 
     <!-- View Switcher & Chart Section -->
-    <section class="art-controls"
+    <section class="art-controls reveal"
       style="width: 100%; max-width: 1000px; margin: 0 auto 40px; padding: 0 20px; display: flex; flex-direction: column; gap: 20px;">
       <div class="view-switcher" style="display: flex; gap: 10px; justify-content: flex-end;">
         <button id="btn-view-grid" class="tab-btn active" onclick="switchView('grid')">Grid View</button>
         <button id="btn-view-timeline" class="tab-btn" onclick="switchView('timeline')">Timeline View</button>
       </div>
 
-      <!-- React Chart Container (Hidden by default in Grid view, or shown if Timeline is default) -->
+      <!-- Timeline (hidden by default in Grid view) -->
       <div id="art-chart-container" style="display: none;">
-        <div id="art-chart-root"></div>
+        <div id="art-timeline" class="art-timeline"></div>
       </div>
     </section>
 
@@ -47,20 +47,27 @@
 
   <div id="footer"></div>
 
-  <!-- Load React Widget -->
-  <script type="module" src="./dist/assets/main.js"></script>
-
   <script>
     async function loadPartials() {
       const header = await fetch("header.html");
       const footer = await fetch("footer.html");
       document.getElementById("header").innerHTML = await header.text();
       document.getElementById("footer").innerHTML = await footer.text();
-      var btn = document.getElementById('theme-toggle-btn');
-      if (btn) btn.addEventListener('click', function() {
-        var isActive = document.body.classList.toggle('theme-shadcn');
-        localStorage.setItem('theme', isActive ? 'shadcn' : 'default');
+      var currentPage = location.pathname.split('/').pop() || 'index.html';
+      document.querySelectorAll('.nav-links .header-link').forEach(function (link) {
+        if (link.getAttribute('href') === currentPage) {
+          link.classList.add('active');
+          link.setAttribute('aria-current', 'page');
+        }
       });
+      var select = document.getElementById('theme-select');
+      if (select) {
+        select.value = document.documentElement.getAttribute('data-theme') || 'default';
+        select.addEventListener('change', function () {
+          document.documentElement.setAttribute('data-theme', this.value);
+          localStorage.setItem('site-theme', this.value);
+        });
+      }
     }
     loadPartials();
 
@@ -72,9 +79,43 @@
         const response = await fetch('data/art_data.json');
         artData = await response.json();
         renderGrid(artData);
+        renderTimeline(artData);
       } catch (error) {
         console.error('Error loading art data:', error);
       }
+    }
+
+    function renderTimeline(data) {
+      const el = document.getElementById('art-timeline');
+      const sorted = [...data].sort((a, b) => a.year - b.year);
+      const years = sorted.map(d => d.year);
+      const pad = Math.max(4, Math.round((Math.max(...years) - Math.min(...years)) * 0.1));
+      const minYear = Math.floor((Math.min(...years) - pad) / 10) * 10;
+      const maxYear = Math.ceil((Math.max(...years) + pad) / 10) * 10;
+      const span = maxYear - minYear;
+      const pct = (year) => ((year - minYear) / span) * 100;
+
+      const ticks = [];
+      for (let y = minYear; y <= maxYear; y += 10) ticks.push(y);
+
+      el.innerHTML = `
+        <div class="timeline-track">
+          ${ticks.map((y, i) => `
+            <div class="timeline-tick" style="left:${pct(y)}%">
+              ${i === 0 || i === ticks.length - 1 ? `<span class="timeline-tick-label">${y}</span>` : ''}
+            </div>
+          `).join('')}
+          ${sorted.map((item, i) => `
+            <div class="timeline-point ${i % 2 === 0 ? 'above' : 'below'}" style="left:${pct(item.year)}%">
+              <span class="timeline-marker" title="${item.film} (${item.year}), dir. ${item.director}"></span>
+              <div class="timeline-label">
+                <span class="timeline-label-title rosarivo-regular-italic">${item.film}</span>
+                <span class="timeline-label-year">${item.year}</span>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
     }
 
     function renderGrid(data) {

@@ -10,35 +10,40 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Rosarivo:ital@0;1&family=Inter:wght@300..700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Rosarivo:ital@0;1&display=swap"
     rel="stylesheet">
 
   <link rel="icon" href="img/favicon.png" />
-  <link rel="stylesheet" href="styles.css?v=20260627" />
+  <link rel="stylesheet" href="styles.css?v=20260720" />
 </head>
 
 <body class="writing-page">
-  <script>(function(){if(localStorage.getItem('theme')==='shadcn')document.body.classList.add('theme-shadcn');}());</script>
+  <script>(function(){var t=localStorage.getItem('site-theme');if(!['default','bolder','shadcn','brutal'].includes(t))t='default';document.documentElement.setAttribute('data-theme',t);}());</script>
 
   <div id="header"></div>
 
   <main>
+    <section class="writing-hero reveal">
+      <h1 class="writing-heading rosarivo-regular">Writing</h1>
+      <p class="writing-hero-subtext red-hat">Essays on design, AI, and the occasional roll of packing tape.</p>
+    </section>
+
     <ul class="writing-list">
       <li>
-        <article class="writing-card">
+        <a class="writing-card reveal" style="--d:1" href="https://classiccottrell.substack.com/p/built-to-break-a-lifelong-education" target="_blank">
           <p class="writing-card-date">July 1, 2026</p>
-          <h2 class="writing-card-title">Built to Break: A Lifelong Education</h2>
-          <p class="writing-card-subtitle">How a childhood urge to destroy things built a career in multimodal design.</p>
-          <a href="https://classiccottrell.substack.com/p/built-to-break-a-lifelong-education" target="_blank" class="writing-card-link header-link">Read on Substack &rarr;</a>
-        </article>
+          <h2 class="writing-card-title rosarivo-regular">Built to Break: A Lifelong Education</h2>
+          <p class="writing-card-subtitle">"How a childhood urge to destroy things built a career in multimodal design."</p>
+          <span class="writing-card-link">Read on Substack <span class="arrow">&rarr;</span></span>
+        </a>
       </li>
       <li>
-        <article class="writing-card">
+        <a class="writing-card reveal" style="--d:2" href="https://classiccottrell.substack.com/p/the-disposable-architecture-of-tomorrow" target="_blank">
           <p class="writing-card-date">June 18, 2026</p>
-          <h2 class="writing-card-title">The Disposable Architecture of Tomorrow</h2>
-          <p class="writing-card-subtitle">What a roll of packing tape tells us about the future of AI</p>
-          <a href="https://classiccottrell.substack.com/p/the-disposable-architecture-of-tomorrow" target="_blank" class="writing-card-link header-link">Read on Substack &rarr;</a>
-        </article>
+          <h2 class="writing-card-title rosarivo-regular">The Disposable Architecture of Tomorrow</h2>
+          <p class="writing-card-subtitle">"What a roll of packing tape tells us about the future of AI."</p>
+          <span class="writing-card-link">Read on Substack <span class="arrow">&rarr;</span></span>
+        </a>
       </li>
     </ul>
   </main>
@@ -51,11 +56,21 @@
       const footer = await fetch("footer.html");
       document.getElementById("header").innerHTML = await header.text();
       document.getElementById("footer").innerHTML = await footer.text();
-      var btn = document.getElementById('theme-toggle-btn');
-      if (btn) btn.addEventListener('click', function() {
-        var isActive = document.body.classList.toggle('theme-shadcn');
-        localStorage.setItem('theme', isActive ? 'shadcn' : 'default');
+      var currentPage = location.pathname.split('/').pop() || 'index.html';
+      document.querySelectorAll('.nav-links .header-link').forEach(function (link) {
+        if (link.getAttribute('href') === currentPage) {
+          link.classList.add('active');
+          link.setAttribute('aria-current', 'page');
+        }
       });
+      var select = document.getElementById('theme-select');
+      if (select) {
+        select.value = document.documentElement.getAttribute('data-theme') || 'default';
+        select.addEventListener('change', function () {
+          document.documentElement.setAttribute('data-theme', this.value);
+          localStorage.setItem('site-theme', this.value);
+        });
+      }
     }
     loadPartials();
   </script>

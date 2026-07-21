@@ -28,7 +28,7 @@
   --text-main: var(--neutral-800);
   --text-secondary: var(--neutral-600);
   --text-footer: #444;
-  --text-copyright: #888;
+  --text-copyright: #6b6b6b;
 
   /* --- Backgrounds --- */
   --bg-page: var(--neutral-50);
@@ -38,6 +38,156 @@
   --radius-large: 60px;
   --radius-medium: 40px;
   --radius-small: 8px;
+
+  /* --- Fluid type scale (available site-wide; not swept into
+     existing font-size declarations) --- */
+  --step--1: clamp(0.80rem, 0.76rem + 0.20vw, 0.9rem);
+  --step-0:  clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --step-1:  clamp(1.2rem, 1.05rem + 0.7vw, 1.5rem);
+  --step-2:  clamp(1.55rem, 1.25rem + 1.4vw, 2.25rem);
+  --step-3:  clamp(2.1rem, 1.55rem + 2.6vw, 3.4rem);
+  --step-4:  clamp(2.6rem, 1.7rem + 4.4vw, 4.75rem);
+}
+
+/* =========================================
+   Theme Overrides (data-theme on <html>)
+========================================= */
+
+/* --- Bolder: OKLCH pine palette (tokens only; layout/typography
+   selectors are untouched, everything already consumes var(--...)) --- */
+[data-theme="bolder"] {
+  --brand: oklch(0.50 0.095 158);
+  --brand-deep: oklch(0.40 0.085 158);
+  --brand-bright: oklch(0.62 0.115 158);
+
+  --paper: oklch(0.985 0.002 160);
+  --surface: oklch(0.955 0.003 160);
+  --line: oklch(0.88 0.004 160);
+  --ink: oklch(0.21 0.012 160);
+  --ink-soft: oklch(0.40 0.014 160);
+  --ink-mute: oklch(0.53 0.012 160);
+
+  --text-main: var(--ink);
+  --text-secondary: var(--ink-soft);
+  --text-footer: var(--ink-soft);
+  --text-copyright: var(--ink-mute);
+  --bg-page: var(--paper);
+
+  --neutral-50: var(--paper);
+  --neutral-100: var(--surface);
+  --neutral-200: oklch(0.92 0.004 160);
+  --neutral-300: var(--line);
+  --neutral-400: oklch(0.70 0.008 160);
+  --neutral-500: var(--ink-mute);
+  --neutral-600: var(--ink-soft);
+  --neutral-700: oklch(0.31 0.013 160);
+  --neutral-800: var(--ink);
+  --neutral-900: oklch(0.16 0.012 160);
+
+  --brand-primary: var(--brand);
+  --brand-primary-hover: var(--brand-deep);
+  --brand-primary-active: var(--brand-bright);
+  --brand-accent: var(--brand);
+  --accent-surface: oklch(0.94 0.03 158);
+  --destructive: oklch(0.52 0.19 29);
+
+  --shadow-soft: 0 22px 60px -28px oklch(0.21 0.04 160 / 0.5);
+  --radius-large: 26px;
+  --radius-medium: 18px;
+  --radius-small: 10px;
+}
+
+/* --- shadcn: existing palette, selector generalized from
+   body.theme-shadcn to the data-theme attribute --- */
+[data-theme="shadcn"] {
+  --bg-page: #ffffff;
+  --text-main: #333333;
+  --text-secondary: #6b7280;
+  --text-footer: #4b5563;
+  --text-copyright: #9ca3af;
+  --brand-primary: #3b82f6;
+  --brand-primary-hover: #2563eb;
+  --brand-primary-active: #1d4ed8;
+  --brand-accent: #3b82f6;
+  --neutral-50: #f9fafb;
+  --neutral-100: #f3f4f6;
+  --neutral-200: #e5e7eb;
+  --neutral-300: #d1d5db;
+  --neutral-400: #9ca3af;
+  --neutral-500: #6b7280;
+  --neutral-600: #4b5563;
+  --neutral-700: #374151;
+  --neutral-800: #1f2937;
+  --neutral-900: #111827;
+  --radius-large: 0.5rem;
+  --radius-medium: 0.375rem;
+  --radius-small: 0.25rem;
+  --shadow-soft: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Force the OS-native system-font stack on every element — most site
+   text (header, footer, writing cards, project prose) sets its own
+   font-family directly (or via .rosarivo-regular/.red-hat) rather than
+   inheriting, and would otherwise win over the theme's font-family. */
+[data-theme="shadcn"] * {
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+}
+
+/* --- Brutal: derived from Projects/Brutal-UX (#000/#FFF binary
+   contrast, zero radius, no shadow, monospace, red rationed to
+   destructive/alert only, motion disabled) --- */
+[data-theme="brutal"] {
+  --bg-page: #FFFFFF;
+  --text-main: #000000;
+  --text-secondary: #000000;
+  --text-footer: #000000;
+  --text-copyright: #333333;
+
+  --brand-primary: #000000;
+  --brand-primary-hover: #000000;
+  --brand-primary-active: #000000;
+  --brand-accent: #000000;
+  --accent-surface: #E5E5E5;
+  --destructive: #FF0000;
+
+  --neutral-50: #FFFFFF;
+  --neutral-100: #F2F2F2;
+  --neutral-200: #E5E5E5;
+  --neutral-300: #CCCCCC;
+  --neutral-400: #999999;
+  --neutral-500: #666666;
+  --neutral-600: #333333;
+  --neutral-700: #1A1A1A;
+  --neutral-800: #000000;
+  --neutral-900: #000000;
+
+  --shadow-soft: none;
+  --radius-large: 0;
+  --radius-medium: 0;
+  --radius-small: 0;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+
+/* Force monospace on every element, since most site text (header,
+   footer, writing cards, project prose) sets its own font-family
+   directly rather than via .rosarivo-regular/.red-hat and would
+   otherwise win over the inherited [data-theme="brutal"] font-family. */
+[data-theme="brutal"] * {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace !important;
+}
+
+[data-theme="brutal"] .rosarivo-regular,
+[data-theme="brutal"] .rosarivo-regular-italic,
+[data-theme="brutal"] .red-hat {
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+[data-theme="brutal"] .reveal {
+  animation: none !important;
+  opacity: 1 !important;
+  transform: none !important;
 }
 
 /* =========================================
@@ -61,12 +211,50 @@
 /* =========================================
    Global Page Layout
 ========================================= */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 body {
   background-color: var(--bg-page);
   color: var(--text-main);
   margin: 0;
   padding: 0;
   text-align: center;
+}
+
+/* =========================================
+   Motion — CSS load reveal (never gates content
+   on JS; reduced-motion lands fully visible)
+========================================= */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  animation: reveal 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--d, 0) * 110ms);
+}
+
+@keyframes reveal {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .hero-link:hover {
+    transform: none;
+  }
+
+  .writing-card:hover .writing-card-link .arrow {
+    transform: none;
+  }
 }
 
 /* =========================================
@@ -94,11 +282,6 @@ header {
   display: flex;
   align-items: center;
   gap: 20px;
-}
-
-/* Hide header nav links only on the home page */
-body.home-page .header-left .nav-links {
-  display: none;
 }
 
 .top-name a {
@@ -131,6 +314,11 @@ body.home-page .header-left .nav-links {
   color: var(--brand-primary-active);
 }
 
+.nav-links .header-link.active {
+  color: var(--brand-primary);
+  font-weight: 600;
+}
+
 /* =========================================
    Main Content
 ========================================= */
@@ -141,64 +329,62 @@ main {
   margin-top: 40px;
 }
 
-/* --- Home Page Grid Layout --- */
-.home-grid {
-  display: grid;
-  grid-template-columns: 1fr auto auto 1fr;
-  /* Center content block */
-  grid-template-areas:
-    ". img nav ."
-    ". intro intro .";
-  column-gap: 20px;
-  /* Reduced gap between img and nav */
-  row-gap: 40px;
-  justify-items: center;
-  max-width: 1200px;
-  margin: 40px auto 0;
-  width: 100%;
-}
-
-/* Assign grid areas */
-.home-grid .profile-section {
-  grid-area: img;
-  justify-self: end;
-  /* Align image to the right of its cell */
-  margin-bottom: 0;
-  /* Override previous margin */
-}
-
-.home-grid .hero-nav {
-  grid-area: nav;
-  justify-self: start;
-  /* Align nav to the left of its cell */
+/* --- Home Page Layout: hero copy first, image+nav below --- */
+.home {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 10px;
+  gap: clamp(44px, 8vw, 92px);
+  width: 100%;
+  max-width: 1080px;
+  margin: clamp(40px, 8vh, 88px) auto 0;
+  padding: 0 24px;
 }
 
-.home-grid .intro {
-  grid-area: intro;
+.hero {
   text-align: center;
-  max-width: 900px;
-  justify-self: center;
-  /* Ensure intro is centered within its span */
+}
+
+.showcase {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(32px, 6vw, 76px);
+}
+
+.hero-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  align-items: flex-start;
+  text-align: left;
 }
 
 /* --- Hero Navigation Links --- */
 .hero-link {
-  font-size: 80px;
-  /* Large size as per screenshot */
-  line-height: 1;
+  display: flex;
+  flex-direction: column;
+  font-size: var(--step-3);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
   color: var(--brand-accent);
-  /* Green color from screenshot */
   text-decoration: none;
-  transition: opacity 0.3s ease;
+  transition: color 0.3s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .hero-link:hover {
-  opacity: 0.8;
+  color: var(--brand-primary-hover);
+  transform: translateX(8px);
+}
+
+.hero-link-meta {
+  font-family: "Red Hat Display", sans-serif;
+  font-style: normal;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--text-secondary);
+  margin-top: 4px;
 }
 
 .profile-section {
@@ -217,17 +403,21 @@ main {
    Text
 ========================================= */
 .headline {
-  font-size: 42px;
-  color: var(--neutral-700);
-  line-height: 1.3;
-  max-width: 900px;
+  font-size: var(--step-4);
+  color: var(--text-main);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  max-width: 20ch;
   margin: 0 auto 20px auto;
+  text-wrap: balance;
 }
 
 .subtext {
-  font-size: 14px;
+  font-size: var(--step-1);
   color: var(--text-secondary);
-  margin-top: 10px;
+  max-width: 52ch;
+  margin: 10px auto 0;
+  text-wrap: pretty;
 }
 
 /* =========================================
@@ -317,15 +507,6 @@ footer .social-icons {
     padding: 0 20px;
   }
 
-  .headline {
-    font-size: 28px;
-    line-height: 1.4;
-  }
-
-  .subtext {
-    font-size: 13px;
-  }
-
   .profile-img {
     width: 200px;
     height: 200px;
@@ -340,33 +521,22 @@ footer .social-icons {
     justify-content: space-between;
   }
 
-  /* Mobile Grid Layout */
-  .home-grid {
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      "img"
-      "intro"
-      "nav";
-    row-gap: 10px;
-    /* Reduced gap significantly */
-    padding: 0;
+  .home {
+    margin-top: 32px;
+    padding: 0 20px;
   }
 
-  .home-grid .profile-section {
-    justify-self: center;
+  .showcase {
+    flex-direction: column;
   }
 
-  .home-grid .hero-nav {
-    justify-self: center;
+  .hero-nav {
     align-items: center;
-    margin-top: 0px;
-    /* Remove top margin */
-    margin-bottom: 20px;
+    text-align: center;
   }
 
   .hero-link {
-    font-size: 48px;
-    /* Smaller on mobile */
+    align-items: center;
   }
 
   footer {
@@ -506,6 +676,107 @@ footer .social-icons {
 /* =========================================
    Art Page
 ========================================= */
+
+/* --- Timeline (Timeline View) --- */
+.art-timeline {
+  position: relative;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 70px 24px 60px;
+}
+
+.timeline-track {
+  position: relative;
+  height: 2px;
+  background: var(--neutral-300);
+  width: 100%;
+}
+
+.timeline-tick {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  width: 1px;
+  height: 8px;
+  background: var(--neutral-300);
+}
+
+.timeline-tick-label {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: "Red Hat Display", sans-serif;
+  font-size: 12px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.timeline-point {
+  position: absolute;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translateX(-50%);
+}
+
+.timeline-marker {
+  position: absolute;
+  top: -4px;
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-small);
+  background: var(--brand-primary);
+  box-shadow: 0 0 0 4px var(--bg-page);
+  cursor: pointer;
+}
+
+.timeline-label {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: max-content;
+  max-width: 160px;
+}
+
+.timeline-point.above .timeline-label {
+  bottom: 20px;
+}
+
+.timeline-point.below .timeline-label {
+  top: 20px;
+}
+
+.timeline-label-title {
+  font-size: 15px;
+  color: var(--text-main);
+  line-height: 1.2;
+}
+
+.timeline-label-year {
+  font-family: "Red Hat Display", sans-serif;
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+@media (max-width: 768px) {
+  .art-timeline {
+    padding: 60px 12px 90px;
+  }
+
+  .timeline-label {
+    max-width: 96px;
+  }
+
+  .timeline-label-title {
+    font-size: 13px;
+  }
+}
 
 /* --- Common Art Entry Styles --- */
 .art-entry {
@@ -670,63 +941,21 @@ footer .social-icons {
 }
 
 /* =========================================
-   Theme Toggle Button
+   Theme Select (footer)
 ========================================= */
-.theme-toggle-btn {
-  background: none;
-  border: none;
+.theme-select {
+  font-family: "Red Hat Display", sans-serif;
+  font-size: 12px;
+  color: var(--text-footer);
+  background: transparent;
+  border: 1px solid var(--neutral-300);
+  border-radius: var(--radius-small);
+  padding: 4px 8px;
   cursor: pointer;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
-  transition: opacity 0.3s ease;
-}
-
-.theme-toggle-btn:hover {
-  opacity: 0.7;
-}
-
-.theme-toggle-icon {
-  color: var(--brand-primary);
-  width: 20px;
-  height: 20px;
 }
 
 /* =========================================
-   shadcn Theme Override
-========================================= */
-body.theme-shadcn {
-  --bg-page: #ffffff;
-  --text-main: #333333;
-  --text-secondary: #6b7280;
-  --text-footer: #4b5563;
-  --text-copyright: #9ca3af;
-  --brand-primary: #3b82f6;
-  --brand-primary-hover: #2563eb;
-  --brand-primary-active: #1d4ed8;
-  --brand-accent: #3b82f6;
-  --neutral-50: #f9fafb;
-  --neutral-100: #f3f4f6;
-  --neutral-200: #e5e7eb;
-  --neutral-300: #d1d5db;
-  --neutral-400: #9ca3af;
-  --neutral-500: #6b7280;
-  --neutral-600: #4b5563;
-  --neutral-700: #374151;
-  --neutral-800: #1f2937;
-  --neutral-900: #111827;
-  --radius-large: 0.5rem;
-  --radius-medium: 0.375rem;
-  --radius-small: 0.25rem;
-  --shadow-soft: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
-  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
-}
-
-/* =========================================
-   Writing Page
+   Writing Page — editorial feature layout
 ========================================= */
 .writing-page main {
   max-width: 680px;
@@ -737,6 +966,29 @@ body.theme-shadcn {
   align-items: flex-start;
 }
 
+.writing-hero {
+  text-align: center;
+  width: 100%;
+  margin: 0 0 64px;
+}
+
+.writing-heading {
+  font-size: var(--step-4);
+  color: var(--text-main);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin: 0 0 14px;
+  text-wrap: balance;
+}
+
+.writing-hero-subtext {
+  font-size: var(--step-1);
+  color: var(--text-secondary);
+  max-width: 46ch;
+  margin: 0 auto;
+  text-wrap: pretty;
+}
+
 .writing-list {
   width: 100%;
   list-style: none;
@@ -744,48 +996,69 @@ body.theme-shadcn {
   padding: 0;
 }
 
-.writing-card {
-  text-align: left;
-  padding: 28px 0;
-  border-bottom: 1px solid var(--neutral-200);
+.writing-list li:first-child .writing-card {
+  padding-top: 0;
 }
 
-.writing-card:first-child {
-  padding-top: 0;
+.writing-card {
+  display: block;
+  text-align: left;
+  padding: 40px 0;
+  border-bottom: 1px solid var(--neutral-200);
+  text-decoration: none;
+  color: inherit;
+}
+
+.writing-card:hover .writing-card-title,
+.writing-card:hover .writing-card-link {
+  color: var(--brand-primary-hover);
+}
+
+.writing-card:hover .writing-card-link .arrow {
+  transform: translateX(4px);
 }
 
 .writing-card-date {
   font-family: "Red Hat Display", sans-serif;
-  font-size: 12px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   color: var(--text-secondary);
-  margin: 0 0 8px 0;
-  font-weight: 400;
+  margin: 0 0 12px 0;
+  font-weight: 500;
 }
 
 .writing-card-title {
-  font-family: "Rosarivo", cursive;
-  font-weight: 400;
-  font-size: 24px;
-  color: var(--neutral-700);
-  margin: 0 0 8px 0;
-  line-height: 1.3;
+  font-size: var(--step-2);
+  color: var(--text-main);
+  margin: 0 0 14px 0;
+  line-height: 1.2;
+  text-wrap: balance;
+  transition: color 0.3s ease;
 }
 
 .writing-card-subtitle {
   font-family: "Red Hat Display", sans-serif;
-  font-size: 14px;
+  font-size: 18px;
   color: var(--text-secondary);
-  margin: 0 0 16px 0;
+  margin: 0 0 20px 0;
+  line-height: 1.5;
   font-style: italic;
+  max-width: 52ch;
 }
 
 .writing-card-link {
   font-family: "Red Hat Display", sans-serif;
   font-size: 14px;
-  font-weight: 400;
-  color: var(--neutral-900);
+  font-weight: 600;
+  color: var(--brand-primary);
   text-decoration: none;
   transition: color 0.3s ease;
+}
+
+.writing-card-link .arrow {
+  display: inline-block;
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .writing-card-link:hover {
@@ -801,19 +1074,79 @@ body.theme-shadcn {
     margin-top: 40px;
   }
 
-  .writing-card-title {
-    font-size: 20px;
+  .writing-hero {
+    margin-bottom: 40px;
+  }
+
+  .writing-card {
+    padding: 28px 0;
   }
 }
 /* =========================================
-   Projects Page
+   Projects Page — sidebar index + detail panel
+   (distinct shell from every other page: a
+   persistent project list drives a switchable
+   detail view, not a single scrolling column)
 ========================================= */
-.projects-page .project-prose {
-  font-family: "Red Hat Display", "Inter", system-ui, sans-serif;
-  max-width: 660px;
+.projects-shell {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: clamp(24px, 4vw, 56px);
+  max-width: 1100px;
   margin: 0 auto;
   padding: 40px clamp(20px, 5vw, 48px) 80px;
+  align-items: start;
   text-align: left;
+  width: 100%;
+}
+
+.projects-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  position: sticky;
+  top: 88px;
+}
+
+.project-nav-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 14px;
+  border-radius: var(--radius-small);
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.project-nav-item:hover {
+  background: var(--accent-surface);
+}
+
+.project-nav-item.active {
+  background: var(--accent-surface);
+}
+
+.project-nav-item.active .project-nav-title {
+  color: var(--brand-primary);
+}
+
+.project-nav-status {
+  font-family: "Red Hat Display", sans-serif;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+}
+
+.project-nav-title {
+  font-size: 1.05rem;
+  line-height: 1.3;
+  color: var(--text-main);
+}
+
+.project-detail {
+  font-family: "Red Hat Display", system-ui, sans-serif;
+  min-width: 0;
 }
 
 .project-title {
@@ -829,7 +1162,7 @@ body.theme-shadcn {
   margin: 0 0 36px;
 }
 
-.project-prose h2 {
+.project-detail h2 {
   font-family: "Rosarivo", Georgia, serif;
   font-weight: 400;
   font-size: 1.5rem;
@@ -837,18 +1170,18 @@ body.theme-shadcn {
   color: var(--brand-primary);
 }
 
-.project-prose p,
-.project-prose li {
+.project-detail p,
+.project-detail li {
   font-size: 1.05rem;
   line-height: 1.65;
   color: var(--text-main);
 }
 
-.project-prose ul {
+.project-detail ul {
   padding-left: 22px;
 }
 
-.project-prose li {
+.project-detail li {
   margin-bottom: 14px;
 }
 
@@ -868,4 +1201,31 @@ body.theme-shadcn {
 
 .project-cta a:hover {
   color: var(--brand-primary-hover);
+}
+
+@media (max-width: 768px) {
+  .projects-shell {
+    grid-template-columns: 1fr;
+    padding: 24px 20px 60px;
+  }
+
+  .projects-nav {
+    position: static;
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 8px;
+    padding-bottom: 12px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--neutral-300);
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .project-nav-item {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .project-title {
+    font-size: 1.8rem;
+  }
 }

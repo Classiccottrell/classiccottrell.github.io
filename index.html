@@ -1,58 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Matthew A. Cottrell</title>
 
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Matthew A. Cottrell</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Rosarivo:ital@0;1&display=swap"
+    rel="stylesheet">
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Rosarivo:ital@0;1&family=Inter:wght@300..700&display=swap"
-      rel="stylesheet">
+  <link rel="icon" href="img/favicon.png" />
 
-    <link rel="icon" href="img/favicon.png" />
+  <!-- CSS -->
+  <link rel="stylesheet" href="styles.css?v=20260720" />
+</head>
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="styles.css?v=20260627" />
-  </head>
-
-  <body class="home-page">
-    <script>(function(){if(localStorage.getItem('theme')==='shadcn')document.body.classList.add('theme-shadcn');}());</script>
-    <div id="header"></div>
+<body class="home-page">
+  <script>(function(){var t=localStorage.getItem('site-theme');if(!['default','bolder','shadcn','brutal'].includes(t))t='default';document.documentElement.setAttribute('data-theme',t);}());</script>
+  <div id="header"></div>
 
 
-    <main class="home-grid">
-      <div class="profile-section">
+  <main class="home">
+    <section class="hero reveal">
+      <h2 class="headline rosarivo-regular">
+        I design world-class enterprise products that feel effortless to use.
+      </h2>
+      <p class="subtext red-hat">
+        Currently seven years into designing enterprise IT software, I’ve learned how to make complex systems feel
+        simple.
+      </p>
+    </section>
+
+    <section class="showcase">
+      <figure class="profile-section reveal" style="--d:1">
         <img src="img/Imag-Matthew.png" alt="Matthew A. Cottrell" class="profile-img" />
-      </div>
+      </figure>
 
-      <nav class="hero-nav">
-        <a href="art.html" class="hero-link rosarivo-regular-italic">Art</a>
-        <a href="writing.html" class="hero-link rosarivo-regular-italic">Writing</a>
-        <!-- TODO: Add Work link -->
-        <!-- <a href="index.html" class="hero-link rosarivo-regular-italic">Work</a> -->
+      <nav class="hero-nav reveal" style="--d:2" aria-label="Sections">
+        <a href="art.html" class="hero-link rosarivo-regular-italic">
+          Art
+          <span class="hero-link-meta">Paintings &amp; drawings</span>
+        </a>
+        <a href="writing.html" class="hero-link rosarivo-regular-italic">
+          Writing
+          <span class="hero-link-meta">Essays on design &amp; AI</span>
+        </a>
+        <a href="projects.html" class="hero-link rosarivo-regular-italic">
+          Projects
+          <span class="hero-link-meta">Case studies &amp; tools</span>
+        </a>
       </nav>
-
-      <section class="intro">
-        <h2 class="headline rosarivo-regular">
-          I design world-class enterprise products that feel effortless to use.
-        </h2>
-        <p class="subtext red-hat">
-          Currently seven years into designing enterprise IT software, I’ve learned how to make complex systems feel
-          simple.
-        </p>
-      </section>
-    </main>
+    </section>
+  </main>
 
 
-    <div id="footer"></div>
-
-  </body>
+  <div id="footer"></div>
 
   <script>
     async function loadPartials() {
@@ -60,13 +66,24 @@
       const footer = await fetch("footer.html");
       document.getElementById("header").innerHTML = await header.text();
       document.getElementById("footer").innerHTML = await footer.text();
-      var btn = document.getElementById('theme-toggle-btn');
-      if (btn) btn.addEventListener('click', function() {
-        var isActive = document.body.classList.toggle('theme-shadcn');
-        localStorage.setItem('theme', isActive ? 'shadcn' : 'default');
+      var currentPage = location.pathname.split('/').pop() || 'index.html';
+      document.querySelectorAll('.nav-links .header-link').forEach(function (link) {
+        if (link.getAttribute('href') === currentPage) {
+          link.classList.add('active');
+          link.setAttribute('aria-current', 'page');
+        }
       });
+      var select = document.getElementById('theme-select');
+      if (select) {
+        select.value = document.documentElement.getAttribute('data-theme') || 'default';
+        select.addEventListener('change', function () {
+          document.documentElement.setAttribute('data-theme', this.value);
+          localStorage.setItem('site-theme', this.value);
+        });
+      }
     }
     loadPartials();
   </script>
+</body>
 
 </html>

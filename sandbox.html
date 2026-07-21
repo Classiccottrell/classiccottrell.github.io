@@ -10,22 +10,22 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Rosarivo:ital@0;1&family=Inter:wght@300..700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Rosarivo:ital@0;1&display=swap"
     rel="stylesheet">
 
   <link rel="icon" href="img/favicon.png" />
-  <link rel="stylesheet" href="styles.css?v=20260627" />
+  <link rel="stylesheet" href="styles.css?v=20260720" />
 
   <!-- CodeFlask & Prism -->
   <script src="https://unpkg.com/codeflask/build/codeflask.min.js"></script>
 </head>
 
 <body class="sandbox-page">
-  <script>(function(){if(localStorage.getItem('theme')==='shadcn')document.body.classList.add('theme-shadcn');}());</script>
+  <script>(function(){var t=localStorage.getItem('site-theme');if(!['default','bolder','shadcn','brutal'].includes(t))t='default';document.documentElement.setAttribute('data-theme',t);}());</script>
 
   <div id="header"></div>
 
-  <main class="sandbox-container">
+  <main class="sandbox-container reveal">
     <!-- Left: Display Area -->
     <div class="sandbox-display">
       <iframe id="sandbox-frame" title="Sandbox Output"></iframe>
@@ -58,11 +58,21 @@
       const footer = await fetch("footer.html");
       document.getElementById("header").innerHTML = await header.text();
       document.getElementById("footer").innerHTML = await footer.text();
-      var btn = document.getElementById('theme-toggle-btn');
-      if (btn) btn.addEventListener('click', function() {
-        var isActive = document.body.classList.toggle('theme-shadcn');
-        localStorage.setItem('theme', isActive ? 'shadcn' : 'default');
+      var currentPage = location.pathname.split('/').pop() || 'index.html';
+      document.querySelectorAll('.nav-links .header-link').forEach(function (link) {
+        if (link.getAttribute('href') === currentPage) {
+          link.classList.add('active');
+          link.setAttribute('aria-current', 'page');
+        }
       });
+      var select = document.getElementById('theme-select');
+      if (select) {
+        select.value = document.documentElement.getAttribute('data-theme') || 'default';
+        select.addEventListener('change', function () {
+          document.documentElement.setAttribute('data-theme', this.value);
+          localStorage.setItem('site-theme', this.value);
+        });
+      }
     }
     loadPartials();
 

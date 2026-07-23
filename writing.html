@@ -57,7 +57,7 @@
       document.getElementById("header").innerHTML = await header.text();
       document.getElementById("footer").innerHTML = await footer.text();
       var currentPage = location.pathname.split('/').pop() || 'index.html';
-      document.querySelectorAll('.nav-links .header-link').forEach(function (link) {
+      document.querySelectorAll('.nav-links .header-link, .nav-drawer-links .header-link').forEach(function (link) {
         if (link.getAttribute('href') === currentPage) {
           link.classList.add('active');
           link.setAttribute('aria-current', 'page');
@@ -74,6 +74,7 @@
     }
     loadPartials();
   </script>
+  <script src="nav.js"></script>
 </body>
 
 </html>

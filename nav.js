@@ -31,7 +31,14 @@
     var e = els();
     if (!e.toggle) return;
     if (event.target.closest('#nav-toggle')) {
-      e.toggle.getAttribute('aria-expanded') === 'true' ? close() : open();
+      if (window.innerWidth <= 768) {
+        e.toggle.getAttribute('aria-expanded') === 'true' ? close() : open();
+      }
+    } else if (event.target.closest('.top-name a')) {
+      if (window.innerWidth <= 768) {
+        event.preventDefault();
+        e.toggle.getAttribute('aria-expanded') === 'true' ? close() : open();
+      }
     } else if (event.target.closest('#nav-drawer-backdrop') || event.target.closest('.nav-drawer-link')) {
       close();
     }

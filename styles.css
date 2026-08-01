@@ -503,38 +503,29 @@ footer .social-icons {
    Mobile Nav Toggle + Ink Curtain Drawer
 ========================================= */
 .nav-toggle {
-  display: none;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
-  gap: 5px;
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   padding: 0;
   border: none;
   background: none;
   cursor: pointer;
 }
 
-.nav-toggle-bar {
+.nav-toggle-icon {
   display: block;
-  width: 20px;
-  height: 2px;
-  border-radius: 2px;
-  background: var(--neutral-900);
-  transition: transform 0.36s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.36s ease;
+  width: 32px;
+  height: 32px;
+  background-color: var(--brand-primary);
+  -webkit-mask: url(img/terry-face.svg) center / contain no-repeat;
+  mask: url(img/terry-face.svg) center / contain no-repeat;
+  transition: transform 0.36s cubic-bezier(0.65, 0, 0.35, 1);
 }
 
-.nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(1) {
-  transform: translateY(7px) rotate(45deg);
-}
-
-.nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(2) {
-  opacity: 0;
-}
-
-.nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(3) {
-  transform: translateY(-7px) rotate(-45deg);
+.nav-toggle[aria-expanded="true"] .nav-toggle-icon {
+  transform: scale(0.9);
 }
 
 .nav-drawer-backdrop {

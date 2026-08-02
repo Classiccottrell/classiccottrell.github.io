@@ -1333,6 +1333,13 @@ footer .social-icons {
   color: var(--brand-primary);
 }
 
+/* Card media: hidden on desktop's text-only sidebar, shown as a
+   generated placeholder (or real image, once one exists) only in the
+   mobile carousel below. */
+.project-nav-media {
+  display: none;
+}
+
 .project-nav-status {
   font-family: "Red Hat Display", sans-serif;
   font-size: 11px;
@@ -1406,6 +1413,51 @@ footer .social-icons {
   color: var(--brand-primary-hover);
 }
 
+/* CTA + repo icon sit side by side; the icon reuses the same mask
+   technique as the header/footer social icons so it recolors per theme
+   instead of shipping a fixed-color PNG. */
+.project-cta-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.project-repo-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+.project-repo-icon {
+  display: block;
+  width: 22px;
+  height: 22px;
+  background-color: var(--brand-primary);
+  transition: background-color 0.3s ease;
+  -webkit-mask-image: url(img/github.svg);
+  mask-image: url(img/github.svg);
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+.project-repo-link:hover .project-repo-icon {
+  background-color: var(--brand-primary-hover);
+}
+
+.project-repo-link:active .project-repo-icon {
+  background-color: var(--brand-primary-active);
+}
+
+[data-theme="brutal"] .project-repo-link:hover .project-repo-icon,
+[data-theme="brutal"] .project-repo-link:active .project-repo-icon {
+  background-color: var(--accent-surface);
+}
+
 @media (max-width: 768px) {
   .projects-shell {
     grid-template-columns: 1fr;
@@ -1413,19 +1465,54 @@ footer .social-icons {
   }
 
   .projects-nav {
+    /* Card width set in vw (not %) so the padding formula below isn't
+       self-referential; padding is then derived from the container's
+       own resolved width, which makes card 1's snap-align:center land
+       exactly at scrollLeft:0 instead of needing negative scroll. */
+    --project-card-w: 78vw;
     position: static;
     flex-direction: row;
     overflow-x: auto;
-    gap: 8px;
-    padding-bottom: 12px;
+    gap: 14px;
+    padding: 4px calc((100% - var(--project-card-w)) / 2) 16px;
     margin-bottom: 8px;
     border-bottom: 1px solid var(--neutral-300);
     -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
   }
 
   .project-nav-item {
-    flex: 0 0 auto;
-    white-space: nowrap;
+    flex: 0 0 var(--project-card-w);
+    white-space: normal;
+    scroll-snap-align: center;
+    background: var(--accent-surface);
+    border-radius: var(--radius-small);
+    padding: 10px;
+  }
+
+  .project-nav-media {
+    display: block;
+    width: 100%;
+    height: 96px;
+    border-radius: var(--radius-small);
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--accent-surface), var(--brand-primary));
+  }
+
+  .project-nav-item:nth-child(2) .project-nav-media {
+    background: linear-gradient(135deg, var(--brand-primary), var(--accent-surface));
+  }
+
+  .project-nav-item:nth-child(3) .project-nav-media {
+    background: linear-gradient(160deg, var(--accent-surface), var(--brand-primary-hover));
+  }
+
+  .project-nav-item:nth-child(4) .project-nav-media {
+    background: linear-gradient(200deg, var(--brand-primary-hover), var(--accent-surface));
+  }
+
+  .project-nav-item img.project-nav-media {
+    object-fit: cover;
   }
 
   .project-title {

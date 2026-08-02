@@ -26,7 +26,7 @@
       }, 3000);
     }());
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260802" />
+  <link rel="stylesheet" href="styles.css?v=20260803" />
 </head>
 
 <body class="projects-page">
@@ -74,12 +74,26 @@
 
     function renderNav(activeId) {
       const nav = document.querySelector('.projects-nav');
-      nav.innerHTML = projects.map(p => `
-        <a href="#${p.id}" class="project-nav-item${p.id === activeId ? ' active' : ''}" data-id="${p.id}">
-          <span class="project-nav-status">${escapeHtml(p.status)}</span>
-          <span class="project-nav-title rosarivo-regular">${escapeHtml(p.title)}</span>
-        </a>
-      `).join('');
+      // Rebuild markup only once; afterwards just flip .active so the
+      // mobile carousel's scroll position survives re-selection (a full
+      // innerHTML replace would reset scrollLeft to 0 on every tap).
+      if (nav.children.length !== projects.length) {
+        nav.innerHTML = projects.map(p => {
+          const media = p.media && p.media.cardImage
+            ? `<img class="project-nav-media" src="${escapeHtml(p.media.cardImage)}" alt="" />`
+            : `<span class="project-nav-media" aria-hidden="true"></span>`;
+          return `
+            <a href="#${p.id}" class="project-nav-item" data-id="${p.id}">
+              ${media}
+              <span class="project-nav-status">${escapeHtml(p.status)}</span>
+              <span class="project-nav-title rosarivo-regular">${escapeHtml(p.title)}</span>
+            </a>
+          `;
+        }).join('');
+      }
+      nav.querySelectorAll('.project-nav-item').forEach(item => {
+        item.classList.toggle('active', item.dataset.id === activeId);
+      });
     }
 
     function renderSection(section) {
@@ -113,9 +127,14 @@
         <p class="project-subtitle reveal" style="--d:2">${escapeHtml(project.subtitle)}</p>
         ${project.sections.map(renderSection).join('')}
         <section>
-          <p class="project-cta">
-            <a href="${project.ctaUrl}" target="_blank" class="header-link">${escapeHtml(project.ctaLabel)} &rarr;</a>
-          </p>
+          <div class="project-cta-row">
+            <p class="project-cta">
+              <a href="${project.ctaUrl}" target="_blank" class="header-link">${escapeHtml(project.ctaLabel)} &rarr;</a>
+            </p>
+            <a href="${project.repo}" target="_blank" class="project-repo-link" aria-label="${escapeHtml(project.title)} on GitHub">
+              <span class="project-repo-icon" aria-hidden="true"></span>
+            </a>
+          </div>
         </section>
       `;
       detail.scrollTop = 0;

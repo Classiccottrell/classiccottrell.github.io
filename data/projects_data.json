@@ -7,6 +7,7 @@
     "repo": "https://github.com/Classiccottrell/Agent_Workspace_Template",
     "ctaLabel": "See the live system overview",
     "ctaUrl": "https://classiccottrell.github.io/Agent_Workspace_Template/",
+    "media": { "cardImage": null },
     "sections": [
       {
         "paragraphs": [
@@ -47,6 +48,7 @@
     "repo": "https://github.com/Classiccottrell/UX_Skill_Repo_1.0",
     "ctaLabel": "See the repo on GitHub",
     "ctaUrl": "https://github.com/Classiccottrell/UX_Skill_Repo_1.0",
+    "media": { "cardImage": null },
     "sections": [
       {
         "paragraphs": [
@@ -85,8 +87,9 @@
     "title": "Brutal UX",
     "subtitle": "A design system that removes every soft-UI hierarchy cue at once, and defends the trade in writing.",
     "repo": "https://github.com/Classiccottrell/Brutal-UX",
-    "ctaLabel": "See the repo on GitHub",
-    "ctaUrl": "https://github.com/Classiccottrell/Brutal-UX",
+    "ctaLabel": "See the live design system",
+    "ctaUrl": "https://classiccottrell.github.io/Brutal-UX/",
+    "media": { "cardImage": null },
     "sections": [
       {
         "paragraphs": [
@@ -126,6 +129,7 @@
     "repo": "https://github.com/Classiccottrell/ClassicCottrell-CLI",
     "ctaLabel": "See the repo on GitHub",
     "ctaUrl": "https://github.com/Classiccottrell/ClassicCottrell-CLI",
+    "media": { "cardImage": null },
     "sections": [
       {
         "paragraphs": [

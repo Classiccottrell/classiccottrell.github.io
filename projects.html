@@ -26,7 +26,7 @@
       }, 3000);
     }());
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260803" />
+  <link rel="stylesheet" href="styles.css?v=20260804" />
 </head>
 
 <body class="projects-page">
@@ -43,8 +43,8 @@
 
   <script>
     async function loadPartials() {
-      const header = await fetch("header.html?v=20260802");
-      const footer = await fetch("footer.html?v=20260802");
+      const header = await fetch("header.html?v=20260804");
+      const footer = await fetch("footer.html?v=20260804");
       document.getElementById("header").innerHTML = await header.text();
       document.getElementById("footer").innerHTML = await footer.text();
       var currentPage = location.pathname.split('/').pop() || 'index.html';
@@ -78,18 +78,12 @@
       // mobile carousel's scroll position survives re-selection (a full
       // innerHTML replace would reset scrollLeft to 0 on every tap).
       if (nav.children.length !== projects.length) {
-        nav.innerHTML = projects.map(p => {
-          const media = p.media && p.media.cardImage
-            ? `<img class="project-nav-media" src="${escapeHtml(p.media.cardImage)}" alt="" />`
-            : `<span class="project-nav-media" aria-hidden="true"></span>`;
-          return `
+        nav.innerHTML = projects.map(p => `
             <a href="#${p.id}" class="project-nav-item" data-id="${p.id}">
-              ${media}
               <span class="project-nav-status">${escapeHtml(p.status)}</span>
               <span class="project-nav-title rosarivo-regular">${escapeHtml(p.title)}</span>
             </a>
-          `;
-        }).join('');
+          `).join('');
       }
       nav.querySelectorAll('.project-nav-item').forEach(item => {
         item.classList.toggle('active', item.dataset.id === activeId);

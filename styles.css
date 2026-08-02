@@ -1333,13 +1333,6 @@ footer .social-icons {
   color: var(--brand-primary);
 }
 
-/* Card media: hidden on desktop's text-only sidebar, shown as a
-   generated placeholder (or real image, once one exists) only in the
-   mobile carousel below. */
-.project-nav-media {
-  display: none;
-}
-
 .project-nav-status {
   font-family: "Red Hat Display", sans-serif;
   font-size: 11px;
@@ -1488,31 +1481,6 @@ footer .social-icons {
     background: var(--accent-surface);
     border-radius: var(--radius-small);
     padding: 10px;
-  }
-
-  .project-nav-media {
-    display: block;
-    width: 100%;
-    height: 96px;
-    border-radius: var(--radius-small);
-    margin-bottom: 8px;
-    background: linear-gradient(135deg, var(--accent-surface), var(--brand-primary));
-  }
-
-  .project-nav-item:nth-child(2) .project-nav-media {
-    background: linear-gradient(135deg, var(--brand-primary), var(--accent-surface));
-  }
-
-  .project-nav-item:nth-child(3) .project-nav-media {
-    background: linear-gradient(160deg, var(--accent-surface), var(--brand-primary-hover));
-  }
-
-  .project-nav-item:nth-child(4) .project-nav-media {
-    background: linear-gradient(200deg, var(--brand-primary-hover), var(--accent-surface));
-  }
-
-  .project-nav-item img.project-nav-media {
-    object-fit: cover;
   }
 
   .project-title {

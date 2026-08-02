@@ -1,6 +1,9 @@
 <header>
   <div class="header-content">
     <div class="header-left">
+      <button id="nav-toggle" class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav-drawer">
+        <span class="nav-toggle-icon" aria-hidden="true"></span>
+      </button>
       <h1 class="top-name"><a href="index.html" class="header-link">Matthew A. Cottrell</a></h1>
       <div class="nav-links">
         <a href="art.html" class="header-link">Art</a>
@@ -24,3 +27,12 @@
     </div>
   </div>
 </header>
+
+<div id="nav-drawer-backdrop" class="nav-drawer-backdrop"></div>
+<aside id="mobile-nav-drawer" class="nav-drawer" aria-hidden="true">
+  <nav class="nav-drawer-links" aria-label="Mobile navigation">
+    <a href="art.html" class="nav-drawer-link header-link"><span class="nav-drawer-index">01</span>Art</a>
+    <a href="writing.html" class="nav-drawer-link header-link"><span class="nav-drawer-index">02</span>Writing</a>
+    <a href="projects.html" class="nav-drawer-link header-link"><span class="nav-drawer-index">03</span>Projects</a>
+  </nav>
+</aside>

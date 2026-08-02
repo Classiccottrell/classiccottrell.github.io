@@ -235,6 +235,14 @@
   text-decoration-thickness: 2px;
 }
 
+/* hero-link's hover affordance normally relies on translateX(8px), which
+   prefers-reduced-motion zeroes out — combined with brutal's black-on-black
+   color swap that leaves no visible change at all in that intersection. */
+[data-theme="brutal"] .hero-link:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+}
+
 /* =========================================
    Fonts
 ========================================= */

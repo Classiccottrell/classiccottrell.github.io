@@ -1355,14 +1355,33 @@ footer .social-icons {
 .project-title {
   font-size: 2.4rem;
   line-height: 1.15;
-  margin: 8px 0 4px;
+  margin: 0 0 4px;
   color: var(--text-main);
 }
 
 .project-subtitle {
   font-size: 1.15rem;
   color: var(--text-secondary);
-  margin: 0 0 36px;
+  margin: 0;
+}
+
+/* Title/subtitle sit in a flex row with the (small, understated) repo
+   icon; text takes available width, icon holds its size. The 36px that
+   used to live on .project-subtitle moves here so it collapses with the
+   next section's h2 margin the same way it did before (a flex item's
+   margins can't collapse with anything outside the flex container, so
+   leaving it on the subtitle would trap it and double the gap). */
+.project-heading-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 36px;
+}
+
+.project-heading-text {
+  min-width: 0;
+  flex: 1 1 auto;
 }
 
 .project-detail h2 {
@@ -1406,20 +1425,14 @@ footer .social-icons {
   color: var(--brand-primary-hover);
 }
 
-/* CTA + repo icon sit side by side; the icon reuses the same mask
-   technique as the header/footer social icons so it recolors per theme
-   instead of shipping a fixed-color PNG. */
-.project-cta-row {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
+/* Repo icon reuses the same mask technique as the header/footer social
+   icons so it recolors per theme instead of shipping a fixed-color PNG. */
 .project-repo-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex: 0 0 auto;
+  margin-top: 8px;
 }
 
 .project-repo-icon {

@@ -26,7 +26,7 @@
       }, 3000);
     }());
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260804" />
+  <link rel="stylesheet" href="styles.css?v=20260805" />
 
   <!-- CodeFlask & Prism -->
   <script src="https://unpkg.com/codeflask/build/codeflask.min.js"></script>
@@ -66,8 +66,8 @@
 
   <script>
     async function loadPartials() {
-      const header = await fetch("header.html?v=20260804");
-      const footer = await fetch("footer.html?v=20260804");
+      const header = await fetch("header.html?v=20260805");
+      const footer = await fetch("footer.html?v=20260805");
       document.getElementById("header").innerHTML = await header.text();
       document.getElementById("footer").innerHTML = await footer.text();
       var currentPage = location.pathname.split('/').pop() || 'index.html';

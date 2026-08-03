@@ -1425,14 +1425,28 @@ footer .social-icons {
   color: var(--brand-primary-hover);
 }
 
+.project-repo-links {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+  flex: 0 0 auto;
+}
+
 /* Repo icon reuses the same mask technique as the header/footer social
    icons so it recolors per theme instead of shipping a fixed-color PNG. */
 .project-repo-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  flex: 0 0 auto;
-  margin-top: 8px;
+  gap: 6px;
+}
+
+.project-repo-label {
+  font-size: 0.85rem;
+  color: var(--text-main);
+  white-space: nowrap;
 }
 
 .project-repo-icon {

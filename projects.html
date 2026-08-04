@@ -68,6 +68,11 @@
     // Projects Page Logic
     let projects = [];
 
+    function normalizeProject(project) {
+      if (Array.isArray(project.repos)) return project;
+      return { ...project, repos: project.repo ? [{ label: project.title, url: project.repo }] : [] };
+    }
+
     function escapeHtml(str) {
       return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
@@ -150,8 +155,8 @@
 
     async function loadProjects() {
       try {
-        const response = await fetch('data/projects_data.json');
-        projects = await response.json();
+        const response = await fetch('data/projects_data.json?v=20260806');
+        projects = (await response.json()).map(normalizeProject);
         const initialId = location.hash.replace('#', '') || (projects[0] && projects[0].id);
         selectProject(initialId);
       } catch (error) {

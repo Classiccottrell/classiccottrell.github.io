@@ -584,6 +584,7 @@ footer .social-icons {
 .tab-btn:focus-visible,
 .writing-card:focus-visible,
 .project-nav-item:focus-visible,
+.project-repo-link:focus-visible,
 .nav-toggle:focus-visible,
 .theme-select:focus-visible {
   outline: 2px solid var(--brand-primary);

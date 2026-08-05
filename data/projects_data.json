@@ -1,11 +1,14 @@
 [
   {
-    "id": "agent-workspace-template",
+    "id": "agent-workspace",
     "status": "Ongoing",
-    "title": "The Agent Workspace Template",
+    "title": "The Agent Workspace Pair",
     "subtitle": "A folder that turns an AI chat tool into an operating environment.",
-    "repo": "https://github.com/Classiccottrell/Agent_Workspace_Template",
-    "ctaLabel": "See the live system overview",
+    "repos": [
+      { "label": "Agent Workspace Template", "url": "https://github.com/Classiccottrell/Agent_Workspace_Template" },
+      { "label": "Agentic Light", "url": "https://github.com/Classiccottrell/Agentic_Light" }
+    ],
+    "ctaLabel": "See the live Agent Workspace Template",
     "ctaUrl": "https://classiccottrell.github.io/Agent_Workspace_Template/",
     "sections": [
       {
@@ -18,11 +21,12 @@
         "heading": "What it is",
         "intro": "One folder. Clone it, run one script, and you are operating:",
         "items": [
-          { "lead": "An orchestrator and five scoped agents.", "text": "The root agent breaks work down and hands it to a specialist: architect, coder, engineering manager, archivist, curator. Each one owns a directory and nothing else." },
+          { "lead": "An orchestrator and seven scoped agents.", "text": "The root agent breaks work down and hands it to a specialist: architect, coder, engineering manager, archivist, curator, plus a creative director for brand and copy and a QA agent that gatekeeps production pull requests. The five core roles ship for all three CLIs; QA runs on Codex and Claude, creative direction on Claude only. Each one owns its lane and nothing else." },
           { "lead": "Vault Brain, a second brain in plain Markdown.", "text": "Clip a web page in your browser and a background job reads it overnight, files it into a wiki, and cross-links it to everything you already know. Raw notes get the same treatment. Nothing evaporates in chat history." },
-          { "lead": "Background jobs that keep it honest.", "text": "Daily ingest, a Friday close-out that summarizes the week, a Monday job that starts the next one, and a health check every four hours. When something breaks, the system says so before you notice." }
+          { "lead": "Background jobs that keep it honest.", "text": "Daily ingest, a Friday close-out that summarizes the week, a Monday job that starts the next one, a health check every four hours, and an hourly sync that keeps new skills stocked on the shelf. When something breaks, the system says so before you notice." },
+          { "lead": "Two sizes of the same shop.", "text": "Agent Workspace Template is everything above, running unattended. Agentic Light is the same bench with nobody sweeping up overnight: no scheduler, no background jobs. You start it by hand — `bash pipeline/run.sh \"<task>\" /path/to/target/repo` — and it runs one provider, once, in the foreground. Lint, then Playwright, then a human approval, before anything opens a PR." }
         ],
-        "outro": "It works with Claude Code or the Gemini CLI, and picks up the GitHub CLI and Playwright when they are installed, so the agents push code and test pages as shell commands instead of burning tokens on plumbing. Built for the Mac first; the agents and the vault run anywhere the CLI does."
+        "outro": "The template runs on Codex, Claude Code, or the Gemini CLI, and picks up the GitHub CLI and Playwright when they are installed, so the agents push code and test pages as shell commands instead of burning tokens on plumbing. Built for the Mac first; the agents and the vault run anywhere the CLI does."
       },
       {
         "heading": "The UX thinking",
@@ -44,7 +48,7 @@
     "status": "Ongoing",
     "title": "UX Skill Repo 1.0",
     "subtitle": "Twelve AI agent skills held to one measurable rulebook, with a loop that keeps testing it against real work.",
-    "repo": "https://github.com/Classiccottrell/UX_Skill_Repo_1.0",
+    "repos": [{ "label": "UX Skill Repo 1.0", "url": "https://github.com/Classiccottrell/UX_Skill_Repo_1.0" }],
     "ctaLabel": "See the repo on GitHub",
     "ctaUrl": "https://github.com/Classiccottrell/UX_Skill_Repo_1.0",
     "sections": [
@@ -84,9 +88,9 @@
     "status": "Ongoing",
     "title": "Brutal UX",
     "subtitle": "A design system that removes every soft-UI hierarchy cue at once, and defends the trade in writing.",
-    "repo": "https://github.com/Classiccottrell/Brutal-UX",
-    "ctaLabel": "See the repo on GitHub",
-    "ctaUrl": "https://github.com/Classiccottrell/Brutal-UX",
+    "repos": [{ "label": "Brutal UX", "url": "https://github.com/Classiccottrell/Brutal-UX" }],
+    "ctaLabel": "See the live design system",
+    "ctaUrl": "https://classiccottrell.github.io/Brutal-UX/",
     "sections": [
       {
         "paragraphs": [
@@ -123,7 +127,7 @@
     "status": "Ongoing",
     "title": "ClassicCottrell CLI",
     "subtitle": "A reusable CLI framework so every new tool starts branded, not blank.",
-    "repo": "https://github.com/Classiccottrell/ClassicCottrell-CLI",
+    "repos": [{ "label": "ClassicCottrell CLI", "url": "https://github.com/Classiccottrell/ClassicCottrell-CLI" }],
     "ctaLabel": "See the repo on GitHub",
     "ctaUrl": "https://github.com/Classiccottrell/ClassicCottrell-CLI",
     "sections": [

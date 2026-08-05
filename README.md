@@ -24,6 +24,8 @@ classiccottrell.github.io/
 ├── footer.html         (reusable site footer)
 ├── styles.css
 ├── script.js           (loads header/footer)
+├── playwright.config.js (browser test configuration)
+├── tests/              (Playwright browser checks)
 │
 └── img/
     ├── Imag-Matthew.png
@@ -60,6 +62,11 @@ http://localhost:8080
 - `footer.html` loads
 - Icons/images appear
 - No console errors
+
+### **4. Run browser checks:**
+```bash
+npm run test:browser
+```
 
 ---
 

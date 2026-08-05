@@ -119,6 +119,8 @@
   --neutral-700: #374151;
   --neutral-800: #1f2937;
   --neutral-900: #111827;
+  --accent-surface: #dbeafe;
+  --destructive: #ef4444;
   --radius-large: 0.5rem;
   --radius-medium: 0.375rem;
   --radius-small: 0.25rem;
@@ -188,6 +190,57 @@
   animation: none !important;
   opacity: 1 !important;
   transform: none !important;
+}
+
+/* Brutal: --brand-primary/-hover/-active are all #000, so anything that
+   only swaps between those tokens on hover/active shows no visible
+   change. Force the binary background/foreground invert used by the
+   reference Brutal-UX button/input convention instead. */
+[data-theme="brutal"] .header-link:hover,
+[data-theme="brutal"] .header-link:active,
+[data-theme="brutal"] .footer-link:hover,
+[data-theme="brutal"] .project-cta a:hover {
+  background: var(--text-main);
+  color: var(--bg-page);
+}
+
+/* nav-drawer-index keeps its own explicit brand-primary color; without
+   this it would go invisible against the inverted background above. */
+[data-theme="brutal"] .nav-drawer-link:hover .nav-drawer-index,
+[data-theme="brutal"] .nav-drawer-link:active .nav-drawer-index {
+  color: inherit;
+}
+
+[data-theme="brutal"] .run-btn:hover {
+  background: var(--bg-page);
+  color: var(--text-main);
+}
+
+[data-theme="brutal"] .social-link:hover {
+  background: var(--text-main);
+}
+
+[data-theme="brutal"] .social-link:hover .social-icon,
+[data-theme="brutal"] .social-link:active .social-icon {
+  background-color: var(--bg-page);
+}
+
+/* writing-card title/link text sits over date/subtitle text that would
+   go invisible under a background invert, so use underline instead. */
+[data-theme="brutal"] .writing-card:hover .writing-card-title,
+[data-theme="brutal"] .writing-card:hover .writing-card-link,
+[data-theme="brutal"] .writing-card-link:hover,
+[data-theme="brutal"] .writing-card-link:active {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+}
+
+/* hero-link's hover affordance normally relies on translateX(8px), which
+   prefers-reduced-motion zeroes out — combined with brutal's black-on-black
+   color swap that leaves no visible change at all in that intersection. */
+[data-theme="brutal"] .hero-link:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
 }
 
 /* =========================================
@@ -472,30 +525,76 @@ footer .social-icons {
 
 .social-link {
   display: inline-block;
-  transition: filter 0.3s ease;
 }
 
-/* Base icon tint = brand primary */
+/* Icons are recolored via mask (like .nav-toggle-icon) instead of a
+   filter chain, so they actually follow --brand-primary per theme. */
 .social-icon {
+  display: block;
   width: 20px;
   height: 20px;
-  filter: brightness(0) saturate(100%) invert(48%) sepia(8%) saturate(266%) hue-rotate(49deg) brightness(95%) contrast(92%);
+  background-color: var(--brand-primary);
+  transition: background-color 0.3s ease;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
 }
 
-/* Instagram Icon specific coloring */
+.social-icon.github {
+  -webkit-mask-image: url(img/github.svg);
+  mask-image: url(img/github.svg);
+}
+
 .social-icon.instagram {
-  filter: brightness(0) saturate(100%) invert(47%) sepia(6%) saturate(526%) hue-rotate(49deg) brightness(92%) contrast(87%);
+  -webkit-mask-image: url(img/instagram.svg);
+  mask-image: url(img/instagram.svg);
+}
+
+.social-icon.substack {
+  -webkit-mask-image: url(img/substack.svg);
+  mask-image: url(img/substack.svg);
+}
+
+.social-icon.linked {
+  -webkit-mask-image: url(img/linked.svg);
+  mask-image: url(img/linked.svg);
 }
 
 /* Hover & Active States */
 .social-link:hover .social-icon {
-  filter: brightness(0) saturate(100%) invert(39%) sepia(18%) saturate(1225%) hue-rotate(99deg) brightness(95%) contrast(86%);
-  /* var(--brand-primary-hover) */
+  background-color: var(--brand-primary-hover);
 }
 
 .social-link:active .social-icon {
-  filter: brightness(0) saturate(100%) invert(45%) sepia(18%) saturate(1204%) hue-rotate(169deg) brightness(94%) contrast(88%);
-  /* var(--brand-primary-active) */
+  background-color: var(--brand-primary-active);
+}
+
+/* =========================================
+   Focus States (keyboard nav — every interactive
+   element with a :hover state gets a themed ring)
+========================================= */
+.header-link:focus-visible,
+.footer-link:focus-visible,
+.social-link:focus-visible,
+.hero-link:focus-visible,
+.run-btn:focus-visible,
+.tab-btn:focus-visible,
+.writing-card:focus-visible,
+.project-nav-item:focus-visible,
+.project-repo-link:focus-visible,
+.nav-toggle:focus-visible,
+.theme-select:focus-visible {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 3px;
+  border-radius: var(--radius-small);
+}
+
+[data-theme="brutal"] :focus-visible {
+  outline-width: 3px;
+  outline-offset: 0;
 }
 
 
@@ -968,7 +1067,7 @@ footer .social-icons {
 .detail-row {
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid var(--neutral-300);
   padding-bottom: 8px;
   margin-bottom: 8px;
   gap: 20px;
@@ -1257,14 +1356,33 @@ footer .social-icons {
 .project-title {
   font-size: 2.4rem;
   line-height: 1.15;
-  margin: 8px 0 4px;
+  margin: 0 0 4px;
   color: var(--text-main);
 }
 
 .project-subtitle {
   font-size: 1.15rem;
   color: var(--text-secondary);
-  margin: 0 0 36px;
+  margin: 0;
+}
+
+/* Title/subtitle sit in a flex row with the (small, understated) repo
+   icon; text takes available width, icon holds its size. The 36px that
+   used to live on .project-subtitle moves here so it collapses with the
+   next section's h2 margin the same way it did before (a flex item's
+   margins can't collapse with anything outside the flex container, so
+   leaving it on the subtitle would trap it and double the gap). */
+.project-heading-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 36px;
+}
+
+.project-heading-text {
+  min-width: 0;
+  flex: 1 1 auto;
 }
 
 .project-detail h2 {
@@ -1308,6 +1426,59 @@ footer .social-icons {
   color: var(--brand-primary-hover);
 }
 
+.project-repo-links {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+  flex: 0 0 auto;
+}
+
+/* Repo icon reuses the same mask technique as the header/footer social
+   icons so it recolors per theme instead of shipping a fixed-color PNG. */
+.project-repo-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.project-repo-label {
+  font-size: 0.85rem;
+  color: var(--text-main);
+  white-space: nowrap;
+}
+
+.project-repo-icon {
+  display: block;
+  width: 22px;
+  height: 22px;
+  background-color: var(--brand-primary);
+  transition: background-color 0.3s ease;
+  -webkit-mask-image: url(img/github.svg);
+  mask-image: url(img/github.svg);
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+.project-repo-link:hover .project-repo-icon {
+  background-color: var(--brand-primary-hover);
+}
+
+.project-repo-link:active .project-repo-icon {
+  background-color: var(--brand-primary-active);
+}
+
+[data-theme="brutal"] .project-repo-link:hover .project-repo-icon,
+[data-theme="brutal"] .project-repo-link:active .project-repo-icon {
+  background-color: var(--accent-surface);
+}
+
 @media (max-width: 768px) {
   .projects-shell {
     grid-template-columns: 1fr;
@@ -1315,19 +1486,29 @@ footer .social-icons {
   }
 
   .projects-nav {
+    /* Card width set in vw (not %) so the padding formula below isn't
+       self-referential; padding is then derived from the container's
+       own resolved width, which makes card 1's snap-align:center land
+       exactly at scrollLeft:0 instead of needing negative scroll. */
+    --project-card-w: 78vw;
     position: static;
     flex-direction: row;
     overflow-x: auto;
-    gap: 8px;
-    padding-bottom: 12px;
+    gap: 14px;
+    padding: 4px calc((100% - var(--project-card-w)) / 2) 16px;
     margin-bottom: 8px;
     border-bottom: 1px solid var(--neutral-300);
     -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
   }
 
   .project-nav-item {
-    flex: 0 0 auto;
-    white-space: nowrap;
+    flex: 0 0 var(--project-card-w);
+    white-space: normal;
+    scroll-snap-align: center;
+    background: var(--accent-surface);
+    border-radius: var(--radius-small);
+    padding: 10px;
   }
 
   .project-title {

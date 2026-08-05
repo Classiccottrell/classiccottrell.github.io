@@ -160,5 +160,26 @@
         ]
       }
     ]
+  },
+  {
+    "id": "vpat-vault",
+    "status": "Active",
+    "title": "VPAT Vault",
+    "subtitle": "A productized, 8-prompt Claude toolkit for defensible VPAT 2.5 accessibility conformance reports.",
+    "repos": [],
+    "ctaLabel": "Get the VPAT Vault",
+    "ctaUrl": "https://classiccottrell.gumroad.com/l/VPAT-Vault",
+    "sections": [
+      {
+        "paragraphs": [
+          "Every VPAT audit ends the same way: accessibility findings scattered across a spreadsheet, a compliance officer translating them into ITI language by hand, and no consistent record of what fails, for whom, and where. VPAT Vault packages that translation work into a repeatable Scan → Systemize → Ship workflow: structured prompts that audit accessibility findings, convert them into ITI-compliant VPAT rows, run QA on the output, and produce executive summaries that bridge the gap between testing and engineering backlogs."
+        ]
+      },
+      {
+        "paragraphs": [
+          "The core of it is an 8-prompt Claude library, each prompt tested against a real Web Accessibility Conformance Report covering 50 WCAG 2.1 Level A/AA criteria, with documented test runs for every prompt. An automated validator and optimizer loop checks each prompt against the ITI rubric — Supports, Partially Supports, Does Not Support, Not Applicable, no custom deviations — and trims token overhead without dropping the compliance score."
+        ]
+      }
+    ]
   }
 ]

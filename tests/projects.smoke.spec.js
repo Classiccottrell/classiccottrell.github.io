@@ -22,3 +22,17 @@ test('legacy project data supports themes, focus, and mobile selection', async (
   await expect(page.locator('.project-nav-item[data-id="second"]')).toHaveClass(/active/);
   await expect(page.locator('.project-title')).toHaveText('Second');
 });
+
+test('VPAT Vault card uses current product scope and exact purchase URL', async ({ page }) => {
+  await page.goto('/projects.html');
+
+  const card = page.locator('.project-nav-item[data-id="vpat-vault"]');
+  await expect(card).toContainText('VPAT Vault');
+  await card.click();
+
+  await expect(page.locator('.project-title')).toHaveText('VPAT Vault');
+  await expect(page.locator('.project-detail')).toContainText('49-record reference dataset');
+  await expect(page.locator('.project-detail')).toContainText('human evidence review');
+  await expect(page.locator('.project-detail a')).toHaveAttribute('href', 'https://classiccottrell.gumroad.com/l/VPAT-Vault');
+  await expect(page.locator('.project-detail')).not.toContainText(/covering 50|each prompt tested|optimizer|token overhead/i);
+});

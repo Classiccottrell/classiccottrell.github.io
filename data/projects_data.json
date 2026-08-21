@@ -180,7 +180,7 @@
     "image": "img/products/vpat-vault.jpg",
     "repos": [],
     "ctaLabel": "Get the VPAT Vault",
-    "ctaUrl": "https://classiccottrell.gumroad.com/l/VPAT-Vault",
+    "ctaUrl": "https://shop.classiccottrell.ca/product/vpat-vault",
     "sections": [
       {
         "paragraphs": [
@@ -192,8 +192,7 @@
           "The toolkit includes an 8-prompt Claude library, a dependency-free validator, and a 49-record reference dataset, with the full 50-record set pending. The validator checks structured output and allowed ITI conformance terms; human evidence review is required before any report is finalized."
         ]
       }
-    ],
-    "product": { "label": "Buy VPAT Vault", "url": "https://shop.classiccottrell.ca/product/vpat-vault" }
+    ]
   },
   {
     "id": "design-system",

@@ -118,6 +118,22 @@
       `;
     }
 
+    function renderProduct(project) {
+      if (!project.image && !project.product) return '';
+      const image = project.image
+        ? `<img class="project-product-image reveal" style="--d:1" src="${escapeHtml(project.image)}" alt="${escapeHtml(project.title)} product photo" loading="lazy">`
+        : '';
+      const buyCta = project.product
+        ? `<a href="${escapeHtml(project.product.url)}" target="_blank" class="project-buy-cta">${escapeHtml(project.product.label)} &rarr;</a>`
+        : '';
+      return `
+        <div class="project-product">
+          ${image}
+          ${buyCta}
+        </div>
+      `;
+    }
+
     function renderDetail(project) {
       const detail = document.getElementById('project-detail');
       detail.innerHTML = `
@@ -136,6 +152,7 @@
             `).join('')}
           </div>
         </div>
+        ${renderProduct(project)}
         ${project.sections.map(renderSection).join('')}
         <section>
           <p class="project-cta">

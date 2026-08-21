@@ -33,6 +33,7 @@ test('VPAT Vault card uses current product scope and exact purchase URL', async 
   await expect(page.locator('.project-title')).toHaveText('VPAT Vault');
   await expect(page.locator('.project-detail')).toContainText('49-record reference dataset');
   await expect(page.locator('.project-detail')).toContainText('human evidence review');
-  await expect(page.locator('.project-detail a')).toHaveAttribute('href', 'https://classiccottrell.gumroad.com/l/VPAT-Vault');
+  await expect(page.locator('p.project-cta a')).toHaveAttribute('href', 'https://shop.classiccottrell.ca/product/vpat-vault');
+  await expect(page.locator('.project-buy-cta')).toHaveCount(0);
   await expect(page.locator('.project-detail')).not.toContainText(/covering 50|each prompt tested|optimizer|token overhead/i);
 });

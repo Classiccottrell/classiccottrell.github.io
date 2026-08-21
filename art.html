@@ -30,7 +30,7 @@
 </head>
 
 <body>
-  <script>(function(){var t=localStorage.getItem('site-theme');if(!['default','bolder','shadcn','brutal'].includes(t))t='default';document.documentElement.setAttribute('data-theme',t);}());</script>
+  <script>(function(){function fromCookie(){var m=document.cookie.split('; ').find(function(r){return r.indexOf('site-theme=')===0;});return m?decodeURIComponent(m.split('=')[1]):null;}var vals=['default','bolder','shadcn','brutal'];var t=fromCookie();if(!vals.includes(t))t=localStorage.getItem('site-theme');if(!vals.includes(t))t='default';document.documentElement.setAttribute('data-theme',t);}());</script>
 
   <div id="header"></div>
 
@@ -78,6 +78,7 @@
         select.addEventListener('change', function () {
           document.documentElement.setAttribute('data-theme', this.value);
           localStorage.setItem('site-theme', this.value);
+          document.cookie = 'site-theme=' + this.value + '; domain=.classiccottrell.ca; path=/; max-age=31536000; samesite=lax';
         });
       }
     }

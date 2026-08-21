@@ -127,6 +127,7 @@
     "status": "Ongoing",
     "title": "ClassicCottrell CLI",
     "subtitle": "A reusable CLI framework so every new tool starts branded, not blank.",
+    "image": "img/products/photo-curator-cli.jpg",
     "repos": [{ "label": "ClassicCottrell CLI", "url": "https://github.com/Classiccottrell/ClassicCottrell-CLI" }],
     "ctaLabel": "See the repo on GitHub",
     "ctaUrl": "https://github.com/Classiccottrell/ClassicCottrell-CLI",
@@ -155,20 +156,31 @@
         ]
       },
       {
+        "heading": "Photo Curator CLI: a real product on the framework",
+        "intro": "The framework needed proof it could carry a shipped product, not just internal tools. Photo Curator CLI is that proof:",
+        "items": [
+          { "lead": "Automated shortlisting, not manual triage.", "text": "Point it at a shoot folder and it scores every frame, then ranks a keep/reject shortlist automatically — the first pass done for you, fast, instead of scrubbing hundreds of near-duplicates by eye." },
+          { "lead": "Thresholds you set, not a black box.", "text": "Keep/reject cutoffs are configurable, so the tool's judgment stays tunable to how strict a pass you actually want." },
+          { "lead": "Built on the same branded shell as everything else.", "text": "It ships as a command-line tool on the Classic Cottrell CLI toolkit, so it inherits the same welcome page, terminal styling, and fallback behavior as ccasset, ccsync, and cctokens for free." }
+        ]
+      },
+      {
         "paragraphs": [
-          "The measure of a framework isn't the first tool built on it, it's the fifth. Three apps in, the pattern's held: brand a class, register a command, ship."
+          "The measure of a framework isn't the first tool built on it, it's the fifth. Three internal apps and one shipped product in, the pattern's held: brand a class, register a command, ship."
         ]
       }
-    ]
+    ],
+    "product": { "label": "Buy Photo Curator CLI", "url": "https://shop.classiccottrell.ca/product/photo-curator-cli" }
   },
   {
     "id": "vpat-vault",
     "status": "Active",
     "title": "VPAT Vault",
     "subtitle": "An 8-prompt Claude toolkit for drafting VPAT 2.5 accessibility conformance reports.",
+    "image": "img/products/vpat-vault.jpg",
     "repos": [],
     "ctaLabel": "Get the VPAT Vault",
-    "ctaUrl": "https://classiccottrell.gumroad.com/l/VPAT-Vault",
+    "ctaUrl": "https://shop.classiccottrell.ca/product/vpat-vault",
     "sections": [
       {
         "paragraphs": [
@@ -178,6 +190,32 @@
       {
         "paragraphs": [
           "The toolkit includes an 8-prompt Claude library, a dependency-free validator, and a 49-record reference dataset, with the full 50-record set pending. The validator checks structured output and allowed ITI conformance terms; human evidence review is required before any report is finalized."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "design-system",
+    "status": "Active",
+    "title": "Classic Cottrell Design System",
+    "subtitle": "A token-driven, multi-theme design system pairing a warm editorial canvas with reusable React primitives.",
+    "repos": [{ "label": "Design System", "url": "https://github.com/Classiccottrell/ClassicCottrell_design-system" }],
+    "ctaLabel": "See the live design system",
+    "ctaUrl": "https://design.classiccottrell.ca",
+    "sections": [
+      {
+        "paragraphs": [
+          "Every new interface started as a fresh set of decisions: which green, which radius, which type pairing, made again from scratch each time and drifting a little further from the last one. Re-theming meant hunting down hardcoded values across a dozen components.",
+          "The Classic Cottrell Design System is the fix: one set of CSS custom properties for color, type, and spacing, and a library of primitives built on top of them, so re-theming is a values-only edit instead of a rewrite."
+        ]
+      },
+      {
+        "heading": "What it is",
+        "intro": "One token layer, one component library, one showcase that proves both:",
+        "items": [
+          { "lead": "A warm, editorial baseline.", "text": "A cream canvas, a single forest-green accent, and a Rosarivo-serif / Red Hat Display-sans pairing, defined once as CSS variables in globals.css and mapped to light and dark themes." },
+          { "lead": "Primitives, not one-off pages.", "text": "Button, Card, Input, Badge, and the rest live in components/ui/, built with React 19 and Base UI primitives, so every demo page — landing, form, about, gallery — assembles entirely from the same reusable set." },
+          { "lead": "The showcase is the documentation.", "text": "The home page renders the tokens, type, and components live, so what you see is what you get, not a static style guide that drifts out of sync with the code." }
         ]
       }
     ]

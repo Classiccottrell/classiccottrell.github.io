@@ -155,11 +155,12 @@
         </div>
         ${renderProduct(project)}
         ${project.sections.map(renderSection).join('')}
+        ${project.ctaUrl ? `
         <section>
           <p class="project-cta">
             <a href="${project.ctaUrl}" target="_blank" class="header-link">${escapeHtml(project.ctaLabel)} &rarr;</a>
           </p>
-        </section>
+        </section>` : ''}
       `;
       detail.scrollTop = 0;
     }

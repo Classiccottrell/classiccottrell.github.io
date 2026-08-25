@@ -128,9 +128,7 @@
     "title": "ClassicCottrell CLI",
     "subtitle": "A reusable CLI framework so every new tool starts branded, not blank.",
     "image": "img/products/photo-curator-cli.jpg",
-    "repos": [{ "label": "ClassicCottrell CLI", "url": "https://github.com/Classiccottrell/ClassicCottrell-CLI" }],
-    "ctaLabel": "See the repo on GitHub",
-    "ctaUrl": "https://github.com/Classiccottrell/ClassicCottrell-CLI",
+    "repos": [],
     "sections": [
       {
         "paragraphs": [

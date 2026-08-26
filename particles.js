@@ -68,11 +68,19 @@
   var FADE_POWER = 2.0;
 
   // --- Motion ----------------------------------------------------------------
-  var SPEED = 0.0000135;
+  var SPEED = 0.000017;
   var NOISE_X = 0.0026;
   var NOISE_Z = 0.0008;
   var SKY_LINK_DIST = 86;
   var PARALLAX_EASE = 0.035;  // pointer-parallax follow rate, kept gentle for a steadier read
+
+  // A slow sinusoidal swell layered on top of the ridged noise, independent of
+  // the noise scroll above — this is what turns "ridges sliding sideways"
+  // into "ridges visibly rising and falling", i.e. rolling waves rather than
+  // a scrolling skyline. Frequency/amplitude kept tame: subtle-plus, not storm.
+  var SWELL_FREQ = 0.0006;   // spatial frequency across depth (world z)
+  var SWELL_SPEED = 0.00045; // phase advance per ms
+  var SWELL_AMP = 0.16;      // fraction of peak height added by the swell
 
   // --- Drag --------------------------------------------------------------
   var GRAB_RADIUS = 26;       // px from a node's centre that counts as a grab
@@ -89,9 +97,15 @@
   // e.g. a 60px drag overshoots ~6.2px - inside the 5-15% visible band.
   var RELEASE_KICK = 0.8;
 
-  // --- Ripple (cursor disturbance) ----------------------------------------
-  var RIPPLE_RADIUS = 90;     // px from the pointer that gets disturbed
-  var RIPPLE_STRENGTH = 2.0;  // world-unit velocity kick at the pointer's centre (falls off with distance)
+  // --- Ripple (expanding wavefront, spawned by the cursor but travels on its
+  // own — it must not read as "following the cursor") -----------------------
+  var RIPPLE_SPAWN_DIST = 40;   // px the pointer must move before a new ring spawns
+  var RIPPLE_SPAWN_MS = 90;     // minimum ms between spawns, even if moving fast
+  var RIPPLE_BAND = 70;         // px thickness of the traveling wavefront
+  var RIPPLE_SPEED = 0.5;       // px/ms the ring's radius grows
+  var RIPPLE_MAX_RADIUS = 520;  // px travelled before the ring is retired
+  var RIPPLE_STRENGTH = 3.2;    // world-unit velocity kick at the wavefront's peak
+  var MAX_RIPPLES = 8;          // concurrent rings kept alive
 
   var width = 0;
   var height = 0;
@@ -124,6 +138,15 @@
 
   var dragIndex = -1;
   var hoverIndex = -1;
+
+  var swellPhase = 0;
+  var lastFrameTime = 0;
+
+  // Active ripple rings: { x, y, r } in screen px, origin fixed at spawn time.
+  var ripples = [];
+  var lastRippleX = null;
+  var lastRippleY = null;
+  var lastRippleTime = 0;
 
   function motionAllowed() {
     return !reduceMotion.matches && root.getAttribute('data-theme') !== 'brutal';
@@ -178,7 +201,11 @@
   }
 
   function elevationAt(worldX, worldZ) {
-    return ridged(worldX * NOISE_X, worldZ * NOISE_Z + travel) * peakWorld;
+    var ridge = ridged(worldX * NOISE_X, worldZ * NOISE_Z + travel) * peakWorld;
+    // Slow swell riding on top of the ridge noise — rises and falls over time
+    // rather than just scrolling, so the terrain reads as rolling waves.
+    var swell = Math.sin(worldZ * SWELL_FREQ + swellPhase) * SWELL_AMP * peakWorld;
+    return ridge + swell;
   }
 
   function scaleAt(depth) { return FOCAL / depth; }
@@ -393,9 +420,22 @@
   function step(now) {
     if (!start) start = now;
     travel = (now - start) * SPEED;
+    swellPhase = (now - start) * SWELL_SPEED;
+    var dt = lastFrameTime ? Math.min(now - lastFrameTime, 48) : 16.7;
+    lastFrameTime = now;
 
     easedX += (pointerX - easedX) * PARALLAX_EASE;
     easedY += (pointerY - easedY) * PARALLAX_EASE;
+
+    // Ripples travel outward on their own clock — nothing here reads the
+    // live pointer position, so a ring keeps expanding after the cursor
+    // has moved elsewhere or stopped.
+    for (var ri = ripples.length - 1; ri >= 0; ri--) {
+      var ring = ripples[ri];
+      ring.r += RIPPLE_SPEED * dt;
+      if (ring.r > RIPPLE_MAX_RADIUS) { ripples.splice(ri, 1); continue; }
+      applyRipple(ring);
+    }
 
     for (var i = 0; i < sky.length; i++) {
       var p = sky[i];
@@ -482,41 +522,60 @@
     ve[i] = 0;
   }
 
-  // Cursor disturbance: nearby terrain vertices and sky particles get an
-  // outward velocity kick that decays with distance from the pointer. They
-  // spring back through the same settle()/ripple-offset physics used for
-  // drag-release, so this reads as a ripple passing through rather than a
-  // permanent push.
-  function rippleAt(px, py) {
-    if (!motionAllowed()) return;
-    var r2 = RIPPLE_RADIUS * RIPPLE_RADIUS;
+  // A ripple ring: a thin traveling band at radius `r` from a fixed origin.
+  // Terrain vertices / sky particles close to that band get an outward
+  // velocity kick; the amplitude decays as the ring expands, so it fades out
+  // on its own well before RIPPLE_MAX_RADIUS. They spring back through the
+  // same settle()/ripple-offset physics used for drag-release.
+  function applyRipple(ring) {
+    var half = RIPPLE_BAND / 2;
+    var decay = 1 - ring.r / RIPPLE_MAX_RADIUS;
+    if (decay <= 0) return;
 
     for (var i = 0; i < projX.length; i++) {
       if (i === dragIndex) continue;
-      var ddx = projX[i] - px;
-      var ddy = projY[i] - py;
-      var dist2 = ddx * ddx + ddy * ddy;
-      if (dist2 >= r2) continue;
-      var dist = Math.sqrt(dist2) || 0.0001;
-      var falloff = 1 - dist / RIPPLE_RADIUS;
+      var ddx = projX[i] - ring.x;
+      var ddy = projY[i] - ring.y;
+      var dist = Math.sqrt(ddx * ddx + ddy * ddy) || 0.0001;
+      var band = Math.abs(dist - ring.r);
+      if (band >= half) continue;
+      var bandFalloff = 1 - band / half;
       var k = scaleAt(rowDepth[(i / cols) | 0]);
-      var push = falloff * falloff * RIPPLE_STRENGTH / k;
+      var push = bandFalloff * bandFalloff * decay * RIPPLE_STRENGTH / k;
       vx[i] += (ddx / dist) * push;
       ve[i] += (ddy / dist) * push;
     }
 
     for (var s = 0; s < sky.length; s++) {
       var p = sky[s];
-      var sdx = (p.x + p.rx) - px;
-      var sdy = (p.y + p.ry) - py;
-      var sd2 = sdx * sdx + sdy * sdy;
-      if (sd2 >= r2) continue;
-      var sd = Math.sqrt(sd2) || 0.0001;
-      var sf = 1 - sd / RIPPLE_RADIUS;
-      var spush = sf * sf * RIPPLE_STRENGTH * 0.35;
+      var sdx = (p.x + p.rx) - ring.x;
+      var sdy = (p.y + p.ry) - ring.y;
+      var sd = Math.sqrt(sdx * sdx + sdy * sdy) || 0.0001;
+      var sband = Math.abs(sd - ring.r);
+      if (sband >= half) continue;
+      var sf = 1 - sband / half;
+      var spush = sf * sf * decay * RIPPLE_STRENGTH * 0.35;
       p.rvx += (sdx / sd) * spush;
       p.rvy += (sdy / sd) * spush;
     }
+  }
+
+  // Throttled spawn: a new ring is only created once the pointer has moved
+  // far enough (or enough time has passed) since the last one, so a sweep
+  // across the screen leaves a trail of a few rings rather than one per
+  // pixel of movement. The rings themselves never re-read pointer position.
+  function maybeSpawnRipple(px, py, now) {
+    if (!motionAllowed()) return;
+    var movedFar = lastRippleX === null ||
+      (px - lastRippleX) * (px - lastRippleX) + (py - lastRippleY) * (py - lastRippleY) >=
+        RIPPLE_SPAWN_DIST * RIPPLE_SPAWN_DIST;
+    if (!movedFar || now - lastRippleTime < RIPPLE_SPAWN_MS) return;
+
+    lastRippleX = px;
+    lastRippleY = py;
+    lastRippleTime = now;
+    if (ripples.length >= MAX_RIPPLES) ripples.shift();
+    ripples.push({ x: px, y: py, r: 0 });
   }
 
   if (finePointer.matches) {
@@ -537,7 +596,7 @@
     window.addEventListener('pointermove', function (event) {
       if (event.pointerType === 'touch') return;
 
-      rippleAt(event.clientX, event.clientY);
+      maybeSpawnRipple(event.clientX, event.clientY, event.timeStamp || performance.now());
 
       if (dragIndex >= 0) {
         pullTo(dragIndex, event.clientX, event.clientY);

@@ -51,15 +51,21 @@
     colour = value || '#437057';
   }
 
-  // One particle per ~18k CSS pixels keeps the field even across viewport
+  // One particle per ~12k CSS pixels keeps the field even across viewport
   // sizes; the clamp stops phones from looking bare and 4K displays from
   // paying for a thousand draws a frame.
   function targetCount() {
-    return Math.max(24, Math.min(90, Math.round((width * height) / 18000)));
+    return Math.max(34, Math.min(130, Math.round((width * height) / 12000)));
   }
 
+  // Radius floor is 1.2px because anything smaller is mostly antialiased
+  // edge and reads as haze rather than a dot. Alpha floor is 0.30 for the
+  // same reason: measured against the page these values put the median dot
+  // at ~1.5:1 and the brightest at ~2.9:1, where the field reads as ambient
+  // texture. The first pass used 0.12-0.40, which measured 1.15:1 median --
+  // effectively invisible on an average display.
   function makeParticle() {
-    var radius = 0.8 + Math.random() * 1.8;
+    var radius = 1.2 + Math.random() * 1.9;
     return {
       x: Math.random() * width,
       y: Math.random() * height,
@@ -67,8 +73,8 @@
       // Larger dots read as nearer, so they drift and parallax further.
       vx: (Math.random() - 0.5) * 0.12,
       vy: -0.06 - Math.random() * 0.12,
-      depth: radius / 2.6,
-      alpha: 0.12 + Math.random() * 0.28,
+      depth: radius / 3.1,
+      alpha: 0.30 + Math.random() * 0.42,
       phase: Math.random() * Math.PI * 2,
     };
   }
@@ -97,8 +103,9 @@
     for (var i = 0; i < particles.length; i++) {
       var p = particles[i];
       // Slow opacity breathing keeps the field from reading as a static
-      // dot screen; the offsets are sub-pixel-slow on purpose.
-      var pulse = 0.7 + 0.3 * Math.sin(elapsed * 0.0008 + p.phase);
+      // dot screen; the offsets are sub-pixel-slow on purpose. The trough
+      // stays at 0.8 so the dip never takes a dot below visibility.
+      var pulse = 0.9 + 0.1 * Math.sin(elapsed * 0.0008 + p.phase);
       ctx.globalAlpha = p.alpha * pulse;
       ctx.beginPath();
       ctx.arc(

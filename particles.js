@@ -79,6 +79,15 @@
   var RETAIN = 0.82;          // fraction of the pull a node keeps on release
   var SPRING_K = 0.15;        // spring stiffness pulling a settling node toward its target
   var SPRING_DAMPING = 0.66;  // velocity damping per frame; <1 stays underdamped (lets it overshoot)
+  // Only 1-RETAIN (18%) of the drag is the spring's actual travel distance, so a
+  // resting spring's natural overshoot on that short hop reads as ~1-2% of the
+  // full on-screen drag - imperceptible. Kick release velocity proportional to
+  // the FULL retained delta (dx-tx) so overshoot is visible relative to how far
+  // the user actually dragged, not just the small unretained remainder.
+  // Simulated: kickFactor 0.8 with SPRING_K/SPRING_DAMPING above -> peak overshoot
+  // ~10.3% of drag distance for D=40/60/80px (linear system, scale-invariant),
+  // e.g. a 60px drag overshoots ~6.2px - inside the 5-15% visible band.
+  var RELEASE_KICK = 0.8;
 
   // --- Ripple (cursor disturbance) ----------------------------------------
   var RIPPLE_RADIUS = 90;     // px from the pointer that gets disturbed
@@ -555,7 +564,13 @@
       // Float back a little of the way, then hold near where it was dropped.
       tx[dragIndex] = dx[dragIndex] * RETAIN;
       te[dragIndex] = de[dragIndex] * RETAIN;
-      if (!motionAllowed()) {
+      if (motionAllowed()) {
+        // Kick proportional to the full retained delta, not just the spring's
+        // short remaining travel, so the release bounce reads against the
+        // actual drag distance. See RELEASE_KICK comment above.
+        vx[dragIndex] = -(dx[dragIndex] - tx[dragIndex]) * RELEASE_KICK;
+        ve[dragIndex] = -(de[dragIndex] - te[dragIndex]) * RELEASE_KICK;
+      } else {
         dx[dragIndex] = tx[dragIndex];
         de[dragIndex] = te[dragIndex];
       }

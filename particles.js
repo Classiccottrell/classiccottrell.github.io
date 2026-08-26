@@ -82,6 +82,14 @@
   var SWELL_SPEED = 0.00045; // phase advance per ms
   var SWELL_AMP = 0.16;      // fraction of peak height added by the swell
 
+  // Per-vertex undulation layered on top of the shared swell above: every
+  // vertex gets its own phase (derived from its grid position) so neighbours
+  // don't bob in lockstep — this is what reads as individual nodes "moving
+  // around" rather than one uniform wave. Kept small relative to SWELL_AMP so
+  // it adds life without shaking the terrain.
+  var UNDULATE_FREQ = 0.00085;  // per-vertex phase advance per ms
+  var UNDULATE_AMP = 0.05;      // fraction of peak height per vertex
+
   // --- Drag --------------------------------------------------------------
   var GRAB_RADIUS = 26;       // px from a node's centre that counts as a grab
   var RETAIN = 0.82;          // fraction of the pull a node keeps on release
@@ -92,20 +100,24 @@
   // full on-screen drag - imperceptible. Kick release velocity proportional to
   // the FULL retained delta (dx-tx) so overshoot is visible relative to how far
   // the user actually dragged, not just the small unretained remainder.
-  // Simulated: kickFactor 0.8 with SPRING_K/SPRING_DAMPING above -> peak overshoot
-  // ~10.3% of drag distance for D=40/60/80px (linear system, scale-invariant),
-  // e.g. a 60px drag overshoots ~6.2px - inside the 5-15% visible band.
-  var RELEASE_KICK = 0.8;
+  // Simulated: kickFactor 1.4 with SPRING_K/SPRING_DAMPING above -> peak overshoot
+  // ~21.8% of drag distance for D=40/60/80px (linear system, scale-invariant),
+  // e.g. a 60px drag overshoots ~13.1px - inside the 15-25% clearly-readable band
+  // (kickFactor 0.8 gave only ~10.3%, i.e. ~6.2px on the same drag - too subtle).
+  var RELEASE_KICK = 1.4;
 
   // --- Ripple (expanding wavefront, spawned by the cursor but travels on its
   // own — it must not read as "following the cursor") -----------------------
   var RIPPLE_SPAWN_DIST = 40;   // px the pointer must move before a new ring spawns
   var RIPPLE_SPAWN_MS = 90;     // minimum ms between spawns, even if moving fast
   var RIPPLE_BAND = 70;         // px thickness of the traveling wavefront
-  var RIPPLE_SPEED = 0.5;       // px/ms the ring's radius grows
-  var RIPPLE_MAX_RADIUS = 520;  // px travelled before the ring is retired
+  var RIPPLE_SPEED = 0.4;       // px/ms the ring's radius grows
+  var RIPPLE_MAX_RADIUS = 1200; // px travelled before the ring is retired
+  // Lifetime = RIPPLE_MAX_RADIUS / RIPPLE_SPEED = 1200/0.4 = 3000ms (was 520/0.5
+  // = 1040ms) — roughly triples ring lifetime into the 2.5-3.5s "lasts longer" band.
   var RIPPLE_STRENGTH = 3.2;    // world-unit velocity kick at the wavefront's peak
-  var MAX_RIPPLES = 8;          // concurrent rings kept alive
+  var MAX_RIPPLES = 5;          // concurrent rings kept alive (trimmed from 8 since
+                                 // rings now overlap far longer at the same spawn rate)
 
   var width = 0;
   var height = 0;
@@ -140,6 +152,7 @@
   var hoverIndex = -1;
 
   var swellPhase = 0;
+  var undulatePhase = 0;
   var lastFrameTime = 0;
 
   // Active ripple rings: { x, y, r } in screen px, origin fixed at spawn time.
@@ -205,10 +218,23 @@
     // Slow swell riding on top of the ridge noise — rises and falls over time
     // rather than just scrolling, so the terrain reads as rolling waves.
     var swell = Math.sin(worldZ * SWELL_FREQ + swellPhase) * SWELL_AMP * peakWorld;
-    return ridge + swell;
+    // Per-vertex undulation: each (worldX, worldZ) gets a fixed spatial phase
+    // offset (from a cheap sine of its own position), so neighbouring vertices
+    // drift out of sync with each other and with the shared swell above.
+    var vertexPhase = (worldX * 0.013 + worldZ * 0.007) * Math.PI * 2;
+    var undulate = Math.sin(undulatePhase + vertexPhase) * UNDULATE_AMP * peakWorld;
+    return ridge + swell + undulate;
   }
 
   function scaleAt(depth) { return FOCAL / depth; }
+
+  // Sky particle lifecycle (fade in -> hold -> fade out -> respawn), a slow
+  // ambient twinkle rather than a permanently-on field. Durations are randomised
+  // per particle in buildGeometry() so the field never pulses in sync.
+  var TWINKLE_FADE_MIN = 1800;  // ms, fastest fade in/out
+  var TWINKLE_FADE_MAX = 3400;  // ms, slowest fade in/out
+  var TWINKLE_HOLD_MIN = 1500;  // ms, shortest fully-visible hold
+  var TWINKLE_HOLD_MAX = 4500;  // ms, longest fully-visible hold
 
   var SKY_MAX_SPEED = 0.16; // ceiling for the small wrap-edge speed kick
   function clampSpeed(v) {
@@ -289,11 +315,46 @@
         // wander position, so a cursor pass reads as a transient disturbance
         // rather than a permanent change to the particle's drift.
         rx: 0, ry: 0, rvx: 0, rvy: 0,
+        // Twinkle lifecycle: fade in, hold at full, fade out to transparent,
+        // then respawn elsewhere. Phase durations randomised so particles
+        // never sync up; `twinklePhase` starts partway through a random
+        // phase so the field doesn't all begin mid-fade-in on load.
+        twinkleState: 'in',
+        twinkleT: 0,
+        twinkleFadeIn: TWINKLE_FADE_MIN + Math.random() * (TWINKLE_FADE_MAX - TWINKLE_FADE_MIN),
+        twinkleHold: TWINKLE_HOLD_MIN + Math.random() * (TWINKLE_HOLD_MAX - TWINKLE_HOLD_MIN),
+        twinkleFadeOut: TWINKLE_FADE_MIN + Math.random() * (TWINKLE_FADE_MAX - TWINKLE_FADE_MIN),
+        twinkle: Math.random(),
       });
     }
   }
 
   // --- Drawing ---------------------------------------------------------------
+  // Advances a sky particle's twinkle lifecycle by dt ms, respawning it at a
+  // new random position once a full fade-out completes.
+  function updateTwinkle(p, dt) {
+    p.twinkleT += dt;
+    if (p.twinkleState === 'in') {
+      p.twinkle = Math.min(1, p.twinkleT / p.twinkleFadeIn);
+      if (p.twinkleT >= p.twinkleFadeIn) { p.twinkleState = 'hold'; p.twinkleT = 0; }
+    } else if (p.twinkleState === 'hold') {
+      p.twinkle = 1;
+      if (p.twinkleT >= p.twinkleHold) { p.twinkleState = 'out'; p.twinkleT = 0; }
+    } else {
+      p.twinkle = Math.max(0, 1 - p.twinkleT / p.twinkleFadeOut);
+      if (p.twinkleT >= p.twinkleFadeOut) {
+        p.x = Math.random() * width;
+        p.y = Math.random() * horizonY;
+        p.twinkleState = 'in';
+        p.twinkleT = 0;
+        p.twinkle = 0;
+        p.twinkleFadeIn = TWINKLE_FADE_MIN + Math.random() * (TWINKLE_FADE_MAX - TWINKLE_FADE_MIN);
+        p.twinkleHold = TWINKLE_HOLD_MIN + Math.random() * (TWINKLE_HOLD_MAX - TWINKLE_HOLD_MIN);
+        p.twinkleFadeOut = TWINKLE_FADE_MIN + Math.random() * (TWINKLE_FADE_MAX - TWINKLE_FADE_MIN);
+      }
+    }
+  }
+
   function drawSky() {
     for (var i = 0; i < sky.length; i++) {
       var p = sky[i];
@@ -312,7 +373,7 @@
     }
     for (var k = 0; k < sky.length; k++) {
       var s = sky[k];
-      ctx.globalAlpha = SKY_ALPHA * s.a;
+      ctx.globalAlpha = SKY_ALPHA * s.a * s.twinkle;
       ctx.beginPath();
       ctx.arc(s.x + s.rx, s.y + s.ry, s.r, 0, Math.PI * 2);
       ctx.fill();
@@ -421,6 +482,7 @@
     if (!start) start = now;
     travel = (now - start) * SPEED;
     swellPhase = (now - start) * SWELL_SPEED;
+    undulatePhase = (now - start) * UNDULATE_FREQ;
     var dt = lastFrameTime ? Math.min(now - lastFrameTime, 48) : 16.7;
     lastFrameTime = now;
 
@@ -439,6 +501,7 @@
 
     for (var i = 0; i < sky.length; i++) {
       var p = sky[i];
+      updateTwinkle(p, dt);
       p.x += p.vx;
       p.y += p.vy;
       // Wrap keeps its full velocity (restitution 1) plus a small kick, so

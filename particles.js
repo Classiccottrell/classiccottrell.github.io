@@ -8,7 +8,9 @@
 //
 // Nodes can be grabbed and pulled with a mouse. On release a node floats a
 // little of the way back and then holds near where it was dropped, so the
-// terrain keeps a record of having been handled.
+// terrain keeps a record of having been handled. Simply moving the pointer
+// through the field also disturbs nearby terrain vertices and sky particles
+// with a brief, decaying ripple, via the same spring-back physics.
 //
 // Every world-space dimension is derived from the viewport in resize(), so
 // the composition holds its proportions instead of drifting as the window
@@ -75,8 +77,12 @@
   // --- Drag --------------------------------------------------------------
   var GRAB_RADIUS = 26;       // px from a node's centre that counts as a grab
   var RETAIN = 0.82;          // fraction of the pull a node keeps on release
-  var SPRING_K = 0.12;        // spring stiffness pulling a settling node toward its target
-  var SPRING_DAMPING = 0.58;  // velocity damping per frame; <1 stays underdamped (lets it overshoot)
+  var SPRING_K = 0.15;        // spring stiffness pulling a settling node toward its target
+  var SPRING_DAMPING = 0.66;  // velocity damping per frame; <1 stays underdamped (lets it overshoot)
+
+  // --- Ripple (cursor disturbance) ----------------------------------------
+  var RIPPLE_RADIUS = 90;     // px from the pointer that gets disturbed
+  var RIPPLE_STRENGTH = 2.0;  // world-unit velocity kick at the pointer's centre (falls off with distance)
 
   var width = 0;
   var height = 0;
@@ -243,6 +249,10 @@
         vx: (Math.random() - 0.5) * 0.09,
         vy: (Math.random() - 0.5) * 0.05,
         a: 0.45 + Math.random() * 0.55,
+        // Ripple displacement: a separate spring-back offset from the base
+        // wander position, so a cursor pass reads as a transient disturbance
+        // rather than a permanent change to the particle's drift.
+        rx: 0, ry: 0, rvx: 0, rvy: 0,
       });
     }
   }
@@ -268,7 +278,7 @@
       var s = sky[k];
       ctx.globalAlpha = SKY_ALPHA * s.a;
       ctx.beginPath();
-      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.arc(s.x + s.rx, s.y + s.ry, s.r, 0, Math.PI * 2);
       ctx.fill();
     }
   }
@@ -388,6 +398,13 @@
       if (p.x > width + 10) { p.x = -10; p.vx = clampSpeed(p.vx * 1.05); }
       if (p.y < -10) { p.y = horizonY; p.vy = clampSpeed(p.vy * 1.05); }
       if (p.y > horizonY) { p.y = -10; p.vy = clampSpeed(p.vy * 1.05); }
+
+      // Ripple offset springs back to zero, same underdamped model as the
+      // terrain settle below, so a cursor pass fades rather than sticks.
+      p.rvx = (p.rvx + -p.rx * SPRING_K) * SPRING_DAMPING;
+      p.rvy = (p.rvy + -p.ry * SPRING_K) * SPRING_DAMPING;
+      p.rx += p.rvx;
+      p.ry += p.rvy;
     }
 
     settle();
@@ -456,6 +473,43 @@
     ve[i] = 0;
   }
 
+  // Cursor disturbance: nearby terrain vertices and sky particles get an
+  // outward velocity kick that decays with distance from the pointer. They
+  // spring back through the same settle()/ripple-offset physics used for
+  // drag-release, so this reads as a ripple passing through rather than a
+  // permanent push.
+  function rippleAt(px, py) {
+    if (!motionAllowed()) return;
+    var r2 = RIPPLE_RADIUS * RIPPLE_RADIUS;
+
+    for (var i = 0; i < projX.length; i++) {
+      if (i === dragIndex) continue;
+      var ddx = projX[i] - px;
+      var ddy = projY[i] - py;
+      var dist2 = ddx * ddx + ddy * ddy;
+      if (dist2 >= r2) continue;
+      var dist = Math.sqrt(dist2) || 0.0001;
+      var falloff = 1 - dist / RIPPLE_RADIUS;
+      var k = scaleAt(rowDepth[(i / cols) | 0]);
+      var push = falloff * falloff * RIPPLE_STRENGTH / k;
+      vx[i] += (ddx / dist) * push;
+      ve[i] += (ddy / dist) * push;
+    }
+
+    for (var s = 0; s < sky.length; s++) {
+      var p = sky[s];
+      var sdx = (p.x + p.rx) - px;
+      var sdy = (p.y + p.ry) - py;
+      var sd2 = sdx * sdx + sdy * sdy;
+      if (sd2 >= r2) continue;
+      var sd = Math.sqrt(sd2) || 0.0001;
+      var sf = 1 - sd / RIPPLE_RADIUS;
+      var spush = sf * sf * RIPPLE_STRENGTH * 0.35;
+      p.rvx += (sdx / sd) * spush;
+      p.rvy += (sdy / sd) * spush;
+    }
+  }
+
   if (finePointer.matches) {
     // Mouse and pen only. Claiming touch drags here would fight the page's
     // own scrolling, which matters far more than the toy.
@@ -473,6 +527,8 @@
 
     window.addEventListener('pointermove', function (event) {
       if (event.pointerType === 'touch') return;
+
+      rippleAt(event.clientX, event.clientY);
 
       if (dragIndex >= 0) {
         pullTo(dragIndex, event.clientX, event.clientY);

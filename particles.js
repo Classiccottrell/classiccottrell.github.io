@@ -59,7 +59,6 @@
   var RIDGE_ALPHA = 0.30;
   var CONNECTOR_ALPHA = 0.15;
   var VERTEX_ALPHA = 0.42;
-  var HORIZON_ALPHA = 0.18;
   var SKY_ALPHA = 0.28;
   var SKY_LINK_ALPHA = 0.12;
   var CONNECTOR_EVERY = 4;
@@ -68,14 +67,16 @@
 
   // --- Motion ----------------------------------------------------------------
   var SPEED = 0.0000135;
-  var NOISE_X = 0.0032;
-  var NOISE_Z = 0.0010;
+  var NOISE_X = 0.0026;
+  var NOISE_Z = 0.0008;
   var SKY_LINK_DIST = 86;
+  var PARALLAX_EASE = 0.035;  // pointer-parallax follow rate, kept gentle for a steadier read
 
-  // --- Drag ------------------------------------------------------------------
+  // --- Drag --------------------------------------------------------------
   var GRAB_RADIUS = 26;       // px from a node's centre that counts as a grab
   var RETAIN = 0.82;          // fraction of the pull a node keeps on release
-  var SETTLE = 0.055;         // per-frame easing toward the retained position
+  var SPRING_K = 0.12;        // spring stiffness pulling a settling node toward its target
+  var SPRING_DAMPING = 0.58;  // velocity damping per frame; <1 stays underdamped (lets it overshoot)
 
   var width = 0;
   var height = 0;
@@ -94,7 +95,7 @@
 
   // Per-node drag state, indexed r * cols + c. dx/de are the live displacement
   // (world x, elevation); tx/te are what it is easing toward.
-  var dx, de, tx, te, projX, projY;
+  var dx, de, tx, te, vx, ve, projX, projY;
 
   var frame = null;
   var resizeTimer = null;
@@ -167,6 +168,11 @@
 
   function scaleAt(depth) { return FOCAL / depth; }
 
+  var SKY_MAX_SPEED = 0.16; // ceiling for the small wrap-edge speed kick
+  function clampSpeed(v) {
+    return v > SKY_MAX_SPEED ? SKY_MAX_SPEED : v < -SKY_MAX_SPEED ? -SKY_MAX_SPEED : v;
+  }
+
   // Distance fade — the atmospheric perspective that sells the depth.
   function fadeAt(depth) {
     var t = 1 - (depth - Z_NEAR) / (Z_FAR - Z_NEAR);
@@ -192,8 +198,8 @@
 
     // Vertex density tracks viewport size so a phone is not drawing a desktop
     // mesh and a wide display is not left sparse.
-    cols = Math.max(22, Math.min(64, Math.round(width / 24)));
-    rows = Math.max(14, Math.min(30, Math.round(height / 34)));
+    cols = Math.max(24, Math.min(70, Math.round(width / 22)));
+    rows = Math.max(16, Math.min(34, Math.round(height / 32)));
 
     canvas.width = Math.round(width * dpr);
     canvas.height = Math.round(height * dpr);
@@ -220,13 +226,15 @@
     de = new Float32Array(n);
     tx = new Float32Array(n);
     te = new Float32Array(n);
+    vx = new Float32Array(n);
+    ve = new Float32Array(n);
     projX = new Float32Array(n);
     projY = new Float32Array(n);
     dragIndex = -1;
     hoverIndex = -1;
 
     sky.length = 0;
-    var skyCount = Math.max(10, Math.min(38, Math.round((width * horizonY) / 15000)));
+    var skyCount = Math.max(14, Math.min(48, Math.round((width * horizonY) / 11000)));
     for (var i = 0; i < skyCount; i++) {
       sky.push({
         x: Math.random() * width,
@@ -240,21 +248,6 @@
   }
 
   // --- Drawing ---------------------------------------------------------------
-  function drawHorizon(hy) {
-    // Faded at both ends so the line reads as haze rather than a drawn rule.
-    var grad = ctx.createLinearGradient(0, 0, width, 0);
-    grad.addColorStop(0, 'transparent');
-    grad.addColorStop(0.5, colour);
-    grad.addColorStop(1, 'transparent');
-    ctx.globalAlpha = HORIZON_ALPHA;
-    ctx.strokeStyle = grad;
-    ctx.beginPath();
-    ctx.moveTo(0, hy);
-    ctx.lineTo(width, hy);
-    ctx.stroke();
-    ctx.strokeStyle = colour;
-  }
-
   function drawSky() {
     for (var i = 0; i < sky.length; i++) {
       var p = sky[i];
@@ -346,7 +339,6 @@
     ctx.lineWidth = 1;
     ctx.lineJoin = 'round';
 
-    drawHorizon(hy);
     drawSky();
     drawTerrain(cx, hy);
 
@@ -359,14 +351,23 @@
     if (frame === null) draw();
   }
 
+  // Spring-damper settle: a released node overshoots its retained position and
+  // rings back with decaying amplitude, rather than easing straight to it.
+  // Underdamped (SPRING_DAMPING < 1) so 1-2 visible oscillations happen before
+  // the node comes to rest.
   function settle() {
     for (var i = 0; i < dx.length; i++) {
       if (i === dragIndex) continue;
       var ax = tx[i] - dx[i];
       var ae = te[i] - de[i];
-      if (ax * ax + ae * ae < 0.0001) { dx[i] = tx[i]; de[i] = te[i]; continue; }
-      dx[i] += ax * SETTLE;
-      de[i] += ae * SETTLE;
+      if (ax * ax + ae * ae < 0.0001 && vx[i] * vx[i] + ve[i] * ve[i] < 0.0001) {
+        dx[i] = tx[i]; de[i] = te[i]; vx[i] = 0; ve[i] = 0;
+        continue;
+      }
+      vx[i] = (vx[i] + ax * SPRING_K) * SPRING_DAMPING;
+      ve[i] = (ve[i] + ae * SPRING_K) * SPRING_DAMPING;
+      dx[i] += vx[i];
+      de[i] += ve[i];
     }
   }
 
@@ -374,17 +375,19 @@
     if (!start) start = now;
     travel = (now - start) * SPEED;
 
-    easedX += (pointerX - easedX) * 0.04;
-    easedY += (pointerY - easedY) * 0.04;
+    easedX += (pointerX - easedX) * PARALLAX_EASE;
+    easedY += (pointerY - easedY) * PARALLAX_EASE;
 
     for (var i = 0; i < sky.length; i++) {
       var p = sky[i];
       p.x += p.vx;
       p.y += p.vy;
-      if (p.x < -10) p.x = width + 10;
-      if (p.x > width + 10) p.x = -10;
-      if (p.y < -10) p.y = horizonY;
-      if (p.y > horizonY) p.y = -10;
+      // Wrap keeps its full velocity (restitution 1) plus a small kick, so
+      // the field stays lively instead of losing energy at the seam.
+      if (p.x < -10) { p.x = width + 10; p.vx = clampSpeed(p.vx * 1.05); }
+      if (p.x > width + 10) { p.x = -10; p.vx = clampSpeed(p.vx * 1.05); }
+      if (p.y < -10) { p.y = horizonY; p.vy = clampSpeed(p.vy * 1.05); }
+      if (p.y > horizonY) { p.y = -10; p.vy = clampSpeed(p.vy * 1.05); }
     }
 
     settle();
@@ -449,6 +452,8 @@
     dx[i] = tx[i] = (px - cx) / k - colX[c];
     var elev = groundWorld - (py - hy) / k;
     de[i] = te[i] = elev - elevationAt(colX[c], rowDepth[r]);
+    vx[i] = 0;
+    ve[i] = 0;
   }
 
   if (finePointer.matches) {

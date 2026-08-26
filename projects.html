@@ -32,39 +32,92 @@
 <body class="projects-page">
   <script>(function(){function fromCookie(){var m=document.cookie.split('; ').find(function(r){return r.indexOf('site-theme=')===0;});return m?decodeURIComponent(m.split('=')[1]):null;}var vals=['default','bolder','shadcn','brutal'];var t=fromCookie();if(!vals.includes(t))t=localStorage.getItem('site-theme');if(!vals.includes(t))t='default';document.documentElement.setAttribute('data-theme',t);}());</script>
 
-  <div id="header"></div>
+  <div id="header"><!-- build:header -->
+<header>
+  <div class="header-content">
+    <div class="header-left">
+      <button id="nav-toggle" class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav-drawer">
+        <span class="nav-toggle-icon" aria-hidden="true"></span>
+      </button>
+      <h1 class="top-name"><a href="index.html" class="header-link">Matthew A. Cottrell</a></h1>
+      <div class="nav-links">
+        <a href="art.html" class="header-link">Art</a>
+        <a href="writing.html" class="header-link">Writing</a>
+        <a href="projects.html" class="header-link active" aria-current="page">Projects</a>
+        <a href="https://shop.classiccottrell.ca" target="_blank" class="header-link">Shop</a>
+      </div>
+    </div>
+    <div class="social-icons">
+      <a href="https://github.com/Classiccottrell" target="_blank" class="social-link" aria-label="GitHub">
+        <span class="social-icon github" aria-hidden="true"></span>
+      </a>
+      <a href="https://www.instagram.com/classiccottrell" target="_blank" class="social-link" aria-label="Instagram">
+        <span class="social-icon instagram" aria-hidden="true"></span>
+      </a>
+      <a href="https://classiccottrell.substack.com/" target="_blank" class="social-link" aria-label="Substack">
+        <span class="social-icon substack" aria-hidden="true"></span>
+      </a>
+      <a href="https://www.linkedin.com/in/classiccottrell/" target="_blank" class="social-link" aria-label="LinkedIn">
+        <span class="social-icon linked" aria-hidden="true"></span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<div id="nav-drawer-backdrop" class="nav-drawer-backdrop"></div>
+<aside id="mobile-nav-drawer" class="nav-drawer" aria-hidden="true">
+  <nav class="nav-drawer-links" aria-label="Mobile navigation">
+    <a href="index.html" class="nav-drawer-link header-link"><span class="nav-drawer-index">01</span>Home</a>
+    <a href="art.html" class="nav-drawer-link header-link"><span class="nav-drawer-index">02</span>Art</a>
+    <a href="writing.html" class="nav-drawer-link header-link"><span class="nav-drawer-index">03</span>Writing</a>
+    <a href="projects.html" class="nav-drawer-link header-link active" aria-current="page"><span class="nav-drawer-index">04</span>Projects</a>
+    <a href="https://shop.classiccottrell.ca" target="_blank" class="nav-drawer-link header-link"><span class="nav-drawer-index">05</span>Shop</a>
+  </nav>
+</aside>
+<!-- /build:header --></div>
 
   <main class="projects-shell">
     <nav class="projects-nav reveal" aria-label="Projects"></nav>
     <div class="project-detail" id="project-detail"></div>
   </main>
 
-  <div id="footer"></div>
+  <div id="footer"><!-- build:footer -->
+<footer>
+  <h3 class="name-footer">Matthew A. Cottrell</h3>
+  <p class="title-footer">Product design and Strategy</p>
+
+  <div class="social-icons">
+    <a href="https://github.com/Classiccottrell" target="_blank" class="social-link" aria-label="GitHub">
+      <span class="social-icon github" aria-hidden="true"></span>
+    </a>
+    <a href="https://www.instagram.com/classiccottrell" target="_blank" class="social-link" aria-label="Instagram">
+      <span class="social-icon instagram" aria-hidden="true"></span>
+    </a>
+    <a href="https://classiccottrell.substack.com/" target="_blank" class="social-link" aria-label="Substack">
+      <span class="social-icon substack" aria-hidden="true"></span>
+    </a>
+    <a href="https://www.linkedin.com/in/classiccottrell/" target="_blank" class="social-link" aria-label="LinkedIn">
+      <span class="social-icon linked" aria-hidden="true"></span>
+    </a>
+  </div>
+  <p class="copyright">© 2009–<span id="current-year"></span> Matthew A. Cottrell. All rights reserved.</p>
+  <div class="footer-links">
+    <a href="sandbox.html" class="footer-link">Sandbox</a>
+    <select id="theme-select" class="theme-select" aria-label="Site theme">
+      <option value="default">Classic</option>
+      <option value="bolder">Bolder</option>
+      <option value="shadcn">Shadcn</option>
+      <option value="brutal">Brutal</option>
+    </select>
+  </div>
+</footer>
+
+<script>
+  document.getElementById("current-year").textContent = new Date().getFullYear();
+</script>
+<!-- /build:footer --></div>
 
   <script>
-    async function loadPartials() {
-      const header = await fetch("header.html?v=20260806");
-      const footer = await fetch("footer.html?v=20260806");
-      document.getElementById("header").innerHTML = await header.text();
-      document.getElementById("footer").innerHTML = await footer.text();
-      var currentPage = location.pathname.split('/').pop() || 'index.html';
-      document.querySelectorAll('.nav-links .header-link, .nav-drawer-links .header-link').forEach(function (link) {
-        if (link.getAttribute('href') === currentPage) {
-          link.classList.add('active');
-          link.setAttribute('aria-current', 'page');
-        }
-      });
-      var select = document.getElementById('theme-select');
-      if (select) {
-        select.value = document.documentElement.getAttribute('data-theme') || 'default';
-        select.addEventListener('change', function () {
-          document.documentElement.setAttribute('data-theme', this.value);
-          localStorage.setItem('site-theme', this.value);
-          document.cookie = 'site-theme=' + this.value + '; domain=.classiccottrell.ca; path=/; max-age=31536000; samesite=lax';
-        });
-      }
-    }
-    loadPartials();
 
     // Projects Page Logic
     let projects = [];

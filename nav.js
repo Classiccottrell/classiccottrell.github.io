@@ -1,5 +1,6 @@
-// Mobile nav flyout (Ink Curtain Drawer). Header is injected via fetch() innerHTML,
-// so this listens with event delegation on document instead of binding at load time.
+// Mobile nav flyout (Ink Curtain Drawer). Header/footer markup is inlined at
+// build time (scripts/build-html.mjs), so this listens with event delegation
+// on document rather than assuming elements exist at script-parse time.
 (function () {
   function els() {
     return {
@@ -52,4 +53,17 @@
   window.addEventListener('resize', function () {
     if (window.innerWidth > 768) close();
   });
+
+  // Theme select (moved out of the old runtime loadPartials() injection —
+  // header markup is now inlined at build time, but the select's value sync
+  // and change handling still need to happen at runtime).
+  var select = document.getElementById('theme-select');
+  if (select) {
+    select.value = document.documentElement.getAttribute('data-theme') || 'default';
+    select.addEventListener('change', function () {
+      document.documentElement.setAttribute('data-theme', this.value);
+      localStorage.setItem('site-theme', this.value);
+      document.cookie = 'site-theme=' + this.value + '; domain=.classiccottrell.ca; path=/; max-age=31536000; samesite=lax';
+    });
+  }
 })();

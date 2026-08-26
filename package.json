@@ -6,7 +6,10 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "dev": "vite",
+    "prebuild": "npm run build:html",
     "build": "vite build",
+    "build:html": "node scripts/build-html.mjs",
+    "build:html:check": "node scripts/build-html.mjs --check",
     "preview": "vite preview",
     "test:browser": "playwright test"
   },

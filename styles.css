@@ -685,12 +685,19 @@ footer .social-icons {
   padding: 96px 28px 32px;
   box-sizing: border-box;
   transform: translateX(-100%);
-  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  /* visibility (not just the off-screen transform) is what takes the drawer's
+     links out of the tab order — translateX alone left five focusable links
+     parked at x=-292 on every page and every viewport, inside a container
+     marked aria-hidden. Transitioning it means the drawer stays visible for
+     the length of the slide-out, then flips hidden at the end. */
+  visibility: hidden;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.5s;
   z-index: 41;
 }
 
 .nav-drawer.is-open {
   transform: translateX(0);
+  visibility: visible;
 }
 
 .nav-drawer-links {

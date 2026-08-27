@@ -311,6 +311,37 @@ body {
 }
 
 /* =========================================
+   Ambient Particle Field (home page)
+   Canvas is injected by particles.js and is
+   decorative only — never in the tab order,
+   never intercepting clicks.
+========================================= */
+.particle-field {
+  position: fixed;
+  inset: 0;
+  /* Content is lifted to z-index 1 below rather than relying on the canvas
+     sitting at -1, so the field stays visible even if <html> ever picks up
+     its own background (which would stop body's from being propagated). */
+  z-index: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+.home-page > main,
+.home-page > #footer {
+  position: relative;
+  z-index: 1;
+}
+
+/* #header holds the injected header *and* the mobile drawer/backdrop, whose
+   own z-index (40/41) is scoped to this stacking context — so it has to
+   outrank main, or main would paint over the open drawer. */
+.home-page > #header {
+  position: relative;
+  z-index: 2;
+}
+
+/* =========================================
    Header
 ========================================= */
 header {
@@ -654,12 +685,19 @@ footer .social-icons {
   padding: 96px 28px 32px;
   box-sizing: border-box;
   transform: translateX(-100%);
-  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  /* visibility (not just the off-screen transform) is what takes the drawer's
+     links out of the tab order — translateX alone left five focusable links
+     parked at x=-292 on every page and every viewport, inside a container
+     marked aria-hidden. Transitioning it means the drawer stays visible for
+     the length of the slide-out, then flips hidden at the end. */
+  visibility: hidden;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.5s;
   z-index: 41;
 }
 
 .nav-drawer.is-open {
   transform: translateX(0);
+  visibility: visible;
 }
 
 .nav-drawer-links {

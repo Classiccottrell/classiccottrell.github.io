@@ -8,7 +8,9 @@
 //
 // Nodes can be grabbed and pulled with a mouse. On release a node floats a
 // little of the way back and then holds near where it was dropped, so the
-// terrain keeps a record of having been handled.
+// terrain keeps a record of having been handled. Simply moving the pointer
+// through the field also disturbs nearby terrain vertices and sky particles
+// with a brief, decaying ripple, via the same spring-back physics.
 //
 // Every world-space dimension is derived from the viewport in resize(), so
 // the composition holds its proportions instead of drifting as the window
@@ -59,23 +61,75 @@
   var RIDGE_ALPHA = 0.30;
   var CONNECTOR_ALPHA = 0.15;
   var VERTEX_ALPHA = 0.42;
-  var HORIZON_ALPHA = 0.18;
   var SKY_ALPHA = 0.28;
   var SKY_LINK_ALPHA = 0.12;
   var CONNECTOR_EVERY = 4;
   var VERTEX_EVERY = 2;
   var FADE_POWER = 2.0;
 
-  // --- Motion ----------------------------------------------------------------
-  var SPEED = 0.0000135;
-  var NOISE_X = 0.0032;
-  var NOISE_Z = 0.0010;
-  var SKY_LINK_DIST = 86;
+  // Rare special-character vertices/particles: a small, curated, geometric
+  // glyph set that fits the wireframe aesthetic — chosen once per node at
+  // geometry-build time (deterministic, not re-rolled every frame) so it
+  // reads as an occasional easter egg rather than noise.
+  var GLYPHS = ['♪', '✦', '✧', '∴', '⟡'];
+  var GLYPH_CHANCE = 0.045; // ~4.5% of terrain vertices
+  var SKY_GLYPH_CHANCE = 0.05; // ~5% of sky particles (nice-to-have reuse)
 
-  // --- Drag ------------------------------------------------------------------
+  // --- Motion ----------------------------------------------------------------
+  var SPEED = 0.000017;
+  var NOISE_X = 0.0026;
+  var NOISE_Z = 0.0008;
+  var SKY_LINK_DIST = 86;
+  var PARALLAX_EASE = 0.02;  // pointer-parallax follow rate, kept gentle for a steadier read
+
+  // A slow sinusoidal swell layered on top of the ridged noise, independent of
+  // the noise scroll above — this is what turns "ridges sliding sideways"
+  // into "ridges visibly rising and falling", i.e. rolling waves rather than
+  // a scrolling skyline. Frequency/amplitude kept tame: subtle-plus, not storm.
+  var SWELL_FREQ = 0.0006;   // spatial frequency across depth (world z)
+  var SWELL_SPEED = 0.00045; // phase advance per ms
+  var SWELL_AMP = 0.09;      // fraction of peak height added by the swell (was 0.16 — toned down for a steadier read)
+
+  // Per-vertex undulation layered on top of the shared swell above: every
+  // vertex gets its own phase (derived from its grid position) so neighbours
+  // don't bob in lockstep — this is what reads as individual nodes "moving
+  // around" rather than one uniform wave. Kept small relative to SWELL_AMP so
+  // it adds life without shaking the terrain.
+  var UNDULATE_FREQ = 0.00085;  // per-vertex phase advance per ms
+  var UNDULATE_AMP = 0.028;     // fraction of peak height per vertex (was 0.05 — toned down for a steadier read)
+  // Checkerboard cell size (world units) for the alternating sign below — tuned
+  // to roughly the grid's own spacing so the flip is visible between neighbours
+  // rather than only across large regions.
+  var UNDULATE_CELL = 34;
+
+  // --- Drag --------------------------------------------------------------
   var GRAB_RADIUS = 26;       // px from a node's centre that counts as a grab
   var RETAIN = 0.82;          // fraction of the pull a node keeps on release
-  var SETTLE = 0.055;         // per-frame easing toward the retained position
+  var SPRING_K = 0.15;        // spring stiffness pulling a settling node toward its target
+  var SPRING_DAMPING = 0.66;  // velocity damping per frame; <1 stays underdamped (lets it overshoot)
+  // Only 1-RETAIN (18%) of the drag is the spring's actual travel distance, so a
+  // resting spring's natural overshoot on that short hop reads as ~1-2% of the
+  // full on-screen drag - imperceptible. Kick release velocity proportional to
+  // the FULL retained delta (dx-tx) so overshoot is visible relative to how far
+  // the user actually dragged, not just the small unretained remainder.
+  // Simulated: kickFactor 1.4 with SPRING_K/SPRING_DAMPING above -> peak overshoot
+  // ~21.8% of drag distance for D=40/60/80px (linear system, scale-invariant),
+  // e.g. a 60px drag overshoots ~13.1px - inside the 15-25% clearly-readable band
+  // (kickFactor 0.8 gave only ~10.3%, i.e. ~6.2px on the same drag - too subtle).
+  var RELEASE_KICK = 1.4;
+
+  // --- Ripple (expanding wavefront, spawned by the cursor but travels on its
+  // own — it must not read as "following the cursor") -----------------------
+  var RIPPLE_SPAWN_DIST = 40;   // px the pointer must move before a new ring spawns
+  var RIPPLE_SPAWN_MS = 90;     // minimum ms between spawns, even if moving fast
+  var RIPPLE_BAND = 70;         // px thickness of the traveling wavefront
+  var RIPPLE_SPEED = 0.4;       // px/ms the ring's radius grows
+  var RIPPLE_MAX_RADIUS = 1200; // px travelled before the ring is retired
+  // Lifetime = RIPPLE_MAX_RADIUS / RIPPLE_SPEED = 1200/0.4 = 3000ms (was 520/0.5
+  // = 1040ms) — roughly triples ring lifetime into the 2.5-3.5s "lasts longer" band.
+  var RIPPLE_STRENGTH = 3.2;    // world-unit velocity kick at the wavefront's peak
+  var MAX_RIPPLES = 5;          // concurrent rings kept alive (trimmed from 8 since
+                                 // rings now overlap far longer at the same spawn rate)
 
   var width = 0;
   var height = 0;
@@ -94,7 +148,18 @@
 
   // Per-node drag state, indexed r * cols + c. dx/de are the live displacement
   // (world x, elevation); tx/te are what it is easing toward.
-  var dx, de, tx, te, projX, projY;
+  var dx, de, tx, te, vx, ve, projX, projY;
+  // Per-vertex glyph assignment: -1 means "draw the usual dot", otherwise an
+  // index into GLYPHS. Fixed at buildGeometry() time, not re-rolled per frame.
+  var vertexGlyph;
+  var vertexSizeMul;
+  var vertexAlphaMul;
+  // Cross-frame sky-link state ("i,j" -> ms since the link first formed), so a
+  // freshly-formed connector line can fade/scale in rather than snapping to
+  // full opacity — the "spring into existence" spiderweb effect.
+  var skyLinkAge = {};
+  var LINK_SPAWN_MS = 420;
+  var frameDt = 16.7;
 
   var frame = null;
   var resizeTimer = null;
@@ -108,6 +173,16 @@
 
   var dragIndex = -1;
   var hoverIndex = -1;
+
+  var swellPhase = 0;
+  var undulatePhase = 0;
+  var lastFrameTime = 0;
+
+  // Active ripple rings: { x, y, r } in screen px, origin fixed at spawn time.
+  var ripples = [];
+  var lastRippleX = null;
+  var lastRippleY = null;
+  var lastRippleTime = 0;
 
   function motionAllowed() {
     return !reduceMotion.matches && root.getAttribute('data-theme') !== 'brutal';
@@ -162,10 +237,40 @@
   }
 
   function elevationAt(worldX, worldZ) {
-    return ridged(worldX * NOISE_X, worldZ * NOISE_Z + travel) * peakWorld;
+    var ridge = ridged(worldX * NOISE_X, worldZ * NOISE_Z + travel) * peakWorld;
+    // Slow swell riding on top of the ridge noise — rises and falls over time
+    // rather than just scrolling, so the terrain reads as rolling waves.
+    var swell = Math.sin(worldZ * SWELL_FREQ + swellPhase) * SWELL_AMP * peakWorld;
+    // Per-vertex undulation: each (worldX, worldZ) gets a fixed spatial phase
+    // offset (from a cheap sine of its own position, at a high enough spatial
+    // frequency that adjacent vertices land in visibly different phase), so
+    // neighbouring vertices drift out of sync with each other and with the
+    // shared swell above.
+    var vertexPhase = (worldX * 0.045 + worldZ * 0.03) * Math.PI * 2;
+    // Checkerboard sign flip on top of the phase drift above: this is what
+    // makes adjacent nodes/rows read as moving in visibly OPPOSITE directions
+    // (an interference-pattern look) rather than a smooth shared ripple.
+    var cellX = Math.floor(worldX / UNDULATE_CELL);
+    var cellZ = Math.floor(worldZ / UNDULATE_CELL);
+    var altSign = ((cellX + cellZ) & 1) ? -1 : 1;
+    var undulate = Math.sin(undulatePhase + vertexPhase) * UNDULATE_AMP * peakWorld * altSign;
+    return ridge + swell + undulate;
   }
 
   function scaleAt(depth) { return FOCAL / depth; }
+
+  // Sky particle lifecycle (fade in -> hold -> fade out -> respawn), a slow
+  // ambient twinkle rather than a permanently-on field. Durations are randomised
+  // per particle in buildGeometry() so the field never pulses in sync.
+  var TWINKLE_FADE_MIN = 1800;  // ms, fastest fade in/out
+  var TWINKLE_FADE_MAX = 3400;  // ms, slowest fade in/out
+  var TWINKLE_HOLD_MIN = 1500;  // ms, shortest fully-visible hold
+  var TWINKLE_HOLD_MAX = 4500;  // ms, longest fully-visible hold
+
+  var SKY_MAX_SPEED = 0.26; // ceiling for the small wrap-edge speed kick (raised for floatier drift)
+  function clampSpeed(v) {
+    return v > SKY_MAX_SPEED ? SKY_MAX_SPEED : v < -SKY_MAX_SPEED ? -SKY_MAX_SPEED : v;
+  }
 
   // Distance fade — the atmospheric perspective that sells the depth.
   function fadeAt(depth) {
@@ -192,8 +297,8 @@
 
     // Vertex density tracks viewport size so a phone is not drawing a desktop
     // mesh and a wide display is not left sparse.
-    cols = Math.max(22, Math.min(64, Math.round(width / 24)));
-    rows = Math.max(14, Math.min(30, Math.round(height / 34)));
+    cols = Math.max(24, Math.min(70, Math.round(width / 22)));
+    rows = Math.max(16, Math.min(34, Math.round(height / 32)));
 
     canvas.width = Math.round(width * dpr);
     canvas.height = Math.round(height * dpr);
@@ -220,42 +325,99 @@
     de = new Float32Array(n);
     tx = new Float32Array(n);
     te = new Float32Array(n);
+    vx = new Float32Array(n);
+    ve = new Float32Array(n);
     projX = new Float32Array(n);
     projY = new Float32Array(n);
     dragIndex = -1;
     hoverIndex = -1;
 
+    // Deterministic per-vertex glyph flag (row/col + seed hash, so a resize
+    // that rebuilds geometry re-rolls consistently rather than reusing stale
+    // indices against a differently-sized grid).
+    vertexGlyph = new Int8Array(n);
+    // Per-vertex size/opacity variance for plain-dot vertices, deterministic
+    // from row/col + seed so the field looks organic but stays stable across
+    // frames (re-rolled only when geometry rebuilds, same as vertexGlyph).
+    vertexSizeMul = new Float32Array(n);
+    vertexAlphaMul = new Float32Array(n);
+    for (var vr = 0; vr < rows; vr++) {
+      for (var vc = 0; vc < cols; vc++) {
+        var vi = vr * cols + vc;
+        var vRoll = hash2(vr, vc, seed + 7919);
+        vertexGlyph[vi] = vRoll < GLYPH_CHANCE
+          ? Math.floor(hash2(vc, vr, seed + 104729) * GLYPHS.length)
+          : -1;
+        vertexSizeMul[vi] = 0.7 + hash2(vr, vc, seed + 40961) * 0.65;
+        vertexAlphaMul[vi] = 0.8 + hash2(vc, vr, seed + 65537) * 0.4;
+      }
+    }
+
+    skyLinkAge = {};
     sky.length = 0;
-    var skyCount = Math.max(10, Math.min(38, Math.round((width * horizonY) / 15000)));
+    var skyCount = Math.max(14, Math.min(48, Math.round((width * horizonY) / 11000)));
     for (var i = 0; i < skyCount; i++) {
       sky.push({
         x: Math.random() * width,
         y: Math.random() * horizonY,
         r: 1.1 + Math.random() * 1.5,
-        vx: (Math.random() - 0.5) * 0.09,
-        vy: (Math.random() - 0.5) * 0.05,
+        // Floatier drift than before (0.09/0.05 -> 0.17/0.11), so the field
+        // feels less static without breaking the twinkle/link readability.
+        vx: (Math.random() - 0.5) * 0.17,
+        vy: (Math.random() - 0.5) * 0.11,
         a: 0.45 + Math.random() * 0.55,
+        glyph: Math.random() < SKY_GLYPH_CHANCE ? Math.floor(Math.random() * GLYPHS.length) : -1,
+        // Ripple displacement: a separate spring-back offset from the base
+        // wander position, so a cursor pass reads as a transient disturbance
+        // rather than a permanent change to the particle's drift.
+        rx: 0, ry: 0, rvx: 0, rvy: 0,
+        // Twinkle lifecycle: fade in, hold at full, fade out to transparent,
+        // then respawn elsewhere. Phase durations randomised so particles
+        // never sync up; `twinklePhase` starts partway through a random
+        // phase so the field doesn't all begin mid-fade-in on load.
+        twinkleState: 'in',
+        twinkleT: 0,
+        twinkleFadeIn: TWINKLE_FADE_MIN + Math.random() * (TWINKLE_FADE_MAX - TWINKLE_FADE_MIN),
+        twinkleHold: TWINKLE_HOLD_MIN + Math.random() * (TWINKLE_HOLD_MAX - TWINKLE_HOLD_MIN),
+        twinkleFadeOut: TWINKLE_FADE_MIN + Math.random() * (TWINKLE_FADE_MAX - TWINKLE_FADE_MIN),
+        twinkle: Math.random(),
       });
     }
   }
 
   // --- Drawing ---------------------------------------------------------------
-  function drawHorizon(hy) {
-    // Faded at both ends so the line reads as haze rather than a drawn rule.
-    var grad = ctx.createLinearGradient(0, 0, width, 0);
-    grad.addColorStop(0, 'transparent');
-    grad.addColorStop(0.5, colour);
-    grad.addColorStop(1, 'transparent');
-    ctx.globalAlpha = HORIZON_ALPHA;
-    ctx.strokeStyle = grad;
-    ctx.beginPath();
-    ctx.moveTo(0, hy);
-    ctx.lineTo(width, hy);
-    ctx.stroke();
-    ctx.strokeStyle = colour;
+  // Advances a sky particle's twinkle lifecycle by dt ms, respawning it at a
+  // new random position once a full fade-out completes.
+  function updateTwinkle(p, dt) {
+    p.twinkleT += dt;
+    if (p.twinkleState === 'in') {
+      p.twinkle = Math.min(1, p.twinkleT / p.twinkleFadeIn);
+      if (p.twinkleT >= p.twinkleFadeIn) { p.twinkleState = 'hold'; p.twinkleT = 0; }
+    } else if (p.twinkleState === 'hold') {
+      p.twinkle = 1;
+      if (p.twinkleT >= p.twinkleHold) { p.twinkleState = 'out'; p.twinkleT = 0; }
+    } else {
+      p.twinkle = Math.max(0, 1 - p.twinkleT / p.twinkleFadeOut);
+      if (p.twinkleT >= p.twinkleFadeOut) {
+        p.x = Math.random() * width;
+        p.y = Math.random() * horizonY;
+        p.twinkleState = 'in';
+        p.twinkleT = 0;
+        p.twinkle = 0;
+        p.twinkleFadeIn = TWINKLE_FADE_MIN + Math.random() * (TWINKLE_FADE_MAX - TWINKLE_FADE_MIN);
+        p.twinkleHold = TWINKLE_HOLD_MIN + Math.random() * (TWINKLE_HOLD_MAX - TWINKLE_HOLD_MIN);
+        p.twinkleFadeOut = TWINKLE_FADE_MIN + Math.random() * (TWINKLE_FADE_MAX - TWINKLE_FADE_MIN);
+      }
+    }
   }
 
   function drawSky() {
+    // Rebuilt fresh each frame from what's actually in range right now: a key
+    // missing from the previous frame's map means the link just formed, so it
+    // starts its spring-in fade from zero; a key that carries over keeps
+    // accumulating age until it reaches full opacity. Keys that drop out of
+    // range simply aren't copied forward, so they vanish instead of leaking.
+    var nextLinkAge = {};
     for (var i = 0; i < sky.length; i++) {
       var p = sky[i];
       for (var j = i + 1; j < sky.length; j++) {
@@ -264,19 +426,34 @@
         var ddy = p.y - q.y;
         var dist = Math.sqrt(ddx * ddx + ddy * ddy);
         if (dist >= SKY_LINK_DIST) continue;
-        ctx.globalAlpha = SKY_LINK_ALPHA * (1 - dist / SKY_LINK_DIST);
+        var key = i + ',' + j;
+        var age = (skyLinkAge[key] || 0) + frameDt;
+        nextLinkAge[key] = age;
+        var spawnT = Math.min(1, age / LINK_SPAWN_MS);
+        ctx.globalAlpha = SKY_LINK_ALPHA * (1 - dist / SKY_LINK_DIST) * spawnT;
         ctx.beginPath();
         ctx.moveTo(p.x, p.y);
         ctx.lineTo(q.x, q.y);
         ctx.stroke();
       }
     }
+    skyLinkAge = nextLinkAge;
+
     for (var k = 0; k < sky.length; k++) {
       var s = sky[k];
-      ctx.globalAlpha = SKY_ALPHA * s.a;
-      ctx.beginPath();
-      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.globalAlpha = SKY_ALPHA * s.a * s.twinkle;
+      if (s.glyph >= 0) {
+        ctx.save();
+        ctx.font = (s.r * 5.2 + 4) + 'px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(GLYPHS[s.glyph], s.x + s.rx, s.y + s.ry);
+        ctx.restore();
+      } else {
+        ctx.beginPath();
+        ctx.arc(s.x + s.rx, s.y + s.ry, s.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
     }
   }
 
@@ -325,10 +502,20 @@
         // A grabbed or hovered node gets a little more presence, so the
         // interaction has a visible target rather than an invisible hotspot.
         var lifted = (i === dragIndex) ? 1 : (i === hoverIndex ? 0.75 : 0);
-        ctx.globalAlpha = VERTEX_ALPHA * fade + lifted * 0.45;
-        ctx.beginPath();
-        ctx.arc(projX[i], projY[i], dotR + lifted * 1.8, 0, Math.PI * 2);
-        ctx.fill();
+        if (vertexGlyph[i] >= 0) {
+          ctx.globalAlpha = VERTEX_ALPHA * fade + lifted * 0.45;
+          ctx.save();
+          ctx.font = (dotR * 4.2 + lifted * 3) + 'px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(GLYPHS[vertexGlyph[i]], projX[i], projY[i]);
+          ctx.restore();
+        } else {
+          ctx.globalAlpha = VERTEX_ALPHA * fade * vertexAlphaMul[i] + lifted * 0.45;
+          ctx.beginPath();
+          ctx.arc(projX[i], projY[i], dotR * vertexSizeMul[i] + lifted * 1.8, 0, Math.PI * 2);
+          ctx.fill();
+        }
       }
 
       for (c = 0; c < cols; c++) { prevX[c] = projX[base + c]; prevY[c] = projY[base + c]; }
@@ -346,7 +533,6 @@
     ctx.lineWidth = 1;
     ctx.lineJoin = 'round';
 
-    drawHorizon(hy);
     drawSky();
     drawTerrain(cx, hy);
 
@@ -359,32 +545,66 @@
     if (frame === null) draw();
   }
 
+  // Spring-damper settle: a released node overshoots its retained position and
+  // rings back with decaying amplitude, rather than easing straight to it.
+  // Underdamped (SPRING_DAMPING < 1) so 1-2 visible oscillations happen before
+  // the node comes to rest.
   function settle() {
     for (var i = 0; i < dx.length; i++) {
       if (i === dragIndex) continue;
       var ax = tx[i] - dx[i];
       var ae = te[i] - de[i];
-      if (ax * ax + ae * ae < 0.0001) { dx[i] = tx[i]; de[i] = te[i]; continue; }
-      dx[i] += ax * SETTLE;
-      de[i] += ae * SETTLE;
+      if (ax * ax + ae * ae < 0.0001 && vx[i] * vx[i] + ve[i] * ve[i] < 0.0001) {
+        dx[i] = tx[i]; de[i] = te[i]; vx[i] = 0; ve[i] = 0;
+        continue;
+      }
+      vx[i] = (vx[i] + ax * SPRING_K) * SPRING_DAMPING;
+      ve[i] = (ve[i] + ae * SPRING_K) * SPRING_DAMPING;
+      dx[i] += vx[i];
+      de[i] += ve[i];
     }
   }
 
   function step(now) {
     if (!start) start = now;
     travel = (now - start) * SPEED;
+    swellPhase = (now - start) * SWELL_SPEED;
+    undulatePhase = (now - start) * UNDULATE_FREQ;
+    var dt = lastFrameTime ? Math.min(now - lastFrameTime, 48) : 16.7;
+    lastFrameTime = now;
+    frameDt = dt;
 
-    easedX += (pointerX - easedX) * 0.04;
-    easedY += (pointerY - easedY) * 0.04;
+    easedX += (pointerX - easedX) * PARALLAX_EASE;
+    easedY += (pointerY - easedY) * PARALLAX_EASE;
+
+    // Ripples travel outward on their own clock — nothing here reads the
+    // live pointer position, so a ring keeps expanding after the cursor
+    // has moved elsewhere or stopped.
+    for (var ri = ripples.length - 1; ri >= 0; ri--) {
+      var ring = ripples[ri];
+      ring.r += RIPPLE_SPEED * dt;
+      if (ring.r > RIPPLE_MAX_RADIUS) { ripples.splice(ri, 1); continue; }
+      applyRipple(ring);
+    }
 
     for (var i = 0; i < sky.length; i++) {
       var p = sky[i];
+      updateTwinkle(p, dt);
       p.x += p.vx;
       p.y += p.vy;
-      if (p.x < -10) p.x = width + 10;
-      if (p.x > width + 10) p.x = -10;
-      if (p.y < -10) p.y = horizonY;
-      if (p.y > horizonY) p.y = -10;
+      // Wrap keeps its full velocity (restitution 1) plus a small kick, so
+      // the field stays lively instead of losing energy at the seam.
+      if (p.x < -10) { p.x = width + 10; p.vx = clampSpeed(p.vx * 1.05); }
+      if (p.x > width + 10) { p.x = -10; p.vx = clampSpeed(p.vx * 1.05); }
+      if (p.y < -10) { p.y = horizonY; p.vy = clampSpeed(p.vy * 1.05); }
+      if (p.y > horizonY) { p.y = -10; p.vy = clampSpeed(p.vy * 1.05); }
+
+      // Ripple offset springs back to zero, same underdamped model as the
+      // terrain settle below, so a cursor pass fades rather than sticks.
+      p.rvx = (p.rvx + -p.rx * SPRING_K) * SPRING_DAMPING;
+      p.rvy = (p.rvy + -p.ry * SPRING_K) * SPRING_DAMPING;
+      p.rx += p.rvx;
+      p.ry += p.rvy;
     }
 
     settle();
@@ -449,6 +669,64 @@
     dx[i] = tx[i] = (px - cx) / k - colX[c];
     var elev = groundWorld - (py - hy) / k;
     de[i] = te[i] = elev - elevationAt(colX[c], rowDepth[r]);
+    vx[i] = 0;
+    ve[i] = 0;
+  }
+
+  // A ripple ring: a thin traveling band at radius `r` from a fixed origin.
+  // Terrain vertices / sky particles close to that band get an outward
+  // velocity kick; the amplitude decays as the ring expands, so it fades out
+  // on its own well before RIPPLE_MAX_RADIUS. They spring back through the
+  // same settle()/ripple-offset physics used for drag-release.
+  function applyRipple(ring) {
+    var half = RIPPLE_BAND / 2;
+    var decay = 1 - ring.r / RIPPLE_MAX_RADIUS;
+    if (decay <= 0) return;
+
+    for (var i = 0; i < projX.length; i++) {
+      if (i === dragIndex) continue;
+      var ddx = projX[i] - ring.x;
+      var ddy = projY[i] - ring.y;
+      var dist = Math.sqrt(ddx * ddx + ddy * ddy) || 0.0001;
+      var band = Math.abs(dist - ring.r);
+      if (band >= half) continue;
+      var bandFalloff = 1 - band / half;
+      var k = scaleAt(rowDepth[(i / cols) | 0]);
+      var push = bandFalloff * bandFalloff * decay * RIPPLE_STRENGTH / k;
+      vx[i] += (ddx / dist) * push;
+      ve[i] += (ddy / dist) * push;
+    }
+
+    for (var s = 0; s < sky.length; s++) {
+      var p = sky[s];
+      var sdx = (p.x + p.rx) - ring.x;
+      var sdy = (p.y + p.ry) - ring.y;
+      var sd = Math.sqrt(sdx * sdx + sdy * sdy) || 0.0001;
+      var sband = Math.abs(sd - ring.r);
+      if (sband >= half) continue;
+      var sf = 1 - sband / half;
+      var spush = sf * sf * decay * RIPPLE_STRENGTH * 0.35;
+      p.rvx += (sdx / sd) * spush;
+      p.rvy += (sdy / sd) * spush;
+    }
+  }
+
+  // Throttled spawn: a new ring is only created once the pointer has moved
+  // far enough (or enough time has passed) since the last one, so a sweep
+  // across the screen leaves a trail of a few rings rather than one per
+  // pixel of movement. The rings themselves never re-read pointer position.
+  function maybeSpawnRipple(px, py, now) {
+    if (!motionAllowed()) return;
+    var movedFar = lastRippleX === null ||
+      (px - lastRippleX) * (px - lastRippleX) + (py - lastRippleY) * (py - lastRippleY) >=
+        RIPPLE_SPAWN_DIST * RIPPLE_SPAWN_DIST;
+    if (!movedFar || now - lastRippleTime < RIPPLE_SPAWN_MS) return;
+
+    lastRippleX = px;
+    lastRippleY = py;
+    lastRippleTime = now;
+    if (ripples.length >= MAX_RIPPLES) ripples.shift();
+    ripples.push({ x: px, y: py, r: 0 });
   }
 
   if (finePointer.matches) {
@@ -469,6 +747,8 @@
     window.addEventListener('pointermove', function (event) {
       if (event.pointerType === 'touch') return;
 
+      maybeSpawnRipple(event.clientX, event.clientY, event.timeStamp || performance.now());
+
       if (dragIndex >= 0) {
         pullTo(dragIndex, event.clientX, event.clientY);
         event.preventDefault();
@@ -478,8 +758,8 @@
 
       // Shifting the vanishing point a little reads as looking around the
       // scene; more than this and the terrain visibly swims.
-      pointerX = ((event.clientX / width) - 0.5) * -34;
-      pointerY = ((event.clientY / height) - 0.5) * -18;
+      pointerX = ((event.clientX / width) - 0.5) * -16;
+      pointerY = ((event.clientY / height) - 0.5) * -9;
 
       var i = interactiveTarget(event) ? -1 : nearestNode(event.clientX, event.clientY);
       if (i !== hoverIndex) {
@@ -494,7 +774,13 @@
       // Float back a little of the way, then hold near where it was dropped.
       tx[dragIndex] = dx[dragIndex] * RETAIN;
       te[dragIndex] = de[dragIndex] * RETAIN;
-      if (!motionAllowed()) {
+      if (motionAllowed()) {
+        // Kick proportional to the full retained delta, not just the spring's
+        // short remaining travel, so the release bounce reads against the
+        // actual drag distance. See RELEASE_KICK comment above.
+        vx[dragIndex] = -(dx[dragIndex] - tx[dragIndex]) * RELEASE_KICK;
+        ve[dragIndex] = -(de[dragIndex] - te[dragIndex]) * RELEASE_KICK;
+      } else {
         dx[dragIndex] = tx[dragIndex];
         de[dragIndex] = te[dragIndex];
       }

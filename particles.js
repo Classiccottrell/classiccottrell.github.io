@@ -67,6 +67,14 @@
   var VERTEX_EVERY = 2;
   var FADE_POWER = 2.0;
 
+  // Rare special-character vertices/particles: a small, curated, geometric
+  // glyph set that fits the wireframe aesthetic — chosen once per node at
+  // geometry-build time (deterministic, not re-rolled every frame) so it
+  // reads as an occasional easter egg rather than noise.
+  var GLYPHS = ['♪', '✦', '✧', '∴', '⟡'];
+  var GLYPH_CHANCE = 0.045; // ~4.5% of terrain vertices
+  var SKY_GLYPH_CHANCE = 0.05; // ~5% of sky particles (nice-to-have reuse)
+
   // --- Motion ----------------------------------------------------------------
   var SPEED = 0.000017;
   var NOISE_X = 0.0026;
@@ -80,7 +88,7 @@
   // a scrolling skyline. Frequency/amplitude kept tame: subtle-plus, not storm.
   var SWELL_FREQ = 0.0006;   // spatial frequency across depth (world z)
   var SWELL_SPEED = 0.00045; // phase advance per ms
-  var SWELL_AMP = 0.16;      // fraction of peak height added by the swell
+  var SWELL_AMP = 0.09;      // fraction of peak height added by the swell (was 0.16 — toned down for a steadier read)
 
   // Per-vertex undulation layered on top of the shared swell above: every
   // vertex gets its own phase (derived from its grid position) so neighbours
@@ -88,7 +96,11 @@
   // around" rather than one uniform wave. Kept small relative to SWELL_AMP so
   // it adds life without shaking the terrain.
   var UNDULATE_FREQ = 0.00085;  // per-vertex phase advance per ms
-  var UNDULATE_AMP = 0.05;      // fraction of peak height per vertex
+  var UNDULATE_AMP = 0.028;     // fraction of peak height per vertex (was 0.05 — toned down for a steadier read)
+  // Checkerboard cell size (world units) for the alternating sign below — tuned
+  // to roughly the grid's own spacing so the flip is visible between neighbours
+  // rather than only across large regions.
+  var UNDULATE_CELL = 34;
 
   // --- Drag --------------------------------------------------------------
   var GRAB_RADIUS = 26;       // px from a node's centre that counts as a grab
@@ -137,6 +149,15 @@
   // Per-node drag state, indexed r * cols + c. dx/de are the live displacement
   // (world x, elevation); tx/te are what it is easing toward.
   var dx, de, tx, te, vx, ve, projX, projY;
+  // Per-vertex glyph assignment: -1 means "draw the usual dot", otherwise an
+  // index into GLYPHS. Fixed at buildGeometry() time, not re-rolled per frame.
+  var vertexGlyph;
+  // Cross-frame sky-link state ("i,j" -> ms since the link first formed), so a
+  // freshly-formed connector line can fade/scale in rather than snapping to
+  // full opacity — the "spring into existence" spiderweb effect.
+  var skyLinkAge = {};
+  var LINK_SPAWN_MS = 420;
+  var frameDt = 16.7;
 
   var frame = null;
   var resizeTimer = null;
@@ -219,10 +240,18 @@
     // rather than just scrolling, so the terrain reads as rolling waves.
     var swell = Math.sin(worldZ * SWELL_FREQ + swellPhase) * SWELL_AMP * peakWorld;
     // Per-vertex undulation: each (worldX, worldZ) gets a fixed spatial phase
-    // offset (from a cheap sine of its own position), so neighbouring vertices
-    // drift out of sync with each other and with the shared swell above.
-    var vertexPhase = (worldX * 0.013 + worldZ * 0.007) * Math.PI * 2;
-    var undulate = Math.sin(undulatePhase + vertexPhase) * UNDULATE_AMP * peakWorld;
+    // offset (from a cheap sine of its own position, at a high enough spatial
+    // frequency that adjacent vertices land in visibly different phase), so
+    // neighbouring vertices drift out of sync with each other and with the
+    // shared swell above.
+    var vertexPhase = (worldX * 0.045 + worldZ * 0.03) * Math.PI * 2;
+    // Checkerboard sign flip on top of the phase drift above: this is what
+    // makes adjacent nodes/rows read as moving in visibly OPPOSITE directions
+    // (an interference-pattern look) rather than a smooth shared ripple.
+    var cellX = Math.floor(worldX / UNDULATE_CELL);
+    var cellZ = Math.floor(worldZ / UNDULATE_CELL);
+    var altSign = ((cellX + cellZ) & 1) ? -1 : 1;
+    var undulate = Math.sin(undulatePhase + vertexPhase) * UNDULATE_AMP * peakWorld * altSign;
     return ridge + swell + undulate;
   }
 
@@ -236,7 +265,7 @@
   var TWINKLE_HOLD_MIN = 1500;  // ms, shortest fully-visible hold
   var TWINKLE_HOLD_MAX = 4500;  // ms, longest fully-visible hold
 
-  var SKY_MAX_SPEED = 0.16; // ceiling for the small wrap-edge speed kick
+  var SKY_MAX_SPEED = 0.26; // ceiling for the small wrap-edge speed kick (raised for floatier drift)
   function clampSpeed(v) {
     return v > SKY_MAX_SPEED ? SKY_MAX_SPEED : v < -SKY_MAX_SPEED ? -SKY_MAX_SPEED : v;
   }
@@ -301,6 +330,21 @@
     dragIndex = -1;
     hoverIndex = -1;
 
+    // Deterministic per-vertex glyph flag (row/col + seed hash, so a resize
+    // that rebuilds geometry re-rolls consistently rather than reusing stale
+    // indices against a differently-sized grid).
+    vertexGlyph = new Int8Array(n);
+    for (var vr = 0; vr < rows; vr++) {
+      for (var vc = 0; vc < cols; vc++) {
+        var vi = vr * cols + vc;
+        var vRoll = hash2(vr, vc, seed + 7919);
+        vertexGlyph[vi] = vRoll < GLYPH_CHANCE
+          ? Math.floor(hash2(vc, vr, seed + 104729) * GLYPHS.length)
+          : -1;
+      }
+    }
+
+    skyLinkAge = {};
     sky.length = 0;
     var skyCount = Math.max(14, Math.min(48, Math.round((width * horizonY) / 11000)));
     for (var i = 0; i < skyCount; i++) {
@@ -308,9 +352,12 @@
         x: Math.random() * width,
         y: Math.random() * horizonY,
         r: 1.1 + Math.random() * 1.5,
-        vx: (Math.random() - 0.5) * 0.09,
-        vy: (Math.random() - 0.5) * 0.05,
+        // Floatier drift than before (0.09/0.05 -> 0.17/0.11), so the field
+        // feels less static without breaking the twinkle/link readability.
+        vx: (Math.random() - 0.5) * 0.17,
+        vy: (Math.random() - 0.5) * 0.11,
         a: 0.45 + Math.random() * 0.55,
+        glyph: Math.random() < SKY_GLYPH_CHANCE ? Math.floor(Math.random() * GLYPHS.length) : -1,
         // Ripple displacement: a separate spring-back offset from the base
         // wander position, so a cursor pass reads as a transient disturbance
         // rather than a permanent change to the particle's drift.
@@ -356,6 +403,12 @@
   }
 
   function drawSky() {
+    // Rebuilt fresh each frame from what's actually in range right now: a key
+    // missing from the previous frame's map means the link just formed, so it
+    // starts its spring-in fade from zero; a key that carries over keeps
+    // accumulating age until it reaches full opacity. Keys that drop out of
+    // range simply aren't copied forward, so they vanish instead of leaking.
+    var nextLinkAge = {};
     for (var i = 0; i < sky.length; i++) {
       var p = sky[i];
       for (var j = i + 1; j < sky.length; j++) {
@@ -364,19 +417,34 @@
         var ddy = p.y - q.y;
         var dist = Math.sqrt(ddx * ddx + ddy * ddy);
         if (dist >= SKY_LINK_DIST) continue;
-        ctx.globalAlpha = SKY_LINK_ALPHA * (1 - dist / SKY_LINK_DIST);
+        var key = i + ',' + j;
+        var age = (skyLinkAge[key] || 0) + frameDt;
+        nextLinkAge[key] = age;
+        var spawnT = Math.min(1, age / LINK_SPAWN_MS);
+        ctx.globalAlpha = SKY_LINK_ALPHA * (1 - dist / SKY_LINK_DIST) * spawnT;
         ctx.beginPath();
         ctx.moveTo(p.x, p.y);
         ctx.lineTo(q.x, q.y);
         ctx.stroke();
       }
     }
+    skyLinkAge = nextLinkAge;
+
     for (var k = 0; k < sky.length; k++) {
       var s = sky[k];
       ctx.globalAlpha = SKY_ALPHA * s.a * s.twinkle;
-      ctx.beginPath();
-      ctx.arc(s.x + s.rx, s.y + s.ry, s.r, 0, Math.PI * 2);
-      ctx.fill();
+      if (s.glyph >= 0) {
+        ctx.save();
+        ctx.font = (s.r * 5.2 + 4) + 'px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(GLYPHS[s.glyph], s.x + s.rx, s.y + s.ry);
+        ctx.restore();
+      } else {
+        ctx.beginPath();
+        ctx.arc(s.x + s.rx, s.y + s.ry, s.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
     }
   }
 
@@ -426,9 +494,18 @@
         // interaction has a visible target rather than an invisible hotspot.
         var lifted = (i === dragIndex) ? 1 : (i === hoverIndex ? 0.75 : 0);
         ctx.globalAlpha = VERTEX_ALPHA * fade + lifted * 0.45;
-        ctx.beginPath();
-        ctx.arc(projX[i], projY[i], dotR + lifted * 1.8, 0, Math.PI * 2);
-        ctx.fill();
+        if (vertexGlyph[i] >= 0) {
+          ctx.save();
+          ctx.font = (dotR * 4.2 + lifted * 3) + 'px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(GLYPHS[vertexGlyph[i]], projX[i], projY[i]);
+          ctx.restore();
+        } else {
+          ctx.beginPath();
+          ctx.arc(projX[i], projY[i], dotR + lifted * 1.8, 0, Math.PI * 2);
+          ctx.fill();
+        }
       }
 
       for (c = 0; c < cols; c++) { prevX[c] = projX[base + c]; prevY[c] = projY[base + c]; }
@@ -485,6 +562,7 @@
     undulatePhase = (now - start) * UNDULATE_FREQ;
     var dt = lastFrameTime ? Math.min(now - lastFrameTime, 48) : 16.7;
     lastFrameTime = now;
+    frameDt = dt;
 
     easedX += (pointerX - easedX) * PARALLAX_EASE;
     easedY += (pointerY - easedY) * PARALLAX_EASE;

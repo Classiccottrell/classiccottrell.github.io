@@ -80,7 +80,7 @@
   var NOISE_X = 0.0026;
   var NOISE_Z = 0.0008;
   var SKY_LINK_DIST = 86;
-  var PARALLAX_EASE = 0.035;  // pointer-parallax follow rate, kept gentle for a steadier read
+  var PARALLAX_EASE = 0.02;  // pointer-parallax follow rate, kept gentle for a steadier read
 
   // A slow sinusoidal swell layered on top of the ridged noise, independent of
   // the noise scroll above — this is what turns "ridges sliding sideways"
@@ -152,6 +152,8 @@
   // Per-vertex glyph assignment: -1 means "draw the usual dot", otherwise an
   // index into GLYPHS. Fixed at buildGeometry() time, not re-rolled per frame.
   var vertexGlyph;
+  var vertexSizeMul;
+  var vertexAlphaMul;
   // Cross-frame sky-link state ("i,j" -> ms since the link first formed), so a
   // freshly-formed connector line can fade/scale in rather than snapping to
   // full opacity — the "spring into existence" spiderweb effect.
@@ -334,6 +336,11 @@
     // that rebuilds geometry re-rolls consistently rather than reusing stale
     // indices against a differently-sized grid).
     vertexGlyph = new Int8Array(n);
+    // Per-vertex size/opacity variance for plain-dot vertices, deterministic
+    // from row/col + seed so the field looks organic but stays stable across
+    // frames (re-rolled only when geometry rebuilds, same as vertexGlyph).
+    vertexSizeMul = new Float32Array(n);
+    vertexAlphaMul = new Float32Array(n);
     for (var vr = 0; vr < rows; vr++) {
       for (var vc = 0; vc < cols; vc++) {
         var vi = vr * cols + vc;
@@ -341,6 +348,8 @@
         vertexGlyph[vi] = vRoll < GLYPH_CHANCE
           ? Math.floor(hash2(vc, vr, seed + 104729) * GLYPHS.length)
           : -1;
+        vertexSizeMul[vi] = 0.7 + hash2(vr, vc, seed + 40961) * 0.65;
+        vertexAlphaMul[vi] = 0.8 + hash2(vc, vr, seed + 65537) * 0.4;
       }
     }
 
@@ -493,8 +502,8 @@
         // A grabbed or hovered node gets a little more presence, so the
         // interaction has a visible target rather than an invisible hotspot.
         var lifted = (i === dragIndex) ? 1 : (i === hoverIndex ? 0.75 : 0);
-        ctx.globalAlpha = VERTEX_ALPHA * fade + lifted * 0.45;
         if (vertexGlyph[i] >= 0) {
+          ctx.globalAlpha = VERTEX_ALPHA * fade + lifted * 0.45;
           ctx.save();
           ctx.font = (dotR * 4.2 + lifted * 3) + 'px sans-serif';
           ctx.textAlign = 'center';
@@ -502,8 +511,9 @@
           ctx.fillText(GLYPHS[vertexGlyph[i]], projX[i], projY[i]);
           ctx.restore();
         } else {
+          ctx.globalAlpha = VERTEX_ALPHA * fade * vertexAlphaMul[i] + lifted * 0.45;
           ctx.beginPath();
-          ctx.arc(projX[i], projY[i], dotR + lifted * 1.8, 0, Math.PI * 2);
+          ctx.arc(projX[i], projY[i], dotR * vertexSizeMul[i] + lifted * 1.8, 0, Math.PI * 2);
           ctx.fill();
         }
       }
@@ -748,8 +758,8 @@
 
       // Shifting the vanishing point a little reads as looking around the
       // scene; more than this and the terrain visibly swims.
-      pointerX = ((event.clientX / width) - 0.5) * -34;
-      pointerY = ((event.clientY / height) - 0.5) * -18;
+      pointerX = ((event.clientX / width) - 0.5) * -16;
+      pointerY = ((event.clientY / height) - 0.5) * -9;
 
       var i = interactiveTarget(event) ? -1 : nearestNode(event.clientX, event.clientY);
       if (i !== hoverIndex) {

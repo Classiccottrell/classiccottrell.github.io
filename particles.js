@@ -72,8 +72,8 @@
   // geometry-build time (deterministic, not re-rolled every frame) so it
   // reads as an occasional easter egg rather than noise.
   var GLYPHS = ['♪', '✦', '✧', '∴', '⟡'];
-  var GLYPH_CHANCE = 0.045; // ~4.5% of terrain vertices
-  var SKY_GLYPH_CHANCE = 0.05; // ~5% of sky particles (nice-to-have reuse)
+  var GLYPH_CHANCE = 0.13; // ~13% of terrain vertices
+  var SKY_GLYPH_CHANCE = 0.15; // ~15% of sky particles (nice-to-have reuse)
 
   // --- Motion ----------------------------------------------------------------
   var SPEED = 0.000017;
@@ -104,30 +104,35 @@
 
   // --- Drag --------------------------------------------------------------
   var GRAB_RADIUS = 26;       // px from a node's centre that counts as a grab
-  var RETAIN = 0.82;          // fraction of the pull a node keeps on release
+  var RETAIN = 0.58;          // fraction of the pull a node keeps on release
   var SPRING_K = 0.15;        // spring stiffness pulling a settling node toward its target
   var SPRING_DAMPING = 0.66;  // velocity damping per frame; <1 stays underdamped (lets it overshoot)
-  // Only 1-RETAIN (18%) of the drag is the spring's actual travel distance, so a
-  // resting spring's natural overshoot on that short hop reads as ~1-2% of the
-  // full on-screen drag - imperceptible. Kick release velocity proportional to
+  // 1-RETAIN (42%) of the drag is now the spring's actual travel distance, so the
+  // resting spring's natural overshoot on that hop already reads as a visible
+  // fraction of the full on-screen drag. Kick release velocity proportional to
   // the FULL retained delta (dx-tx) so overshoot is visible relative to how far
-  // the user actually dragged, not just the small unretained remainder.
-  // Simulated: kickFactor 1.4 with SPRING_K/SPRING_DAMPING above -> peak overshoot
-  // ~21.8% of drag distance for D=40/60/80px (linear system, scale-invariant),
-  // e.g. a 60px drag overshoots ~13.1px - inside the 15-25% clearly-readable band
-  // (kickFactor 0.8 gave only ~10.3%, i.e. ~6.2px on the same drag - too subtle).
-  var RELEASE_KICK = 1.4;
+  // the user actually dragged, not just the unretained remainder.
+  // Simulated: kickFactor 2.0 with SPRING_K/SPRING_DAMPING above -> peak overshoot
+  // ~34% of drag distance for D=40/60/80px (linear system, scale-invariant),
+  // e.g. a 60px drag overshoots ~20px - a clearly-readable bounce rather than a
+  // subtle wobble.
+  var RELEASE_KICK = 2.0;
 
   // --- Ripple (expanding wavefront, spawned by the cursor but travels on its
   // own — it must not read as "following the cursor") -----------------------
   var RIPPLE_SPAWN_DIST = 40;   // px the pointer must move before a new ring spawns
   var RIPPLE_SPAWN_MS = 90;     // minimum ms between spawns, even if moving fast
-  var RIPPLE_BAND = 70;         // px thickness of the traveling wavefront
+  var RIPPLE_BAND = 110;        // px thickness of the traveling wavefront (widened from 70
+                                 // so the falloff is softer and a drag's neighbour push
+                                 // reads across more nodes, not just a thin ring)
   var RIPPLE_SPEED = 0.4;       // px/ms the ring's radius grows
   var RIPPLE_MAX_RADIUS = 1200; // px travelled before the ring is retired
   // Lifetime = RIPPLE_MAX_RADIUS / RIPPLE_SPEED = 1200/0.4 = 3000ms (was 520/0.5
   // = 1040ms) — roughly triples ring lifetime into the 2.5-3.5s "lasts longer" band.
-  var RIPPLE_STRENGTH = 3.2;    // world-unit velocity kick at the wavefront's peak
+  var RIPPLE_STRENGTH = 5.5;    // world-unit velocity kick at the wavefront's peak
+                                 // (raised from 3.2 so a drag's own ripple visibly
+                                 // pushes neighbouring terrain nodes/lines, not just
+                                 // sky particles)
   var MAX_RIPPLES = 5;          // concurrent rings kept alive (trimmed from 8 since
                                  // rings now overlap far longer at the same spawn rate)
 
@@ -154,6 +159,10 @@
   var vertexGlyph;
   var vertexSizeMul;
   var vertexAlphaMul;
+  // Deterministic per-vertex glyph-size multiplier, same hash pattern as the
+  // two above but a distinct seed offset — drastic drawn range (~0.5-2.2x) so
+  // glyphs read as clearly varied in size, not just present/absent.
+  var vertexGlyphSizeMul;
   // Cross-frame sky-link state ("i,j" -> ms since the link first formed), so a
   // freshly-formed connector line can fade/scale in rather than snapping to
   // full opacity — the "spring into existence" spiderweb effect.
@@ -170,6 +179,25 @@
   var pointerY = 0;
   var easedX = 0;
   var easedY = 0;
+
+  // Raw last screen coords (unlike pointerX/Y above, not parallax-transformed)
+  // used only to vortex sky dots around the cursor; null while the pointer
+  // hasn't moved yet so step() can skip the hover pass entirely.
+  var rawPointerX = null;
+  var rawPointerY = null;
+  var VORTEX_RADIUS = 140;      // px hover range for the swirl nudge
+  var VORTEX_STRENGTH = 0.012;  // tangential velocity kick at zero distance
+
+  // Cached vertical haze gradient over the terrain, rebuilt only on
+  // resize/colour change rather than every frame (it never varies within
+  // those bounds, so redoing it per-frame would be pure waste).
+  var hazeGradient = null;
+  function buildHazeGradient() {
+    var g = ctx.createLinearGradient(0, 0, 0, horizonY);
+    g.addColorStop(0, colour);
+    g.addColorStop(1, 'transparent');
+    hazeGradient = g;
+  }
 
   var dragIndex = -1;
   var hoverIndex = -1;
@@ -341,6 +369,7 @@
     // frames (re-rolled only when geometry rebuilds, same as vertexGlyph).
     vertexSizeMul = new Float32Array(n);
     vertexAlphaMul = new Float32Array(n);
+    vertexGlyphSizeMul = new Float32Array(n);
     for (var vr = 0; vr < rows; vr++) {
       for (var vc = 0; vc < cols; vc++) {
         var vi = vr * cols + vc;
@@ -348,8 +377,9 @@
         vertexGlyph[vi] = vRoll < GLYPH_CHANCE
           ? Math.floor(hash2(vc, vr, seed + 104729) * GLYPHS.length)
           : -1;
-        vertexSizeMul[vi] = 0.7 + hash2(vr, vc, seed + 40961) * 0.65;
+        vertexSizeMul[vi] = 0.5 + hash2(vr, vc, seed + 40961) * 1.4;
         vertexAlphaMul[vi] = 0.8 + hash2(vc, vr, seed + 65537) * 0.4;
+        vertexGlyphSizeMul[vi] = 0.5 + hash2(vr, vc, seed + 24847) * 1.7;
       }
     }
 
@@ -367,6 +397,10 @@
         vy: (Math.random() - 0.5) * 0.11,
         a: 0.45 + Math.random() * 0.55,
         glyph: Math.random() < SKY_GLYPH_CHANCE ? Math.floor(Math.random() * GLYPHS.length) : -1,
+        // Per-particle glyph-size multiplier, same drastic range as the terrain
+        // vertex one — random() is fine here (sky particles already respawn
+        // with fresh random state, no rebuild-stability need like the terrain grid).
+        glyphSizeMul: 0.5 + Math.random() * 1.7,
         // Ripple displacement: a separate spring-back offset from the base
         // wander position, so a cursor pass reads as a transient disturbance
         // rather than a permanent change to the particle's drift.
@@ -444,7 +478,7 @@
       ctx.globalAlpha = SKY_ALPHA * s.a * s.twinkle;
       if (s.glyph >= 0) {
         ctx.save();
-        ctx.font = (s.r * 5.2 + 4) + 'px sans-serif';
+        ctx.font = (s.r * 5.2 + 4) * s.glyphSizeMul + 'px sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(GLYPHS[s.glyph], s.x + s.rx, s.y + s.ry);
@@ -505,7 +539,7 @@
         if (vertexGlyph[i] >= 0) {
           ctx.globalAlpha = VERTEX_ALPHA * fade + lifted * 0.45;
           ctx.save();
-          ctx.font = (dotR * 4.2 + lifted * 3) + 'px sans-serif';
+          ctx.font = (dotR * 4.2 + lifted * 3) * vertexGlyphSizeMul[i] + 'px sans-serif';
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
           ctx.fillText(GLYPHS[vertexGlyph[i]], projX[i], projY[i]);
@@ -534,6 +568,18 @@
     ctx.lineJoin = 'round';
 
     drawSky();
+
+    // Ambient colour haze falling from the top of the canvas onto the waves,
+    // drawn between the sky and terrain passes so it sits under the terrain
+    // lines rather than washing them out.
+    if (hazeGradient) {
+      ctx.save();
+      ctx.globalAlpha = 0.12;
+      ctx.fillStyle = hazeGradient;
+      ctx.fillRect(0, 0, width, horizonY);
+      ctx.restore();
+    }
+
     drawTerrain(cx, hy);
 
     ctx.globalAlpha = 1;
@@ -587,6 +633,12 @@
       applyRipple(ring);
     }
 
+    // Vortex-on-hover: nudge nearby sky particles' ripple velocity tangentially
+    // (perpendicular to the pointer->particle vector) so they swirl around the
+    // cursor rather than being pushed straight away like a ripple. Reuses the
+    // same rvx/rvy spring-back below, so no separate settle logic is needed.
+    var vortexActive = finePointer.matches && motionAllowed() && rawPointerX !== null;
+
     for (var i = 0; i < sky.length; i++) {
       var p = sky[i];
       updateTwinkle(p, dt);
@@ -598,6 +650,20 @@
       if (p.x > width + 10) { p.x = -10; p.vx = clampSpeed(p.vx * 1.05); }
       if (p.y < -10) { p.y = horizonY; p.vy = clampSpeed(p.vy * 1.05); }
       if (p.y > horizonY) { p.y = -10; p.vy = clampSpeed(p.vy * 1.05); }
+
+      if (vortexActive) {
+        var vdx = p.x - rawPointerX;
+        var vdy = p.y - rawPointerY;
+        var vdist = Math.sqrt(vdx * vdx + vdy * vdy);
+        if (vdist < VORTEX_RADIUS) {
+          var vproximity = 1 - vdist / VORTEX_RADIUS;
+          var vd = vdist || 0.0001;
+          // Perpendicular to the pointer->particle vector = tangential, i.e.
+          // it spins the particle around the cursor rather than toward/away.
+          p.rvx += (-vdy / vd) * VORTEX_STRENGTH * vproximity * dt;
+          p.rvy += (vdx / vd) * VORTEX_STRENGTH * vproximity * dt;
+        }
+      }
 
       // Ripple offset springs back to zero, same underdamped model as the
       // terrain settle below, so a cursor pass fades rather than sticks.
@@ -635,6 +701,7 @@
     resize();
     buildGeometry();
     readColour();
+    buildHazeGradient();
     run();
   }
 
@@ -747,6 +814,9 @@
     window.addEventListener('pointermove', function (event) {
       if (event.pointerType === 'touch') return;
 
+      rawPointerX = event.clientX;
+      rawPointerY = event.clientY;
+
       maybeSpawnRipple(event.clientX, event.clientY, event.timeStamp || performance.now());
 
       if (dragIndex >= 0) {
@@ -810,6 +880,7 @@
   // stop, since "brutal" is a motion-free theme) when it changes.
   new MutationObserver(function () {
     readColour();
+    buildHazeGradient();
     run();
   }).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
 

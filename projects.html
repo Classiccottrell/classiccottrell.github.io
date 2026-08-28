@@ -20,14 +20,15 @@
     href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Rosarivo:ital@0;1&display=swap"
     rel="stylesheet">
 
-  <link rel="icon" href="img/favicon.png" id="favicon" />
+  <link rel="icon" href="img/favicon-32.png" id="favicon" />
   <script>
     (function () {
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       var icon = document.getElementById('favicon');
-      var frames = ['img/favicon.png', 'img/Fav-con-terry.png', 'img/Fav-con-terry1.png', 'img/Fav-con-terry2.png', 'img/Fav-con-terry3.png', 'img/Fav-con-terry4.png'];
+      var frames = ['img/favicon-32.png', 'img/Fav-con-terry-32.png', 'img/Fav-con-terry1-32.png', 'img/Fav-con-terry2-32.png', 'img/Fav-con-terry3-32.png', 'img/Fav-con-terry4-32.png'];
       var i = 0;
       setInterval(function () {
+        if (document.hidden) return;
         i = (i + 1) % frames.length;
         icon.href = frames[i];
       }, 3000);
@@ -37,6 +38,7 @@
 </head>
 
 <body class="projects-page">
+  <a href="#main" class="skip-link">Skip to main content</a>
   <script>(function(){function fromCookie(){var m=document.cookie.split('; ').find(function(r){return r.indexOf('site-theme=')===0;});return m?decodeURIComponent(m.split('=')[1]):null;}var vals=['default','bolder','shadcn','brutal'];var t=fromCookie();if(!vals.includes(t))t=localStorage.getItem('site-theme');if(!vals.includes(t))t='default';document.documentElement.setAttribute('data-theme',t);}());</script>
 
   <div id="header"><!-- build:header -->
@@ -51,20 +53,20 @@
         <a href="art.html" class="header-link">Art</a>
         <a href="writing.html" class="header-link">Writing</a>
         <a href="projects.html" class="header-link active" aria-current="page">Projects</a>
-        <a href="https://shop.classiccottrell.ca" target="_blank" class="header-link">Shop</a>
+        <a href="https://shop.classiccottrell.ca" target="_blank" rel="noopener noreferrer" class="header-link">Shop<span class="visually-hidden"> (opens in a new tab)</span></a>
       </div>
     </div>
     <div class="social-icons">
-      <a href="https://github.com/Classiccottrell" target="_blank" class="social-link" aria-label="GitHub">
+      <a href="https://github.com/Classiccottrell" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="GitHub (opens in a new tab)">
         <span class="social-icon github" aria-hidden="true"></span>
       </a>
-      <a href="https://www.instagram.com/classiccottrell" target="_blank" class="social-link" aria-label="Instagram">
+      <a href="https://www.instagram.com/classiccottrell" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Instagram (opens in a new tab)">
         <span class="social-icon instagram" aria-hidden="true"></span>
       </a>
-      <a href="https://classiccottrell.substack.com/" target="_blank" class="social-link" aria-label="Substack">
+      <a href="https://classiccottrell.substack.com/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Substack (opens in a new tab)">
         <span class="social-icon substack" aria-hidden="true"></span>
       </a>
-      <a href="https://www.linkedin.com/in/classiccottrell/" target="_blank" class="social-link" aria-label="LinkedIn">
+      <a href="https://www.linkedin.com/in/classiccottrell/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="LinkedIn (opens in a new tab)">
         <span class="social-icon linked" aria-hidden="true"></span>
       </a>
     </div>
@@ -78,12 +80,12 @@
     <a href="art.html" class="nav-drawer-link header-link"><span class="nav-drawer-index">02</span>Art</a>
     <a href="writing.html" class="nav-drawer-link header-link"><span class="nav-drawer-index">03</span>Writing</a>
     <a href="projects.html" class="nav-drawer-link header-link active" aria-current="page"><span class="nav-drawer-index">04</span>Projects</a>
-    <a href="https://shop.classiccottrell.ca" target="_blank" class="nav-drawer-link header-link"><span class="nav-drawer-index">05</span>Shop</a>
+    <a href="https://shop.classiccottrell.ca" target="_blank" rel="noopener noreferrer" class="nav-drawer-link header-link"><span class="nav-drawer-index">05</span>Shop<span class="visually-hidden"> (opens in a new tab)</span></a>
   </nav>
 </aside>
 <!-- /build:header --></div>
 
-  <main class="projects-shell">
+  <main id="main" class="projects-shell">
     <nav class="projects-nav reveal" aria-label="Projects"></nav>
     <div class="project-detail" id="project-detail"></div>
   </main>
@@ -94,16 +96,16 @@
   <p class="title-footer">Product design and Strategy</p>
 
   <div class="social-icons">
-    <a href="https://github.com/Classiccottrell" target="_blank" class="social-link" aria-label="GitHub">
+    <a href="https://github.com/Classiccottrell" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="GitHub (opens in a new tab)">
       <span class="social-icon github" aria-hidden="true"></span>
     </a>
-    <a href="https://www.instagram.com/classiccottrell" target="_blank" class="social-link" aria-label="Instagram">
+    <a href="https://www.instagram.com/classiccottrell" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Instagram (opens in a new tab)">
       <span class="social-icon instagram" aria-hidden="true"></span>
     </a>
-    <a href="https://classiccottrell.substack.com/" target="_blank" class="social-link" aria-label="Substack">
+    <a href="https://classiccottrell.substack.com/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Substack (opens in a new tab)">
       <span class="social-icon substack" aria-hidden="true"></span>
     </a>
-    <a href="https://www.linkedin.com/in/classiccottrell/" target="_blank" class="social-link" aria-label="LinkedIn">
+    <a href="https://www.linkedin.com/in/classiccottrell/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="LinkedIn (opens in a new tab)">
       <span class="social-icon linked" aria-hidden="true"></span>
     </a>
   </div>
@@ -152,7 +154,13 @@
           `).join('');
       }
       nav.querySelectorAll('.project-nav-item').forEach(item => {
-        item.classList.toggle('active', item.dataset.id === activeId);
+        const isActive = item.dataset.id === activeId;
+        item.classList.toggle('active', isActive);
+        if (isActive) {
+          item.setAttribute('aria-current', 'true');
+        } else {
+          item.removeAttribute('aria-current');
+        }
       });
     }
 
@@ -185,7 +193,7 @@
         ? `<img class="project-product-image reveal" style="--d:1" src="${escapeHtml(project.image)}" alt="${escapeHtml(project.title)} product photo" loading="lazy">`
         : '';
       const buyCta = project.product
-        ? `<a href="${escapeHtml(project.product.url)}" target="_blank" class="project-buy-cta">${escapeHtml(project.product.label)} &rarr;</a>`
+        ? `<a href="${escapeHtml(project.product.url)}" target="_blank" rel="noopener noreferrer" class="project-buy-cta">${escapeHtml(project.product.label)} &rarr;<span class="visually-hidden"> (opens in a new tab)</span></a>`
         : '';
       return `
         <div class="project-product">
@@ -201,12 +209,12 @@
         <p class="writing-card-date reveal">${escapeHtml(project.status)}</p>
         <div class="project-heading-row">
           <div class="project-heading-text">
-            <h1 class="project-title rosarivo-regular reveal" style="--d:1">${escapeHtml(project.title)}</h1>
+            <h1 class="project-title rosarivo-regular reveal" style="--d:1" tabindex="-1">${escapeHtml(project.title)}</h1>
             <p class="project-subtitle reveal" style="--d:2">${escapeHtml(project.subtitle)}</p>
           </div>
           <div class="project-repo-links">
             ${project.repos.map(r => `
-              <a href="${r.url}" target="_blank" class="project-repo-link" aria-label="${escapeHtml(r.label)} on GitHub">
+              <a href="${r.url}" target="_blank" rel="noopener noreferrer" class="project-repo-link" aria-label="${escapeHtml(r.label)} on GitHub (opens in a new tab)">
                 <span class="project-repo-icon" aria-hidden="true"></span>
                 ${project.repos.length > 1 ? `<span class="project-repo-label">${escapeHtml(r.label)}</span>` : ''}
               </a>
@@ -218,11 +226,13 @@
         ${project.ctaUrl ? `
         <section>
           <p class="project-cta">
-            <a href="${project.ctaUrl}" target="_blank" class="header-link">${escapeHtml(project.ctaLabel)} &rarr;</a>
+            <a href="${project.ctaUrl}" target="_blank" rel="noopener noreferrer" class="header-link">${escapeHtml(project.ctaLabel)} &rarr;<span class="visually-hidden"> (opens in a new tab)</span></a>
           </p>
         </section>` : ''}
       `;
       detail.scrollTop = 0;
+      const heading = detail.querySelector('.project-title');
+      if (heading) heading.focus();
     }
 
     function selectProject(id) {

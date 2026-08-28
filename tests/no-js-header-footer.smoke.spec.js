@@ -14,7 +14,7 @@ test.describe('no-JS header/footer inlining', () => {
 
       const navLinks = p.locator('.nav-links .header-link');
       await expect(navLinks).toHaveCount(4);
-      await expect(navLinks.last()).toHaveText('Shop');
+      await expect(navLinks.last()).toContainText('Shop');
       await expect(navLinks.last()).toHaveAttribute('href', 'https://shop.classiccottrell.ca');
 
       const drawerLinks = p.locator('.nav-drawer-links .nav-drawer-link');

@@ -10,13 +10,25 @@
     };
   }
 
+  var lastFocused = null;
+
+  function focusableEls(drawer) {
+    return Array.prototype.slice.call(
+      drawer.querySelectorAll('a[href], button:not([disabled])')
+    );
+  }
+
   function open() {
     var e = els();
     if (!e.toggle || !e.drawer || !e.backdrop) return;
+    lastFocused = document.activeElement;
     e.drawer.classList.add('is-open');
     e.backdrop.classList.add('is-open');
     e.toggle.setAttribute('aria-expanded', 'true');
     e.drawer.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    var focusable = focusableEls(e.drawer);
+    if (focusable.length) focusable[0].focus();
   }
 
   function close() {
@@ -26,6 +38,13 @@
     e.backdrop.classList.remove('is-open');
     e.toggle.setAttribute('aria-expanded', 'false');
     e.drawer.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    if (lastFocused && typeof lastFocused.focus === 'function') {
+      lastFocused.focus();
+    } else {
+      e.toggle.focus();
+    }
+    lastFocused = null;
   }
 
   document.addEventListener('click', function (event) {
@@ -35,18 +54,30 @@
       if (window.innerWidth <= 768) {
         e.toggle.getAttribute('aria-expanded') === 'true' ? close() : open();
       }
-    } else if (event.target.closest('.top-name a')) {
-      if (window.innerWidth <= 768) {
-        event.preventDefault();
-        e.toggle.getAttribute('aria-expanded') === 'true' ? close() : open();
-      }
     } else if (event.target.closest('#nav-drawer-backdrop') || event.target.closest('.nav-drawer-link')) {
       close();
     }
   });
 
   document.addEventListener('keydown', function (event) {
-    if (event.key === 'Escape') close();
+    var e = els();
+    if (event.key === 'Escape') {
+      close();
+      return;
+    }
+    if (event.key === 'Tab' && e.drawer && e.drawer.classList.contains('is-open')) {
+      var focusable = focusableEls(e.drawer);
+      if (!focusable.length) return;
+      var first = focusable[0];
+      var last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
   });
 
   // Close the drawer if the viewport is resized past the mobile breakpoint.

@@ -4,7 +4,7 @@
 **Contact**: Matthew A. Cottrell
 
 ## Summary of Findings
-The website is largely accessible but has minor issues related to HTML validation and color contrast for secondary text.
+The website is largely accessible. The previously noted HTML validation error, copyright contrast issue, and missing skip link have been fixed.
 
 ## Section 508 Standards
 
@@ -15,29 +15,29 @@ The website is largely accessible but has minor issues related to HTML validatio
 | (b) Focus Indicator | Supports | Browser default focus rings are preserved. |
 | **1194.22 Web-based Intranet and Internet Information and Applications** | | |
 | (a) Text Alternatives | Supports | Images have `alt` attributes (e.g., Profile image, Social icons). |
-| (c) Color | Partially Supports | Most text meets contrast ratios, but footer copyright text (#888) is below 4.5:1. |
+| (c) Color | Supports | Footer copyright text (`#6b6b6b`) on background (`#F9F5F1`) now passes at 4.91:1. |
 | (d) Stylesheets | Supports | Content is readable without stylesheets. |
 | (i) Frames | Not Applicable | No frames used. |
 | (n) Forms | Not Applicable | No forms present. |
-| (o) Skip Navigation | Does Not Support | No "Skip to Main Content" link provided. |
+| (o) Skip Navigation | Supports | A visually-hidden "Skip to main content" link is the first element in `<body>` on every page, targeting `#main`. |
 | **1194.31 Functional Performance Criteria** | | |
-| (a) Blindness | Supports with Exceptions | Invalid HTML structure (head inside body) may confuse some screen readers. |
-| (b) Low Vision | Partially Supports | Zooming works, but some low contrast text exists. |
+| (a) Blindness | Supports | `<head>`/`<body>` structure is valid on all pages. |
+| (b) Low Vision | Supports | Zooming works and copyright text now meets contrast requirements. |
 
 ## WCAG 2.1 Report
 **Compliance Level**: AA
 
 ### Principle 1: Perceivable
 - **1.1.1 Non-text Content**: PASS. Images have alt text.
-- **1.3.1 Info and Relationships**: FAIL. `index.html` has `<head>` nested inside `<body>`. This is invalid HTML and breaks semantic parsing.
-- **1.4.3 Contrast (Minimum)**: FAIL. Footer copyright text (`#888888`) on background (`#F9F5F1`) has a ratio of ~3.5:1, which fails the 4.5:1 requirement for small text.
+- **1.3.1 Info and Relationships**: PASS. `<head>` inside `<body>` parse error has been fixed on all pages.
+- **1.4.3 Contrast (Minimum)**: PASS. Footer copyright text (`#6b6b6b`) on background (`#F9F5F1`) now has a ratio of 4.91:1, meeting the 4.5:1 requirement for small text.
 
 ### Principle 2: Operable
-- **2.4.1 Bypass Blocks**: FAIL. No mechanism to skip header navigation.
+- **2.4.1 Bypass Blocks**: PASS. A "Skip to main content" link is present as the first focusable element on every page.
 - **2.4.4 Link Purpose**: PASS. Link text is descriptive ("Art", "LinkedIn", "Instagram").
 
 ### Principle 3: Understandable
 - **3.1.1 Language of Page**: PASS. `lang="en"` is present.
 
 ### Principle 4: Robust
-- **4.1.1 Parsing**: FAIL. Significant HTML validation error (`head` inside `body`).
+- **4.1.1 Parsing**: PASS. HTML validation error (`head` inside `body`) has been fixed.

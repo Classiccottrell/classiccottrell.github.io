@@ -20,14 +20,15 @@
     href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Rosarivo:ital@0;1&display=swap"
     rel="stylesheet">
 
-  <link rel="icon" href="img/favicon.png" id="favicon" />
+  <link rel="icon" href="img/favicon-32.png" id="favicon" />
   <script>
     (function () {
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       var icon = document.getElementById('favicon');
-      var frames = ['img/favicon.png', 'img/Fav-con-terry.png', 'img/Fav-con-terry1.png', 'img/Fav-con-terry2.png', 'img/Fav-con-terry3.png', 'img/Fav-con-terry4.png'];
+      var frames = ['img/favicon-32.png', 'img/Fav-con-terry-32.png', 'img/Fav-con-terry1-32.png', 'img/Fav-con-terry2-32.png', 'img/Fav-con-terry3-32.png', 'img/Fav-con-terry4-32.png'];
       var i = 0;
       setInterval(function () {
+        if (document.hidden) return;
         i = (i + 1) % frames.length;
         icon.href = frames[i];
       }, 3000);
@@ -37,6 +38,7 @@
 </head>
 
 <body class="writing-page">
+  <a href="#main" class="skip-link">Skip to main content</a>
   <script>(function(){function fromCookie(){var m=document.cookie.split('; ').find(function(r){return r.indexOf('site-theme=')===0;});return m?decodeURIComponent(m.split('=')[1]):null;}var vals=['default','bolder','shadcn','brutal'];var t=fromCookie();if(!vals.includes(t))t=localStorage.getItem('site-theme');if(!vals.includes(t))t='default';document.documentElement.setAttribute('data-theme',t);}());</script>
 
   <div id="header"><!-- build:header -->
@@ -51,20 +53,20 @@
         <a href="art.html" class="header-link">Art</a>
         <a href="writing.html" class="header-link active" aria-current="page">Writing</a>
         <a href="projects.html" class="header-link">Projects</a>
-        <a href="https://shop.classiccottrell.ca" target="_blank" class="header-link">Shop</a>
+        <a href="https://shop.classiccottrell.ca" target="_blank" rel="noopener noreferrer" class="header-link">Shop<span class="visually-hidden"> (opens in a new tab)</span></a>
       </div>
     </div>
     <div class="social-icons">
-      <a href="https://github.com/Classiccottrell" target="_blank" class="social-link" aria-label="GitHub">
+      <a href="https://github.com/Classiccottrell" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="GitHub (opens in a new tab)">
         <span class="social-icon github" aria-hidden="true"></span>
       </a>
-      <a href="https://www.instagram.com/classiccottrell" target="_blank" class="social-link" aria-label="Instagram">
+      <a href="https://www.instagram.com/classiccottrell" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Instagram (opens in a new tab)">
         <span class="social-icon instagram" aria-hidden="true"></span>
       </a>
-      <a href="https://classiccottrell.substack.com/" target="_blank" class="social-link" aria-label="Substack">
+      <a href="https://classiccottrell.substack.com/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Substack (opens in a new tab)">
         <span class="social-icon substack" aria-hidden="true"></span>
       </a>
-      <a href="https://www.linkedin.com/in/classiccottrell/" target="_blank" class="social-link" aria-label="LinkedIn">
+      <a href="https://www.linkedin.com/in/classiccottrell/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="LinkedIn (opens in a new tab)">
         <span class="social-icon linked" aria-hidden="true"></span>
       </a>
     </div>
@@ -78,12 +80,12 @@
     <a href="art.html" class="nav-drawer-link header-link"><span class="nav-drawer-index">02</span>Art</a>
     <a href="writing.html" class="nav-drawer-link header-link active" aria-current="page"><span class="nav-drawer-index">03</span>Writing</a>
     <a href="projects.html" class="nav-drawer-link header-link"><span class="nav-drawer-index">04</span>Projects</a>
-    <a href="https://shop.classiccottrell.ca" target="_blank" class="nav-drawer-link header-link"><span class="nav-drawer-index">05</span>Shop</a>
+    <a href="https://shop.classiccottrell.ca" target="_blank" rel="noopener noreferrer" class="nav-drawer-link header-link"><span class="nav-drawer-index">05</span>Shop<span class="visually-hidden"> (opens in a new tab)</span></a>
   </nav>
 </aside>
 <!-- /build:header --></div>
 
-  <main>
+  <main id="main">
     <section class="writing-hero reveal">
       <h1 class="writing-heading rosarivo-regular">Writing</h1>
       <p class="writing-hero-subtext red-hat">Essays on design, AI, and the occasional roll of packing tape.</p>
@@ -91,19 +93,19 @@
 
     <ul class="writing-list">
       <li>
-        <a class="writing-card reveal" style="--d:1" href="https://classiccottrell.substack.com/p/built-to-break-a-lifelong-education" target="_blank">
+        <a class="writing-card reveal" style="--d:1" href="https://classiccottrell.substack.com/p/built-to-break-a-lifelong-education" target="_blank" rel="noopener noreferrer">
           <p class="writing-card-date">July 1, 2026</p>
           <h2 class="writing-card-title rosarivo-regular">Built to Break: A Lifelong Education</h2>
           <p class="writing-card-subtitle">"How a childhood urge to destroy things built a career in multimodal design."</p>
-          <span class="writing-card-link">Read on Substack <span class="arrow">&rarr;</span></span>
+          <span class="writing-card-link">Read on Substack <span class="arrow">&rarr;</span><span class="visually-hidden"> (opens in a new tab)</span></span>
         </a>
       </li>
       <li>
-        <a class="writing-card reveal" style="--d:2" href="https://classiccottrell.substack.com/p/the-disposable-architecture-of-tomorrow" target="_blank">
+        <a class="writing-card reveal" style="--d:2" href="https://classiccottrell.substack.com/p/the-disposable-architecture-of-tomorrow" target="_blank" rel="noopener noreferrer">
           <p class="writing-card-date">June 18, 2026</p>
           <h2 class="writing-card-title rosarivo-regular">The Disposable Architecture of Tomorrow</h2>
           <p class="writing-card-subtitle">"What a roll of packing tape tells us about the future of AI."</p>
-          <span class="writing-card-link">Read on Substack <span class="arrow">&rarr;</span></span>
+          <span class="writing-card-link">Read on Substack <span class="arrow">&rarr;</span><span class="visually-hidden"> (opens in a new tab)</span></span>
         </a>
       </li>
     </ul>
@@ -115,16 +117,16 @@
   <p class="title-footer">Product design and Strategy</p>
 
   <div class="social-icons">
-    <a href="https://github.com/Classiccottrell" target="_blank" class="social-link" aria-label="GitHub">
+    <a href="https://github.com/Classiccottrell" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="GitHub (opens in a new tab)">
       <span class="social-icon github" aria-hidden="true"></span>
     </a>
-    <a href="https://www.instagram.com/classiccottrell" target="_blank" class="social-link" aria-label="Instagram">
+    <a href="https://www.instagram.com/classiccottrell" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Instagram (opens in a new tab)">
       <span class="social-icon instagram" aria-hidden="true"></span>
     </a>
-    <a href="https://classiccottrell.substack.com/" target="_blank" class="social-link" aria-label="Substack">
+    <a href="https://classiccottrell.substack.com/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Substack (opens in a new tab)">
       <span class="social-icon substack" aria-hidden="true"></span>
     </a>
-    <a href="https://www.linkedin.com/in/classiccottrell/" target="_blank" class="social-link" aria-label="LinkedIn">
+    <a href="https://www.linkedin.com/in/classiccottrell/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="LinkedIn (opens in a new tab)">
       <span class="social-icon linked" aria-hidden="true"></span>
     </a>
   </div>

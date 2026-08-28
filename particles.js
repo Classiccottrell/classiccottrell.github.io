@@ -6,11 +6,13 @@
 // the noise scrolls toward the viewer, which reads as slow forward travel.
 // Above the horizon a sparse particle field links its near neighbours.
 //
-// Nodes can be grabbed and pulled with a mouse. On release a node floats a
-// little of the way back and then holds near where it was dropped, so the
-// terrain keeps a record of having been handled. Simply moving the pointer
-// through the field also disturbs nearby terrain vertices and sky particles
-// with a brief, decaying ripple, via the same spring-back physics.
+// Nodes can be grabbed and pulled with a mouse, dragging nearby connected mesh
+// along with a falloff by grid distance. On release, every affected node
+// overshoots and rings back via an underdamped spring, settling just off its
+// original position rather than snapping exactly back to it — the bounce
+// amplitude falls off with distance from the grabbed node. Simply moving the
+// pointer through the field also disturbs nearby terrain vertices and sky
+// particles with a brief, decaying ripple, via the same spring-back physics.
 //
 // Every world-space dimension is derived from the viewport in resize(), so
 // the composition holds its proportions instead of drifting as the window
@@ -71,9 +73,11 @@
   // glyph set that fits the wireframe aesthetic — chosen once per node at
   // geometry-build time (deterministic, not re-rolled every frame) so it
   // reads as an occasional easter egg rather than noise.
-  var GLYPHS = ['♪', '✦', '✧', '∴', '⟡'];
-  var GLYPH_CHANCE = 0.045; // ~4.5% of terrain vertices
-  var SKY_GLYPH_CHANCE = 0.05; // ~5% of sky particles (nice-to-have reuse)
+  // Ω repeated so it's picked more often — glyph selection below is a uniform
+  // random index into this array, so duplicate entries are the weighting knob.
+  var GLYPHS = ['Ω', 'Ω', 'Ω', '✦', '✧', '∴', '⟡'];
+  var GLYPH_CHANCE = 0.13; // ~13% of terrain vertices
+  var SKY_GLYPH_CHANCE = 0.15; // ~15% of sky particles (nice-to-have reuse)
 
   // --- Motion ----------------------------------------------------------------
   var SPEED = 0.000017;
@@ -104,19 +108,21 @@
 
   // --- Drag --------------------------------------------------------------
   var GRAB_RADIUS = 26;       // px from a node's centre that counts as a grab
-  var RETAIN = 0.82;          // fraction of the pull a node keeps on release
+  var MESH_DRAG_RADIUS = 3;   // grid cells (row/col distance) a drag pulls neighbours along for
   var SPRING_K = 0.15;        // spring stiffness pulling a settling node toward its target
-  var SPRING_DAMPING = 0.66;  // velocity damping per frame; <1 stays underdamped (lets it overshoot)
-  // Only 1-RETAIN (18%) of the drag is the spring's actual travel distance, so a
-  // resting spring's natural overshoot on that short hop reads as ~1-2% of the
-  // full on-screen drag - imperceptible. Kick release velocity proportional to
-  // the FULL retained delta (dx-tx) so overshoot is visible relative to how far
-  // the user actually dragged, not just the small unretained remainder.
-  // Simulated: kickFactor 1.4 with SPRING_K/SPRING_DAMPING above -> peak overshoot
-  // ~21.8% of drag distance for D=40/60/80px (linear system, scale-invariant),
-  // e.g. a 60px drag overshoots ~13.1px - inside the 15-25% clearly-readable band
-  // (kickFactor 0.8 gave only ~10.3%, i.e. ~6.2px on the same drag - too subtle).
-  var RELEASE_KICK = 1.4;
+  var SPRING_DAMPING = 0.85;  // velocity damping per frame; <1 stays underdamped (lets it overshoot).
+                               // Raised from 0.66 so the spring rings through several visible
+                               // back-and-forth swings before settling, instead of 1-2 quick ones.
+  // Release target is a small fraction of the drag, not the exact origin — the
+  // node springs back through several audible-feeling swings and comes to rest
+  // just off its original position, rather than landing dead-on where it started.
+  var SETTLE_OFFSET = 0.06;
+  // Kick release velocity proportional to the retained delta (dx-tx) so the
+  // overshoot/bounce reads clearly against how far the user actually dragged.
+  // Re-tuned alongside the SPRING_DAMPING raise above — a less-damped spring
+  // overshoots more per swing, so this needed lowering to keep the first swing
+  // in a readable (not wild) range while still ringing through several cycles.
+  var RELEASE_KICK = 0.9;
 
   // --- Ripple (expanding wavefront, spawned by the cursor but travels on its
   // own — it must not read as "following the cursor") -----------------------
@@ -127,7 +133,7 @@
   var RIPPLE_MAX_RADIUS = 1200; // px travelled before the ring is retired
   // Lifetime = RIPPLE_MAX_RADIUS / RIPPLE_SPEED = 1200/0.4 = 3000ms (was 520/0.5
   // = 1040ms) — roughly triples ring lifetime into the 2.5-3.5s "lasts longer" band.
-  var RIPPLE_STRENGTH = 3.2;    // world-unit velocity kick at the wavefront's peak
+  var RIPPLE_STRENGTH = 1.7;    // world-unit velocity kick at the wavefront's peak
   var MAX_RIPPLES = 5;          // concurrent rings kept alive (trimmed from 8 since
                                  // rings now overlap far longer at the same spawn rate)
 
@@ -142,6 +148,24 @@
 
   var colour = '#437057';
   var seed = (Math.random() * 65536) | 0;
+
+  // Falling haze: a vertical gradient in the theme colour, washing down from
+  // the top of the canvas past the horizon and over the upper wave terrain —
+  // not confined to the sky band, so it actually reads as "falling onto the
+  // waves" rather than a thin strip nobody notices. Cached and only rebuilt on
+  // resize/theme change, since createLinearGradient is comparatively expensive
+  // to redo every frame.
+  var HAZE_SPAN_FRAC = 0.4; // fraction of viewport height the haze extends past the horizon
+  var hazeGradient = null;
+
+  function buildHazeGradient() {
+    if (!ctx || !height) { hazeGradient = null; return; }
+    var hazeEnd = Math.min(height, horizonY + height * HAZE_SPAN_FRAC);
+    var g = ctx.createLinearGradient(0, 0, 0, hazeEnd);
+    g.addColorStop(0, colour);
+    g.addColorStop(1, 'transparent');
+    hazeGradient = g;
+  }
   var rowDepth = [];
   var colX = [];
   var sky = [];
@@ -149,11 +173,16 @@
   // Per-node drag state, indexed r * cols + c. dx/de are the live displacement
   // (world x, elevation); tx/te are what it is easing toward.
   var dx, de, tx, te, vx, ve, projX, projY;
+  var dragWeight, dragBaseDx, dragBaseDe, dragAffected;
   // Per-vertex glyph assignment: -1 means "draw the usual dot", otherwise an
   // index into GLYPHS. Fixed at buildGeometry() time, not re-rolled per frame.
   var vertexGlyph;
   var vertexSizeMul;
   var vertexAlphaMul;
+  // Deterministic per-vertex glyph-size multiplier (same hash pattern as
+  // vertexSizeMul, distinct seed offset) — makes glyphs vary noticeably in
+  // size rather than all rendering at the same font-size math.
+  var vertexGlyphSizeMul;
   // Cross-frame sky-link state ("i,j" -> ms since the link first formed), so a
   // freshly-formed connector line can fade/scale in rather than snapping to
   // full opacity — the "spring into existence" spiderweb effect.
@@ -170,6 +199,12 @@
   var pointerY = 0;
   var easedX = 0;
   var easedY = 0;
+
+  // Raw last pointer screen coords (unlike pointerX/Y above, not remapped to
+  // the parallax range) — used to find sky particles near the cursor for the
+  // hover-vortex nudge below.
+  var rawPointerX = -9999;
+  var rawPointerY = -9999;
 
   var dragIndex = -1;
   var hoverIndex = -1;
@@ -267,6 +302,12 @@
   var TWINKLE_HOLD_MIN = 1500;  // ms, shortest fully-visible hold
   var TWINKLE_HOLD_MAX = 4500;  // ms, longest fully-visible hold
 
+  // Subtle vortex-on-hover: sky particles within this radius of the pointer
+  // get a gentle tangential (perpendicular-to-cursor) nudge, feeding the same
+  // rvx/rvy spring-back used for ripples — a soft drift/swirl, not a spin.
+  var VORTEX_RADIUS = 140;
+  var VORTEX_STRENGTH = 0.0009; // kept low; scaled further by proximity below
+
   var SKY_MAX_SPEED = 0.26; // ceiling for the small wrap-edge speed kick (raised for floatier drift)
   function clampSpeed(v) {
     return v > SKY_MAX_SPEED ? SKY_MAX_SPEED : v < -SKY_MAX_SPEED ? -SKY_MAX_SPEED : v;
@@ -305,6 +346,7 @@
     canvas.style.width = width + 'px';
     canvas.style.height = height + 'px';
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    buildHazeGradient();
   }
 
   // Depth slices are spaced geometrically rather than evenly: perspective
@@ -329,6 +371,15 @@
     ve = new Float32Array(n);
     projX = new Float32Array(n);
     projY = new Float32Array(n);
+    // Connected-mesh drag: while a node is grabbed, nearby nodes (by grid
+    // distance) get dragged along too, weighted by dragWeight (1 at the
+    // grabbed node, fading to 0 at MESH_DRAG_RADIUS). dragBaseDx/De snapshot
+    // each affected node's displacement at drag-start so the live override in
+    // pullTo() applies the grabbed node's *delta*, not its absolute position.
+    dragWeight = new Float32Array(n);
+    dragBaseDx = new Float32Array(n);
+    dragBaseDe = new Float32Array(n);
+    dragAffected = [];
     dragIndex = -1;
     hoverIndex = -1;
 
@@ -341,6 +392,7 @@
     // frames (re-rolled only when geometry rebuilds, same as vertexGlyph).
     vertexSizeMul = new Float32Array(n);
     vertexAlphaMul = new Float32Array(n);
+    vertexGlyphSizeMul = new Float32Array(n);
     for (var vr = 0; vr < rows; vr++) {
       for (var vc = 0; vc < cols; vc++) {
         var vi = vr * cols + vc;
@@ -348,8 +400,9 @@
         vertexGlyph[vi] = vRoll < GLYPH_CHANCE
           ? Math.floor(hash2(vc, vr, seed + 104729) * GLYPHS.length)
           : -1;
-        vertexSizeMul[vi] = 0.7 + hash2(vr, vc, seed + 40961) * 0.65;
+        vertexSizeMul[vi] = 0.5 + hash2(vr, vc, seed + 40961) * 1.4;
         vertexAlphaMul[vi] = 0.8 + hash2(vc, vr, seed + 65537) * 0.4;
+        vertexGlyphSizeMul[vi] = 0.5 + hash2(vr, vc, seed + 24847) * 1.7;
       }
     }
 
@@ -367,6 +420,9 @@
         vy: (Math.random() - 0.5) * 0.11,
         a: 0.45 + Math.random() * 0.55,
         glyph: Math.random() < SKY_GLYPH_CHANCE ? Math.floor(Math.random() * GLYPHS.length) : -1,
+        // Parallel per-particle glyph-size multiplier (same range as the
+        // terrain's vertexGlyphSizeMul), so sky glyphs vary in size too.
+        glyphSizeMul: 0.5 + Math.random() * 1.7,
         // Ripple displacement: a separate spring-back offset from the base
         // wander position, so a cursor pass reads as a transient disturbance
         // rather than a permanent change to the particle's drift.
@@ -444,7 +500,7 @@
       ctx.globalAlpha = SKY_ALPHA * s.a * s.twinkle;
       if (s.glyph >= 0) {
         ctx.save();
-        ctx.font = (s.r * 5.2 + 4) + 'px sans-serif';
+        ctx.font = ((s.r * 5.2 + 4) * s.glyphSizeMul) + 'px sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(GLYPHS[s.glyph], s.x + s.rx, s.y + s.ry);
@@ -505,7 +561,7 @@
         if (vertexGlyph[i] >= 0) {
           ctx.globalAlpha = VERTEX_ALPHA * fade + lifted * 0.45;
           ctx.save();
-          ctx.font = (dotR * 4.2 + lifted * 3) + 'px sans-serif';
+          ctx.font = ((dotR * 4.2 + lifted * 3) * vertexGlyphSizeMul[i]) + 'px sans-serif';
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
           ctx.fillText(GLYPHS[vertexGlyph[i]], projX[i], projY[i]);
@@ -534,6 +590,15 @@
     ctx.lineJoin = 'round';
 
     drawSky();
+
+    if (hazeGradient) {
+      ctx.save();
+      ctx.globalAlpha = 0.32;
+      ctx.fillStyle = hazeGradient;
+      ctx.fillRect(0, 0, width, Math.min(height, horizonY + height * HAZE_SPAN_FRAC));
+      ctx.restore();
+    }
+
     drawTerrain(cx, hy);
 
     ctx.globalAlpha = 1;
@@ -547,11 +612,11 @@
 
   // Spring-damper settle: a released node overshoots its retained position and
   // rings back with decaying amplitude, rather than easing straight to it.
-  // Underdamped (SPRING_DAMPING < 1) so 1-2 visible oscillations happen before
-  // the node comes to rest.
+  // Underdamped (SPRING_DAMPING < 1) so several visible back-and-forth swings
+  // happen before the node comes to rest.
   function settle() {
     for (var i = 0; i < dx.length; i++) {
-      if (i === dragIndex) continue;
+      if (i === dragIndex || dragWeight[i] > 0) continue;
       var ax = tx[i] - dx[i];
       var ae = te[i] - de[i];
       if (ax * ax + ae * ae < 0.0001 && vx[i] * vx[i] + ve[i] * ve[i] < 0.0001) {
@@ -599,6 +664,21 @@
       if (p.y < -10) { p.y = horizonY; p.vy = clampSpeed(p.vy * 1.05); }
       if (p.y > horizonY) { p.y = -10; p.vy = clampSpeed(p.vy * 1.05); }
 
+      // Subtle vortex-on-hover: nudge particles near the pointer tangentially
+      // around it, scaled down by proximity, so it reads as a soft swirl
+      // rather than a violent spin.
+      if (finePointer.matches && motionAllowed()) {
+        var vdx = p.x - rawPointerX;
+        var vdy = p.y - rawPointerY;
+        var vdist = Math.sqrt(vdx * vdx + vdy * vdy);
+        if (vdist < VORTEX_RADIUS && vdist > 0.0001) {
+          var vf = (1 - vdist / VORTEX_RADIUS) * VORTEX_STRENGTH * dt;
+          // Perpendicular to the pointer->particle vector = tangential.
+          p.rvx += -vdy / vdist * vf;
+          p.rvy += vdx / vdist * vf;
+        }
+      }
+
       // Ripple offset springs back to zero, same underdamped model as the
       // terrain settle below, so a cursor pass fades rather than sticks.
       p.rvx = (p.rvx + -p.rx * SPRING_K) * SPRING_DAMPING;
@@ -635,6 +715,7 @@
     resize();
     buildGeometry();
     readColour();
+    buildHazeGradient();
     run();
   }
 
@@ -659,6 +740,28 @@
     return best;
   }
 
+  // Finds every node within MESH_DRAG_RADIUS grid cells of the grabbed node,
+  // assigns each a falloff weight (1 at the grabbed node, fading to 0 at the
+  // radius), and snapshots their current displacement as the base pullTo()
+  // will apply the drag delta on top of. Called once per grab, not per frame.
+  function computeDragAffected(i) {
+    var r0 = (i / cols) | 0;
+    var c0 = i % cols;
+    dragAffected.length = 0;
+    for (var r = Math.max(0, r0 - MESH_DRAG_RADIUS); r <= Math.min(rows - 1, r0 + MESH_DRAG_RADIUS); r++) {
+      for (var c = Math.max(0, c0 - MESH_DRAG_RADIUS); c <= Math.min(cols - 1, c0 + MESH_DRAG_RADIUS); c++) {
+        var dr = r - r0, dc = c - c0;
+        var dist = Math.sqrt(dr * dr + dc * dc);
+        if (dist > MESH_DRAG_RADIUS) continue;
+        var idx = r * cols + c;
+        dragWeight[idx] = idx === i ? 1 : Math.max(0, 1 - dist / MESH_DRAG_RADIUS);
+        dragBaseDx[idx] = dx[idx];
+        dragBaseDe[idx] = de[idx];
+        dragAffected.push(idx);
+      }
+    }
+  }
+
   function pullTo(i, px, py) {
     var r = (i / cols) | 0;
     var c = i % cols;
@@ -671,6 +774,18 @@
     de[i] = te[i] = elev - elevationAt(colX[c], rowDepth[r]);
     vx[i] = 0;
     ve[i] = 0;
+
+    // Drag the connected mesh along with the grabbed node: apply the same
+    // delta the grabbed node just moved, scaled by each neighbour's falloff
+    // weight, on top of its position when the drag started.
+    var deltaX = dx[i] - dragBaseDx[i];
+    var deltaE = de[i] - dragBaseDe[i];
+    for (var a = 0; a < dragAffected.length; a++) {
+      var idx = dragAffected[a];
+      if (idx === i) continue;
+      dx[idx] = dragBaseDx[idx] + deltaX * dragWeight[idx];
+      de[idx] = dragBaseDe[idx] + deltaE * dragWeight[idx];
+    }
   }
 
   // A ripple ring: a thin traveling band at radius `r` from a fixed origin.
@@ -738,6 +853,7 @@
       var i = nearestNode(event.clientX, event.clientY);
       if (i < 0) return;
       dragIndex = i;
+      computeDragAffected(i);
       pullTo(i, event.clientX, event.clientY);
       body.style.cursor = 'grabbing';
       event.preventDefault();
@@ -746,6 +862,9 @@
 
     window.addEventListener('pointermove', function (event) {
       if (event.pointerType === 'touch') return;
+
+      rawPointerX = event.clientX;
+      rawPointerY = event.clientY;
 
       maybeSpawnRipple(event.clientX, event.clientY, event.timeStamp || performance.now());
 
@@ -769,27 +888,39 @@
       }
     }, { passive: false });
 
-    window.addEventListener('pointerup', function () {
+    window.addEventListener('pointerup', function (event) {
       if (dragIndex < 0) return;
-      // Float back a little of the way, then hold near where it was dropped.
-      tx[dragIndex] = dx[dragIndex] * RETAIN;
-      te[dragIndex] = de[dragIndex] * RETAIN;
-      if (motionAllowed()) {
-        // Kick proportional to the full retained delta, not just the spring's
-        // short remaining travel, so the release bounce reads against the
-        // actual drag distance. See RELEASE_KICK comment above.
-        vx[dragIndex] = -(dx[dragIndex] - tx[dragIndex]) * RELEASE_KICK;
-        ve[dragIndex] = -(de[dragIndex] - te[dragIndex]) * RELEASE_KICK;
-      } else {
-        dx[dragIndex] = tx[dragIndex];
-        de[dragIndex] = te[dragIndex];
+      // Release every mesh-dragged node (the grabbed one plus its weighted
+      // neighbours), each springing back toward just-off-original (SETTLE_OFFSET)
+      // with a release kick scaled by that node's dragWeight — full strength at
+      // the grabbed node, fading out toward MESH_DRAG_RADIUS, so the bounce
+      // visibly weakens the farther a node is from where it was grabbed.
+      for (var a = 0; a < dragAffected.length; a++) {
+        var idx = dragAffected[a];
+        var w = dragWeight[idx];
+        tx[idx] = dx[idx] * SETTLE_OFFSET;
+        te[idx] = de[idx] * SETTLE_OFFSET;
+        if (motionAllowed()) {
+          vx[idx] = -(dx[idx] - tx[idx]) * RELEASE_KICK * w;
+          ve[idx] = -(de[idx] - te[idx]) * RELEASE_KICK * w;
+        } else {
+          dx[idx] = tx[idx];
+          de[idx] = te[idx];
+        }
+        dragWeight[idx] = 0;
       }
+      dragAffected.length = 0;
       dragIndex = -1;
+      hoverIndex = nearestNode(event.clientX, event.clientY);
       body.style.cursor = hoverIndex >= 0 ? 'grab' : '';
       requestDraw();
     });
 
     window.addEventListener('pointercancel', function () {
+      if (dragIndex >= 0) {
+        for (var a = 0; a < dragAffected.length; a++) dragWeight[dragAffected[a]] = 0;
+        dragAffected.length = 0;
+      }
       dragIndex = -1;
       body.style.cursor = '';
     });
@@ -810,6 +941,7 @@
   // stop, since "brutal" is a motion-free theme) when it changes.
   new MutationObserver(function () {
     readColour();
+    buildHazeGradient();
     run();
   }).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
 

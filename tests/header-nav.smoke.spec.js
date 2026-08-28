@@ -20,7 +20,7 @@ for (const page of ['index.html', 'art.html', 'writing.html', 'projects.html']) 
     // Desktop nav-links includes Shop as final item, opening in new tab
     const desktopLinks = p.locator('.nav-links .header-link');
     await expect(desktopLinks).toHaveCount(4);
-    await expect(desktopLinks.last()).toHaveText('Shop');
+    await expect(desktopLinks.last()).toContainText('Shop');
     await expect(desktopLinks.last()).toHaveAttribute('href', 'https://shop.classiccottrell.ca');
     await expect(desktopLinks.last()).toHaveAttribute('target', '_blank');
 

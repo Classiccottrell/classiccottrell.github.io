@@ -888,7 +888,7 @@
       }
     }, { passive: false });
 
-    window.addEventListener('pointerup', function () {
+    window.addEventListener('pointerup', function (event) {
       if (dragIndex < 0) return;
       // Release every mesh-dragged node (the grabbed one plus its weighted
       // neighbours), each springing back toward just-off-original (SETTLE_OFFSET)
@@ -911,6 +911,7 @@
       }
       dragAffected.length = 0;
       dragIndex = -1;
+      hoverIndex = nearestNode(event.clientX, event.clientY);
       body.style.cursor = hoverIndex >= 0 ? 'grab' : '';
       requestDraw();
     });

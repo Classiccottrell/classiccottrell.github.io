@@ -23,6 +23,8 @@ for (const page of ['index.html', 'art.html', 'writing.html', 'projects.html']) 
     await expect(desktopLinks.last()).toContainText('Shop');
     await expect(desktopLinks.last()).toHaveAttribute('href', 'https://shop.classiccottrell.ca');
     await expect(desktopLinks.last()).toHaveAttribute('target', '_blank');
+    await expect(desktopLinks.last().locator('span[aria-hidden="true"]')).toHaveText('↗');
+    await expect(desktopLinks.last().locator('.visually-hidden')).toHaveText(' (opens in a new tab)');
 
     // Mobile drawer order and hrefs
     const drawerLinks = p.locator('.nav-drawer-links .nav-drawer-link');
@@ -34,6 +36,10 @@ for (const page of ['index.html', 'art.html', 'writing.html', 'projects.html']) 
       await expect(link).toContainText(item.text);
       await expect(link).toHaveAttribute('href', item.href);
     }
+    // Shop drawer link also carries the visible arrow + hidden a11y text (no double announcement)
+    const drawerShopLink = drawerLinks.last();
+    await expect(drawerShopLink.locator('span[aria-hidden="true"]')).toHaveText('↗');
+    await expect(drawerShopLink.locator('.visually-hidden')).toHaveText(' (opens in a new tab)');
 
     // nav-toggle open/close
     const toggle = p.locator('#nav-toggle');

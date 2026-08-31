@@ -2,7 +2,7 @@ export default {
     title: 'Molecules/Art Card',
 };
 
-export const Default = () => `
+const cardMarkup = () => `
   <section class="art-entry">
     <div class="art-visual-wrapper bg-white">
       <div class="art-visual" style="background-image: url('img/gents-lg.png'); background-color: #eee;"></div>
@@ -21,10 +21,30 @@ export const Default = () => `
           <span class="detail-value">Guy Ritchie</span>
         </div>
         <div class="detail-row">
+          <span class="detail-label">Character</span>
+          <span class="detail-value">Ray</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Run Time</span>
+          <span class="detail-value">1h 53m</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Actor</span>
+          <span class="detail-value">Charlie Hunnam</span>
+        </div>
+        <div class="detail-row">
           <span class="detail-label">Year</span>
           <span class="detail-value">2019</span>
         </div>
       </div>
     </div>
   </section>
+`;
+
+export const Default = () => cardMarkup();
+
+export const BrutalTheme = () => `
+  <div data-theme="brutal">
+    ${cardMarkup()}
+  </div>
 `;

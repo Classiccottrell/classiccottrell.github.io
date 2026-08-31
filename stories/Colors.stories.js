@@ -27,9 +27,37 @@ export const Palette = () => `
       ${ColorBlock('Neutral 100', '--neutral-100')}
       ${ColorBlock('Neutral 200', '--neutral-200')}
       ${ColorBlock('Neutral 300', '--neutral-300')}
+      ${ColorBlock('Neutral 400', '--neutral-400')}
       ${ColorBlock('Neutral 500', '--neutral-500')}
+      ${ColorBlock('Neutral 600', '--neutral-600')}
       ${ColorBlock('Neutral 700', '--neutral-700')}
+      ${ColorBlock('Neutral 800', '--neutral-800')}
       ${ColorBlock('Neutral 900', '--neutral-900')}
+    </div>
+    <div>
+      <h3>Brand (tokens)</h3>
+      ${ColorBlock('Brand', '--brand')}
+      ${ColorBlock('Brand Deep', '--brand-deep')}
+      ${ColorBlock('Brand Bright', '--brand-bright')}
+      ${ColorBlock('Destructive', '--destructive')}
+      ${ColorBlock('Accent Surface', '--accent-surface')}
+    </div>
+    <div>
+      <h3>Surface</h3>
+      ${ColorBlock('Paper', '--paper')}
+      ${ColorBlock('Surface', '--surface')}
+      ${ColorBlock('Bg Page', '--bg-page')}
+      ${ColorBlock('Line', '--line')}
+    </div>
+    <div>
+      <h3>Ink / Text</h3>
+      ${ColorBlock('Ink', '--ink')}
+      ${ColorBlock('Ink Soft', '--ink-soft')}
+      ${ColorBlock('Ink Mute', '--ink-mute')}
+      ${ColorBlock('Text Main', '--text-main')}
+      ${ColorBlock('Text Secondary', '--text-secondary')}
+      ${ColorBlock('Text Footer', '--text-footer')}
+      ${ColorBlock('Text Copyright', '--text-copyright')}
     </div>
   </div>
 `;

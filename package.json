@@ -23,16 +23,13 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.62.1",
-    "@storybook/addon-essentials": "^7.6.0",
-    "@storybook/addon-interactions": "^7.6.0",
-    "@storybook/addon-links": "^7.6.0",
-    "@storybook/blocks": "^7.6.0",
-    "@storybook/html": "^7.6.0",
-    "@storybook/html-vite": "^7.6.0",
-    "@storybook/test": "^7.6.0",
+    "@storybook/addon-links": "^10.5.10",
+    "@storybook/html": "^10.5.10",
+    "@storybook/html-vite": "^10.5.10",
     "@vitejs/plugin-react": "^4.2.0",
     "prop-types": "^15.8.1",
-    "storybook": "^7.6.0",
-    "vite": "^5.0.0"
+    "storybook": "^10.5.10",
+    "vite": "^6.0.0",
+    "@storybook/addon-docs": "^10.5.10"
   }
 }

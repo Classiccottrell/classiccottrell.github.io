@@ -5,8 +5,14 @@
     "title": "The Agent Workspace Pair",
     "subtitle": "A folder that turns an AI chat tool into an operating environment.",
     "repos": [
-      { "label": "Agent Workspace Template", "url": "https://github.com/Classiccottrell/Agent_Workspace_Template" },
-      { "label": "Agentic Light", "url": "https://github.com/Classiccottrell/Agentic_Light" }
+      {
+        "label": "Agent Workspace Template",
+        "url": "https://github.com/Classiccottrell/Agent_Workspace_Template"
+      },
+      {
+        "label": "Agentic Light",
+        "url": "https://github.com/Classiccottrell/Agentic_Light"
+      }
     ],
     "ctaLabel": "See the live Agent Workspace Template",
     "ctaUrl": "https://classiccottrell.github.io/Agent_Workspace_Template/",
@@ -21,19 +27,40 @@
         "heading": "What it is",
         "intro": "One folder. Clone it, run one script, and you are operating:",
         "items": [
-          { "lead": "An orchestrator and seven scoped agents.", "text": "The root agent breaks work down and hands it to a specialist: architect, coder, engineering manager, archivist, curator, plus a creative director for brand and copy and a QA agent that gatekeeps production pull requests. The five core roles ship for all three CLIs; QA runs on Codex and Claude, creative direction on Claude only. Each one owns its lane and nothing else." },
-          { "lead": "Vault Brain, a second brain in plain Markdown.", "text": "Clip a web page in your browser and a background job reads it overnight, files it into a wiki, and cross-links it to everything you already know. Raw notes get the same treatment. Nothing evaporates in chat history." },
-          { "lead": "Background jobs that keep it honest.", "text": "Daily ingest, a Friday close-out that summarizes the week, a Monday job that starts the next one, a health check every four hours, and an hourly sync that keeps new skills stocked on the shelf. When something breaks, the system says so before you notice." },
-          { "lead": "Two sizes of the same shop.", "text": "Agent Workspace Template is everything above, running unattended. Agentic Light is the same bench with nobody sweeping up overnight: no scheduler, no background jobs. You start it by hand — `bash pipeline/run.sh \"<task>\" /path/to/target/repo` — and it runs one provider, once, in the foreground. Lint, then Playwright, then a human approval, before anything opens a PR." }
+          {
+            "lead": "An orchestrator and seven scoped agents.",
+            "text": "The root agent breaks work down and hands it to a specialist: architect, coder, engineering manager, archivist, curator, plus a creative director for brand and copy and a QA agent that gatekeeps production pull requests. The five core roles ship for all three CLIs; QA runs on Codex and Claude, creative direction on Claude only. Each one owns its lane and nothing else."
+          },
+          {
+            "lead": "Vault Brain, a second brain in plain Markdown.",
+            "text": "Clip a web page in your browser and a background job reads it overnight, files it into a wiki, and cross-links it to everything you already know. Raw notes get the same treatment. Nothing evaporates in chat history."
+          },
+          {
+            "lead": "Background jobs that keep it honest.",
+            "text": "Daily ingest, a Friday close-out that summarizes the week, a Monday job that starts the next one, a health check every four hours, and an hourly sync that keeps new skills stocked on the shelf. When something breaks, the system says so before you notice."
+          },
+          {
+            "lead": "Two sizes of the same shop.",
+            "text": "Agent Workspace Template is everything above, running unattended. Agentic Light is the same bench with nobody sweeping up overnight: no scheduler, no background jobs. You start it by hand — `bash pipeline/run.sh \"<task>\" /path/to/target/repo` — and it runs one provider, once, in the foreground. Lint, then Playwright, then a human approval, before anything opens a PR."
+          }
         ],
         "outro": "The template runs on Codex, Claude Code, or the Gemini CLI, and picks up the GitHub CLI and Playwright when they are installed, so the agents push code and test pages as shell commands instead of burning tokens on plumbing. Built for the Mac first; the agents and the vault run anywhere the CLI does."
       },
       {
         "heading": "The UX thinking",
         "items": [
-          { "lead": "One owner per layer.", "text": "Delivery owns the projects, automation owns the schedule, knowledge owns the vault. Nothing falls between the cracks because every crack has a name on it." },
-          { "lead": "Boring formats win.", "text": "The vault is plain Markdown and the files are the store. If I walk away from every tool in this stack tomorrow, the knowledge walks with me." },
-          { "lead": "The system reports its own health.", "text": "Trust in automation is a UX problem, and visibility is the fix. A status page tells me which job failed while I slept and what to do about it, and the docs ship with a failure-mode playbook: what breaks, why, and the exact prompt to hand a model to fix it." }
+          {
+            "lead": "One owner per layer.",
+            "text": "Delivery owns the projects, automation owns the schedule, knowledge owns the vault. Nothing falls between the cracks because every crack has a name on it."
+          },
+          {
+            "lead": "Boring formats win.",
+            "text": "The vault is plain Markdown and the files are the store. If I walk away from every tool in this stack tomorrow, the knowledge walks with me."
+          },
+          {
+            "lead": "The system reports its own health.",
+            "text": "Trust in automation is a UX problem, and visibility is the fix. A status page tells me which job failed while I slept and what to do about it, and the docs ship with a failure-mode playbook: what breaks, why, and the exact prompt to hand a model to fix it."
+          }
         ]
       },
       {
@@ -44,11 +71,64 @@
     ]
   },
   {
+    "id": "linefield",
+    "status": "Ongoing",
+    "title": "linefield",
+    "subtitle": "Eleven generative line-art backgrounds you own outright.",
+    "repos": [
+      {
+        "label": "linefield",
+        "url": "https://github.com/Classiccottrell/linefield"
+      }
+    ],
+    "ctaLabel": "See the live gallery",
+    "ctaUrl": "https://classiccottrell.github.io/linefield/",
+    "sections": [
+      {
+        "paragraphs": [
+          "A background is the kind of thing you should own outright. It sits on your site for years, it should not phone home, and when you want it slower or bluer you should be able to open the file and change it.",
+          "linefield is eleven of them. Each piece is one HTML file with no dependencies and no build step. Tune it with the on-screen controls, hit export, and you get a standalone file with your settings baked in. Paste it into any page and it runs."
+        ]
+      },
+      {
+        "heading": "What it is",
+        "intro": "Eleven pieces, one shared control surface:",
+        "items": [
+          {
+            "lead": "Thirteen controls on every piece.",
+            "text": "Scale, speed, stroke, opacity, saturation, two hues, glow, angle, motion, phase, invert and density, plus one control specific to each piece. All of them do something you can see. A script drives every one of the 154 combinations and diffs the rendered frames, because twice a control shipped that read its value and changed nothing, and both times a human review passed it."
+          },
+          {
+            "lead": "Four ways out.",
+            "text": "A baked HTML file with every shared module inlined, PNG at 2x or 4x, SVG, and a written description of the current settings. The baked file is the point. It has zero external references, so it runs from any folder on any host, with no build step between you and the page."
+          },
+          {
+            "lead": "A gallery that will not cook your laptop.",
+            "text": "Eleven canvas animations running at once will crawl, so the grid shows stills and swaps only the card you are pointing at for a live preview. One at a time, torn down when you look away. Keyboard focus does the same thing, because hover-only interaction is invisible to anyone not using a mouse."
+          }
+        ]
+      },
+      {
+        "heading": "What it actually took",
+        "paragraphs": [
+          "Drawing the pieces was the easy half. The hard half was catching the things that look correct on paper. A control whose maths is right but whose effect is smaller than the line it draws. A baked export that silently produced a blank page for two pieces because a new module was never registered for inlining, which two separate reviews reported as passing.",
+          "The worst one was not a bug at all. Five pieces shipped that were each individually fine and collectively looked like one thing, because every review judged a piece against its own intent and never against the other ten.",
+          "So the checks are scripts now instead of opinions. The build refuses to run when the manifest, the pieces and the README disagree. The control audit fails on anything that reads a value without changing a pixel. And the last gate before shipping is looking at all eleven side by side, which is the only one that would have caught the thing a person actually noticed."
+        ]
+      }
+    ]
+  },
+  {
     "id": "ux-skill-repo",
     "status": "Ongoing",
     "title": "UX Skill Repo 1.0",
     "subtitle": "Twelve AI agent skills held to one measurable rulebook, with a loop that keeps testing it against real work.",
-    "repos": [{ "label": "UX Skill Repo 1.0", "url": "https://github.com/Classiccottrell/UX_Skill_Repo_1.0" }],
+    "repos": [
+      {
+        "label": "UX Skill Repo 1.0",
+        "url": "https://github.com/Classiccottrell/UX_Skill_Repo_1.0"
+      }
+    ],
     "ctaLabel": "See the repo on GitHub",
     "ctaUrl": "https://github.com/Classiccottrell/UX_Skill_Repo_1.0",
     "sections": [
@@ -62,18 +142,36 @@
         "heading": "What it is",
         "intro": "One repo, twelve skills, one shared rulebook.",
         "items": [
-          { "lead": "A shared vocabulary, not twelve opinions.", "text": "Craft rules live once in design-rules.md, cited by ID (R-COL-1, R-BAN-6). UX heuristics live in ux_laws.json, cited by name. No skill restates “use 4.5:1 contrast” in its own words and drifts out of sync." },
-          { "lead": "Skills grouped by job, not origin.", "text": "Plan (ux-governance, ux-strategy), review (ui-expert, ux-black-hat), make (front-end-design, implement-design, canvas-design, brand-steward, ux-writer), and meta (orchestrator, improvement-loop, find-skills) all route through one front door." },
-          { "lead": "A loop that finds its own bugs.", "text": "improvement-loop runs audit, execute, systematize, re-audit, escalate, and won’t advance a round unless the rulebook itself learned something. Six rounds in, it’s caught its own accent color failing contrast as text, a selection state that broke in dark mode, and a fully built page nothing on the site linked to." }
+          {
+            "lead": "A shared vocabulary, not twelve opinions.",
+            "text": "Craft rules live once in design-rules.md, cited by ID (R-COL-1, R-BAN-6). UX heuristics live in ux_laws.json, cited by name. No skill restates “use 4.5:1 contrast” in its own words and drifts out of sync."
+          },
+          {
+            "lead": "Skills grouped by job, not origin.",
+            "text": "Plan (ux-governance, ux-strategy), review (ui-expert, ux-black-hat), make (front-end-design, implement-design, canvas-design, brand-steward, ux-writer), and meta (orchestrator, improvement-loop, find-skills) all route through one front door."
+          },
+          {
+            "lead": "A loop that finds its own bugs.",
+            "text": "improvement-loop runs audit, execute, systematize, re-audit, escalate, and won’t advance a round unless the rulebook itself learned something. Six rounds in, it’s caught its own accent color failing contrast as text, a selection state that broke in dark mode, and a fully built page nothing on the site linked to."
+          }
         ],
         "outro": "Point it at .agents/skills/ in Claude Code, Cursor, or any MCP client. Most skills also work standalone, pasted straight into a chat."
       },
       {
         "heading": "The UX thinking",
         "items": [
-          { "lead": "Feedback that can’t cite a number isn’t feedback.", "text": "Every finding ties to a contrast ratio or a named law, so “improve the hierarchy” becomes a rule ID and a fix, not a vibe." },
-          { "lead": "The rulebook only grows from evidence.", "text": "It started at nine color rules and six interaction rules. It’s grown because rounds kept finding real, unstaged bugs, not because someone guessed a rule might matter someday." },
-          { "lead": "A clean pass that teaches nothing doesn’t count.", "text": "Advancing a round requires two things: no blocking findings left, and the rulebook learned something new. That forces harder test surfaces, like a data-dense ops console built specifically because a static landing page had run out of complexity to break." }
+          {
+            "lead": "Feedback that can’t cite a number isn’t feedback.",
+            "text": "Every finding ties to a contrast ratio or a named law, so “improve the hierarchy” becomes a rule ID and a fix, not a vibe."
+          },
+          {
+            "lead": "The rulebook only grows from evidence.",
+            "text": "It started at nine color rules and six interaction rules. It’s grown because rounds kept finding real, unstaged bugs, not because someone guessed a rule might matter someday."
+          },
+          {
+            "lead": "A clean pass that teaches nothing doesn’t count.",
+            "text": "Advancing a round requires two things: no blocking findings left, and the rulebook learned something new. That forces harder test surfaces, like a data-dense ops console built specifically because a static landing page had run out of complexity to break."
+          }
         ]
       },
       {
@@ -88,7 +186,12 @@
     "status": "Ongoing",
     "title": "Brutal UX",
     "subtitle": "A design system that removes every soft-UI hierarchy cue at once, and defends the trade in writing.",
-    "repos": [{ "label": "Brutal UX", "url": "https://github.com/Classiccottrell/Brutal-UX" }],
+    "repos": [
+      {
+        "label": "Brutal UX",
+        "url": "https://github.com/Classiccottrell/Brutal-UX"
+      }
+    ],
     "ctaLabel": "See the live design system",
     "ctaUrl": "https://classiccottrell.github.io/Brutal-UX/",
     "sections": [
@@ -102,17 +205,35 @@
         "heading": "What it is",
         "intro": "One enforcement layer, applied globally and irreversibly:",
         "items": [
-          { "lead": "Every soft-UI cue removed at once, not dialed down.", "text": "Zero border-radius, zero box-shadow, zero transition duration, system monospace only, all forced with `!important` at the root so no component can quietly opt back in." },
-          { "lead": "Hierarchy still exists, it just moved.", "text": "A five-step type scale (48/32/24/16/13px) and 2-3px black borders carry the entire structure that shadow and rounding used to carry." },
-          { "lead": "Color is rationed like a budget, not a palette.", "text": "Red for alerts, green for live data, blue for raw hyperlinks, never decoration, never the only signal a state changed." }
+          {
+            "lead": "Every soft-UI cue removed at once, not dialed down.",
+            "text": "Zero border-radius, zero box-shadow, zero transition duration, system monospace only, all forced with `!important` at the root so no component can quietly opt back in."
+          },
+          {
+            "lead": "Hierarchy still exists, it just moved.",
+            "text": "A five-step type scale (48/32/24/16/13px) and 2-3px black borders carry the entire structure that shadow and rounding used to carry."
+          },
+          {
+            "lead": "Color is rationed like a budget, not a palette.",
+            "text": "Red for alerts, green for live data, blue for raw hyperlinks, never decoration, never the only signal a state changed."
+          }
         ]
       },
       {
         "heading": "The UX thinking",
         "items": [
-          { "lead": "Removing polish doesn't remove hierarchy, it relocates it.", "text": "From the pre-attentive visual channel to the semantic one. The system's own validation pass names the trade directly: novices pay a visual-search penalty, experts get near-zero-friction spatial memory." },
-          { "lead": "Instant feedback is a decision, not a missing feature.", "text": "Every transition and animation duration is zeroed globally. State changes land in the same frame instead of easing into existence, an anvil dropping, not a soft landing." },
-          { "lead": "A brutal system still has to pass accessibility, or it's just ugly.", "text": "The manifesto ships its own amendments: a loud, instant focus ring, uppercase capped at short labels only, and color always paired with text so it's never the sole carrier of meaning." }
+          {
+            "lead": "Removing polish doesn't remove hierarchy, it relocates it.",
+            "text": "From the pre-attentive visual channel to the semantic one. The system's own validation pass names the trade directly: novices pay a visual-search penalty, experts get near-zero-friction spatial memory."
+          },
+          {
+            "lead": "Instant feedback is a decision, not a missing feature.",
+            "text": "Every transition and animation duration is zeroed globally. State changes land in the same frame instead of easing into existence, an anvil dropping, not a soft landing."
+          },
+          {
+            "lead": "A brutal system still has to pass accessibility, or it's just ugly.",
+            "text": "The manifesto ships its own amendments: a loud, instant focus ring, uppercase capped at short labels only, and color always paired with text so it's never the sole carrier of meaning."
+          }
         ]
       },
       {
@@ -140,26 +261,53 @@
         "heading": "What it is",
         "intro": "One framework, three fields to brand it:",
         "items": [
-          { "lead": "Brand once, in three fields.", "text": "Subclass Brand with a name, tagline, and hex accent, and every command inherits a welcome page, an ASCII-rendered logo, and a branded first-run splash. No copy-paste between projects." },
-          { "lead": "Terminal color that actually degrades.", "text": "The success/warning/error/info helpers detect truecolor, 256-color, or 16-color terminals automatically, fall back to plain text under NO_COLOR or a pipe, and never assume a capability that isn't there." },
-          { "lead": "Three bundled apps prove the framework holds up.", "text": "ccasset (responsive image variants and blurhash), ccsync (frontmatter validation and content indexing), and cctokens (CSS custom-property extraction) each ship in roughly 80 to 145 lines because the framework does the heavy lifting, not the app." }
+          {
+            "lead": "Brand once, in three fields.",
+            "text": "Subclass Brand with a name, tagline, and hex accent, and every command inherits a welcome page, an ASCII-rendered logo, and a branded first-run splash. No copy-paste between projects."
+          },
+          {
+            "lead": "Terminal color that actually degrades.",
+            "text": "The success/warning/error/info helpers detect truecolor, 256-color, or 16-color terminals automatically, fall back to plain text under NO_COLOR or a pipe, and never assume a capability that isn't there."
+          },
+          {
+            "lead": "Three bundled apps prove the framework holds up.",
+            "text": "ccasset (responsive image variants and blurhash), ccsync (frontmatter validation and content indexing), and cctokens (CSS custom-property extraction) each ship in roughly 80 to 145 lines because the framework does the heavy lifting, not the app."
+          }
         ]
       },
       {
         "heading": "The UX thinking",
         "items": [
-          { "lead": "A first run should look considered, not empty.", "text": "Every tool built on the framework gets the same branded welcome page and splash banner by default, so “we didn’t have time for onboarding” stops being the default outcome." },
-          { "lead": "Degrade honestly instead of assuming a terminal.", "text": "Color support is detected, not assumed, so the same command reads correctly whether it's a modern terminal, an old one, or a log file redirected to disk." },
-          { "lead": "White-labeling should never require a fork.", "text": "Every brand token overrides through an env var prefix at runtime, so the same framework ships five differently branded tools without five copies of the code." }
+          {
+            "lead": "A first run should look considered, not empty.",
+            "text": "Every tool built on the framework gets the same branded welcome page and splash banner by default, so “we didn’t have time for onboarding” stops being the default outcome."
+          },
+          {
+            "lead": "Degrade honestly instead of assuming a terminal.",
+            "text": "Color support is detected, not assumed, so the same command reads correctly whether it's a modern terminal, an old one, or a log file redirected to disk."
+          },
+          {
+            "lead": "White-labeling should never require a fork.",
+            "text": "Every brand token overrides through an env var prefix at runtime, so the same framework ships five differently branded tools without five copies of the code."
+          }
         ]
       },
       {
         "heading": "Photo Curator CLI: a real product on the framework",
         "intro": "The framework needed proof it could carry a shipped product, not just internal tools. Photo Curator CLI is that proof:",
         "items": [
-          { "lead": "Automated shortlisting, not manual triage.", "text": "Point it at a shoot folder and it scores every frame, then ranks a keep/reject shortlist automatically — the first pass done for you, fast, instead of scrubbing hundreds of near-duplicates by eye." },
-          { "lead": "Thresholds you set, not a black box.", "text": "Keep/reject cutoffs are configurable, so the tool's judgment stays tunable to how strict a pass you actually want." },
-          { "lead": "Built on the same branded shell as everything else.", "text": "It ships as a command-line tool on the Classic Cottrell CLI toolkit, so it inherits the same welcome page, terminal styling, and fallback behavior as ccasset, ccsync, and cctokens for free." }
+          {
+            "lead": "Automated shortlisting, not manual triage.",
+            "text": "Point it at a shoot folder and it scores every frame, then ranks a keep/reject shortlist automatically — the first pass done for you, fast, instead of scrubbing hundreds of near-duplicates by eye."
+          },
+          {
+            "lead": "Thresholds you set, not a black box.",
+            "text": "Keep/reject cutoffs are configurable, so the tool's judgment stays tunable to how strict a pass you actually want."
+          },
+          {
+            "lead": "Built on the same branded shell as everything else.",
+            "text": "It ships as a command-line tool on the Classic Cottrell CLI toolkit, so it inherits the same welcome page, terminal styling, and fallback behavior as ccasset, ccsync, and cctokens for free."
+          }
         ]
       },
       {
@@ -168,7 +316,10 @@
         ]
       }
     ],
-    "product": { "label": "Buy Photo Curator CLI", "url": "https://shop.classiccottrell.ca/product/photo-curator-cli" }
+    "product": {
+      "label": "Buy Photo Curator CLI",
+      "url": "https://shop.classiccottrell.ca/product/photo-curator-cli"
+    }
   },
   {
     "id": "vpat-vault",
@@ -197,7 +348,12 @@
     "status": "Active",
     "title": "Classic Cottrell Design System",
     "subtitle": "A token-driven, multi-theme design system pairing a warm editorial canvas with reusable React primitives.",
-    "repos": [{ "label": "Design System", "url": "https://github.com/Classiccottrell/ClassicCottrell_design-system" }],
+    "repos": [
+      {
+        "label": "Design System",
+        "url": "https://github.com/Classiccottrell/ClassicCottrell_design-system"
+      }
+    ],
     "ctaLabel": "See the live design system",
     "ctaUrl": "https://design.classiccottrell.ca",
     "sections": [
@@ -211,9 +367,18 @@
         "heading": "What it is",
         "intro": "One token layer, one component library, one showcase that proves both:",
         "items": [
-          { "lead": "A warm, editorial baseline.", "text": "A cream canvas, a single forest-green accent, and a Rosarivo-serif / Red Hat Display-sans pairing, defined once as CSS variables in globals.css and mapped to light and dark themes." },
-          { "lead": "Primitives, not one-off pages.", "text": "Button, Card, Input, Badge, and the rest live in components/ui/, built with React 19 and Base UI primitives, so every demo page — landing, form, about, gallery — assembles entirely from the same reusable set." },
-          { "lead": "The showcase is the documentation.", "text": "The home page renders the tokens, type, and components live, so what you see is what you get, not a static style guide that drifts out of sync with the code." }
+          {
+            "lead": "A warm, editorial baseline.",
+            "text": "A cream canvas, a single forest-green accent, and a Rosarivo-serif / Red Hat Display-sans pairing, defined once as CSS variables in globals.css and mapped to light and dark themes."
+          },
+          {
+            "lead": "Primitives, not one-off pages.",
+            "text": "Button, Card, Input, Badge, and the rest live in components/ui/, built with React 19 and Base UI primitives, so every demo page — landing, form, about, gallery — assembles entirely from the same reusable set."
+          },
+          {
+            "lead": "The showcase is the documentation.",
+            "text": "The home page renders the tokens, type, and components live, so what you see is what you get, not a static style guide that drifts out of sync with the code."
+          }
         ]
       }
     ]

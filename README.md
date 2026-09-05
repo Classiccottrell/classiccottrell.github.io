@@ -8,7 +8,7 @@ A minimal, fast-loading personal portfolio website hosted on **GitHub Pages**, f
 - Reusable `header.html` and `footer.html` inlined into every page at build time (`npm run build:html`) — no runtime fetch, no flash-of-missing-nav with JS disabled
 - Mobile-responsive layout
 - Google Fonts integration
-- Social icons (LinkedIn + Instagram)
+- Social icons
 - Lightweight HTML/CSS (no frameworks)
 - Easy to maintain and extend
 

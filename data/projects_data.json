@@ -74,7 +74,7 @@
     "id": "linefield",
     "status": "Ongoing",
     "title": "linefield",
-    "subtitle": "Eleven generative line-art backgrounds you own outright.",
+    "subtitle": "Twelve generative line-art backgrounds you own outright.",
     "repos": [
       {
         "label": "linefield",
@@ -87,12 +87,12 @@
       {
         "paragraphs": [
           "A background is the kind of thing you should own outright. It sits on your site for years, it should not phone home, and when you want it slower or bluer you should be able to open the file and change it.",
-          "linefield is eleven of them. Each piece is one HTML file with no dependencies and no build step. Tune it with the on-screen controls, hit export, and you get a standalone file with your settings baked in. Paste it into any page and it runs."
+          "linefield is twelve of them. Each piece is one HTML file with no dependencies and no build step. Tune it with the on-screen controls, hit export, and you get a standalone file with your settings baked in. Paste it into any page and it runs."
         ]
       },
       {
         "heading": "What it is",
-        "intro": "Eleven pieces, one shared control surface:",
+        "intro": "Twelve pieces, one shared control surface:",
         "items": [
           {
             "lead": "Thirteen controls on every piece.",
@@ -104,7 +104,7 @@
           },
           {
             "lead": "A gallery that will not cook your laptop.",
-            "text": "Eleven canvas animations running at once will crawl, so the grid shows stills and swaps only the card you are pointing at for a live preview. One at a time, torn down when you look away. Keyboard focus does the same thing, because hover-only interaction is invisible to anyone not using a mouse."
+            "text": "Twelve canvas animations running at once will crawl, so the grid shows stills and swaps only the card you are pointing at for a live preview. One at a time, torn down when you look away. Keyboard focus does the same thing, because hover-only interaction is invisible to anyone not using a mouse."
           }
         ]
       },
@@ -113,7 +113,7 @@
         "paragraphs": [
           "Drawing the pieces was the easy half. The hard half was catching the things that look correct on paper. A control whose maths is right but whose effect is smaller than the line it draws. A baked export that silently produced a blank page for two pieces because a new module was never registered for inlining, which two separate reviews reported as passing.",
           "The worst one was not a bug at all. Five pieces shipped that were each individually fine and collectively looked like one thing, because every review judged a piece against its own intent and never against the other ten.",
-          "So the checks are scripts now instead of opinions. The build refuses to run when the manifest, the pieces and the README disagree. The control audit fails on anything that reads a value without changing a pixel. And the last gate before shipping is looking at all eleven side by side, which is the only one that would have caught the thing a person actually noticed."
+          "So the checks are scripts now instead of opinions. The build refuses to run when the manifest, the pieces and the README disagree. The control audit fails on anything that reads a value without changing a pixel. And the last gate before shipping is looking at all twelve side by side, which is the only one that would have caught the thing a person actually noticed."
         ]
       }
     ]

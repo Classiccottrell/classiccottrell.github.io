@@ -165,6 +165,23 @@
     }
 
     function renderSection(section) {
+      if (section.roadmap) {
+        return `
+          <section class="project-roadmap" aria-labelledby="project-roadmap-heading">
+            <h2 id="project-roadmap-heading">${escapeHtml(section.heading || 'Roadmap')}</h2>
+            ${section.intro ? `<p>${escapeHtml(section.intro)}</p>` : ''}
+            <div class="roadmap-timeline" role="list">
+              ${section.roadmap.map((stage, index) => `
+                <button class="roadmap-stage ${index === 0 ? 'active' : ''}" type="button" role="listitem" aria-pressed="${index === 0 ? 'true' : 'false'}" data-roadmap-index="${index}">
+                  <span class="roadmap-stage-marker" aria-hidden="true">${String(index + 1).padStart(2, '0')}</span>
+                  <span class="roadmap-stage-copy"><strong>${escapeHtml(stage.label)}</strong><small>${escapeHtml(stage.status)}</small></span>
+                </button>
+              `).join('')}
+            </div>
+            <p class="roadmap-detail" aria-live="polite">${escapeHtml(section.roadmap[0].detail)}</p>
+          </section>
+        `;
+      }
       if (section.heading) {
         const intro = section.intro ? `<p>${escapeHtml(section.intro)}</p>` : '';
         const items = (section.items || []).map(item => `
@@ -195,10 +212,13 @@
       const buyCta = project.product
         ? `<a href="${escapeHtml(project.product.url)}" target="_blank" rel="noopener noreferrer" class="project-buy-cta">${escapeHtml(project.product.label)} &rarr;<span class="visually-hidden"> (opens in a new tab)</span></a>`
         : '';
+      const extensionCta = project.product && project.product.extensionUrl
+        ? `<a href="${escapeHtml(project.product.extensionUrl)}" target="_blank" rel="noopener noreferrer" class="project-extension-cta">${escapeHtml(project.product.extensionLabel || 'Chrome extension')} &rarr;<span class="visually-hidden"> (opens in a new tab)</span></a>`
+        : '';
       return `
         <div class="project-product">
           ${image}
-          ${buyCta}
+          <div class="project-product-actions">${buyCta}${extensionCta}</div>
         </div>
       `;
     }
@@ -231,6 +251,20 @@
         </section>` : ''}
       `;
       detail.scrollTop = 0;
+      detail.querySelectorAll('.roadmap-stage').forEach(stage => {
+        stage.addEventListener('click', () => {
+          const section = project.sections.find(item => item.roadmap);
+          const selected = section && section.roadmap[Number(stage.dataset.roadmapIndex)];
+          if (!selected) return;
+          detail.querySelectorAll('.roadmap-stage').forEach(item => {
+            const active = item === stage;
+            item.classList.toggle('active', active);
+            item.setAttribute('aria-pressed', String(active));
+          });
+          const roadmapDetail = detail.querySelector('.roadmap-detail');
+          if (roadmapDetail) roadmapDetail.textContent = selected.detail;
+        });
+      });
       const heading = detail.querySelector('.project-title');
       if (heading) heading.focus();
     }

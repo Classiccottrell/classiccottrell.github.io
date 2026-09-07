@@ -325,20 +325,36 @@
     "id": "vpat-vault",
     "status": "Active",
     "title": "VPAT Vault",
-    "subtitle": "An 8-prompt Claude toolkit for drafting VPAT 2.5 accessibility conformance reports.",
+    "subtitle": "A nine-prompt Claude toolkit and local Chrome scanner for turning accessibility evidence into VPAT 2.5 drafts.",
     "image": "img/products/vpat-vault.jpg",
     "repos": [],
-    "ctaLabel": "Get the VPAT Vault",
+    "ctaLabel": "Buy VPAT Vault",
     "ctaUrl": "https://shop.classiccottrell.ca/product/vpat-vault",
+    "product": {
+      "label": "Buy VPAT Vault",
+      "url": "https://shop.classiccottrell.ca/product/vpat-vault",
+      "extensionLabel": "Use the free Chrome extension",
+      "extensionUrl": "https://vpat-vault.vercel.app/#extension"
+    },
     "sections": [
       {
         "paragraphs": [
-          "Every VPAT audit ends the same way: accessibility findings scattered across a spreadsheet, a compliance officer translating them into ITI language by hand, and no consistent record of what fails, for whom, and where. VPAT Vault packages that translation work into a repeatable Scan → Systemize → Ship workflow: structured prompts that audit accessibility findings, draft ITI-format VPAT rows, run QA on the output, and produce executive summaries that connect testing to engineering backlogs."
+          "I built VPAT Vault to make creating a VPAT simple enough that more websites can publish one. It combines a local Chrome scanner with a prompt toolkit and HTML template, so evidence moves into the report instead of ending up in a separate silo."
         ]
       },
       {
         "paragraphs": [
-          "The toolkit includes an 8-prompt Claude library, a dependency-free validator, and a 49-record reference dataset, with the full 50-record set pending. The validator checks structured output and allowed ITI conformance terms; human evidence review is required before any report is finalized."
+          "The current release includes nine prompts, a dependency-free validator, a 50-record reference dataset, a report template, and a free Manifest V3 Chrome extension that runs axe locally and exports scan evidence. The roadmap is to connect multi-page scan sessions, evidence review, and report generation into one publishable workflow."
+        ]
+      },
+      {
+        "heading": "Roadmap",
+        "intro": "A practical path from a working evidence capture tool to a complete VPAT workflow.",
+        "roadmap": [
+          { "label": "Foundation", "status": "Shipped", "detail": "Nine prompts, validator, 50-record dataset, and HTML report template." },
+          { "label": "Local scanner", "status": "Shipped", "detail": "Free Chrome extension runs axe on the active tab and exports canonical scan JSON." },
+          { "label": "Scan sessions", "status": "Next", "detail": "Capture evidence across multiple pages while keeping findings connected to the report." },
+          { "label": "Launch workflow", "status": "Planned", "detail": "Review evidence, draft rows, run QA, and publish a VPAT from one guided flow." }
         ]
       }
     ]

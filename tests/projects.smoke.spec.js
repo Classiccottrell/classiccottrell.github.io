@@ -23,7 +23,7 @@ test('legacy project data supports themes, focus, and mobile selection', async (
   await expect(page.locator('.project-title')).toHaveText('Second');
 });
 
-test('VPAT Vault card uses current product scope and exact purchase URL', async ({ page }) => {
+test('VPAT Vault card uses current product scope, purchase CTA, extension link, and roadmap', async ({ page }) => {
   await page.goto('/projects.html');
 
   const card = page.locator('.project-nav-item[data-id="vpat-vault"]');
@@ -31,9 +31,13 @@ test('VPAT Vault card uses current product scope and exact purchase URL', async 
   await card.click();
 
   await expect(page.locator('.project-title')).toHaveText('VPAT Vault');
-  await expect(page.locator('.project-detail')).toContainText('49-record reference dataset');
+  await expect(page.locator('.project-detail')).toContainText('50-record reference dataset');
   await expect(page.locator('.project-detail')).toContainText('human evidence review');
   await expect(page.locator('p.project-cta a')).toHaveAttribute('href', 'https://shop.classiccottrell.ca/product/vpat-vault');
-  await expect(page.locator('.project-buy-cta')).toHaveCount(0);
+  await expect(page.locator('.project-buy-cta')).toHaveAttribute('href', 'https://shop.classiccottrell.ca/product/vpat-vault');
+  await expect(page.locator('.project-extension-cta')).toHaveAttribute('href', 'https://vpat-vault.vercel.app/#extension');
+  await expect(page.locator('.roadmap-stage')).toHaveCount(4);
+  await page.locator('.roadmap-stage').nth(1).click();
+  await expect(page.locator('.roadmap-detail')).toContainText('active tab');
   await expect(page.locator('.project-detail')).not.toContainText(/covering 50|each prompt tested|optimizer|token overhead/i);
 });

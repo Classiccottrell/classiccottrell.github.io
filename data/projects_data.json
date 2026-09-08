@@ -346,7 +346,7 @@
       },
       {
         "heading": "Why I made it",
-        "image": "img/products/vpat-vault-evidence.png",
+        "image": "img/products/vpat-vault-evidence.webp",
         "imageAlt": "VPAT Vault evidence capture interface",
         "paragraphs": [
           "I wanted a scanning tool I would actually use alongside VPAT creation. The extension captures automated evidence where the work starts, while the prompts and template turn that evidence into a reviewable report. I exercised the workflow with my harness so the pieces stay connected from scan to draft."

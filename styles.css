@@ -1489,6 +1489,13 @@ footer .social-icons {
   text-underline-offset: 3px;
 }
 
+.project-inline-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px 16px;
+}
+
 .project-section-image {
   display: block;
   width: 100%;

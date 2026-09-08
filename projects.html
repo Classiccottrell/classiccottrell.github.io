@@ -164,11 +164,11 @@
       });
     }
 
-    function renderSection(section) {
+    function renderSection(section, project) {
       if (section.roadmap) {
         return `
           <section class="project-roadmap" aria-labelledby="project-roadmap-heading">
-            <div class="project-section-heading"><h2 id="project-roadmap-heading">${escapeHtml(section.heading || 'Roadmap')}</h2>${section.productUrl ? `<a class="project-inline-link" href="${escapeHtml(section.productUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(section.productLabel || 'View product page')} <span aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a>` : ''}</div>
+            <div class="project-section-heading"><h2 id="project-roadmap-heading">${escapeHtml(section.heading || 'Roadmap')}</h2><span class="project-inline-links">${section.productUrl ? `<a class="project-inline-link" href="${escapeHtml(section.productUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(section.productLabel || 'View product page')} <span aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a>` : ''}${project?.product?.siteUrl ? `<a class="project-inline-link" href="${escapeHtml(project.product.siteUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(project.product.siteLabel || 'Visit product site')} <span aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a>` : ''}</span></div>
             ${section.intro ? `<p>${escapeHtml(section.intro)}</p>` : ''}
             <div class="roadmap-timeline" role="list">
               ${section.roadmap.map((stage, index) => `
@@ -244,7 +244,7 @@
           </div>
         </div>
         ${renderProduct(project)}
-        ${project.sections.map(renderSection).join('')}
+        ${project.sections.map(section => renderSection(section, project)).join('')}
         ${project.ctaUrl ? `
         <section class="project-buy-section">
           <h2>Get VPAT Vault</h2>

@@ -1470,6 +1470,34 @@ footer .social-icons {
   color: var(--brand-primary);
 }
 
+.project-section-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.project-section-heading h2 {
+  margin-bottom: 12px;
+}
+
+.project-inline-link {
+  color: var(--brand-primary);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.project-section-image {
+  display: block;
+  width: 100%;
+  max-width: 680px;
+  margin: 18px 0 24px;
+  border: 1px solid var(--neutral-300);
+  border-radius: var(--radius-small);
+}
+
 .project-detail p,
 .project-detail li {
   font-size: 1.05rem;
@@ -1545,6 +1573,16 @@ footer .social-icons {
 
 .project-extension-cta:hover {
   color: var(--brand-primary-hover);
+}
+
+.project-buy-section {
+  margin-top: 48px;
+  padding-top: 8px;
+  border-top: 1px solid var(--neutral-300);
+}
+
+.project-buy-section h2 {
+  margin-top: 28px;
 }
 
 .roadmap-timeline {

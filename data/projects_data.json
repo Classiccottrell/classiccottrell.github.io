@@ -333,13 +333,23 @@
     "product": {
       "label": "Buy VPAT Vault",
       "url": "https://shop.classiccottrell.ca/product/vpat-vault",
-      "extensionLabel": "Use the free Chrome extension",
-      "extensionUrl": "https://vpat-vault.vercel.app/#extension"
+      "extensionLabel": "Download Chrome extension",
+      "extensionUrl": "https://vpat.classiccottrell.ca/",
+      "siteLabel": "Visit vpat.classiccottrell.ca",
+      "siteUrl": "https://vpat.classiccottrell.ca/"
     },
     "sections": [
       {
         "paragraphs": [
           "I built VPAT Vault to make creating a VPAT simple enough that more websites can publish one. It combines a local Chrome scanner with a prompt toolkit and HTML template, so evidence moves into the report instead of ending up in a separate silo."
+        ]
+      },
+      {
+        "heading": "Why I made it",
+        "image": "img/products/vpat-vault-evidence.png",
+        "imageAlt": "VPAT Vault evidence capture interface",
+        "paragraphs": [
+          "I wanted a scanning tool I would actually use alongside VPAT creation. The extension captures automated evidence where the work starts, while the prompts and template turn that evidence into a reviewable report. I exercised the workflow with my harness so the pieces stay connected from scan to draft."
         ]
       },
       {
@@ -350,6 +360,8 @@
       {
         "heading": "Roadmap",
         "intro": "A practical path from a working evidence capture tool to a complete VPAT workflow.",
+        "productLabel": "View VPAT Vault product page",
+        "productUrl": "https://shop.classiccottrell.ca/product/vpat-vault",
         "roadmap": [
           { "label": "Foundation", "status": "Shipped", "detail": "Nine prompts, validator, 50-record dataset, and HTML report template." },
           { "label": "Local scanner", "status": "Shipped", "detail": "Free Chrome extension runs axe on the active tab and exports canonical scan JSON." },

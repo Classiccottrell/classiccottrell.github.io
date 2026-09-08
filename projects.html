@@ -168,7 +168,7 @@
       if (section.roadmap) {
         return `
           <section class="project-roadmap" aria-labelledby="project-roadmap-heading">
-            <h2 id="project-roadmap-heading">${escapeHtml(section.heading || 'Roadmap')}</h2>
+            <div class="project-section-heading"><h2 id="project-roadmap-heading">${escapeHtml(section.heading || 'Roadmap')}</h2>${section.productUrl ? `<a class="project-inline-link" href="${escapeHtml(section.productUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(section.productLabel || 'View product page')} <span aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a>` : ''}</div>
             ${section.intro ? `<p>${escapeHtml(section.intro)}</p>` : ''}
             <div class="roadmap-timeline" role="list">
               ${section.roadmap.map((stage, index) => `
@@ -184,6 +184,7 @@
       }
       if (section.heading) {
         const intro = section.intro ? `<p>${escapeHtml(section.intro)}</p>` : '';
+        const image = section.image ? `<img class="project-section-image" src="${escapeHtml(section.image)}" alt="${escapeHtml(section.imageAlt || '')}" loading="lazy">` : '';
         const items = (section.items || []).map(item => `
           <li><strong>${escapeHtml(item.lead)}</strong> ${escapeHtml(item.text)}</li>
         `).join('');
@@ -192,6 +193,7 @@
           <section>
             <h2>${escapeHtml(section.heading)}</h2>
             ${intro}
+            ${image}
             <ul>${items}</ul>
             ${outro}
           </section>
@@ -218,7 +220,7 @@
       return `
         <div class="project-product">
           ${image}
-          <div class="project-product-actions">${buyCta}${extensionCta}</div>
+          <div class="project-product-actions">${extensionCta}</div>
         </div>
       `;
     }
@@ -244,9 +246,10 @@
         ${renderProduct(project)}
         ${project.sections.map(renderSection).join('')}
         ${project.ctaUrl ? `
-        <section>
+        <section class="project-buy-section">
+          <h2>Get VPAT Vault</h2>
           <p class="project-cta">
-            <a href="${project.ctaUrl}" target="_blank" rel="noopener noreferrer" class="header-link">${escapeHtml(project.ctaLabel)} &rarr;<span class="visually-hidden"> (opens in a new tab)</span></a>
+            <a href="${escapeHtml(project.ctaUrl)}" target="_blank" rel="noopener noreferrer" class="project-buy-cta">${escapeHtml(project.ctaLabel)} &rarr;<span class="visually-hidden"> (opens in a new tab)</span></a>
           </p>
         </section>` : ''}
       `;

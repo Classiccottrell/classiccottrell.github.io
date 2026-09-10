@@ -14,7 +14,7 @@ import path from 'node:path';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 
-const PAGES = ['index.html', 'art.html', 'projects.html', 'writing.html', 'sandbox.html'];
+const PAGES = ['index.html', 'art.html', 'projects.html', 'writing.html'];
 
 // Byte-identical block that used to live inline on every page. Removed
 // entirely once the header/footer markup is inlined at build time.
@@ -86,7 +86,7 @@ function stripLoadPartials(html) {
   // Collapse an now-empty <script></script> left behind (index.html, writing.html).
   out = out.replace(/<script>\s*<\/script>\n/, '');
   // Collapse the leftover blank line left behind when other code follows in
-  // the same <script> tag (art.html, projects.html, sandbox.html).
+  // the same <script> tag (art.html, projects.html).
   out = out.replace(/<script>\n\n(\s*\/\/)/, '<script>\n$1');
   return out;
 }

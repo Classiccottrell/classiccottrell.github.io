@@ -164,9 +164,27 @@
       });
     }
 
-    function renderSection(section) {
+    function renderSection(section, project) {
+      if (section.roadmap) {
+        return `
+          <section class="project-roadmap" aria-labelledby="project-roadmap-heading">
+            <div class="project-section-heading"><h2 id="project-roadmap-heading">${escapeHtml(section.heading || 'Roadmap')}</h2><span class="project-inline-links">${section.productUrl ? `<a class="project-inline-link" href="${escapeHtml(section.productUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(section.productLabel || 'View product page')} <span aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a>` : ''}${project?.product?.siteUrl ? `<a class="project-inline-link" href="${escapeHtml(project.product.siteUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(project.product.siteLabel || 'Visit product site')} <span aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a>` : ''}</span></div>
+            ${section.intro ? `<p>${escapeHtml(section.intro)}</p>` : ''}
+            <div class="roadmap-timeline" role="list">
+              ${section.roadmap.map((stage, index) => `
+                <button class="roadmap-stage ${index === 0 ? 'active' : ''}" type="button" role="listitem" aria-pressed="${index === 0 ? 'true' : 'false'}" data-roadmap-index="${index}">
+                  <span class="roadmap-stage-marker" aria-hidden="true">${String(index + 1).padStart(2, '0')}</span>
+                  <span class="roadmap-stage-copy"><strong>${escapeHtml(stage.label)}</strong><small>${escapeHtml(stage.status)}</small></span>
+                </button>
+              `).join('')}
+            </div>
+            <p class="roadmap-detail" aria-live="polite">${escapeHtml(section.roadmap[0].detail)}</p>
+          </section>
+        `;
+      }
       if (section.heading) {
         const intro = section.intro ? `<p>${escapeHtml(section.intro)}</p>` : '';
+        const image = section.image ? `<img class="project-section-image" src="${escapeHtml(section.image)}" alt="${escapeHtml(section.imageAlt || '')}" loading="lazy">` : '';
         const items = (section.items || []).map(item => `
           <li><strong>${escapeHtml(item.lead)}</strong> ${escapeHtml(item.text)}</li>
         `).join('');
@@ -175,6 +193,7 @@
           <section>
             <h2>${escapeHtml(section.heading)}</h2>
             ${intro}
+            ${image}
             <ul>${items}</ul>
             ${outro}
           </section>
@@ -195,10 +214,13 @@
       const buyCta = project.product
         ? `<a href="${escapeHtml(project.product.url)}" target="_blank" rel="noopener noreferrer" class="project-buy-cta">${escapeHtml(project.product.label)} &rarr;<span class="visually-hidden"> (opens in a new tab)</span></a>`
         : '';
+      const extensionCta = project.product && project.product.extensionUrl
+        ? `<a href="${escapeHtml(project.product.extensionUrl)}" target="_blank" rel="noopener noreferrer" class="project-extension-cta">${escapeHtml(project.product.extensionLabel || 'Chrome extension')} &rarr;<span class="visually-hidden"> (opens in a new tab)</span></a>`
+        : '';
       return `
         <div class="project-product">
           ${image}
-          ${buyCta}
+          <div class="project-product-actions">${extensionCta}</div>
         </div>
       `;
     }
@@ -222,15 +244,30 @@
           </div>
         </div>
         ${renderProduct(project)}
-        ${project.sections.map(renderSection).join('')}
+        ${project.sections.map(section => renderSection(section, project)).join('')}
         ${project.ctaUrl ? `
-        <section>
+        <section class="project-buy-section">
+          <h2>Get VPAT Vault</h2>
           <p class="project-cta">
-            <a href="${project.ctaUrl}" target="_blank" rel="noopener noreferrer" class="header-link">${escapeHtml(project.ctaLabel)} &rarr;<span class="visually-hidden"> (opens in a new tab)</span></a>
+            <a href="${escapeHtml(project.ctaUrl)}" target="_blank" rel="noopener noreferrer" class="project-buy-cta">${escapeHtml(project.ctaLabel)} &rarr;<span class="visually-hidden"> (opens in a new tab)</span></a>
           </p>
         </section>` : ''}
       `;
       detail.scrollTop = 0;
+      detail.querySelectorAll('.roadmap-stage').forEach(stage => {
+        stage.addEventListener('click', () => {
+          const section = project.sections.find(item => item.roadmap);
+          const selected = section && section.roadmap[Number(stage.dataset.roadmapIndex)];
+          if (!selected) return;
+          detail.querySelectorAll('.roadmap-stage').forEach(item => {
+            const active = item === stage;
+            item.classList.toggle('active', active);
+            item.setAttribute('aria-pressed', String(active));
+          });
+          const roadmapDetail = detail.querySelector('.roadmap-detail');
+          if (roadmapDetail) roadmapDetail.textContent = selected.detail;
+        });
+      });
       const heading = detail.querySelector('.project-title');
       if (heading) heading.focus();
     }

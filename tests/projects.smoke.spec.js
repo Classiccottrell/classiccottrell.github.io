@@ -31,13 +31,16 @@ test('VPAT Vault card uses current product scope, purchase CTA, extension link, 
   await card.click();
 
   await expect(page.locator('.project-title')).toHaveText('VPAT Vault');
+  await expect(page.locator('.project-subtitle')).toContainText('AI coding agent');
+  await expect(page.locator('.project-subtitle')).not.toContainText('Claude');
   await expect(page.locator('.project-detail')).toContainText('50-record reference dataset');
   await expect(page.locator('.project-detail')).toContainText('human evidence review');
   await expect(page.locator('p.project-cta a')).toHaveAttribute('href', 'https://shop.classiccottrell.ca/product/vpat-vault');
-  await expect(page.locator('.project-buy-section')).toContainText('Get VPAT Vault');
+  await expect(page.locator('.project-buy-section')).toContainText('Buy VPAT Vault');
   await expect(page.locator('.project-buy-section .project-buy-cta')).toHaveAttribute('href', 'https://shop.classiccottrell.ca/product/vpat-vault');
   await expect(page.locator('.project-extension-cta')).toHaveAttribute('href', 'https://vpat.classiccottrell.ca/');
   await expect(page.locator('.project-section-image')).toHaveAttribute('src', 'img/products/vpat-vault-evidence.webp');
+  await expect(page.locator('.project-product-image')).toHaveCount(0);
   await expect(page.locator('.project-roadmap .project-inline-link')).toHaveAttribute('href', 'https://shop.classiccottrell.ca/product/vpat-vault');
   await expect(page.locator('.project-roadmap .project-inline-link').nth(1)).toHaveAttribute('href', 'https://vpat.classiccottrell.ca/');
   await expect(page.locator('.roadmap-stage')).toHaveCount(4);

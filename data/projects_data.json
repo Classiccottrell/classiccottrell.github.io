@@ -325,8 +325,7 @@
     "id": "vpat-vault",
     "status": "Active",
     "title": "VPAT Vault",
-    "subtitle": "A nine-prompt Claude toolkit and local Chrome scanner for turning accessibility evidence into VPAT 2.5 drafts.",
-    "image": "img/products/vpat-vault.jpg",
+    "subtitle": "A nine-prompt AI coding agent toolkit and local Chrome scanner for turning accessibility evidence into VPAT 2.5 drafts.",
     "repos": [],
     "ctaLabel": "Buy VPAT Vault",
     "ctaUrl": "https://shop.classiccottrell.ca/product/vpat-vault",
@@ -341,7 +340,7 @@
     "sections": [
       {
         "paragraphs": [
-          "I built VPAT Vault to make creating a VPAT simple enough that more websites can publish one. It combines a local Chrome scanner with a prompt toolkit and HTML template, so evidence moves into the report instead of ending up in a separate silo."
+          "I built VPAT Vault to make creating a VPAT simple enough that more websites can publish one. It combines a local Chrome scanner with an AI coding agent toolkit and HTML template, so evidence moves into the report instead of ending up in a separate silo."
         ]
       },
       {

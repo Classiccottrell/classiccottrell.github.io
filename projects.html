@@ -34,7 +34,7 @@
       }, 3000);
     }());
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260827" />
+  <link rel="stylesheet" href="styles.css?v=20260909" />
 </head>
 
 <body class="projects-page">
@@ -111,7 +111,7 @@
   </div>
   <p class="copyright">© 2009–<span id="current-year"></span> Matthew A. Cottrell. All rights reserved.</p>
   <div class="footer-links">
-    <a href="sandbox.html" class="footer-link">Sandbox</a>
+    <label for="theme-select" class="theme-label">Theme</label>
     <select id="theme-select" class="theme-select" aria-label="Site theme">
       <option value="default">Classic</option>
       <option value="bolder">Bolder</option>
@@ -225,7 +225,7 @@
       `;
     }
 
-    function renderDetail(project) {
+    function renderDetail(project, focusHeading) {
       const detail = document.getElementById('project-detail');
       detail.innerHTML = `
         <p class="writing-card-date reveal">${escapeHtml(project.status)}</p>
@@ -247,7 +247,7 @@
         ${project.sections.map(section => renderSection(section, project)).join('')}
         ${project.ctaUrl ? `
         <section class="project-buy-section">
-          <h2>Get VPAT Vault</h2>
+          ${project.ctaHeading ? `<h2>${escapeHtml(project.ctaHeading)}</h2>` : ''}
           <p class="project-cta">
             <a href="${escapeHtml(project.ctaUrl)}" target="_blank" rel="noopener noreferrer" class="project-buy-cta">${escapeHtml(project.ctaLabel)} &rarr;<span class="visually-hidden"> (opens in a new tab)</span></a>
           </p>
@@ -269,14 +269,14 @@
         });
       });
       const heading = detail.querySelector('.project-title');
-      if (heading) heading.focus();
+      if (focusHeading && heading) heading.focus();
     }
 
-    function selectProject(id) {
+    function selectProject(id, focusHeading = false) {
       const project = projects.find(p => p.id === id) || projects[0];
       if (!project) return;
       renderNav(project.id);
-      renderDetail(project);
+      renderDetail(project, focusHeading);
     }
 
     async function loadProjects() {
@@ -296,13 +296,14 @@
       e.preventDefault();
       const id = link.dataset.id;
       location.hash = id;
-      selectProject(id);
+      selectProject(id, e.detail === 0);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
     window.addEventListener('hashchange', function () {
       const id = location.hash.replace('#', '');
-      if (id) selectProject(id);
+      const active = document.querySelector('.project-nav-item.active');
+      if (id && active?.dataset.id !== id) selectProject(id);
     });
 
     loadProjects();

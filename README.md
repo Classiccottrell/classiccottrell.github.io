@@ -48,7 +48,7 @@ JavaScript disabled and without layout shift.
 npm run build:html
 ```
 and commit the resulting changes to `index.html`, `art.html`, `projects.html`,
-`writing.html`, and `sandbox.html` before pushing. This site has no CI build
+and `writing.html` before pushing. This site has no CI build
 step (GitHub Pages / Netlify serve the raw committed repo — see `netlify.toml`),
 so the inlined HTML must already be correct in the committed files.
 

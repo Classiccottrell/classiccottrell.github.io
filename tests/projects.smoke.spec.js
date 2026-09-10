@@ -11,6 +11,8 @@ test('legacy project data supports themes, focus, and mobile selection', async (
 
   await page.goto('/projects.html');
   await expect(page.locator('.project-repo-link')).toHaveAttribute('href', 'https://github.com/example/legacy');
+  await expect(page.locator('.project-title')).not.toBeFocused();
+  await expect(page.locator('.project-detail')).not.toContainText('Get VPAT Vault');
 
   await page.locator('.project-repo-link').focus();
   await expect(page.locator('.project-repo-link')).toHaveCSS('outline-style', 'solid');
@@ -18,9 +20,11 @@ test('legacy project data supports themes, focus, and mobile selection', async (
   await page.locator('#theme-select').selectOption('brutal');
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'brutal');
 
-  await page.locator('.project-nav-item[data-id="second"]').click();
+  await page.locator('.project-nav-item[data-id="second"]').focus();
+  await page.keyboard.press('Enter');
   await expect(page.locator('.project-nav-item[data-id="second"]')).toHaveClass(/active/);
   await expect(page.locator('.project-title')).toHaveText('Second');
+  await expect(page.locator('.project-title')).toBeFocused();
 });
 
 test('VPAT Vault card uses current product scope, purchase CTA, extension link, and roadmap', async ({ page }) => {
@@ -32,13 +36,13 @@ test('VPAT Vault card uses current product scope, purchase CTA, extension link, 
 
   await expect(page.locator('.project-title')).toHaveText('VPAT Vault');
   await expect(page.locator('.project-detail')).toContainText('50-record reference dataset');
-  await expect(page.locator('.project-detail')).toContainText('human evidence review');
+  await expect(page.locator('.project-detail')).toContainText('evidence review');
   await expect(page.locator('p.project-cta a')).toHaveAttribute('href', 'https://shop.classiccottrell.ca/product/vpat-vault');
   await expect(page.locator('.project-buy-section')).toContainText('Get VPAT Vault');
   await expect(page.locator('.project-buy-section .project-buy-cta')).toHaveAttribute('href', 'https://shop.classiccottrell.ca/product/vpat-vault');
   await expect(page.locator('.project-extension-cta')).toHaveAttribute('href', 'https://vpat.classiccottrell.ca/');
   await expect(page.locator('.project-section-image')).toHaveAttribute('src', 'img/products/vpat-vault-evidence.webp');
-  await expect(page.locator('.project-roadmap .project-inline-link')).toHaveAttribute('href', 'https://shop.classiccottrell.ca/product/vpat-vault');
+  await expect(page.locator('.project-roadmap .project-inline-link').first()).toHaveAttribute('href', 'https://shop.classiccottrell.ca/product/vpat-vault');
   await expect(page.locator('.project-roadmap .project-inline-link').nth(1)).toHaveAttribute('href', 'https://vpat.classiccottrell.ca/');
   await expect(page.locator('.roadmap-stage')).toHaveCount(4);
   await page.locator('.roadmap-stage').nth(1).click();

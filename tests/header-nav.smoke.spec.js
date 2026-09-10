@@ -41,6 +41,9 @@ for (const page of ['index.html', 'art.html', 'writing.html', 'projects.html']) 
     await expect(drawerShopLink.locator('span[aria-hidden="true"]')).toHaveText('↗');
     await expect(drawerShopLink.locator('.visually-hidden')).toHaveText(' (opens in a new tab)');
 
+    await expect(p.locator('label[for="theme-select"]')).toHaveText('Theme');
+    await expect(p.locator('a[href="sandbox.html"]')).toHaveCount(0);
+
     // nav-toggle open/close
     const toggle = p.locator('#nav-toggle');
     const drawer = p.locator('#mobile-nav-drawer');

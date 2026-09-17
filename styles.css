@@ -1441,7 +1441,7 @@ footer .social-icons {
   margin-bottom: 16px;
 }
 
-.project-buy-cta {
+a.project-buy-cta {
   display: inline-block;
   padding: 14px 24px;
   border-radius: var(--radius-small);
@@ -1451,8 +1451,9 @@ footer .social-icons {
   text-decoration: none;
 }
 
-.project-buy-cta:hover {
+a.project-buy-cta:hover {
   background: var(--brand-primary-hover);
+  color: var(--bg-page);
 }
 
 .project-extension-cta {

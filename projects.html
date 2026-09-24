@@ -185,6 +185,7 @@
       if (section.heading) {
         const intro = section.intro ? `<p>${escapeHtml(section.intro)}</p>` : '';
         const image = section.image ? `<img class="project-section-image" src="${escapeHtml(section.image)}" alt="${escapeHtml(section.imageAlt || '')}" loading="lazy">` : '';
+        const paragraphs = (section.paragraphs || []).map(p => `<p>${escapeHtml(p)}</p>`).join('');
         const items = (section.items || []).map(item => `
           <li><strong>${escapeHtml(item.lead)}</strong> ${escapeHtml(item.text)}</li>
         `).join('');
@@ -193,8 +194,9 @@
           <section>
             <h2>${escapeHtml(section.heading)}</h2>
             ${intro}
+            ${paragraphs}
             ${image}
-            <ul>${items}</ul>
+            ${items ? `<ul>${items}</ul>` : ''}
             ${outro}
           </section>
         `;
@@ -281,7 +283,7 @@
 
     async function loadProjects() {
       try {
-        const response = await fetch('data/projects_data.json?v=20260904');
+        const response = await fetch('data/projects_data.json?v=20260924');
         projects = (await response.json()).map(normalizeProject);
         const initialId = location.hash.replace('#', '') || (projects[0] && projects[0].id);
         selectProject(initialId);

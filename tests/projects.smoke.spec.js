@@ -49,3 +49,19 @@ test('VPAT Vault card uses current product scope, purchase CTA, extension link, 
   await expect(page.locator('.roadmap-detail')).toContainText('active tab');
   await expect(page.locator('.project-detail')).not.toContainText(/covering 50|each prompt tested|optimizer|token overhead/i);
 });
+
+test('headed sections render their paragraphs and skip empty lists', async ({ page }) => {
+  await page.route('**/data/projects_data.json*', route => route.fulfill({
+    json: [{
+      id: 'p', status: 'Live', title: 'P', subtitle: 's', repos: [],
+      sections: [
+        { heading: 'Why', paragraphs: ['Headed paragraph renders.'] },
+        { heading: 'With items', items: [{ lead: 'Lead.', text: 'Text.' }] },
+      ],
+    }],
+  }));
+
+  await page.goto('/projects.html');
+  await expect(page.locator('.project-detail')).toContainText('Headed paragraph renders.');
+  await expect(page.locator('.project-detail ul')).toHaveCount(1);
+});

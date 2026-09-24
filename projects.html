@@ -307,8 +307,14 @@
       if (!link) return;
       e.preventDefault();
       const id = link.dataset.id;
+      const switching = document.querySelector('.project-nav-item.active')?.dataset.id !== id;
       location.hash = id;
       selectProject(id, e.detail === 0);
+      // The desktop nav is sticky, so a reader can switch cases while scrolled
+      // down. Start the new one at its heading; same-card clicks stay put.
+      if (switching && window.scrollY > 0) {
+        window.scrollTo({ top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+      }
     });
 
     window.addEventListener('hashchange', function () {

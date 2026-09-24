@@ -146,3 +146,19 @@ test('preview figures lead the case study and preserve quoted text without injec
   await expect(page.locator('.project-product-actions, [onload], [data-injected]')).toHaveCount(0);
   await expect(page.locator('.project-repo-link')).toHaveAttribute('href', 'https://example.com/" data-injected="true');
 });
+
+test('switching projects from the sticky desktop nav starts the new case at its heading', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.route('**/data/projects_data.json*', route => route.fulfill({
+    json: Array.from({ length: 3 }, (_, index) => ({
+      id: `project-${index}`, title: `Project ${index}`, status: 'Live', subtitle: 'Case study', repos: [],
+      sections: [{ paragraphs: Array(30).fill('Long case study text so the page scrolls well past the heading.') }],
+    })),
+  }));
+
+  await page.goto('/projects.html');
+  await page.evaluate(() => window.scrollTo({ top: 800, behavior: 'instant' }));
+  await page.locator('.project-nav-item[data-id="project-1"]').click();
+  await expect(page.locator('.project-title')).toHaveText('Project 1');
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+});

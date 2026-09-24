@@ -4,14 +4,7 @@
     "status": "Ongoing",
     "title": "Agent Workspace Template",
     "subtitle": "A folder that turns an AI chat tool into an operating environment.",
-    "repos": [
-      {
-        "label": "Agent Workspace Template",
-        "url": "https://github.com/Classiccottrell/Agent_Workspace_Template"
-      }
-    ],
-    "ctaLabel": "See the live Agent Workspace Template",
-    "ctaUrl": "https://classiccottrell.github.io/Agent_Workspace_Template/",
+    "repos": [],
     "sections": [
       {
         "paragraphs": [
@@ -238,14 +231,7 @@
     "status": "Ongoing",
     "title": "UX Skill Repo 1.0",
     "subtitle": "Twelve AI agent skills held to one measurable rulebook, with a loop that keeps testing it against real work.",
-    "repos": [
-      {
-        "label": "UX Skill Repo 1.0",
-        "url": "https://github.com/Classiccottrell/UX_Skill_Repo_1.0"
-      }
-    ],
-    "ctaLabel": "See the repo on GitHub",
-    "ctaUrl": "https://github.com/Classiccottrell/UX_Skill_Repo_1.0",
+    "repos": [],
     "sections": [
       {
         "paragraphs": [

@@ -50,7 +50,7 @@
       },
       {
         "paragraphs": [
-          "The workspace sharpens its own tools and remembers what I put down. The repository is private; this case study shows how I use it."
+          "The future of a workspace is not a grand digital mansion you maintain forever. It is a bench that sharpens its own tools and remembers everything you put down on it. The repository is private; this case study shows how I use it."
         ]
       }
     ]
@@ -121,7 +121,7 @@
     ],
     "image": "img/projects/agentic-light-dashboard.webp",
     "imageAlt": "The Agentic Light status dashboard on a dark page: a health banner reading 59 pass, 2 warn, 0 fail, category chips, and the first three preset cards.",
-    "imageCaption": "The local dashboard: run health, presets and project status."
+    "imageCaption": "The local dashboard: repo health and the preset cards."
   },
   {
     "id": "linefield",
@@ -353,6 +353,7 @@
     "title": "ClassicCottrell CLI",
     "subtitle": "A reusable CLI framework so every new tool starts branded, not blank.",
     "image": "img/products/photo-curator-cli.jpg",
+    "imageAlt": "Product box for the Photo Curation Skill v1: a white box with a black spine, a green aperture logo, a large orange v1 with an AI-powered badge, and the line Photo Curation Skill, Provider-Neutral Real Estate Photo Selection.",
     "repos": [],
     "sections": [
       {
@@ -431,6 +432,7 @@
     "title": "VPAT Vault",
     "subtitle": "A nine-prompt Claude toolkit and local Chrome scanner for turning accessibility evidence into VPAT 2.5 drafts.",
     "image": "img/products/vpat-vault.jpg",
+    "imageAlt": "Product box for VPAT Vault: a white box with a black spine, a green leaf logo, a large orange 2.1 with an Accessible badge, and the line VPAT, Voluntary Product Accessibility Template, WCAG 2.1 Conformance Report.",
     "repos": [],
     "ctaLabel": "Buy VPAT Vault",
     "ctaHeading": "Get VPAT Vault",

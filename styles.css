@@ -250,6 +250,11 @@
   background-color: var(--bg-page);
 }
 
+/* brutal frames are hard black; the default hairline reads soft next to it. */
+[data-theme="brutal"] .writing-card-thumb {
+  border: 2px solid var(--text-main);
+}
+
 /* writing-card title/link text sits over date/subtitle text that would
    go invisible under a background invert, so use underline instead. */
 [data-theme="brutal"] .writing-card:hover .writing-card-title,
@@ -1166,12 +1171,33 @@ footer .social-icons {
 }
 
 .writing-card {
-  display: block;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 208px;
+  column-gap: 32px;
+  align-items: start;
   text-align: left;
   padding: 40px 0;
   border-bottom: 1px solid var(--neutral-200);
   text-decoration: none;
   color: inherit;
+}
+
+.writing-card-thumb {
+  grid-column: 2;
+  grid-row: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border: 1px solid var(--neutral-300);
+  border-radius: var(--radius-small);
+}
+
+.writing-card-body {
+  grid-column: 1;
+  grid-row: 1;
+  min-width: 0;
 }
 
 .writing-card:hover .writing-card-title,
@@ -1245,6 +1271,19 @@ footer .social-icons {
 
   .writing-card {
     padding: 28px 0;
+    grid-template-columns: 1fr;
+    row-gap: 20px;
+  }
+
+  .writing-card-thumb {
+    grid-column: 1;
+    grid-row: 1;
+    aspect-ratio: 3 / 2;
+  }
+
+  .writing-card-body {
+    grid-column: 1;
+    grid-row: 2;
   }
 }
 /* =========================================

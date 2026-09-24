@@ -1426,6 +1426,21 @@ footer .social-icons {
   margin-bottom: 36px;
 }
 
+.project-figure {
+  margin: 0;
+}
+
+.project-preview .project-product-image {
+  max-width: none;
+  margin-bottom: 10px;
+}
+
+.project-figure figcaption {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
 .project-product-actions {
   display: flex;
   flex-wrap: wrap;

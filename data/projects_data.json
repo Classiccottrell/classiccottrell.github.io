@@ -1,7 +1,7 @@
 [
   {
     "id": "agent-workspace",
-    "status": "Ongoing",
+    "status": "Ongoing · Private repository",
     "title": "Agent Workspace Template",
     "subtitle": "A folder that turns an AI chat tool into an operating environment.",
     "repos": [],
@@ -14,7 +14,7 @@
       },
       {
         "heading": "What it is",
-        "intro": "One folder. Clone it, run one script, and you are operating:",
+        "intro": "One folder holds the agents, tools and routines I use across projects:",
         "items": [
           {
             "lead": "An orchestrator and seven scoped agents.",
@@ -50,7 +50,7 @@
       },
       {
         "paragraphs": [
-          "The future of a workspace is not a grand digital mansion you maintain forever. It is a bench you clone in a minute, that sharpens its own tools, and that remembers everything you put down on it."
+          "The workspace sharpens its own tools and remembers what I put down. The repository is private; this case study shows how I use it."
         ]
       }
     ]
@@ -78,8 +78,6 @@
       {
         "heading": "What it is",
         "intro": "A small fork you specialize once, then run by hand:",
-        "image": "img/projects/agentic-light-dashboard.webp",
-        "imageAlt": "The Agentic Light status dashboard on a dark page: a health banner reading 59 pass, 2 warn, 0 fail, category chips, and the first three preset cards.",
         "items": [
           {
             "lead": "Six roles, cut down to what you need.",
@@ -120,7 +118,10 @@
           }
         ]
       }
-    ]
+    ],
+    "image": "img/projects/agentic-light-dashboard.webp",
+    "imageAlt": "The Agentic Light status dashboard on a dark page: a health banner reading 59 pass, 2 warn, 0 fail, category chips, and the first three preset cards.",
+    "imageCaption": "The local dashboard: run health, presets and project status."
   },
   {
     "id": "linefield",
@@ -145,8 +146,6 @@
       {
         "heading": "What it is",
         "intro": "Eighteen pieces, one shared control surface:",
-        "image": "img/projects/linefield-collection.webp",
-        "imageAlt": "A three-by-three sheet of nine linefield pieces: thin line art on near-black tiles, from violet flow ribbons and a green wireframe globe to magenta and cyan moiré rings and a violet grid bent into a well.",
         "items": [
           {
             "lead": "Fourteen controls on every piece.",
@@ -170,7 +169,10 @@
           "So the checks are scripts now instead of opinions. The build refuses to run when the manifest, the pieces and the README disagree. The control audit fails on anything that reads a value without changing a pixel. And the last gate before shipping is looking at all eighteen side by side, which is the only one that would have caught the thing a person actually noticed."
         ]
       }
-    ]
+    ],
+    "image": "img/projects/linefield-collection.webp",
+    "imageAlt": "A three-by-three sheet of nine linefield pieces: thin line art on near-black tiles, from violet flow ribbons and a green wireframe globe to magenta and cyan moiré rings and a violet grid bent into a well.",
+    "imageCaption": "Nine selections from the eighteen-piece collection."
   },
   {
     "id": "forma",
@@ -196,8 +198,6 @@
       {
         "heading": "What it is",
         "intro": "One canvas, four choices:",
-        "image": "img/projects/forma-editor.webp",
-        "imageAlt": "The Forma editor: a translucent blue-violet torus knot with pink and cyan highlights, floating on a cyan-to-pink gradient in the viewport, with the dark control panel and shape picker open at the right.",
         "items": [
           {
             "lead": "Shape, material, environment, effect.",
@@ -224,11 +224,14 @@
           "The render loop is the other quiet piece. One frame scheduler drives everything and pauses when the tab is hidden, so a tab you forgot about is not still rendering."
         ]
       }
-    ]
+    ],
+    "image": "img/projects/forma-editor.webp",
+    "imageAlt": "The Forma editor: a translucent blue-violet torus knot with pink and cyan highlights, floating on a cyan-to-pink gradient in the viewport, with the dark control panel and shape picker open at the right.",
+    "imageCaption": "Forma editor. Shape, material and light in one canvas."
   },
   {
     "id": "ux-skill-repo",
-    "status": "Ongoing",
+    "status": "Ongoing · Private repository",
     "title": "UX Skill Repo 1.0",
     "subtitle": "Twelve AI agent skills held to one measurable rulebook, with a loop that keeps testing it against real work.",
     "repos": [],
@@ -256,7 +259,7 @@
             "text": "improvement-loop runs audit, execute, systematize, re-audit, escalate, and won’t advance a round unless the rulebook itself learned something. Six rounds in, it’s caught its own accent color failing contrast as text, a selection state that broke in dark mode, and a fully built page nothing on the site linked to."
           }
         ],
-        "outro": "Point it at .agents/skills/ in Claude Code, Cursor, or any MCP client. Most skills also work standalone, pasted straight into a chat."
+        "outro": "I run the skills from .agents/skills/ in Claude Code and Cursor. The repository is private; this case study covers the rules and review loop."
       },
       {
         "heading": "The UX thinking",

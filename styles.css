@@ -255,11 +255,17 @@
 /* subscribe button is already black-on-white, so the hover/active invert
    goes white with a 2px inset frame (no layout shift). Focus ring gets a
    3px gap so it stays visible against the black fill. */
+[data-theme="brutal"] a.subscribe-cta-button {
+  border-color: var(--text-main);
+  box-shadow: none;
+}
+
 [data-theme="brutal"] a.subscribe-cta-button:hover,
 [data-theme="brutal"] a.subscribe-cta-button:active {
   background: var(--bg-page);
   color: var(--text-main);
   box-shadow: inset 0 0 0 2px var(--text-main);
+  transform: none;
 }
 
 [data-theme="brutal"] .subscribe-cta-button:focus-visible {
@@ -1198,10 +1204,10 @@ footer .social-icons {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
+  gap: 40px;
   width: 100%;
   box-sizing: border-box;
-  margin: 0 0 40px;
+  margin: 0 0 48px;
   padding: 24px 28px;
   background: var(--accent-surface);
   border: 1px solid var(--neutral-300);
@@ -1350,7 +1356,7 @@ footer .social-icons {
   .subscribe-cta {
     flex-direction: column;
     align-items: stretch;
-    gap: 16px;
+    gap: 24px;
     padding: 20px;
   }
 
@@ -1606,6 +1612,39 @@ a.subscribe-cta-button:hover {
 
 a.subscribe-cta-button:active {
   background: var(--brand-primary-active);
+}
+
+/* The subscribe CTA should read as a real, pressable button: a 48px target,
+   a darker rim, and a touch of depth that lifts on hover and presses down. */
+a.subscribe-cta-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 14px 28px;
+  border: 1px solid var(--brand-primary-hover);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+}
+
+a.subscribe-cta-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+a.subscribe-cta-button:active {
+  transform: translateY(0);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.28);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  a.subscribe-cta-button,
+  a.subscribe-cta-button:hover,
+  a.subscribe-cta-button:active {
+    transition: none;
+    transform: none;
+  }
 }
 
 .project-extension-cta {

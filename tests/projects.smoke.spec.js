@@ -151,6 +151,22 @@ test('preview figures lead the case study and preserve quoted text without injec
   await expect(page.locator('.project-repo-link')).toHaveAttribute('href', 'https://example.com/" data-injected="true');
 });
 
+test('new project cases show their previews and destinations', async ({ page }) => {
+  await page.goto('/projects.html');
+  for (const [id, title, image, href] of [
+    ['agentic-light', 'Agentic Light', 'agentic-light-dashboard.webp', 'https://github.com/Classiccottrell/Agentic_Light'],
+    ['linefield', 'linefield', 'linefield-collection.webp', 'https://classiccottrell.github.io/linefield/'],
+    ['forma', 'Forma', 'forma-editor.webp', 'https://github.com/Classiccottrell/forma'],
+  ]) {
+    await page.locator(`.project-nav-item[data-id="${id}"]`).click();
+    await expect(page.locator('.project-title')).toHaveText(title);
+    const preview = page.locator('.project-product-image');
+    await expect(preview).toHaveAttribute('src', `img/projects/${image}`);
+    await expect.poll(() => preview.evaluate(img => img.naturalWidth)).toBeGreaterThan(0);
+    await expect(page.locator('.project-cta a')).toHaveAttribute('href', href);
+  }
+});
+
 test('switching projects from the sticky desktop nav starts the new case at its heading', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.route('**/data/projects_data.json*', route => route.fulfill({

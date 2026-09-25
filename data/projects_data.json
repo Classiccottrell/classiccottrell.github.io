@@ -420,11 +420,7 @@
           "The measure of a framework isn't the first tool built on it, it's the fifth. Three internal apps and one shipped product in, the pattern's held: brand a class, register a command, ship."
         ]
       }
-    ],
-    "product": {
-      "label": "Buy Photo Curator CLI",
-      "url": "https://shop.classiccottrell.ca/product/photo-curator-cli"
-    }
+    ]
   },
   {
     "id": "vpat-vault",
@@ -434,12 +430,7 @@
     "image": "img/products/vpat-vault.jpg",
     "imageAlt": "Product box for VPAT Vault: a white box with a black spine, a green leaf logo, a large orange 2.1 with an Accessible badge, and the line VPAT, Voluntary Product Accessibility Template, WCAG 2.1 Conformance Report.",
     "repos": [],
-    "ctaLabel": "Buy VPAT Vault",
-    "ctaHeading": "Get VPAT Vault",
-    "ctaUrl": "https://shop.classiccottrell.ca/product/vpat-vault",
     "product": {
-      "label": "Buy VPAT Vault",
-      "url": "https://shop.classiccottrell.ca/product/vpat-vault",
       "extensionLabel": "Download Chrome extension",
       "extensionUrl": "https://vpat.classiccottrell.ca/",
       "siteLabel": "Visit vpat.classiccottrell.ca",
@@ -467,8 +458,6 @@
       {
         "heading": "Roadmap",
         "intro": "A practical path from a working evidence capture tool to a complete VPAT workflow.",
-        "productLabel": "View VPAT Vault product page",
-        "productUrl": "https://shop.classiccottrell.ca/product/vpat-vault",
         "roadmap": [
           { "label": "Foundation", "status": "Shipped", "detail": "Nine prompts, validator, 50-record dataset, and HTML report template." },
           { "label": "Local scanner", "status": "Shipped", "detail": "Free Chrome extension runs axe on the active tab and exports canonical scan JSON." },

@@ -27,7 +27,7 @@ test('legacy project data supports themes, focus, and mobile selection', async (
   await expect(page.locator('.project-title')).toBeFocused();
 });
 
-test('VPAT Vault card uses current product scope, purchase CTA, extension link, and roadmap', async ({ page }) => {
+test('VPAT Vault card uses current product scope, extension link, and roadmap', async ({ page }) => {
   await page.goto('/projects.html');
 
   const card = page.locator('.project-nav-item[data-id="vpat-vault"]');
@@ -37,17 +37,21 @@ test('VPAT Vault card uses current product scope, purchase CTA, extension link, 
   await expect(page.locator('.project-title')).toHaveText('VPAT Vault');
   await expect(page.locator('.project-detail')).toContainText('50-record reference dataset');
   await expect(page.locator('.project-detail')).toContainText('evidence review');
-  await expect(page.locator('p.project-cta a')).toHaveAttribute('href', 'https://shop.classiccottrell.ca/product/vpat-vault');
-  await expect(page.locator('.project-buy-section')).toContainText('Get VPAT Vault');
-  await expect(page.locator('.project-buy-section .project-buy-cta')).toHaveAttribute('href', 'https://shop.classiccottrell.ca/product/vpat-vault');
+  await expect(page.locator('.project-detail a[href*="shop.classiccottrell"]')).toHaveCount(0);
+  await expect(page.locator('.project-buy-section')).toHaveCount(0);
   await expect(page.locator('.project-extension-cta')).toHaveAttribute('href', 'https://vpat.classiccottrell.ca/');
   await expect(page.locator('.project-section-image')).toHaveAttribute('src', 'img/products/vpat-vault-evidence.webp');
-  await expect(page.locator('.project-roadmap .project-inline-link').first()).toHaveAttribute('href', 'https://shop.classiccottrell.ca/product/vpat-vault');
-  await expect(page.locator('.project-roadmap .project-inline-link').nth(1)).toHaveAttribute('href', 'https://vpat.classiccottrell.ca/');
+  await expect(page.locator('.project-roadmap .project-inline-link')).toHaveCount(1);
+  await expect(page.locator('.project-roadmap .project-inline-link').first()).toHaveAttribute('href', 'https://vpat.classiccottrell.ca/');
   await expect(page.locator('.roadmap-stage')).toHaveCount(4);
   await page.locator('.roadmap-stage').nth(1).click();
   await expect(page.locator('.roadmap-detail')).toContainText('active tab');
   await expect(page.locator('.project-detail')).not.toContainText(/covering 50|each prompt tested|optimizer|token overhead/i);
+
+  await page.locator('.project-nav-item[data-id="classiccottrell-cli"]').click();
+  await expect(page.locator('.project-title')).toHaveText('ClassicCottrell CLI');
+  await expect(page.locator('.project-detail a[href*="shop.classiccottrell"]')).toHaveCount(0);
+  await expect(page.locator('.project-buy-section')).toHaveCount(0);
 });
 
 test('headed sections render their paragraphs and skip empty lists', async ({ page }) => {

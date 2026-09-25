@@ -13,12 +13,13 @@ test.describe('no-JS header/footer inlining', () => {
       await p.goto(`${baseURL}/${page}`);
 
       const navLinks = p.locator('.nav-links .header-link');
-      await expect(navLinks).toHaveCount(4);
-      await expect(navLinks.last()).toContainText('Shop');
-      await expect(navLinks.last()).toHaveAttribute('href', 'https://shop.classiccottrell.ca');
+      await expect(navLinks).toHaveCount(3);
+      await expect(navLinks.last()).toContainText('Projects');
+      await expect(navLinks.last()).toHaveAttribute('href', /projects\.html$/);
+      await expect(navLinks.last()).not.toHaveAttribute('target', '_blank');
 
       const drawerLinks = p.locator('.nav-drawer-links .nav-drawer-link');
-      await expect(drawerLinks).toHaveCount(5);
+      await expect(drawerLinks).toHaveCount(4);
 
       const footer = p.locator('#footer');
       await expect(footer).not.toBeEmpty();

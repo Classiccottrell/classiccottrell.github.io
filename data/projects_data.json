@@ -1,21 +1,10 @@
 [
   {
     "id": "agent-workspace",
-    "status": "Ongoing",
-    "title": "The Agent Workspace Pair",
+    "status": "Ongoing · Private repository",
+    "title": "Agent Workspace Template",
     "subtitle": "A folder that turns an AI chat tool into an operating environment.",
-    "repos": [
-      {
-        "label": "Agent Workspace Template",
-        "url": "https://github.com/Classiccottrell/Agent_Workspace_Template"
-      },
-      {
-        "label": "Agentic Light",
-        "url": "https://github.com/Classiccottrell/Agentic_Light"
-      }
-    ],
-    "ctaLabel": "See the live Agent Workspace Template",
-    "ctaUrl": "https://classiccottrell.github.io/Agent_Workspace_Template/",
+    "repos": [],
     "sections": [
       {
         "paragraphs": [
@@ -25,7 +14,7 @@
       },
       {
         "heading": "What it is",
-        "intro": "One folder. Clone it, run one script, and you are operating:",
+        "intro": "One folder holds the agents, tools and routines I use across projects:",
         "items": [
           {
             "lead": "An orchestrator and seven scoped agents.",
@@ -38,13 +27,9 @@
           {
             "lead": "Background jobs that keep it honest.",
             "text": "Daily ingest, a Friday close-out that summarizes the week, a Monday job that starts the next one, a health check every four hours, and an hourly sync that keeps new skills stocked on the shelf. When something breaks, the system says so before you notice."
-          },
-          {
-            "lead": "Two sizes of the same shop.",
-            "text": "Agent Workspace Template is everything above, running unattended. Agentic Light is the same bench with nobody sweeping up overnight: no scheduler, no background jobs. You start it by hand — `bash pipeline/run.sh \"<task>\" /path/to/target/repo` — and it runs one provider, once, in the foreground. Lint, then Playwright, then a human approval, before anything opens a PR."
           }
         ],
-        "outro": "The template runs on Codex, Claude Code, or the Gemini CLI, and picks up the GitHub CLI and Playwright when they are installed, so the agents push code and test pages as shell commands instead of burning tokens on plumbing. Built for the Mac first; the agents and the vault run anywhere the CLI does."
+        "outro": "The template runs on Codex, Claude Code, or the Gemini CLI, and picks up the GitHub CLI and Playwright when they are installed, so the agents push code and test pages as shell commands instead of burning tokens on plumbing. Built for the Mac first; the agents and the vault run anywhere the CLI does. If you want the same bench without the night shift, that is Agentic Light."
       },
       {
         "heading": "The UX thinking",
@@ -65,16 +50,84 @@
       },
       {
         "paragraphs": [
-          "The future of a workspace is not a grand digital mansion you maintain forever. It is a bench you clone in a minute, that sharpens its own tools, and that remembers everything you put down on it."
+          "The future of a workspace is not a grand digital mansion you maintain forever. It is a bench that sharpens its own tools and remembers everything you put down on it. The repository is private; this case study shows how I use it."
         ]
       }
     ]
   },
   {
+    "id": "agentic-light",
+    "status": "Ongoing",
+    "title": "Agentic Light",
+    "subtitle": "The agent workspace with nobody sweeping up overnight.",
+    "repos": [
+      {
+        "label": "Agentic Light",
+        "url": "https://github.com/Classiccottrell/Agentic_Light"
+      }
+    ],
+    "ctaLabel": "See the repo on GitHub",
+    "ctaUrl": "https://github.com/Classiccottrell/Agentic_Light",
+    "sections": [
+      {
+        "paragraphs": [
+          "The Agent Workspace Template runs all night. Daily ingest, a Friday close-out, a health check every four hours. That is the right shape when you live in it. It is the wrong shape when you want to point an agent at one repo for an afternoon.",
+          "Agentic Light is the same bench with the night shift removed. No scheduler, no background service, no retry queue. You start it by hand, one provider runs once in the foreground, and you watch what it does."
+        ]
+      },
+      {
+        "heading": "What it is",
+        "intro": "A small fork you specialize once, then run by hand:",
+        "items": [
+          {
+            "lead": "Six roles, cut down to what you need.",
+            "text": "It ships as a generic fork with architect, coder, engineering manager, curator, creative director and QA. Run one script and it becomes a specific tool: you pick the roles, the gates, and the skills the router may reach for."
+          },
+          {
+            "lead": "Six presets to start from.",
+            "text": "A web app, a CLI tool, a data pipeline, a design review, a server review and a WCAG audit. Each preset decides which roles switch on, which gates run before a pull request opens, and which skills are on the shelf. The WCAG preset runs Playwright, axe and a VPAT lint."
+          },
+          {
+            "lead": "Four providers, one run.",
+            "text": "Claude, Gemini, Codex or Ollama, in the order you set. If the first choice is missing, the launcher falls back before anything starts. Once a run starts it is never retried, and Ollama will not run a workflow that writes. A fake-binary test suite covers all of it without touching a real provider."
+          },
+          {
+            "lead": "A second brain that knows the project.",
+            "text": "Plain Markdown records with offline full-text search and optional Ollama embeddings. When you ask for it, a context packet gets prepended to the coder's prompt. The index is disposable and rebuilds from the files, so the Markdown stays the store."
+          },
+          {
+            "lead": "A dashboard that reads its own config.",
+            "text": "A static microsite shows repo health, every preset, and which roles each one switches on. The preset and roster pages are generated from the config files, and it opens straight from a folder, with no server and no build."
+          }
+        ]
+      },
+      {
+        "heading": "The UX thinking",
+        "items": [
+          {
+            "lead": "Nothing runs that you did not start.",
+            "text": "Every background job is a place for something to fail while you are not looking. Removing the scheduler removes that whole class of surprise."
+          },
+          {
+            "lead": "Specialize once, commit the result.",
+            "text": "Specializing writes three config files: the active roles, the gate list and the selected skills. In a fork you commit them, so the setup lives in the repo, not in anyone's memory."
+          },
+          {
+            "lead": "One human gate, and it does not auto-approve.",
+            "text": "The gates you picked run first. Then the run stops and waits for a yes at the terminal. Only after that can anything open a pull request."
+          }
+        ]
+      }
+    ],
+    "image": "img/projects/agentic-light-dashboard.webp",
+    "imageAlt": "The Agentic Light status dashboard on a dark page: a health banner reading 59 pass, 2 warn, 0 fail, category chips, and the first three preset cards.",
+    "imageCaption": "The local dashboard: repo health and the preset cards."
+  },
+  {
     "id": "linefield",
     "status": "Ongoing",
     "title": "linefield",
-    "subtitle": "Twelve generative line-art backgrounds you own outright.",
+    "subtitle": "Eighteen generative line-art backgrounds you own outright.",
     "repos": [
       {
         "label": "linefield",
@@ -87,16 +140,16 @@
       {
         "paragraphs": [
           "A background is the kind of thing you should own outright. It sits on your site for years, it should not phone home, and when you want it slower or bluer you should be able to open the file and change it.",
-          "linefield is twelve of them. Each piece is one HTML file with no dependencies and no build step. Tune it with the on-screen controls, hit export, and you get a standalone file with your settings baked in. Paste it into any page and it runs."
+          "linefield is eighteen of them. Each piece is one HTML file with no dependencies and no build step. Tune it with the on-screen controls, hit export, and you get a standalone file with your settings baked in. Paste it into any page and it runs."
         ]
       },
       {
         "heading": "What it is",
-        "intro": "Twelve pieces, one shared control surface:",
+        "intro": "Eighteen pieces, one shared control surface:",
         "items": [
           {
-            "lead": "Thirteen controls on every piece.",
-            "text": "Scale, speed, stroke, opacity, saturation, two hues, glow, angle, motion, phase, invert and density, plus one control specific to each piece. All of them do something you can see. A script drives every one of the 154 combinations and diffs the rendered frames, because twice a control shipped that read its value and changed nothing, and both times a human review passed it."
+            "lead": "Fourteen controls on every piece.",
+            "text": "Scale, speed, stroke, opacity, saturation, color mode, two colors, glow, angle, motion, phase, invert and density, plus one control specific to each piece. All of them do something you can see. A script drives every control on every piece and diffs the rendered frames, because twice a control shipped that read its value and changed nothing, and both times a human review passed it."
           },
           {
             "lead": "Four ways out.",
@@ -104,7 +157,7 @@
           },
           {
             "lead": "A gallery that will not cook your laptop.",
-            "text": "Twelve canvas animations running at once will crawl, so the grid shows stills and swaps only the card you are pointing at for a live preview. One at a time, torn down when you look away. Keyboard focus does the same thing, because hover-only interaction is invisible to anyone not using a mouse."
+            "text": "Eighteen canvas animations running at once will crawl, so the grid shows stills and swaps only the card you are pointing at for a live preview. One at a time, torn down when you look away. Keyboard focus does the same thing, because hover-only interaction is invisible to anyone not using a mouse."
           }
         ]
       },
@@ -112,25 +165,76 @@
         "heading": "What it actually took",
         "paragraphs": [
           "Drawing the pieces was the easy half. The hard half was catching the things that look correct on paper. A control whose maths is right but whose effect is smaller than the line it draws. A baked export that silently produced a blank page for two pieces because a new module was never registered for inlining, which two separate reviews reported as passing.",
-          "The worst one was not a bug at all. Five pieces shipped that were each individually fine and collectively looked like one thing, because every review judged a piece against its own intent and never against the other ten.",
-          "So the checks are scripts now instead of opinions. The build refuses to run when the manifest, the pieces and the README disagree. The control audit fails on anything that reads a value without changing a pixel. And the last gate before shipping is looking at all twelve side by side, which is the only one that would have caught the thing a person actually noticed."
+          "The worst one was not a bug at all. Five pieces shipped that were each individually fine and collectively looked like one thing, because every review judged a piece against its own intent and never against the others.",
+          "So the checks are scripts now instead of opinions. The build refuses to run when the manifest, the pieces and the README disagree. The control audit fails on anything that reads a value without changing a pixel. And the last gate before shipping is looking at all eighteen side by side, which is the only one that would have caught the thing a person actually noticed."
         ]
       }
-    ]
+    ],
+    "image": "img/projects/linefield-collection.webp",
+    "imageAlt": "A three-by-three sheet of nine linefield pieces: thin line art on near-black tiles, from violet flow ribbons and a green wireframe globe to magenta and cyan moiré rings and a violet grid bent into a well.",
+    "imageCaption": "Nine selections from the eighteen-piece collection."
   },
   {
-    "id": "ux-skill-repo",
+    "id": "forma",
     "status": "Ongoing",
-    "title": "UX Skill Repo 1.0",
-    "subtitle": "Twelve AI agent skills held to one measurable rulebook, with a loop that keeps testing it against real work.",
+    "title": "Forma",
+    "subtitle": "Pick a shape, set the light, export a transparent PNG.",
     "repos": [
       {
-        "label": "UX Skill Repo 1.0",
-        "url": "https://github.com/Classiccottrell/UX_Skill_Repo_1.0"
+        "label": "Forma",
+        "url": "https://github.com/Classiccottrell/forma"
       }
     ],
     "ctaLabel": "See the repo on GitHub",
-    "ctaUrl": "https://github.com/Classiccottrell/UX_Skill_Repo_1.0",
+    "ctaUrl": "https://github.com/Classiccottrell/forma",
+    "sections": [
+      {
+        "paragraphs": [
+          "A 3D shape on a transparent background is a small ask, and it should not need an account.",
+          "Forma is a shape playground that runs in the browser. Pick a shape, give it a material, set the light, and export a transparent PNG. Nothing uploads and nothing needs a server, because the whole thing runs on your machine.",
+          "Under the editor is a typed engine that treats shape, material, environment and effect as four separate choices that compose. That is why the same composition can leave as a PNG or as a snippet you paste into a page."
+        ]
+      },
+      {
+        "heading": "What it is",
+        "intro": "One canvas, four choices:",
+        "items": [
+          {
+            "lead": "Shape, material, environment, effect.",
+            "text": "Eighteen shapes, fifteen materials and six environments, plus effects and presets to start from. Paste an SVG and it extrudes into a shape of its own."
+          },
+          {
+            "lead": "Two ways out.",
+            "text": "A transparent PNG, or a self-contained embed snippet with a small browser bundle to sit beside it."
+          },
+          {
+            "lead": "Quiet controls.",
+            "text": "Search filters every picker. H hides the panel. Reset puts the default sphere back. On a phone the panel starts collapsed so the shape gets the screen."
+          },
+          {
+            "lead": "Free, and yours.",
+            "text": "MIT licensed, no signup, no server. Self-host it or fork it."
+          }
+        ]
+      },
+      {
+        "heading": "What it actually took",
+        "paragraphs": [
+          "The hard part is invisible. Every time you switch a shape or a material, the engine has to hand the old one back to the GPU. Miss one and the tab slowly eats memory. So the test suite cycles compositions at least fifty times across a stratified sample of 360 shape, material and environment combinations, and checks that nothing is left behind.",
+          "The render loop is the other quiet piece. One frame scheduler drives everything and pauses when the tab is hidden, so a tab you forgot about is not still rendering."
+        ]
+      }
+    ],
+    "image": "img/projects/forma-editor.webp",
+    "imageAlt": "The Forma editor: a translucent blue-violet torus knot with pink and cyan highlights, floating on a cyan-to-pink gradient in the viewport, with the dark control panel and shape picker open at the right.",
+    "imageCaption": "Forma editor. Shape, material and light in one canvas."
+  },
+  {
+    "id": "ux-skill-repo",
+    "status": "Ongoing · Private repository",
+    "title": "UX Skill Repo 1.0",
+    "subtitle": "Twelve AI agent skills held to one measurable rulebook, with a loop that keeps testing it against real work.",
+    "repos": [],
     "sections": [
       {
         "paragraphs": [
@@ -155,7 +259,7 @@
             "text": "improvement-loop runs audit, execute, systematize, re-audit, escalate, and won’t advance a round unless the rulebook itself learned something. Six rounds in, it’s caught its own accent color failing contrast as text, a selection state that broke in dark mode, and a fully built page nothing on the site linked to."
           }
         ],
-        "outro": "Point it at .agents/skills/ in Claude Code, Cursor, or any MCP client. Most skills also work standalone, pasted straight into a chat."
+        "outro": "I run the skills from .agents/skills/ in Claude Code and Cursor. The repository is private; this case study covers the rules and review loop."
       },
       {
         "heading": "The UX thinking",
@@ -249,6 +353,7 @@
     "title": "ClassicCottrell CLI",
     "subtitle": "A reusable CLI framework so every new tool starts branded, not blank.",
     "image": "img/products/photo-curator-cli.jpg",
+    "imageAlt": "Product box for the Photo Curation Skill v1: a white box with a black spine, a green aperture logo, a large orange v1 with an AI-powered badge, and the line Photo Curation Skill, Provider-Neutral Real Estate Photo Selection.",
     "repos": [],
     "sections": [
       {
@@ -315,11 +420,7 @@
           "The measure of a framework isn't the first tool built on it, it's the fifth. Three internal apps and one shipped product in, the pattern's held: brand a class, register a command, ship."
         ]
       }
-    ],
-    "product": {
-      "label": "Buy Photo Curator CLI",
-      "url": "https://shop.classiccottrell.ca/product/photo-curator-cli"
-    }
+    ]
   },
   {
     "id": "vpat-vault",
@@ -327,13 +428,9 @@
     "title": "VPAT Vault",
     "subtitle": "A nine-prompt Claude toolkit and local Chrome scanner for turning accessibility evidence into VPAT 2.5 drafts.",
     "image": "img/products/vpat-vault.jpg",
+    "imageAlt": "Product box for VPAT Vault: a white box with a black spine, a green leaf logo, a large orange 2.1 with an Accessible badge, and the line VPAT, Voluntary Product Accessibility Template, WCAG 2.1 Conformance Report.",
     "repos": [],
-    "ctaLabel": "Buy VPAT Vault",
-    "ctaHeading": "Get VPAT Vault",
-    "ctaUrl": "https://shop.classiccottrell.ca/product/vpat-vault",
     "product": {
-      "label": "Buy VPAT Vault",
-      "url": "https://shop.classiccottrell.ca/product/vpat-vault",
       "extensionLabel": "Download Chrome extension",
       "extensionUrl": "https://vpat.classiccottrell.ca/",
       "siteLabel": "Visit vpat.classiccottrell.ca",
@@ -361,8 +458,6 @@
       {
         "heading": "Roadmap",
         "intro": "A practical path from a working evidence capture tool to a complete VPAT workflow.",
-        "productLabel": "View VPAT Vault product page",
-        "productUrl": "https://shop.classiccottrell.ca/product/vpat-vault",
         "roadmap": [
           { "label": "Foundation", "status": "Shipped", "detail": "Nine prompts, validator, 50-record dataset, and HTML report template." },
           { "label": "Local scanner", "status": "Shipped", "detail": "Free Chrome extension runs axe on the active tab and exports canonical scan JSON." },

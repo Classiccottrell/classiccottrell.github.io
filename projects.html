@@ -34,7 +34,7 @@
       }, 3000);
     }());
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260909" />
+  <link rel="stylesheet" href="styles.css?v=20260924" />
 </head>
 
 <body class="projects-page">
@@ -53,7 +53,6 @@
         <a href="art.html" class="header-link">Art</a>
         <a href="writing.html" class="header-link">Writing</a>
         <a href="projects.html" class="header-link active" aria-current="page">Projects</a>
-        <a href="https://shop.classiccottrell.ca" target="_blank" rel="noopener noreferrer" class="header-link">Shop <span aria-hidden="true">&#8599;</span><span class="visually-hidden"> (opens in a new tab)</span></a>
       </div>
     </div>
     <div class="social-icons">
@@ -80,7 +79,6 @@
     <a href="art.html" class="nav-drawer-link header-link"><span class="nav-drawer-index">02</span>Art</a>
     <a href="writing.html" class="nav-drawer-link header-link"><span class="nav-drawer-index">03</span>Writing</a>
     <a href="projects.html" class="nav-drawer-link header-link active" aria-current="page"><span class="nav-drawer-index">04</span>Projects</a>
-    <a href="https://shop.classiccottrell.ca" target="_blank" rel="noopener noreferrer" class="nav-drawer-link header-link"><span class="nav-drawer-index">05</span>Shop <span aria-hidden="true">&#8599;</span><span class="visually-hidden"> (opens in a new tab)</span></a>
   </nav>
 </aside>
 <!-- /build:header --></div>
@@ -137,7 +135,7 @@
     }
 
     function escapeHtml(str) {
-      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
 
     function renderNav(activeId) {
@@ -147,7 +145,7 @@
       // innerHTML replace would reset scrollLeft to 0 on every tap).
       if (nav.children.length !== projects.length) {
         nav.innerHTML = projects.map(p => `
-            <a href="#${p.id}" class="project-nav-item" data-id="${p.id}">
+            <a href="#${escapeHtml(p.id)}" class="project-nav-item" data-id="${escapeHtml(p.id)}">
               <span class="project-nav-status">${escapeHtml(p.status)}</span>
               <span class="project-nav-title rosarivo-regular">${escapeHtml(p.title)}</span>
             </a>
@@ -162,6 +160,15 @@
           item.removeAttribute('aria-current');
         }
       });
+      const active = nav.querySelector('.active');
+      if (active && nav.scrollWidth > nav.clientWidth) {
+        const card = active.getBoundingClientRect();
+        const rail = nav.getBoundingClientRect();
+        nav.scrollTo({
+          left: nav.scrollLeft + card.left - rail.left - (nav.clientWidth - card.width) / 2,
+          behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
+        });
+      }
     }
 
     function renderSection(section, project) {
@@ -185,6 +192,7 @@
       if (section.heading) {
         const intro = section.intro ? `<p>${escapeHtml(section.intro)}</p>` : '';
         const image = section.image ? `<img class="project-section-image" src="${escapeHtml(section.image)}" alt="${escapeHtml(section.imageAlt || '')}" loading="lazy">` : '';
+        const paragraphs = (section.paragraphs || []).map(p => `<p>${escapeHtml(p)}</p>`).join('');
         const items = (section.items || []).map(item => `
           <li><strong>${escapeHtml(item.lead)}</strong> ${escapeHtml(item.text)}</li>
         `).join('');
@@ -193,8 +201,9 @@
           <section>
             <h2>${escapeHtml(section.heading)}</h2>
             ${intro}
+            ${paragraphs}
             ${image}
-            <ul>${items}</ul>
+            ${items ? `<ul>${items}</ul>` : ''}
             ${outro}
           </section>
         `;
@@ -209,10 +218,10 @@
     function renderProduct(project) {
       if (!project.image && !project.product) return '';
       const image = project.image
-        ? `<img class="project-product-image reveal" style="--d:1" src="${escapeHtml(project.image)}" alt="${escapeHtml(project.title)} product photo" loading="lazy">`
-        : '';
-      const buyCta = project.product
-        ? `<a href="${escapeHtml(project.product.url)}" target="_blank" rel="noopener noreferrer" class="project-buy-cta">${escapeHtml(project.product.label)} &rarr;<span class="visually-hidden"> (opens in a new tab)</span></a>`
+        ? `<figure class="project-figure${project.imageCaption ? ' project-preview' : ''}">
+            <img class="project-product-image reveal" style="--d:1" src="${escapeHtml(project.image)}" alt="${escapeHtml(project.imageAlt || `${project.title} product photo`)}" loading="lazy">
+            ${project.imageCaption ? `<figcaption>${escapeHtml(project.imageCaption)}</figcaption>` : ''}
+          </figure>`
         : '';
       const extensionCta = project.product && project.product.extensionUrl
         ? `<a href="${escapeHtml(project.product.extensionUrl)}" target="_blank" rel="noopener noreferrer" class="project-extension-cta">${escapeHtml(project.product.extensionLabel || 'Chrome extension')} &rarr;<span class="visually-hidden"> (opens in a new tab)</span></a>`
@@ -220,13 +229,14 @@
       return `
         <div class="project-product">
           ${image}
-          <div class="project-product-actions">${extensionCta}</div>
+          ${extensionCta ? `<div class="project-product-actions">${extensionCta}</div>` : ''}
         </div>
       `;
     }
 
     function renderDetail(project, focusHeading) {
       const detail = document.getElementById('project-detail');
+      const repos = project.repos.filter(repo => repo.url !== project.ctaUrl);
       detail.innerHTML = `
         <p class="writing-card-date reveal">${escapeHtml(project.status)}</p>
         <div class="project-heading-row">
@@ -234,14 +244,14 @@
             <h1 class="project-title rosarivo-regular reveal" style="--d:1" tabindex="-1">${escapeHtml(project.title)}</h1>
             <p class="project-subtitle reveal" style="--d:2">${escapeHtml(project.subtitle)}</p>
           </div>
-          <div class="project-repo-links">
-            ${project.repos.map(r => `
-              <a href="${r.url}" target="_blank" rel="noopener noreferrer" class="project-repo-link" aria-label="${escapeHtml(r.label)} on GitHub (opens in a new tab)">
+          ${repos.length ? `<div class="project-repo-links">
+            ${repos.map(r => `
+              <a href="${escapeHtml(r.url)}" target="_blank" rel="noopener noreferrer" class="project-repo-link" aria-label="${escapeHtml(r.label)} on GitHub (opens in a new tab)">
                 <span class="project-repo-icon" aria-hidden="true"></span>
-                ${project.repos.length > 1 ? `<span class="project-repo-label">${escapeHtml(r.label)}</span>` : ''}
+                ${repos.length > 1 ? `<span class="project-repo-label">${escapeHtml(r.label)}</span>` : ''}
               </a>
             `).join('')}
-          </div>
+          </div>` : ''}
         </div>
         ${renderProduct(project)}
         ${project.sections.map(section => renderSection(section, project)).join('')}
@@ -269,7 +279,7 @@
         });
       });
       const heading = detail.querySelector('.project-title');
-      if (focusHeading && heading) heading.focus();
+      if (focusHeading && heading) heading.focus({ preventScroll: true });
     }
 
     function selectProject(id, focusHeading = false) {
@@ -281,7 +291,7 @@
 
     async function loadProjects() {
       try {
-        const response = await fetch('data/projects_data.json?v=20260904');
+        const response = await fetch('data/projects_data.json?v=20260924');
         projects = (await response.json()).map(normalizeProject);
         const initialId = location.hash.replace('#', '') || (projects[0] && projects[0].id);
         selectProject(initialId);
@@ -295,13 +305,18 @@
       if (!link) return;
       e.preventDefault();
       const id = link.dataset.id;
+      const switching = document.querySelector('.project-nav-item.active')?.dataset.id !== id;
       location.hash = id;
       selectProject(id, e.detail === 0);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // The desktop nav is sticky, so a reader can switch cases while scrolled
+      // down. Start the new one at its heading; same-card clicks stay put.
+      if (switching && window.scrollY > 0) {
+        window.scrollTo({ top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+      }
     });
 
     window.addEventListener('hashchange', function () {
-      const id = location.hash.replace('#', '');
+      const id = location.hash.replace('#', '') || projects[0]?.id;
       const active = document.querySelector('.project-nav-item.active');
       if (id && active?.dataset.id !== id) selectProject(id);
     });

@@ -166,6 +166,18 @@
   font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
 }
 
+/* shadcn --text-secondary (#6b7280) on the --accent-surface band is 3.96:1;
+   the next neutral step clears 4.5:1. */
+[data-theme="shadcn"] .subscribe-cta-text {
+  color: var(--neutral-600);
+}
+
+/* bolder --brand-primary-active is the lighter --brand-bright, which drops
+   the button label to 3.29:1 while pressed; hold the hover fill instead. */
+[data-theme="bolder"] a.subscribe-cta-button:active {
+  background: var(--brand-primary-hover);
+}
+
 /* --- Brutal: derived from Projects/Brutal-UX (#000/#FFF binary
    contrast, zero radius, no shadow, monospace, red rationed to
    destructive/alert only, motion disabled) --- */
@@ -234,6 +246,32 @@
   color: var(--bg-page);
 }
 
+/* brutal frames are hard black; the band's default hairline (#CCC on #E5E5E5)
+   is nearly invisible next to the 2px-framed thumbnails below it. */
+[data-theme="brutal"] .subscribe-cta {
+  border: 2px solid var(--text-main);
+}
+
+/* subscribe button is already black-on-white, so the hover/active invert
+   goes white with a 2px inset frame (no layout shift). Focus ring gets a
+   3px gap so it stays visible against the black fill. */
+[data-theme="brutal"] a.subscribe-cta-button {
+  border-color: var(--text-main);
+  box-shadow: none;
+}
+
+[data-theme="brutal"] a.subscribe-cta-button:hover,
+[data-theme="brutal"] a.subscribe-cta-button:active {
+  background: var(--bg-page);
+  color: var(--text-main);
+  box-shadow: inset 0 0 0 2px var(--text-main);
+  transform: none;
+}
+
+[data-theme="brutal"] .subscribe-cta-button:focus-visible {
+  outline-offset: 3px;
+}
+
 /* nav-drawer-index keeps its own explicit brand-primary color; without
    this it would go invisible against the inverted background above. */
 [data-theme="brutal"] .nav-drawer-link:hover .nav-drawer-index,
@@ -248,6 +286,11 @@
 [data-theme="brutal"] .social-link:hover .social-icon,
 [data-theme="brutal"] .social-link:active .social-icon {
   background-color: var(--bg-page);
+}
+
+/* brutal frames are hard black; the default hairline reads soft next to it. */
+[data-theme="brutal"] .writing-card-thumb {
+  border: 2px solid var(--text-main);
 }
 
 /* writing-card title/link text sits over date/subtitle text that would
@@ -637,6 +680,7 @@ footer .social-icons {
 .social-link:focus-visible,
 .hero-link:focus-visible,
 .writing-card:focus-visible,
+.subscribe-cta-button:focus-visible,
 .project-nav-item:focus-visible,
 .project-repo-link:focus-visible,
 .nav-toggle:focus-visible,
@@ -1154,6 +1198,51 @@ footer .social-icons {
   text-wrap: pretty;
 }
 
+/* Substack subscribe band: quiet strip between the hero and the essay list.
+   The button look is shared with a.project-buy-cta (rule near the end). */
+.subscribe-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 0 48px;
+  padding: 24px 28px;
+  background: var(--accent-surface);
+  border: 1px solid var(--neutral-300);
+  border-radius: var(--radius-small);
+  text-align: left;
+}
+
+.subscribe-cta-copy {
+  min-width: 0;
+}
+
+.subscribe-cta-title {
+  font-size: var(--step-1);
+  color: var(--text-main);
+  line-height: 1.2;
+  margin: 0 0 6px;
+  text-wrap: balance;
+}
+
+.subscribe-cta-text {
+  font-size: 16px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+  text-wrap: pretty;
+}
+
+.subscribe-cta-button {
+  flex: none;
+  font-family: "Red Hat Display", sans-serif;
+  font-size: 16px;
+  text-align: center;
+  white-space: nowrap;
+}
+
 .writing-list {
   width: 100%;
   list-style: none;
@@ -1166,12 +1255,33 @@ footer .social-icons {
 }
 
 .writing-card {
-  display: block;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 208px;
+  column-gap: 32px;
+  align-items: start;
   text-align: left;
   padding: 40px 0;
   border-bottom: 1px solid var(--neutral-200);
   text-decoration: none;
   color: inherit;
+}
+
+.writing-card-thumb {
+  grid-column: 2;
+  grid-row: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border: 1px solid var(--neutral-300);
+  border-radius: var(--radius-small);
+}
+
+.writing-card-body {
+  grid-column: 1;
+  grid-row: 1;
+  min-width: 0;
 }
 
 .writing-card:hover .writing-card-title,
@@ -1243,8 +1353,35 @@ footer .social-icons {
     margin-bottom: 40px;
   }
 
+  .subscribe-cta {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 24px;
+    padding: 20px;
+  }
+
   .writing-card {
     padding: 28px 0;
+    grid-template-columns: 1fr;
+    row-gap: 20px;
+  }
+
+  .writing-card-thumb {
+    grid-column: 1;
+    grid-row: 1;
+    aspect-ratio: 3 / 2;
+  }
+
+  .writing-card-body {
+    grid-column: 1;
+    grid-row: 2;
+  }
+}
+
+/* brutal's wide uppercase mono label would run past the button fill at 320px */
+@media (max-width: 360px) {
+  .subscribe-cta-button {
+    white-space: normal;
   }
 }
 /* =========================================
@@ -1426,6 +1563,21 @@ footer .social-icons {
   margin-bottom: 36px;
 }
 
+.project-figure {
+  margin: 0;
+}
+
+.project-preview .project-product-image {
+  max-width: none;
+  margin-bottom: 10px;
+}
+
+.project-figure figcaption {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
 .project-product-actions {
   display: flex;
   flex-wrap: wrap;
@@ -1441,7 +1593,8 @@ footer .social-icons {
   margin-bottom: 16px;
 }
 
-a.project-buy-cta {
+a.project-buy-cta,
+a.subscribe-cta-button {
   display: inline-block;
   padding: 14px 24px;
   border-radius: var(--radius-small);
@@ -1451,9 +1604,47 @@ a.project-buy-cta {
   text-decoration: none;
 }
 
-a.project-buy-cta:hover {
+a.project-buy-cta:hover,
+a.subscribe-cta-button:hover {
   background: var(--brand-primary-hover);
   color: var(--bg-page);
+}
+
+a.subscribe-cta-button:active {
+  background: var(--brand-primary-active);
+}
+
+/* The subscribe CTA should read as a real, pressable button: a 48px target,
+   a darker rim, and a touch of depth that lifts on hover and presses down. */
+a.subscribe-cta-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 14px 28px;
+  border: 1px solid var(--brand-primary-hover);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+}
+
+a.subscribe-cta-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+a.subscribe-cta-button:active {
+  transform: translateY(0);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.28);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  a.subscribe-cta-button,
+  a.subscribe-cta-button:hover,
+  a.subscribe-cta-button:active {
+    transition: none;
+    transform: none;
+  }
 }
 
 .project-extension-cta {

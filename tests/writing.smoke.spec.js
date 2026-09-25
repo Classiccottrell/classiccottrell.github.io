@@ -41,3 +41,45 @@ for (const viewport of [{ width: 1280, height: 900 }, { width: 390, height: 844 
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   });
 }
+
+for (const viewport of [{ width: 1280, height: 900 }, { width: 390, height: 844 }]) {
+  test(`writing page opens with a Substack subscribe band above the essays (${viewport.width}px)`, async ({ page }) => {
+    await page.setViewportSize(viewport);
+    await page.goto('/writing.html');
+
+    const cta = page.locator('.subscribe-cta');
+    await expect(cta).toHaveCount(1);
+    await expect(cta).toHaveAccessibleName('Get new essays in your inbox');
+
+    const link = cta.locator('a.subscribe-cta-button');
+    await expect(link).toHaveAttribute('href', 'https://classiccottrell.substack.com/subscribe');
+    await expect(link).toHaveAttribute('target', '_blank');
+    await expect(link).toHaveAttribute('rel', /noopener/);
+
+    // The band sits above the first essay card.
+    const layout = await page.evaluate(() => {
+      const box = el => el.getBoundingClientRect();
+      const band = document.querySelector('.subscribe-cta');
+      const style = getComputedStyle(band);
+      return {
+        band: box(band),
+        firstCard: box(document.querySelector('.writing-card')),
+        text: box(band.querySelector('.subscribe-cta-copy')),
+        button: box(band.querySelector('.subscribe-cta-button')),
+        contentWidth: band.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight),
+      };
+    });
+    expect(layout.band.bottom).toBeLessThanOrEqual(layout.firstCard.top);
+
+    if (viewport.width >= 1024) {
+      // Text left, button right, on one row.
+      expect(layout.button.left).toBeGreaterThan(layout.text.right - 1);
+    } else {
+      // Stacked: button below the text and spanning the band.
+      expect(layout.button.top).toBeGreaterThanOrEqual(layout.text.bottom - 1);
+      expect(layout.button.width).toBeGreaterThanOrEqual(layout.contentWidth * 0.9);
+    }
+
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  });
+}

@@ -121,7 +121,7 @@
     ],
     "image": "img/projects/agentic-light-dashboard.webp",
     "imageAlt": "The Agentic Light status dashboard on a dark page: a health banner reading 59 pass, 2 warn, 0 fail, category chips, and the first three preset cards.",
-    "imageCaption": "The local dashboard: repo health and the preset cards."
+    "imageCaption": "Repository health and specialization presets."
   },
   {
     "id": "linefield",
@@ -171,7 +171,7 @@
       }
     ],
     "image": "img/projects/linefield-collection.webp",
-    "imageAlt": "A three-by-three sheet of nine linefield pieces: thin line art on near-black tiles, from violet flow ribbons and a green wireframe globe to magenta and cyan moiré rings and a violet grid bent into a well.",
+    "imageAlt": "Nine linefield pieces in a three-by-three grid: violet flow ribbons, a wireframe globe, overlapping moiré rings, green waves, a receding grid and other generative line art on dark tiles.",
     "imageCaption": "Nine selections from the eighteen-piece collection."
   },
   {
@@ -226,7 +226,7 @@
       }
     ],
     "image": "img/projects/forma-editor.webp",
-    "imageAlt": "The Forma editor: a translucent blue-violet torus knot with pink and cyan highlights, floating on a cyan-to-pink gradient in the viewport, with the dark control panel and shape picker open at the right.",
+    "imageAlt": "Forma editor with a copper torus knot against a dark backdrop and the complete environment picker open, with Midnight selected.",
     "imageCaption": "Forma editor. Shape, material and light in one canvas."
   },
   {

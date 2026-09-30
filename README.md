@@ -97,6 +97,11 @@ http://localhost:8080
 npm run test:browser
 ```
 
+Project copy lives in `data/projects_data.json`. The top-level `image`, `imageAlt`,
+and `imageCaption` fields render a full-width preview with a caption before the case
+study. Images inside `sections` stay alongside their supporting text. Product
+images without a caption retain their compact layout.
+
 ---
 
 ## 💾 Deployment (GitHub Pages)

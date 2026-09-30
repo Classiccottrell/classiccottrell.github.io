@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Library Showcase | Matthew A. Cottrell</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Rosarivo:ital@0;1&display=swap"
+    rel="stylesheet">
+
+  <link rel="icon" href="img/favicon.png" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="styles.css?v=20260720" />
+  <link rel="stylesheet" href="demo.css?v=1" />
+</head>
+
+<body class="showcase-page">
+  <script>(function(){var t=localStorage.getItem('site-theme');if(!['default','bolder','shadcn','brutal'].includes(t))t='default';document.documentElement.setAttribute('data-theme',t);}());</script>
+  <div id="header"></div>
+
+  <main class="demo-main">
+    <section class="demo-intro reveal">
+      <h1 class="rosarivo-regular">A technical showcase, not a portfolio page</h1>
+      <p>
+        Four motion/UI libraries, wired up as vanilla CDN modules or isolated React islands, styled entirely
+        from this site's own design tokens. Not linked from the main nav; reachable by direct URL only.
+        Everything here respects <code>prefers-reduced-motion</code>.
+      </p>
+    </section>
+
+    <!-- ============ MOTION ============ -->
+    <section class="demo-section reveal" style="--d:1">
+      <span class="demo-lib-tag">Motion (motiondivision)</span>
+      <h2>Spring-driven vanilla interactions</h2>
+      <p class="demo-lede">
+        Loaded via a pinned jsdelivr <code>+esm</code> build. Motion's vanilla bundle has no
+        <code>layoutId</code> or <code>drag</code> helper (those are React-only). The shared-layout expand
+        and the drag-reorder below are hand-built FLIP and pointer-event implementations that hand off to
+        Motion's <code>animate()</code> for the spring settle.
+      </p>
+
+      <div class="demo-grid">
+        <article class="demo-card">
+          <h3>Spring tilt</h3>
+          <p class="demo-card-note">Move the cursor over the card. Spring back on leave (stiffness 300, damping 20).</p>
+          <div class="tilt-stage">
+            <div class="tilt-card rosarivo-regular-italic" id="tilt-card">tilt me</div>
+          </div>
+        </article>
+
+        <article class="demo-card">
+          <h3>Shared-layout expand</h3>
+          <p class="demo-card-note">Click a still from Art. The same image morphs into a detail panel, no navigation.</p>
+          <div class="expand-thumbs" id="expand-thumbs"></div>
+          <div class="expand-panel" id="expand-panel"></div>
+        </article>
+
+        <article class="demo-card">
+          <h3>Spring drag-reorder</h3>
+          <p class="demo-card-note">Drag a project chip to a new slot. Release for a spring settle.</p>
+          <div class="chip-row" id="chip-row">
+            <div class="chip">Workspace Template</div>
+            <div class="chip">Skill Repo 1.0</div>
+            <div class="chip">Brutal UX</div>
+            <div class="chip">CC CLI</div>
+          </div>
+          <div class="demo-tool-row">
+            <button class="demo-btn" id="chip-reset" type="button">Reset order</button>
+            <span class="demo-hint">Reduced motion: arrow buttons replace drag.</span>
+          </div>
+        </article>
+      </div>
+
+      <p class="demo-callout"><strong>On classiccottrell.ca:</strong> the shared-layout expand is the natural
+        pattern for the Art page's film-still grid: tap a still in place instead of opening a new route.</p>
+    </section>
+
+    <!-- ============ ANIME.JS ============ -->
+    <section class="demo-section reveal" style="--d:2">
+      <span class="demo-lib-tag">anime.js (juliangarnier)</span>
+      <h2>Timeline-driven vanilla choreography</h2>
+      <p class="demo-lede">
+        anime.js v4 (a different API surface from v3: named exports, <code>createTimeline</code>,
+        <code>svg.createDrawable</code>), also via a pinned <code>+esm</code> build.
+      </p>
+
+      <div class="demo-grid">
+        <article class="demo-card">
+          <h3>Staggered headline</h3>
+          <p class="demo-card-note">The homepage headline, split and staggered in.</p>
+          <p class="anime-headline" id="anime-headline">I design world-class enterprise products that feel effortless to use.</p>
+          <button class="demo-btn" id="anime-replay" type="button">Replay</button>
+        </article>
+
+        <article class="demo-card">
+          <h3>SVG line-draw</h3>
+          <p class="demo-card-note">Scroll into view or click the monogram to draw it.</p>
+          <div class="mac-mark-stage">
+            <svg class="mac-mark" id="mac-mark" viewBox="0 0 220 90" width="200" height="82" role="img" aria-label="M.A.C. monogram">
+              <path d="M12 78 L12 12 L38 60 L64 12 L64 78" />
+              <path d="M92 78 L112 12 L132 78 M100 54 L124 54" />
+              <path d="M198 24 C 190 12, 164 12, 160 45 C 156 78, 190 82, 198 68" />
+            </svg>
+          </div>
+        </article>
+
+        <article class="demo-card">
+          <h3>Scrubbable timeline</h3>
+          <p class="demo-card-note">Drag the handle (or click the track) to scrub a 3-state diagram.</p>
+          <div class="scrub-diagram">
+            <div class="scrub-stage"><div class="dot"></div><span>Sketch</span></div>
+            <div class="scrub-stage"><div class="dot"></div><span>Build</span></div>
+            <div class="scrub-stage"><div class="dot"></div><span>Ship</span></div>
+          </div>
+          <div class="scrub-track" id="scrub-track">
+            <div class="scrub-track-fill" id="scrub-fill"></div>
+            <div class="scrub-handle" id="scrub-handle"></div>
+          </div>
+        </article>
+      </div>
+
+      <p class="demo-callout"><strong>On classiccottrell.ca:</strong> the scrub timeline is a strong fit for
+        walking a case study's process phases inline, without a slideshow or route change.</p>
+    </section>
+
+    <!-- ============ BKLIT-UI ============ -->
+    <section class="demo-section reveal" style="--d:3">
+      <span class="demo-lib-tag">bklit-ui (shadcn registry)</span>
+      <h2>React island: token-styled charts</h2>
+      <p class="demo-lede">
+        bklit-ui ships as copy-paste registry source, not a published bundle, so there is nothing to import
+        from a CDN. Instead this is React 18 + Recharts (UMD) + Babel standalone, mounted in an isolated
+        <code>#bklit-island</code> div, with every fill/stroke resolved from this page's own CSS variables.
+      </p>
+      <div id="bklit-island"></div>
+      <p class="demo-callout"><strong>On classiccottrell.ca:</strong> the tenure gauge is honest enough to sit
+        directly in the homepage subtext as a small inline stat, no dashboard needed.</p>
+    </section>
+
+    <!-- ============ KOKONUTUI ============ -->
+    <section class="demo-section reveal" style="--d:4">
+      <span class="demo-lib-tag">kokonutui</span>
+      <h2>React island: interaction mechanics, re-skinned</h2>
+      <p class="demo-lede">
+        Not an import: the interaction <em>mechanics</em> (magnetic press, hover-lift glow, marquee reveal)
+        rebuilt from scratch in <code>--brand-primary</code> / <code>--radius-small</code>, no gradient or
+        glass surfaces.
+      </p>
+      <div id="kokonut-island"></div>
+      <p class="demo-callout"><strong>On classiccottrell.ca:</strong> the magnetic button is a candidate for
+        the hero's primary CTA once one exists; the marquee suits a footer skills strip.</p>
+    </section>
+  </main>
+
+  <div id="footer"></div>
+
+  <script>
+    async function loadPartials() {
+      const header = await fetch("header.html");
+      const footer = await fetch("footer.html");
+      document.getElementById("header").innerHTML = await header.text();
+      document.getElementById("footer").innerHTML = await footer.text();
+      var currentPage = location.pathname.split('/').pop() || 'index.html';
+      document.querySelectorAll('.nav-links .header-link').forEach(function (link) {
+        if (link.getAttribute('href') === currentPage) {
+          link.classList.add('active');
+          link.setAttribute('aria-current', 'page');
+        }
+      });
+      var select = document.getElementById('theme-select');
+      if (select) {
+        select.value = document.documentElement.getAttribute('data-theme') || 'default';
+        select.addEventListener('change', function () {
+          document.documentElement.setAttribute('data-theme', this.value);
+          localStorage.setItem('site-theme', this.value);
+        });
+      }
+    }
+    loadPartials();
+  </script>
+
+  <!-- ============ Motion module (1a/1b/1c) ============ -->
+  <script type="module">
+    import { animate, motionValue } from "https://cdn.jsdelivr.net/npm/motion@11.15.0/+esm";
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const spring = { type: "spring", stiffness: 300, damping: 20 };
+
+    /* 1a — spring tilt */
+    const tiltCard = document.getElementById('tilt-card');
+    if (tiltCard && !reducedMotion) {
+      const rx = motionValue(0);
+      const ry = motionValue(0);
+      const render = () => {
+        tiltCard.style.transform = `rotateX(${rx.get()}deg) rotateY(${ry.get()}deg)`;
+      };
+      rx.on('change', render);
+      ry.on('change', render);
+      tiltCard.style.transformStyle = 'preserve-3d';
+      tiltCard.addEventListener('pointermove', (e) => {
+        const r = tiltCard.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width - 0.5;
+        const py = (e.clientY - r.top) / r.height - 0.5;
+        animate(rx, py * -16, spring);
+        animate(ry, px * 16, spring);
+      });
+      tiltCard.addEventListener('pointerleave', () => {
+        animate(rx, 0, spring);
+        animate(ry, 0, spring);
+      });
+    }
+
+    /* 1b — shared-layout expand (manual FLIP; Motion's layoutId is React-only) */
+    function flip(el, mutate) {
+      const first = el.getBoundingClientRect();
+      mutate();
+      const last = el.getBoundingClientRect();
+      if (reducedMotion) return;
+      const dx = first.left - last.left;
+      const dy = first.top - last.top;
+      const sx = first.width / last.width;
+      const sy = first.height / last.height;
+      animate(el, { x: [dx, 0], y: [dy, 0], scaleX: [sx, 1], scaleY: [sy, 1] }, spring);
+    }
+
+    async function initExpand() {
+      const thumbRow = document.getElementById('expand-thumbs');
+      const panel = document.getElementById('expand-panel');
+      if (!thumbRow || !panel) return;
+      const res = await fetch('data/art_data.json');
+      const films = (await res.json()).slice(0, 3);
+      thumbRow.innerHTML = films.map((f, i) => `
+        <button class="expand-thumb" data-i="${i}" type="button" aria-label="Expand ${f.film}">
+          <img src="${f.image}" alt="${f.film}" />
+        </button>
+      `).join('');
+
+      let open = null;
+      thumbRow.addEventListener('click', (e) => {
+        const btn = e.target.closest('.expand-thumb');
+        if (!btn) return;
+        if (open && open.btn === btn) { close(); return; }
+        if (open) { open.btn.appendChild(open.img); panel.classList.remove('is-open'); open = null; }
+
+        const film = films[Number(btn.dataset.i)];
+        const img = btn.querySelector('img');
+        panel.innerHTML = `<div class="expand-panel-img"></div><div class="expand-panel-body">
+          <h4 class="rosarivo-regular-italic">${film.film} (${film.year})</h4>
+          <p>${film.director}, starring ${film.actor}</p>
+          <p>${film.quote}</p>
+          <button class="expand-panel-close" type="button">Close</button>
+        </div>`;
+        const target = panel.querySelector('.expand-panel-img');
+        flip(img, () => { target.appendChild(img); panel.classList.add('is-open'); });
+        open = { img, btn };
+        panel.querySelector('.expand-panel-close').addEventListener('click', close);
+      });
+
+      function close() {
+        if (!open) return;
+        const { img, btn } = open;
+        flip(img, () => { btn.appendChild(img); panel.classList.remove('is-open'); });
+        open = null;
+      }
+    }
+    initExpand();
+
+    /* 1c — drag-reorder chips with spring release */
+    function initChips() {
+      const row = document.getElementById('chip-row');
+      const resetBtn = document.getElementById('chip-reset');
+      if (!row) return;
+      const original = Array.from(row.children);
+
+      function flipReorder(newOrder) {
+        const first = new Map(newOrder.map((c) => [c, c.getBoundingClientRect()]));
+        newOrder.forEach((c) => row.appendChild(c));
+        newOrder.forEach((c) => {
+          const f = first.get(c);
+          const l = c.getBoundingClientRect();
+          const dx = f.left - l.left, dy = f.top - l.top;
+          if (reducedMotion) { c.style.transform = ''; return; }
+          animate(c, { x: [dx, 0], y: [dy, 0] }, spring);
+        });
+      }
+
+      if (reducedMotion) {
+        row.querySelectorAll('.chip').forEach((chip) => {
+          const left = document.createElement('button');
+          left.type = 'button'; left.textContent = '◀'; left.setAttribute('aria-label', 'Move left');
+          const right = document.createElement('button');
+          right.type = 'button'; right.textContent = '▶'; right.setAttribute('aria-label', 'Move right');
+          chip.prepend(left);
+          chip.append(right);
+          left.addEventListener('click', () => {
+            const cur = Array.from(row.children);
+            const i = cur.indexOf(chip);
+            if (i > 0) { [cur[i - 1], cur[i]] = [cur[i], cur[i - 1]]; flipReorder(cur); }
+          });
+          right.addEventListener('click', () => {
+            const cur = Array.from(row.children);
+            const i = cur.indexOf(chip);
+            if (i < cur.length - 1) { [cur[i + 1], cur[i]] = [cur[i], cur[i + 1]]; flipReorder(cur); }
+          });
+        });
+      } else {
+        row.querySelectorAll('.chip').forEach((chip) => {
+          chip.addEventListener('pointerdown', (e) => {
+            chip.setPointerCapture(e.pointerId);
+            chip.classList.add('dragging');
+            const startX = e.clientX;
+            const baseRect = chip.getBoundingClientRect();
+            const rowRect = row.getBoundingClientRect();
+
+            function onMove(ev) {
+              let dx = ev.clientX - startX;
+              const minDx = rowRect.left - baseRect.left;
+              const maxDx = rowRect.right - baseRect.right;
+              dx = Math.min(Math.max(dx, minDx), maxDx);
+              chip.style.transform = `translateX(${dx}px)`;
+            }
+            function onUp() {
+              chip.removeEventListener('pointermove', onMove);
+              chip.removeEventListener('pointerup', onUp);
+              chip.classList.remove('dragging');
+              const dragRect = chip.getBoundingClientRect();
+              const dragCenter = dragRect.left + dragRect.width / 2;
+              const siblings = Array.from(row.children).filter((c) => c !== chip);
+              let idx = siblings.length;
+              for (let i = 0; i < siblings.length; i++) {
+                const r = siblings[i].getBoundingClientRect();
+                if (dragCenter < r.left + r.width / 2) { idx = i; break; }
+              }
+              siblings.splice(idx, 0, chip);
+              flipReorder(siblings);
+            }
+            chip.addEventListener('pointermove', onMove);
+            chip.addEventListener('pointerup', onUp);
+          });
+        });
+      }
+
+      if (resetBtn) resetBtn.addEventListener('click', () => flipReorder(original.slice()));
+    }
+    initChips();
+  </script>
+
+  <!-- ============ anime.js module (2a/2b/2c) ============ -->
+  <script type="module">
+    import { animate, stagger, createTimeline, svg } from "https://cdn.jsdelivr.net/npm/animejs@4.0.0/+esm";
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* 2a — staggered headline replay */
+    const headlineEl = document.getElementById('anime-headline');
+    const replayBtn = document.getElementById('anime-replay');
+    if (headlineEl) {
+      const text = headlineEl.textContent.trim();
+      headlineEl.innerHTML = text.split(' ').map((w) => `<span class="word">${w}</span>`).join(' ');
+
+      const playHeadline = () => {
+        const words = headlineEl.querySelectorAll('.word');
+        if (reducedMotion) {
+          words.forEach((w) => { w.style.opacity = 1; w.style.transform = 'none'; });
+          return;
+        }
+        animate(words, {
+          opacity: [0, 1],
+          translateY: [16, 0],
+          duration: 650,
+          delay: stagger(45),
+          ease: 'outExpo',
+        });
+      };
+      playHeadline();
+      if (replayBtn) replayBtn.addEventListener('click', playHeadline);
+    }
+
+    /* 2b — SVG line-draw monogram */
+    const macMark = document.getElementById('mac-mark');
+    if (macMark) {
+      let drawn = false;
+      const drawMark = () => {
+        if (drawn) return;
+        drawn = true;
+        if (reducedMotion) return;
+        try {
+          const drawable = svg.createDrawable('#mac-mark path');
+          animate(drawable, { draw: ['0 0', '0 1'], duration: 1300, delay: stagger(180), ease: 'inOutQuad' });
+        } catch (err) {
+          /* decorative only — a library-shape mismatch here never blocks page content */
+        }
+      };
+      if (reducedMotion) {
+        drawn = true;
+      } else if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((en) => { if (en.isIntersecting) { drawMark(); io.disconnect(); } });
+        }, { threshold: 0.4 });
+        io.observe(macMark);
+      }
+      macMark.addEventListener('click', drawMark);
+    }
+
+    /* 2c — scrubbable timeline */
+    const track = document.getElementById('scrub-track');
+    const handle = document.getElementById('scrub-handle');
+    const fill = document.getElementById('scrub-fill');
+    const stages = document.querySelectorAll('.scrub-stage');
+    if (track && handle && stages.length === 3) {
+      const tl = createTimeline({ autoplay: false })
+        .add(stages[0], { opacity: [1, 0.35], scale: [1, 0.9] }, 0)
+        .add(stages[1], { opacity: [0.35, 1], scale: [0.9, 1] }, 0)
+        .add(stages[1], { opacity: [1, 0.35], scale: [1, 0.9] }, 500)
+        .add(stages[2], { opacity: [0.35, 1], scale: [0.9, 1] }, 500);
+
+      const setFraction = (fr) => {
+        fr = Math.min(Math.max(fr, 0), 1);
+        if (reducedMotion) fr = fr < 0.33 ? 0 : fr < 0.66 ? 0.5 : 1;
+        handle.style.left = `${fr * 100}%`;
+        fill.style.width = `${fr * 100}%`;
+        tl.seek(fr * tl.duration);
+      };
+      setFraction(0);
+
+      handle.addEventListener('pointerdown', (e) => {
+        handle.setPointerCapture(e.pointerId);
+        const onMove = (ev) => {
+          const r = track.getBoundingClientRect();
+          setFraction((ev.clientX - r.left) / r.width);
+        };
+        const onUp = () => {
+          handle.removeEventListener('pointermove', onMove);
+          handle.removeEventListener('pointerup', onUp);
+        };
+        handle.addEventListener('pointermove', onMove);
+        handle.addEventListener('pointerup', onUp);
+      });
+      track.addEventListener('click', (e) => {
+        if (e.target === handle) return;
+        const r = track.getBoundingClientRect();
+        setFraction((e.clientX - r.left) / r.width);
+      });
+    }
+  </script>
+
+  <!-- ============ React islands: bklit-ui + kokonutui ============ -->
+  <script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prop-types@15.8.1/prop-types.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/recharts@2.13.3/umd/Recharts.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.26.4/babel.min.js"></script>
+
+  <script type="text/babel" data-presets="react">
+    const { useState, useEffect, useRef } = React;
+    const {
+      ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid,
+      RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar,
+      RadialBarChart, RadialBar,
+    } = Recharts;
+
+    const kknReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* Resolves a CSS custom property in JS and re-reads it whenever
+       [data-theme] flips, so Recharts' fill/stroke props (rendered as
+       raw SVG attributes, which don't reliably re-resolve var()) stay
+       correct across theme switches. */
+    function useThemeColor(varName, fallback) {
+      const [color, setColor] = useState(fallback);
+      useEffect(() => {
+        const read = () => {
+          const v = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+          setColor(v || fallback);
+        };
+        read();
+        const mo = new MutationObserver(read);
+        mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+        return () => mo.disconnect();
+      }, [varName]);
+      return color;
+    }
+
+    function ShipChart() {
+      const [data, setData] = useState([]);
+      const brand = useThemeColor('--brand-primary', '#437057');
+      const accent = useThemeColor('--accent-surface', '#E2EBE4');
+      const shortNames = {
+        'agent-workspace-template': 'Workspace Template',
+        'ux-skill-repo': 'Skill Repo 1.0',
+        'brutal-ux': 'Brutal UX',
+        'classiccottrell-cli': 'CC CLI',
+      };
+      useEffect(() => {
+        fetch('data/projects_data.json').then((r) => r.json()).then((list) => {
+          setData(list.map((p, i) => ({
+            name: shortNames[p.id] || p.title,
+            shipped: i + 1,
+          })));
+        });
+      }, []);
+      return (
+        <div>
+          <div style={{ width: '100%', height: 200 }}>
+            <ResponsiveContainer>
+              <AreaChart data={data} margin={{ top: 8, right: 12, left: -20, bottom: 0 }}>
+                <CartesianGrid vertical={false} />
+                <XAxis dataKey="name" tick={{ fontSize: 11 }} interval={0} angle={-14} textAnchor="end" height={44} />
+                <YAxis allowDecimals={false} width={28} />
+                <Area type="monotone" dataKey="shipped" stroke={brand} strokeWidth={2} fill={accent} />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+          <p className="island-note">Cumulative count by project sequence (projects_data.json has no ship
+            dates yet), so this reads order, not calendar time.</p>
+        </div>
+      );
+    }
+
+    function SkillRadar() {
+      const brand = useThemeColor('--brand-primary', '#437057');
+      const data = [
+        { dim: 'Systems', value: 8 },
+        { dim: 'Visual', value: 7 },
+        { dim: 'Writing', value: 8 },
+        { dim: 'Code', value: 6 },
+        { dim: 'Strategy', value: 8 },
+      ];
+      return (
+        <div>
+          <div style={{ width: '100%', height: 200 }}>
+            <ResponsiveContainer>
+              <RadarChart data={data} outerRadius="68%">
+                <PolarGrid />
+                <PolarAngleAxis dataKey="dim" tick={{ fontSize: 11 }} />
+                <PolarRadiusAxis domain={[0, 10]} tick={false} axisLine={false} />
+                <Radar dataKey="value" stroke={brand} strokeWidth={2} fill={brand} fillOpacity={0.18} />
+              </RadarChart>
+            </ResponsiveContainer>
+          </div>
+          <p className="island-note">Self-rated and illustrative, not a formal assessment.</p>
+        </div>
+      );
+    }
+
+    function TenureGauge() {
+      const brand = useThemeColor('--brand-primary', '#437057');
+      const neutral = useThemeColor('--neutral-200', '#E3DBD2');
+      const data = [{ name: 'yrs', value: 7 }];
+      return (
+        <div className="stat-gauge-wrap">
+          <div style={{ width: 160, height: 100 }}>
+            <ResponsiveContainer>
+              <RadialBarChart data={data} innerRadius="70%" outerRadius="100%" startAngle={180} endAngle={0} barSize={14}>
+                <PolarAngleAxis type="number" domain={[0, 10]} angleAxisId={0} tick={false} />
+                <RadialBar dataKey="value" cornerRadius={8} fill={brand} background={{ fill: neutral }} />
+              </RadialBarChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="stat-gauge-number">7</div>
+          <div className="stat-gauge-label">years in enterprise UX<br />(shown on a 0–10yr scale for context)</div>
+        </div>
+      );
+    }
+
+    function BklitIsland() {
+      return (
+        <div className="island-grid">
+          <div className="island-card"><h3>Projects shipped</h3><ShipChart /></div>
+          <div className="island-card"><h3>Skill spread</h3><SkillRadar /></div>
+          <div className="island-card"><h3>Tenure</h3><TenureGauge /></div>
+        </div>
+      );
+    }
+
+    function MagneticButton() {
+      const ref = useRef(null);
+      const [style, setStyle] = useState({});
+      if (kknReducedMotion) {
+        return <button className="kkn-btn" type="button">Magnetic button</button>;
+      }
+      const onMove = (e) => {
+        const r = ref.current.getBoundingClientRect();
+        const dx = (e.clientX - (r.left + r.width / 2)) * 0.25;
+        const dy = (e.clientY - (r.top + r.height / 2)) * 0.25;
+        setStyle({ transform: `translate(${dx}px, ${dy}px)` });
+      };
+      const onLeave = () => setStyle({ transform: 'translate(0,0)' });
+      const onDown = () => setStyle((s) => ({ transform: `${s.transform || ''} scale(0.94)` }));
+      const onUp = () => setStyle((s) => ({ transform: (s.transform || '').replace(' scale(0.94)', '') }));
+      return (
+        <button
+          ref={ref}
+          className="kkn-btn"
+          type="button"
+          onMouseMove={onMove}
+          onMouseLeave={onLeave}
+          onPointerDown={onDown}
+          onPointerUp={onUp}
+          style={{ ...style, transition: 'transform 0.15s ease' }}
+        >
+          Magnetic button
+        </button>
+      );
+    }
+
+    function HoverCard() {
+      return (
+        <div className="kkn-card">
+          <h4>Hover-lift card</h4>
+          <p>Border-glow and lift on hover, entirely --brand-primary / --accent-surface.</p>
+        </div>
+      );
+    }
+
+    function MarqueeReveal() {
+      const words = ['Systems.', 'Visual.', 'Writing.', 'Code.', 'Strategy.'];
+      const loop = [...words, ...words];
+      return (
+        <div className="kkn-marquee">
+          <div className="kkn-marquee-track rosarivo-regular-italic">
+            {loop.map((w, i) => <span key={i}>{w}</span>)}
+          </div>
+        </div>
+      );
+    }
+
+    function KokonutIsland() {
+      return (
+        <div className="kkn-row">
+          <MagneticButton />
+          <HoverCard />
+          <MarqueeReveal />
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('bklit-island')).render(<BklitIsland />);
+    ReactDOM.createRoot(document.getElementById('kokonut-island')).render(<KokonutIsland />);
+  </script>
+</body>
+
+</html>

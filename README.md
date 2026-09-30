@@ -11,6 +11,7 @@ A minimal, fast-loading personal portfolio website hosted on **GitHub Pages**, f
 - Social icons (LinkedIn + Instagram)
 - Lightweight HTML/CSS (no frameworks)
 - Easy to maintain and extend
+- `showcase.html`, `index-studio.html`, `index-drafting.html`, `index-casefile.html` — motion/animation-library demo previews (Motion, anime.js, React islands); reachable by direct filename only, not linked from the main nav
 
 ---
 

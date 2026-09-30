@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Drafting Table | Matthew A. Cottrell</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Rosarivo:ital@0;1&display=swap"
+    rel="stylesheet">
+
+  <link rel="icon" href="img/favicon.png" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="styles.css?v=20260720" />
+
+  <!-- Page-scoped rework styles. Deliberately no .reveal on this page's
+       hero/photo/nav — one anime.js timeline replaces it (see the
+       module script below). Nothing here hides content by default:
+       every element renders fully visible until the timeline's own
+       script hides it immediately before playing, so a blocked CDN
+       or a script error leaves the page intact, never blank. -->
+  <style>
+    .ink-caption {
+      position: relative;
+      display: inline-block;
+    }
+
+    .ink-underline {
+      display: block;
+      width: 100%;
+      max-width: 140px;
+      height: 8px;
+      margin-top: 2px;
+    }
+
+    .ink-underline path {
+      fill: none;
+      stroke: var(--brand-primary);
+      stroke-width: 2;
+      stroke-linecap: round;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .ink-underline {
+        display: none;
+      }
+
+      .hero-link-meta {
+        display: inline-block;
+        border-bottom: 1px solid var(--brand-primary);
+        padding-bottom: 2px;
+      }
+    }
+  </style>
+</head>
+
+<body class="home-page">
+  <script>(function(){var t=localStorage.getItem('site-theme');if(!['default','bolder','shadcn','brutal'].includes(t))t='default';document.documentElement.setAttribute('data-theme',t);}());</script>
+  <div id="header"></div>
+
+  <main class="home">
+    <section class="hero">
+      <h2 class="headline rosarivo-regular" id="draft-headline">
+        I design world-class enterprise products that feel effortless to use.
+      </h2>
+      <p class="subtext red-hat" id="draft-subtext">
+        Currently seven years into designing enterprise IT software, I’ve learned how to make complex systems feel
+        simple.
+      </p>
+    </section>
+
+    <section class="showcase">
+      <figure class="profile-section">
+        <img src="img/Imag-Matthew.png" alt="Matthew A. Cottrell" class="profile-img" id="draft-photo" />
+      </figure>
+
+      <nav class="hero-nav" id="draft-nav" aria-label="Sections">
+        <a href="art.html" class="hero-link rosarivo-regular-italic">
+          Art
+          <span class="hero-link-meta ink-caption">
+            Paintings &amp; drawings
+            <svg class="ink-underline" viewBox="0 0 140 8" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M2,5 Q35,1 70,4 T138,3" />
+            </svg>
+          </span>
+        </a>
+        <a href="writing.html" class="hero-link rosarivo-regular-italic">
+          Writing
+          <span class="hero-link-meta ink-caption">
+            Essays on design &amp; AI
+            <svg class="ink-underline" viewBox="0 0 140 8" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M2,5 Q35,1 70,4 T138,3" />
+            </svg>
+          </span>
+        </a>
+        <a href="projects.html" class="hero-link rosarivo-regular-italic">
+          Projects
+          <span class="hero-link-meta ink-caption">
+            Case studies &amp; tools
+            <svg class="ink-underline" viewBox="0 0 140 8" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M2,5 Q35,1 70,4 T138,3" />
+            </svg>
+          </span>
+        </a>
+      </nav>
+    </section>
+  </main>
+
+  <div id="footer"></div>
+
+  <script>
+    async function loadPartials() {
+      const header = await fetch("header.html");
+      const footer = await fetch("footer.html");
+      document.getElementById("header").innerHTML = await header.text();
+      document.getElementById("footer").innerHTML = await footer.text();
+      var currentPage = location.pathname.split('/').pop() || 'index.html';
+      document.querySelectorAll('.nav-links .header-link').forEach(function (link) {
+        if (link.getAttribute('href') === currentPage) {
+          link.classList.add('active');
+          link.setAttribute('aria-current', 'page');
+        }
+      });
+      var select = document.getElementById('theme-select');
+      if (select) {
+        select.value = document.documentElement.getAttribute('data-theme') || 'default';
+        select.addEventListener('change', function () {
+          document.documentElement.setAttribute('data-theme', this.value);
+          localStorage.setItem('site-theme', this.value);
+        });
+      }
+    }
+    loadPartials();
+  </script>
+
+  <!-- The one anime.js timeline that replaces .reveal for this page.
+       Reduced motion: skip entirely — content is already fully visible
+       by default (no hidden static CSS), which is exactly the same
+       instantly-visible result styles.css's own .reveal reduced-motion
+       override produces. -->
+  <script type="module">
+    import { createTimeline, stagger } from "https://cdn.jsdelivr.net/npm/animejs@4.0.0/+esm";
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reducedMotion) {
+      const headline = document.getElementById('draft-headline');
+      const subtext = document.getElementById('draft-subtext');
+      const photo = document.getElementById('draft-photo');
+      const navLinks = document.querySelectorAll('#draft-nav .hero-link');
+      const underlinePaths = document.querySelectorAll('.ink-underline path');
+
+      const text = headline.textContent.trim();
+      headline.innerHTML = text.split(' ').map((w) => `<span class="word">${w}</span>`).join(' ');
+      const words = headline.querySelectorAll('.word');
+
+      /* Hide state applied here, immediately before the timeline plays
+         — never as static CSS — so a failed import leaves the fully
+         visible fallback markup in place. */
+      words.forEach((w) => { w.style.display = 'inline-block'; w.style.opacity = 0; w.style.transform = 'translateY(14px)'; });
+      subtext.style.opacity = 0;
+      subtext.style.transform = 'translateY(10px)';
+      photo.style.clipPath = 'inset(0 100% 0 0)';
+      navLinks.forEach((l) => { l.style.opacity = 0; l.style.transform = 'translateX(-10px)'; });
+      underlinePaths.forEach((p) => {
+        const len = p.getTotalLength();
+        p.style.strokeDasharray = `${len}`;
+        p.style.strokeDashoffset = `${len}`;
+      });
+
+      createTimeline({ defaults: { ease: 'outExpo' } })
+        .add(words, { opacity: 1, translateY: 0, duration: 500, delay: stagger(60) }, 0)
+        .add(subtext, { opacity: 1, translateY: 0, duration: 500 }, 250)
+        .add(photo, { clipPath: 'inset(0 0% 0 0)', duration: 700 }, 300)
+        .add(navLinks, { opacity: 1, translateX: 0, duration: 450, delay: stagger(90) }, 500)
+        .add(underlinePaths, { strokeDashoffset: 0, duration: 500, delay: stagger(120), ease: 'inOutQuad' }, 750);
+    }
+  </script>
+</body>
+
+</html>

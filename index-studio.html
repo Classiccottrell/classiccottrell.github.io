@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Studio Reveal | Matthew A. Cottrell</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Rosarivo:ital@0;1&display=swap"
+    rel="stylesheet">
+
+  <link rel="icon" href="img/favicon.png" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="styles.css?v=20260720" />
+
+  <!-- Page-scoped rework styles: only the case-card nav chrome and the
+       parallax hit area. All transform/opacity motion below is owned
+       by the Motion script, not CSS, to avoid double-animating
+       against .reveal. -->
+  <style>
+    .case-nav {
+      width: 100%;
+      max-width: 380px;
+      gap: 14px;
+    }
+
+    .case-card {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      padding: 18px 22px;
+      background: var(--neutral-50);
+      border: 1px solid var(--neutral-200);
+      border-radius: var(--radius-medium);
+      box-shadow: var(--shadow-soft);
+      /* Motion owns transform on these via inline style; styles.css's
+         .hero-link transition (color/transform 0.3s) would otherwise
+         re-interpolate every spring frame and turn it to mush. */
+      transition: none;
+    }
+
+    .parallax-frame {
+      display: inline-block;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .case-card {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+
+<body class="home-page">
+  <script>(function(){var t=localStorage.getItem('site-theme');if(!['default','bolder','shadcn','brutal'].includes(t))t='default';document.documentElement.setAttribute('data-theme',t);}());</script>
+  <div id="header"></div>
+
+  <main class="home">
+    <section class="hero reveal">
+      <h2 class="headline rosarivo-regular">
+        I design world-class enterprise products that feel effortless to use.
+      </h2>
+      <p class="subtext red-hat">
+        Currently seven years into designing enterprise IT software, I’ve learned how to make complex systems feel
+        simple.
+      </p>
+    </section>
+
+    <section class="showcase">
+      <figure class="profile-section reveal" style="--d:1">
+        <span class="parallax-frame">
+          <img src="img/Imag-Matthew.png" alt="Matthew A. Cottrell" class="profile-img" />
+        </span>
+      </figure>
+
+      <nav class="hero-nav case-nav reveal" style="--d:2" aria-label="Sections">
+        <a href="art.html" class="hero-link case-card rosarivo-regular-italic">
+          Art
+          <span class="hero-link-meta">Paintings &amp; drawings</span>
+        </a>
+        <a href="writing.html" class="hero-link case-card rosarivo-regular-italic">
+          Writing
+          <span class="hero-link-meta">Essays on design &amp; AI</span>
+        </a>
+        <a href="projects.html" class="hero-link case-card rosarivo-regular-italic">
+          Projects
+          <span class="hero-link-meta">Case studies &amp; tools</span>
+        </a>
+      </nav>
+    </section>
+  </main>
+
+  <div id="footer"></div>
+
+  <script>
+    async function loadPartials() {
+      const header = await fetch("header.html");
+      const footer = await fetch("footer.html");
+      document.getElementById("header").innerHTML = await header.text();
+      document.getElementById("footer").innerHTML = await footer.text();
+      var currentPage = location.pathname.split('/').pop() || 'index.html';
+      document.querySelectorAll('.nav-links .header-link').forEach(function (link) {
+        if (link.getAttribute('href') === currentPage) {
+          link.classList.add('active');
+          link.setAttribute('aria-current', 'page');
+        }
+      });
+      var select = document.getElementById('theme-select');
+      if (select) {
+        select.value = document.documentElement.getAttribute('data-theme') || 'default';
+        select.addEventListener('change', function () {
+          document.documentElement.setAttribute('data-theme', this.value);
+          localStorage.setItem('site-theme', this.value);
+        });
+      }
+    }
+    loadPartials();
+  </script>
+
+  <!-- Motion attaches post-load, hover/drag only. .reveal (styles.css)
+       still owns the initial entrance animation untouched. -->
+  <script type="module">
+    import { animate, motionValue } from "https://cdn.jsdelivr.net/npm/motion@11.15.0/+esm";
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const spring = { type: "spring", stiffness: 300, damping: 20 };
+
+    /* Spring-parallax profile photo, subtle, follows the cursor */
+    const photo = document.querySelector('.profile-img');
+    if (photo && !reducedMotion) {
+      const mx = motionValue(0);
+      const my = motionValue(0);
+      const render = () => { photo.style.transform = `translate(${mx.get()}px, ${my.get()}px)`; };
+      mx.on('change', render);
+      my.on('change', render);
+      window.addEventListener('mousemove', (e) => {
+        const r = photo.getBoundingClientRect();
+        const cx = r.left + r.width / 2;
+        const cy = r.top + r.height / 2;
+        const dx = Math.max(-12, Math.min(12, (e.clientX - cx) / 40));
+        const dy = Math.max(-12, Math.min(12, (e.clientY - cy) / 40));
+        animate(mx, dx, spring);
+        animate(my, dy, spring);
+      });
+    }
+
+    /* Case-card nav: hover springs the target forward, others recede;
+       click runs a short shared-layout-style transition before the
+       real navigation (vanilla Motion has no layoutId, so this is a
+       hand-timed transform beat, not a true layout morph). */
+    const cards = Array.from(document.querySelectorAll('.case-card'));
+    if (!reducedMotion && cards.length) {
+      cards.forEach((card) => {
+        card.addEventListener('mouseenter', () => {
+          animate(card, { x: 14, scale: 1.02 }, spring);
+          cards.filter((c) => c !== card).forEach((c) => animate(c, { scale: 0.94, opacity: 0.55 }, spring));
+        });
+        card.addEventListener('mouseleave', () => {
+          cards.forEach((c) => animate(c, { x: 0, scale: 1, opacity: 1 }, spring));
+        });
+        card.addEventListener('click', (e) => {
+          e.preventDefault();
+          const href = card.getAttribute('href');
+          let navigated = false;
+          const go = () => { if (!navigated) { navigated = true; window.location.href = href; } };
+          cards.filter((c) => c !== card).forEach((c) => animate(c, { opacity: 0.15, scale: 0.92 }, { duration: 0.25 }));
+          const a = animate(card, { x: 28, scale: 1.05 }, { duration: 0.3, ease: 'easeOut' });
+          Promise.resolve(a.finished).then(go).catch(go);
+          setTimeout(go, 500);
+        });
+      });
+    }
+  </script>
+</body>
+
+</html>

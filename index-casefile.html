@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Case File | Matthew A. Cottrell</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Rosarivo:ital@0;1&display=swap"
+    rel="stylesheet">
+
+  <link rel="icon" href="img/favicon.png" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="styles.css?v=20260720" />
+
+  <!-- Page-scoped rework styles. .reveal (styles.css) is untouched and
+       still owns initial entrance; everything below is post-interaction
+       only (hover/press), added by the vanilla-JS tab script and the
+       React photo island's own CSS. -->
+  <style>
+    .case-tabs {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .case-tab {
+      flex: 1 1 160px;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 16px 18px;
+      border: 1px solid var(--neutral-200);
+      border-radius: var(--radius-small);
+      background: var(--neutral-50);
+      font-size: var(--step-1);
+      transition: border-color 0.25s ease, background-color 0.25s ease, transform 0.15s ease;
+    }
+
+    .tab-badge {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 3px 8px;
+      border-radius: var(--radius-small);
+      background: var(--accent-surface);
+      color: var(--brand-primary);
+      font-size: var(--step--1);
+      font-weight: 600;
+    }
+
+    .photo-card {
+      display: inline-block;
+      border-radius: var(--radius-large);
+      border: 1px solid transparent;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+    }
+
+    .photo-card:hover {
+      border-color: color-mix(in srgb, var(--brand-primary) 8%, transparent);
+      box-shadow: 0 0 0 8px color-mix(in srgb, var(--brand-primary) 8%, transparent), var(--shadow-soft);
+      transform: translateY(-4px);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .case-tab {
+        transition: border-color 0.2s ease;
+      }
+
+      .photo-card {
+        transition: border-color 0.2s ease;
+      }
+
+      .photo-card:hover {
+        border-color: var(--brand-primary);
+        box-shadow: none;
+        transform: none;
+      }
+    }
+  </style>
+</head>
+
+<body class="home-page">
+  <script>(function(){var t=localStorage.getItem('site-theme');if(!['default','bolder','shadcn','brutal'].includes(t))t='default';document.documentElement.setAttribute('data-theme',t);}());</script>
+  <div id="header"></div>
+
+  <main class="home">
+    <section class="hero reveal">
+      <h2 class="headline rosarivo-regular">
+        I design world-class enterprise products that feel effortless to use.
+      </h2>
+      <p class="subtext red-hat">
+        Currently seven years into designing enterprise IT software, I’ve learned how to make complex systems feel
+        simple.
+      </p>
+    </section>
+
+    <section class="showcase">
+      <figure class="profile-section reveal" style="--d:1">
+        <div id="profile-island"></div>
+      </figure>
+
+      <nav class="hero-nav case-tabs reveal" style="--d:2" aria-label="Sections">
+        <a href="art.html" class="hero-link case-tab rosarivo-regular-italic" data-tab>
+          Art
+          <span class="hero-link-meta tab-badge">Paintings &amp; drawings</span>
+        </a>
+        <a href="writing.html" class="hero-link case-tab rosarivo-regular-italic" data-tab>
+          Writing
+          <span class="hero-link-meta tab-badge">Essays on design &amp; AI</span>
+        </a>
+        <a href="projects.html" class="hero-link case-tab rosarivo-regular-italic" data-tab>
+          Projects
+          <span class="hero-link-meta tab-badge">Case studies &amp; tools</span>
+        </a>
+      </nav>
+    </section>
+  </main>
+
+  <div id="footer"></div>
+
+  <script>
+    async function loadPartials() {
+      const header = await fetch("header.html");
+      const footer = await fetch("footer.html");
+      document.getElementById("header").innerHTML = await header.text();
+      document.getElementById("footer").innerHTML = await footer.text();
+      var currentPage = location.pathname.split('/').pop() || 'index.html';
+      document.querySelectorAll('.nav-links .header-link').forEach(function (link) {
+        if (link.getAttribute('href') === currentPage) {
+          link.classList.add('active');
+          link.setAttribute('aria-current', 'page');
+        }
+      });
+      var select = document.getElementById('theme-select');
+      if (select) {
+        select.value = document.documentElement.getAttribute('data-theme') || 'default';
+        select.addEventListener('change', function () {
+          document.documentElement.setAttribute('data-theme', this.value);
+          localStorage.setItem('site-theme', this.value);
+        });
+      }
+    }
+    loadPartials();
+  </script>
+
+  <!-- Case-file tabs: hand-built vanilla JS press/hover choreography,
+       no library. Post-interaction only — .reveal already handled
+       entrance. -->
+  <script>
+    (function () {
+      var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      document.querySelectorAll('.case-tab').forEach(function (tab) {
+        tab.addEventListener('mouseenter', function () {
+          tab.style.borderColor = 'var(--brand-primary)';
+          if (!reducedMotion) {
+            tab.style.transform = 'translateY(-4px)';
+            tab.style.backgroundColor = 'var(--accent-surface)';
+          }
+        });
+        tab.addEventListener('mouseleave', function () {
+          tab.style.borderColor = '';
+          tab.style.transform = '';
+          tab.style.backgroundColor = '';
+        });
+        if (!reducedMotion) {
+          tab.addEventListener('pointerdown', function () {
+            tab.style.transform = 'translateY(-4px) scale(0.97)';
+          });
+          tab.addEventListener('pointerup', function () {
+            tab.style.transform = 'translateY(-4px)';
+          });
+        }
+      });
+    }());
+  </script>
+
+  <!-- Isolated React island: only the profile photo frame is React.
+       The rest of this page is plain vanilla JS/CSS, by design. -->
+  <script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.26.4/babel.min.js"></script>
+  <script type="text/babel" data-presets="react">
+    function ProfileCard() {
+      return (
+        <div className="photo-card">
+          <img src="img/Imag-Matthew.png" alt="Matthew A. Cottrell" className="profile-img" />
+        </div>
+      );
+    }
+    ReactDOM.createRoot(document.getElementById('profile-island')).render(<ProfileCard />);
+  </script>
+</body>
+
+</html>

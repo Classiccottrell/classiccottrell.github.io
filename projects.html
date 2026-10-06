@@ -291,7 +291,7 @@
 
     async function loadProjects() {
       try {
-        const response = await fetch('data/projects_data.json?v=20260924');
+        const response = await fetch('data/projects_data.json?v=20261005');
         projects = (await response.json()).map(normalizeProject);
         const initialId = location.hash.replace('#', '') || (projects[0] && projects[0].id);
         selectProject(initialId);

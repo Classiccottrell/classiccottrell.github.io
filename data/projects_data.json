@@ -127,7 +127,7 @@
     "id": "linefield",
     "status": "Ongoing",
     "title": "linefield",
-    "subtitle": "Eighteen generative line-art backgrounds you own outright.",
+    "subtitle": "Twenty generative line-art backgrounds you own outright.",
     "repos": [
       {
         "label": "linefield",
@@ -140,24 +140,32 @@
       {
         "paragraphs": [
           "A background is the kind of thing you should own outright. It sits on your site for years, it should not phone home, and when you want it slower or bluer you should be able to open the file and change it.",
-          "linefield is eighteen of them. Each piece is one HTML file with no dependencies and no build step. Tune it with the on-screen controls, hit export, and you get a standalone file with your settings baked in. Paste it into any page and it runs."
+          "linefield is twenty of them. Each piece is one HTML file with no dependencies and no build step. Tune it with the on-screen controls, hit export, and you get a standalone file with your settings baked in. Paste it into any page and it runs."
         ]
       },
       {
         "heading": "What it is",
-        "intro": "Eighteen pieces, one shared control surface:",
+        "intro": "Twenty pieces in five collections, one shared control surface:",
         "items": [
           {
-            "lead": "Fourteen controls on every piece.",
-            "text": "Scale, speed, stroke, opacity, saturation, color mode, two colors, glow, angle, motion, phase, invert and density, plus one control specific to each piece. All of them do something you can see. A script drives every control on every piece and diffs the rendered frames, because twice a control shipped that read its value and changed nothing, and both times a human review passed it."
+            "lead": "Monochrome by default.",
+            "text": "Near-white hairlines on near-black, one object per frame, and a declared empty zone where your headline goes. Brightness comes from lines crossing, not from colour. Colour is still one preset away. It just isn't the default any more."
           },
           {
-            "lead": "Four ways out.",
-            "text": "A baked HTML file with every shared module inlined, PNG at 2x or 4x, SVG, and a written description of the current settings. The baked file is the point. It has zero external references, so it runs from any folder on any host, with no build step between you and the page."
+            "lead": "Sixteen controls on every piece.",
+            "text": "Scale, speed, stroke, opacity, saturation, color mode, two colors, two hues, invert, glow, angle, motion, phase and density, plus whatever each piece needs on its own. A script drives every control on every piece and diffs the rendered frames: 299 controls, none of them dead. It exists because twice a control shipped that read its value and changed nothing, and both times a human review passed it."
+          },
+          {
+            "lead": "Five ways out.",
+            "text": "A baked HTML file with every shared module inlined, the untouched source, PNG at 2x or 4x, SVG, and a written prompt describing the current settings. The baked file is the point. It has zero external references, so it runs from any folder on any host. For decks and mockups there is also a pack of square stills of all twenty, and a catalogue listing each piece's empty zone and controls."
+          },
+          {
+            "lead": "Two new materials.",
+            "text": "Dune is a ridge of film grain under one low light. Swell is an ocean swell drawn as a halftone screen, where the size of each dot carries the light. Both step outside pure linework, and both still run in plain Canvas 2D."
           },
           {
             "lead": "A gallery that will not cook your laptop.",
-            "text": "Eighteen canvas animations running at once will crawl, so the grid shows stills and swaps only the card you are pointing at for a live preview. One at a time, torn down when you look away. Keyboard focus does the same thing, because hover-only interaction is invisible to anyone not using a mouse."
+            "text": "Twenty canvas animations running at once will crawl, so the grid shows stills and swaps only the card you are pointing at for a live preview. One at a time, torn down when you look away. Keyboard focus does the same thing, because hover-only interaction is invisible to anyone not using a mouse."
           }
         ]
       },
@@ -166,13 +174,21 @@
         "paragraphs": [
           "Drawing the pieces was the easy half. The hard half was catching the things that look correct on paper. A control whose maths is right but whose effect is smaller than the line it draws. A baked export that silently produced a blank page for two pieces because a new module was never registered for inlining, which two separate reviews reported as passing.",
           "The worst one was not a bug at all. Five pieces shipped that were each individually fine and collectively looked like one thing, because every review judged a piece against its own intent and never against the others.",
-          "So the checks are scripts now instead of opinions. The build refuses to run when the manifest, the pieces and the README disagree. The control audit fails on anything that reads a value without changing a pixel. And the last gate before shipping is looking at all eighteen side by side, which is the only one that would have caught the thing a person actually noticed."
+          "So the checks are scripts now instead of opinions. The build refuses to run when the manifest, the pieces and the README disagree. The control audit fails on anything that reads a value without changing a pixel. And the last gate before shipping is looking at all twenty side by side, which is the only one that would have caught the thing a person actually noticed."
+        ]
+      },
+      {
+        "heading": "Version two",
+        "paragraphs": [
+          "Version one worked and still looked like a demo. Laid out side by side, the problem was colour. Every piece had its own saturated hue, so eighteen pieces read as eighteen different products instead of one collection.",
+          "So version two is monochrome first. Every piece was redrawn as one object: hairlines, one bright point, and a lot of empty space for whatever sits on top of it. A new gate fails the build if a default carries colour or marks too much or too little of the frame.",
+          "There is no target count. A new piece ships when it clears the same gates as the other twenty."
         ]
       }
     ],
-    "image": "img/projects/linefield-collection.webp",
-    "imageAlt": "Nine linefield pieces in a three-by-three grid: violet flow ribbons, a wireframe globe, overlapping moiré rings, green waves, a receding grid and other generative line art on dark tiles.",
-    "imageCaption": "Nine selections from the eighteen-piece collection."
+    "image": "img/projects/linefield-gallery.webp",
+    "imageAlt": "The top of the linefield gallery: the headline Generative backgrounds, shipped as one file, a short intro, the Wake overlay panel, five collection filters, and the first row of the Currents collection, three monochrome hairline pieces on near-black.",
+    "imageCaption": "The gallery: twenty pieces in five collections, monochrome by default."
   },
   {
     "id": "forma",

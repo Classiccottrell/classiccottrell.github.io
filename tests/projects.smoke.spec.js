@@ -155,7 +155,7 @@ test('new project cases show their previews and destinations', async ({ page }) 
   await page.goto('/projects.html');
   for (const [id, title, image, href] of [
     ['agentic-light', 'Agentic Light', 'agentic-light-dashboard.webp', 'https://github.com/Classiccottrell/Agentic_Light'],
-    ['linefield', 'linefield', 'linefield-collection.webp', 'https://classiccottrell.github.io/linefield/'],
+    ['linefield', 'linefield', 'linefield-gallery.webp', 'https://classiccottrell.github.io/linefield/'],
     ['forma', 'Forma', 'forma-editor.webp', 'https://github.com/Classiccottrell/forma'],
   ]) {
     await page.locator(`.project-nav-item[data-id="${id}"]`).click();

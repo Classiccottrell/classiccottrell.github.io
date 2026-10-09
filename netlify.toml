@@ -1,16 +1,43 @@
-# netlify.toml
+# The repo is the site: pages are built and committed (npm run build), so
+# Netlify publishes the folder as-is, exactly like GitHub Pages.
 [build]
   publish = "."
   command = ""
 
-# Always revalidate HTML and the stylesheet so published styling changes
-# show up immediately instead of being served from a stale cache.
+# HTML revalidates every time. Assets carry a ?v= content hash, so they can be
+# cached for a long time.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
 [[headers]]
   for = "/*.html"
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
 
 [[headers]]
-  for = "/styles.css"
+  for = "/assets/*"
   [headers.values]
-    Cache-Control = "public, max-age=0, must-revalidate"
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Old addresses. The #hash on projects.html survives the redirect, and
+# /work/ forwards it to the right case study.
+[[redirects]]
+  from = "/projects.html"
+  to = "/work/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/art.html"
+  to = "/drawings/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/writing.html"
+  to = "/writing/"
+  status = 301
+  force = true

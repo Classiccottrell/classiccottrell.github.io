@@ -1,35 +1,22 @@
 {
   "name": "classiccottrell-github-io",
-  "version": "1.0.0",
+  "version": "2.0.0",
+  "private": true,
   "description": "Personal website of Matthew A. Cottrell",
+  "type": "module",
   "scripts": {
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
-    "dev": "vite",
-    "prebuild": "npm run build:html",
-    "build": "vite build",
-    "build:html": "node scripts/build-html.mjs",
-    "build:html:check": "node scripts/build-html.mjs --check",
-    "preview": "vite preview",
-    "test:browser": "playwright test"
-  },
-  "dependencies": {
-    "@emotion/react": "^11.11.1",
-    "@emotion/styled": "^11.11.0",
-    "@mui/material": "^5.14.18",
-    "@mui/x-charts": "^6.18.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "build": "node scripts/build.mjs",
+    "build:check": "node scripts/build.mjs --check",
+    "check:contrast": "node scripts/check-contrast.mjs",
+    "images": "node scripts/images.mjs",
+    "cards": "node scripts/cards.mjs",
+    "contact-sheet": "node scripts/contact-sheet.mjs",
+    "serve": "node scripts/serve.mjs",
+    "test": "npm run build:check && npm run check:contrast && playwright test"
   },
   "devDependencies": {
     "@playwright/test": "^1.62.1",
-    "@storybook/addon-links": "^10.5.10",
-    "@storybook/html": "^10.5.10",
-    "@storybook/html-vite": "^10.5.10",
-    "@vitejs/plugin-react": "^4.2.0",
-    "prop-types": "^15.8.1",
-    "storybook": "^10.5.10",
-    "vite": "^6.0.0",
-    "@storybook/addon-docs": "^10.5.10"
+    "axe-core": "^4.10.2",
+    "sharp": "^0.34.4"
   }
 }

@@ -1,3 +1,5 @@
 node_modules
 playwright-report/
 test-results/
+contact-sheet/
+.DS_Store

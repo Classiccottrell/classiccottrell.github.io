@@ -1,0 +1,16 @@
+[
+  { "id": "R-01", "text": "Brightness comes from lines crossing, not from colour.", "source": "linefield", "href": "/work/linefield/" },
+  { "id": "R-02", "text": "Feedback that can’t cite a number isn’t feedback.", "source": "UX Skill Repo", "href": "/work/ux-skill-repo/" },
+  { "id": "R-03", "text": "Boring formats win.", "source": "The Agent Bench", "href": "/work/agent-bench/" },
+  { "id": "R-04", "text": "A brutal system still has to pass accessibility, or it’s just ugly.", "source": "Brutal UX", "href": "/work/brutal-ux/" },
+  { "id": "R-05", "text": "Nothing runs that you did not start.", "source": "Agentic Light", "href": "/work/agent-bench/" },
+  { "id": "R-06", "text": "One owner per layer.", "source": "The Agent Bench", "href": "/work/agent-bench/" },
+  { "id": "R-07", "text": "The system reports its own health.", "source": "The Agent Bench", "href": "/work/agent-bench/" },
+  { "id": "R-08", "text": "Removing polish doesn’t remove hierarchy, it relocates it.", "source": "Brutal UX", "href": "/work/brutal-ux/" },
+  { "id": "R-09", "text": "Instant feedback is a decision, not a missing feature.", "source": "Brutal UX", "href": "/work/brutal-ux/" },
+  { "id": "R-10", "text": "A clean pass that teaches nothing doesn’t count.", "source": "UX Skill Repo", "href": "/work/ux-skill-repo/" },
+  { "id": "R-11", "text": "The rulebook only grows from evidence.", "source": "UX Skill Repo", "href": "/work/ux-skill-repo/" },
+  { "id": "R-12", "text": "Specialize once, commit the result.", "source": "Agentic Light", "href": "/work/agent-bench/" },
+  { "id": "R-13", "text": "A first run should look considered, not empty.", "source": "ClassicCottrell CLI", "href": "/work/classiccottrell-cli/" },
+  { "id": "R-14", "text": "Degrade honestly instead of assuming a terminal.", "source": "ClassicCottrell CLI", "href": "/work/classiccottrell-cli/" }
+]

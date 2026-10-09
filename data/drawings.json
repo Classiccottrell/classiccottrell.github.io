@@ -1,0 +1,53 @@
+{
+  "intro": "Ink portraits of characters who stuck with me. One film, one face, one line of dialogue.",
+  "drawings": [
+    {
+      "slug": "kurtz",
+      "character": "Colonel Kurtz",
+      "film": "Apocalypse Now",
+      "year": 1979,
+      "director": "Francis Ford Coppola",
+      "actor": "Marlon Brando",
+      "quote": "I’ve seen horrors. Horrors that you have seen. But you have no right to call me a murderer, you have a right to kill me.",
+      "ground": "black",
+      "image": "/assets/img/drawings/kurtz.webp",
+      "width": 1100,
+      "height": 1040,
+      "alt": "Ink drawing of Colonel Kurtz from Apocalypse Now, white on black: a shaved head with the eyes lost in shadow, and dog tags on a chain at his collar.",
+      "drawn": null,
+      "medium": null
+    },
+    {
+      "slug": "travis",
+      "character": "Travis Bickle",
+      "film": "Taxi Driver",
+      "year": 1976,
+      "director": "Martin Scorsese",
+      "actor": "Robert De Niro",
+      "quote": "You talkin’ to me?",
+      "ground": "white",
+      "image": "/assets/img/drawings/travis.webp",
+      "width": 1100,
+      "height": 1206,
+      "alt": "Ink drawing of Travis Bickle from Taxi Driver in profile, with a mohawk and an army jacket, in solid black on white.",
+      "drawn": null,
+      "medium": null
+    },
+    {
+      "slug": "coach",
+      "character": "Coach",
+      "film": "The Gentlemen",
+      "year": 2019,
+      "director": "Guy Ritchie",
+      "actor": "Colin Farrell",
+      "quote": "You’re embarrassing yourself here lads. Kids stab, girls shoot, boys punch. Grown-ups fight with their heads. That’s where the real battle is up here, in the gray. Now, wake up, lads. Life’s quick. You’re slow. Life’s hard on a bone top.",
+      "ground": "white",
+      "image": "/assets/img/drawings/coach.webp",
+      "width": 1100,
+      "height": 1161,
+      "alt": "Ink drawing of Coach from The Gentlemen in a flat cap and glasses, one hand raised to his face, wearing a plaid track jacket.",
+      "drawn": null,
+      "medium": null
+    }
+  ]
+}

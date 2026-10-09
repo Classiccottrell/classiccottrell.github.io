@@ -1,162 +1,231 @@
-<!DOCTYPE html>
-<html lang="en">
-
+<!doctype html>
+<html lang="en" class="no-js">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Matthew A. Cottrell</title>
-  <meta name="description" content="Matthew A. Cottrell — portfolio home. Paintings, essays on design and AI, and case studies from a designer/builder working across art, writing, and software." />
-  <meta property="og:title" content="Matthew A. Cottrell" />
-  <meta property="og:description" content="Matthew A. Cottrell — portfolio home. Paintings, essays on design and AI, and case studies from a designer/builder working across art, writing, and software." />
-  <meta property="og:image" content="https://classiccottrell.github.io/img/Imag-Matthew.png" />
-  <meta property="og:url" content="https://classiccottrell.github.io/index.html" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <link rel="canonical" href="https://classiccottrell.github.io/index.html" />
-
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Rosarivo:ital@0;1&display=swap"
-    rel="stylesheet">
-
-  <link rel="icon" href="img/favicon-32.png" id="favicon" />
-  <script>
-    (function () {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      var icon = document.getElementById('favicon');
-      var frames = ['img/favicon-32.png', 'img/Fav-con-terry-32.png', 'img/Fav-con-terry1-32.png', 'img/Fav-con-terry2-32.png', 'img/Fav-con-terry3-32.png', 'img/Fav-con-terry4-32.png'];
-      var i = 0;
-      setInterval(function () {
-        if (document.hidden) return;
-        i = (i + 1) % frames.length;
-        icon.href = frames[i];
-      }, 3000);
-    }());
-  </script>
-
-  <!-- CSS -->
-  <link rel="stylesheet" href="styles.css?v=20260924" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Matthew A. Cottrell · Product designer</title>
+<meta name="description" content="Product designer. I take complicated software apart until it makes sense: enterprise IT, design systems, accessibility and AI tooling.">
+<link rel="canonical" href="https://classiccottrell.github.io/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Matthew A. Cottrell">
+<meta property="og:title" content="Matthew A. Cottrell">
+<meta property="og:description" content="Product designer. I take complicated software apart until it makes sense: enterprise IT, design systems, accessibility and AI tooling.">
+<meta property="og:url" content="https://classiccottrell.github.io/">
+<meta property="og:image" content="https://classiccottrell.github.io/assets/cards/home.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFFFFF">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0A0A0A">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" href="/assets/fonts/familjen-grotesk.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/site.css?v=626e87340f">
+<script>document.documentElement.className='js'</script>
+<script src="/assets/js/site.js?v=c3818911f5" defer></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Matthew A. Cottrell","jobTitle":"Product designer","url":"https://classiccottrell.github.io","sameAs":["https://www.linkedin.com/in/classiccottrell/","https://github.com/Classiccottrell","https://classiccottrell.substack.com/","https://www.instagram.com/classiccottrell"]}</script>
 </head>
+<body>
 
-<body class="home-page">
-  <a href="#main" class="skip-link">Skip to main content</a>
-  <script>(function(){function fromCookie(){var m=document.cookie.split('; ').find(function(r){return r.indexOf('site-theme=')===0;});return m?decodeURIComponent(m.split('=')[1]):null;}var vals=['default','bolder','shadcn','brutal'];var t=fromCookie();if(!vals.includes(t))t=localStorage.getItem('site-theme');if(!vals.includes(t))t='default';document.documentElement.setAttribute('data-theme',t);}());</script>
-  <div id="header"><!-- build:header -->
-<header>
-  <div class="header-content">
-    <div class="header-left">
-      <button id="nav-toggle" class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav-drawer">
-        <span class="nav-toggle-icon" aria-hidden="true"></span>
-      </button>
-      <p class="top-name"><a href="index.html" class="header-link">Matthew A. Cottrell</a></p>
-      <div class="nav-links">
-        <a href="art.html" class="header-link">Art</a>
-        <a href="writing.html" class="header-link">Writing</a>
-        <a href="projects.html" class="header-link">Projects</a>
-      </div>
-    </div>
-    <div class="social-icons">
-      <a href="https://github.com/Classiccottrell" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="GitHub (opens in a new tab)">
-        <span class="social-icon github" aria-hidden="true"></span>
-      </a>
-      <a href="https://www.instagram.com/classiccottrell" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Instagram (opens in a new tab)">
-        <span class="social-icon instagram" aria-hidden="true"></span>
-      </a>
-      <a href="https://classiccottrell.substack.com/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Substack (opens in a new tab)">
-        <span class="social-icon substack" aria-hidden="true"></span>
-      </a>
-      <a href="https://www.linkedin.com/in/classiccottrell/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="LinkedIn (opens in a new tab)">
-        <span class="social-icon linked" aria-hidden="true"></span>
-      </a>
-    </div>
+<a class="skip" href="#main">Skip to content</a>
+<header class="mast">
+  <div class="wrap mast-in">
+    <a class="mast-name" href="/" aria-current="page">Matthew A. Cottrell</a>
+    <nav class="mast-nav" aria-label="Main"><ul><li><a href="/work/">Work</a></li><li><a href="/writing/">Writing</a></li><li><a href="/drawings/">Drawings</a></li><li><a href="/about/">About</a></li></ul></nav>
+    <div class="mast-end"><a class="avail" href="/work-with-me/#availability"><i class="sm sm-live" aria-hidden="true"></i>Open to new projects</a><a class="lnk mast-cta" href="/work-with-me/">Work with me</a></div>
+    <details class="menu">
+      <summary>Menu</summary>
+      <nav class="menu-panel" aria-label="Menu"><ul><li><a href="/work/">Work</a></li><li><a href="/writing/">Writing</a></li><li><a href="/drawings/">Drawings</a></li><li><a href="/about/">About</a></li><li><a class="lnk mast-cta" href="/work-with-me/">Work with me</a></li></ul><a class="avail" href="/work-with-me/#availability"><i class="sm sm-live" aria-hidden="true"></i>Open to new projects</a></nav>
+    </details>
   </div>
 </header>
+<main id="main">
 
-<div id="nav-drawer-backdrop" class="nav-drawer-backdrop"></div>
-<aside id="mobile-nav-drawer" class="nav-drawer" aria-hidden="true">
-  <nav class="nav-drawer-links" aria-label="Mobile navigation">
-    <a href="index.html" class="nav-drawer-link header-link active" aria-current="page"><span class="nav-drawer-index">01</span>Home</a>
-    <a href="art.html" class="nav-drawer-link header-link"><span class="nav-drawer-index">02</span>Art</a>
-    <a href="writing.html" class="nav-drawer-link header-link"><span class="nav-drawer-index">03</span>Writing</a>
-    <a href="projects.html" class="nav-drawer-link header-link"><span class="nav-drawer-index">04</span>Projects</a>
-  </nav>
-</aside>
-<!-- /build:header --></div>
-
-
-  <main id="main" class="home">
-    <section class="hero reveal">
-      <h1 class="headline rosarivo-regular">
-        I design world-class enterprise products that feel effortless to use.
-      </h1>
-      <p class="subtext red-hat">
-        Currently seven years into designing enterprise IT software, I’ve learned how to make complex systems feel
-        simple.
-      </p>
-    </section>
-
-    <section class="showcase">
-      <figure class="profile-section reveal" style="--d:1">
-        <img src="img/Imag-Matthew.png" alt="Matthew A. Cottrell" class="profile-img" />
-      </figure>
-
-      <nav class="hero-nav reveal" style="--d:2" aria-label="Sections">
-        <a href="art.html" class="hero-link rosarivo-regular-italic">
-          Art
-          <span class="hero-link-meta">Paintings &amp; drawings</span>
-        </a>
-        <a href="writing.html" class="hero-link rosarivo-regular-italic">
-          Writing
-          <span class="hero-link-meta">Essays on design &amp; AI</span>
-        </a>
-        <a href="projects.html" class="hero-link rosarivo-regular-italic">
-          Projects
-          <span class="hero-link-meta">Case studies &amp; tools</span>
-        </a>
-      </nav>
-    </section>
-  </main>
-
-
-  <div id="footer"><!-- build:footer -->
-<footer>
-  <h3 class="name-footer">Matthew A. Cottrell</h3>
-  <p class="title-footer">Product design and Strategy</p>
-
-  <div class="social-icons">
-    <a href="https://github.com/Classiccottrell" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="GitHub (opens in a new tab)">
-      <span class="social-icon github" aria-hidden="true"></span>
-    </a>
-    <a href="https://www.instagram.com/classiccottrell" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Instagram (opens in a new tab)">
-      <span class="social-icon instagram" aria-hidden="true"></span>
-    </a>
-    <a href="https://classiccottrell.substack.com/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Substack (opens in a new tab)">
-      <span class="social-icon substack" aria-hidden="true"></span>
-    </a>
-    <a href="https://www.linkedin.com/in/classiccottrell/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="LinkedIn (opens in a new tab)">
-      <span class="social-icon linked" aria-hidden="true"></span>
-    </a>
+<section class="hero wrap" aria-labelledby="hero-h">
+  <canvas class="trail" aria-hidden="true"></canvas>
+  <div class="g12 hero-in">
+    <div class="hero-text">
+      <p class="note">Product designer · Enterprise IT · Design systems · Accessibility · AI tooling</p>
+      <h1 class="hero-h" id="hero-h">I take complicated software apart until it makes sense.</h1>
+      <p class="lede">Seven years designing enterprise IT software. I also draw in ink, write about design and AI, and build the tools I wish I’d had.</p>
+      <p class="ctas"><a class="btn" href="/work-with-me/">Work with me <span aria-hidden="true">→</span></a><a class="lnk" href="/work/">See the work</a></p>
+    </div>
+    
+<figure class="hero-fig" data-inking data-dur="2200">
+  <div class="inking"><img class="pen" src="/assets/img/self/pencil.webp" width="900" height="1075" alt=""><img class="ink" src="/assets/img/self/ink.webp" width="900" height="1075" alt="A two-tone stencil portrait of Matthew in profile, with cap, sunglasses and backpack."></div>
+  <figcaption class="note cap">Self-portrait · stencil from a photo</figcaption>
+</figure>
   </div>
-  <p class="copyright">© 2009–<span id="current-year"></span> Matthew A. Cottrell. All rights reserved.</p>
-  <div class="footer-links">
-    <label for="theme-select" class="theme-label">Theme</label>
-    <select id="theme-select" class="theme-select" aria-label="Site theme">
-      <option value="default">Classic</option>
-      <option value="bolder">Bolder</option>
-      <option value="shadcn">Shadcn</option>
-      <option value="brutal">Brutal</option>
-    </select>
+</section>
+
+<section class="wrap sec" aria-labelledby="sel-h">
+  <div class="sec-head"><h2 class="note" id="sel-h">Selected work</h2><a class="note" href="/work/">All 10 projects <span aria-hidden="true">→</span></a></div>
+  <div class="sel">
+    <ol class="idx" data-cut="sel-pic"><li><a class="idx-row" href="/work/vpat-vault/" data-src="/assets/img/work/vpat-vault.webp"><span class="n">01</span><h3 class="t">VPAT Vault</h3><span class="d">Accessibility evidence in, a VPAT 2.5 draft out.</span><span class="m">Product · 2026 · <i class="sm sm-live" aria-hidden="true"></i>Live</span></a></li><li><a class="idx-row" href="/work/linefield/" data-src="/assets/img/work/linefield.webp"><span class="n">02</span><h3 class="t">linefield</h3><span class="d">Twenty generative backgrounds you own outright.</span><span class="m">Generative art · 2026 · <i class="sm sm-live" aria-hidden="true"></i>Live, v2</span></a></li><li><a class="idx-row" href="/work/forma/" data-src="/assets/img/work/forma.webp"><span class="n">03</span><h3 class="t">Forma</h3><span class="d">Pick a shape, set the light, export a transparent PNG.</span><span class="m">Tool · 2026 · <i class="sm sm-ship" aria-hidden="true"></i>Shipped, MIT</span></a></li><li><a class="idx-row" href="/work/terry-time/" data-src="/assets/img/work/terry-time.webp"><span class="n">04</span><h3 class="t">Terry Time</h3><span class="d">One merch shop, two storefronts, and paid orders pick the winner.</span><span class="m">Brand and shop · 2026 · <i class="sm sm-prog" aria-hidden="true"></i>Pre-launch</span></a></li><li><a class="idx-row" href="/work/agent-bench/" data-src="/assets/img/work/agentic-light.webp"><span class="n">05</span><h3 class="t">The Agent Bench</h3><span class="d">A folder that turns an AI chat tool into an operating environment.</span><span class="m">Agent system · 2026 · <i class="sm sm-priv" aria-hidden="true"></i>Private, with a public light fork</span></a></li></ol>
+    <div class="sel-pic panel crop" aria-hidden="true"><img src="/assets/img/work/vpat-vault.webp" width="1600" height="872" alt="" loading="lazy" decoding="async"></div>
+  </div>
+</section>
+
+<section class="wrap sec" aria-labelledby="xv-h">
+  <div class="xv-wrap">
+    <div class="xv-text">
+      <p class="note">The job</p>
+      <h2 class="h2" id="xv-h">Take it apart.</h2>
+      <p>Drag the slider. A sample service-desk screen comes apart into the five layers I design, from the words on top to the rules underneath. Most fixes live a layer or two below where the problem shows.</p>
+      <div class="ink-ctl" data-js>
+        <label class="note" for="explode">Apart</label>
+        <input type="range" id="explode" min="0" max="100" value="0">
+        <output for="explode">0%</output>
+        <button type="button" class="tool" id="explode-btn">Take it apart</button>
+      </div>
+      <p class="note xv-legend">05 Content · 04 Components · 03 Layout · 02 Tokens · 01 Rules</p>
+      <p class="note cap">A sample screen. On a real project, it’s yours.</p>
+    </div>
+    
+<div class="xv" id="xv" role="img" aria-label="A sample service-desk screen that separates into five layers: content on top, then components, layout, tokens, and the rules underneath.">
+  <div class="xv-stage"><div class="xv-stack">
+    <div class="xv-layer l1" style="--i:0" data-l="l1"><i class="xv-pin"></i>
+      <div class="xv-rules"><span class="rule-chip"><b>R-02</b>Feedback that can’t cite a number isn’t feedback.</span><span class="rule-chip"><b>R-04</b>A brutal system still has to pass accessibility, or it’s just ugly.</span><span class="rule-chip"><b>R-05</b>Nothing runs that you did not start.</span><span class="rule-chip"><b>R-07</b>The system reports its own health.</span><span class="rule-chip"><b>R-09</b>Instant feedback is a decision, not a missing feature.</span></div>
+    </div>
+    <div class="xv-layer l2" style="--i:1" data-l="l2"><i class="xv-pin"></i>
+      <div class="xv-tokens">
+        <div class="tk-sw"><i style="background:#0A0A0A"></i><i style="background:#FFFFFF"></i><i style="background:#55585C"></i><i style="background:#A4DDED"></i><i style="background:#1B62A0"></i></div>
+        <div class="tk-type"><span class="a">Familjen 700 · 22</span><span class="b">Newsreader 400 · 15</span><span class="c">RED HAT MONO 500 · 11</span></div>
+        <div class="tk-space"><i style="width:8%"></i><i style="width:16%"></i><i style="width:24%"></i><i style="width:32%"></i><i style="width:48%"></i></div>
+      </div>
+    </div>
+    <div class="xv-layer l3" style="--i:2" data-l="l3"><i class="xv-pin"></i>
+      <div class="r-top xl"><span>Header · 56</span></div>
+      <div class="r-nav xl"><span>Nav · 20%</span></div>
+      <div class="r-main xl"><span>Main · 7 col</span><span class="cols"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+      <div class="r-side xl"><span>Side · 4 col</span></div>
+    </div>
+    <div class="xv-layer l4" style="--i:3" data-l="l4"><i class="xv-pin"></i>
+      <div class="r-top xc-row"><b class="cmp" style="flex:0 0 18%">Logo</b><b class="cmp" style="flex:1">Search field</b><b class="cmp" style="flex:0 0 22%">Button / primary</b></div>
+      <div class="r-nav xc-col"><b class="cmp">Nav item × 5</b></div>
+      <div class="r-main xc-col"><b class="cmp" style="flex:0 0 12%">Heading</b><b class="cmp" style="flex:0 0 10%">Chip × 3</b><b class="cmp">Table row × 4</b></div>
+      <div class="r-side xc-col"><b class="cmp" style="flex:0 0 22%">Panel header</b><b class="cmp">Meta rows</b><b class="cmp" style="flex:0 0 12%">Progress</b><b class="cmp" style="flex:0 0 14%">Button / secondary</b></div>
+    </div>
+    <div class="xv-layer l5" style="--i:4" data-l="l5"><i class="xv-pin"></i>
+      <div class="r-top ui-top"><span class="ui-logo">Service Desk</span><span class="ui-search">Search incidents</span><span class="ui-btn">New incident</span></div>
+      <div class="r-nav ui-nav"><span class="on">Queue</span><span>Assigned to me</span><span>Changes</span><span>Assets</span><span>Reports</span></div>
+      <div class="r-main ui-main">
+        <span class="ui-h">Incident queue</span>
+        <span class="ui-chips"><i>Open</i><i>P1–P2</i><i>My team</i></span>
+        <span class="ui-table">
+          <span class="ui-tr ui-th"><i>ID</i><i>Summary</i><i>P</i><i>Status</i></span>
+          <span class="ui-tr on"><i>INC-20481</i><i>VPN drops on reconnect</i><i>P1</i><i><b class="sm sm-prog"></b>In progress</i></span>
+          <span class="ui-tr"><i>INC-20479</i><i>SSO loop after reset</i><i>P2</i><i><b class="sm sm-priv"></b>Open</i></span>
+          <span class="ui-tr"><i>INC-20476</i><i>Printer queue, floor 3</i><i>P2</i><i><b class="sm sm-priv"></b>Open</i></span>
+          <span class="ui-tr"><i>INC-20470</i><i>Laptop won’t enrol</i><i>P1</i><i><b class="sm sm-live"></b>Resolved</i></span>
+        </span>
+      </div>
+      <div class="r-side ui-side"><span class="ui-id">INC-20481</span><span class="ui-st">VPN drops on reconnect</span><span class="ui-meta"><i>Priority</i><i>P1</i></span><span class="ui-meta"><i>SLA</i><i>2 h 14 m left</i></span><span class="ui-bar"><i style="width:62%"></i></span><span class="ui-btn2">Assign to me</span></div>
+    </div>
+  </div></div>
+  <div class="xv-tags" aria-hidden="true">
+    <span class="xv-tag" data-l="l5"><b>05</b><span>Content</span><i class="ld"></i><i class="dt"></i></span>
+    <span class="xv-tag" data-l="l4"><b>04</b><span>Components</span><i class="ld"></i><i class="dt"></i></span>
+    <span class="xv-tag" data-l="l3"><b>03</b><span>Layout</span><i class="ld"></i><i class="dt"></i></span>
+    <span class="xv-tag" data-l="l2"><b>02</b><span>Tokens</span><i class="ld"></i><i class="dt"></i></span>
+    <span class="xv-tag" data-l="l1"><b>01</b><span>Rules</span><i class="ld"></i><i class="dt"></i></span>
+  </div>
+</div>
+  </div>
+</section>
+
+<section class="band stage" aria-labelledby="stage-h" data-stage>
+  <iframe class="band-art" src="/assets/linefield/grain-field.html" title="Grain Field, a linefield piece, drifting behind the take" loading="lazy" tabindex="-1" aria-hidden="true"></iframe>
+  <div class="wrap stage-in">
+    <div>
+      <h2 class="note" id="stage-h">Hot takes</h2>
+      <p class="stage-n note"><span data-stage-n>T-01</span><span data-stage-heat><span class="heat" role="img" aria-label="Heat 3 of 3"><i class="f"></i><i class="f"></i><i class="f"></i></span></span></p>
+      <p class="stage-t"><a href="/takes/go-home-on-time/" data-stage-text>Enterprise users don’t want delight. They want to go home on time.</a></p>
+      <p class="note" data-stage-src>Receipts · Brutal UX</p>
+    </div>
+    <div class="stage-ctl">
+      <span class="stage-btns" data-js><button type="button" class="tool" data-stage-prev>← Prev</button><button type="button" class="tool" data-stage-play>Pause</button><button type="button" class="tool" data-stage-next>Next →</button></span>
+      <a class="lnk" href="/takes/">All 12 takes</a>
+    </div>
+  </div>
+  <script type="application/json" id="takes-data">[{"id":"T-01","heat":3,"text":"Enterprise users don’t want delight. They want to go home on time.","href":"/takes/go-home-on-time/","src":"Receipts · Brutal UX"},{"id":"T-02","heat":2,"text":"A design system is a mood board until a script can fail it.","href":"/takes/mood-board/","src":"Receipts · linefield"},{"id":"T-03","heat":2,"text":"AI gets you to 80% by lunch. The last 20% is still the job.","href":"/takes/the-last-20/","src":"Receipts · The Last 20%"},{"id":"T-04","heat":2,"text":"An accessibility report nobody can find is a liability with a cover page.","href":"/takes/liability-with-a-cover-page/","src":"Receipts · VPAT Vault"},{"id":"T-05","heat":2,"text":"Decoration is where hierarchy goes to hide.","href":"/takes/decoration/","src":"Receipts · Brutal UX"},{"id":"T-06","heat":1,"text":"Software should be disposable. Your data shouldn’t be.","href":"/takes/disposable/","src":"Receipts · The Disposable Architecture of Tomorrow, The Agent Bench"},{"id":"T-07","heat":3,"text":"Dead controls do more damage than dark patterns, because nobody goes looking for them.","href":"/takes/dead-controls/","src":"Receipts · linefield"},{"id":"T-08","heat":3,"text":"A design review that can’t cite a number is an opinion with a calendar invite.","href":"/takes/cite-a-number/","src":"Receipts · UX Skill Repo"},{"id":"T-09","heat":2,"text":"Background automation without a status page is a haunting.","href":"/takes/status-page/","src":"Receipts · The Agent Bench"},{"id":"T-10","heat":1,"text":"Build the extreme version first. Then buy back only the comfort you can justify.","href":"/takes/extreme-version/","src":"Receipts · Brutal UX"},{"id":"T-11","heat":2,"text":"Hiring managers don’t read case studies. They read captions and numbers.","href":"/takes/captions-and-numbers/","src":"Receipts · Work"},{"id":"T-12","heat":1,"text":"Breaking things is a design method. You don’t grow out of it.","href":"/takes/breaking-things/","src":"Receipts · Built to Break"}]</script>
+</section>
+
+<section class="wrap sec" aria-labelledby="rules-h">
+  <div class="sec-head"><h2 class="note" id="rules-h">How I work</h2><a class="note" href="/about/#rules">All 14 rules <span aria-hidden="true">→</span></a></div>
+  <ol class="rules">
+<li class="rule" id="r-02"><p class="note">R-02</p><q>Feedback that can’t cite a number isn’t feedback.</q><p class="src"><a href="/work/ux-skill-repo/">UX Skill Repo</a></p></li>
+<li class="rule" id="r-03"><p class="note">R-03</p><q>Boring formats win.</q><p class="src"><a href="/work/agent-bench/">The Agent Bench</a></p></li>
+<li class="rule" id="r-05"><p class="note">R-05</p><q>Nothing runs that you did not start.</q><p class="src"><a href="/work/agent-bench/">Agentic Light</a></p></li></ol>
+</section>
+
+<section class="band draw-band" aria-labelledby="draw-h">
+  <div class="wrap band-grid">
+    <div>
+      <h2 class="note" id="draw-h">Drawings</h2>
+      <p class="h2">Ink portraits of characters who stuck with me.</p>
+      <blockquote class="quote"><p>“I’ve seen horrors. Horrors that you have seen.”</p></blockquote>
+      <p class="note">Colonel Kurtz · Apocalypse Now · 1979</p>
+      <p class="band-link"><a class="lnk" href="/drawings/">See the drawings</a></p>
+    </div>
+    <img class="screen" src="/assets/img/drawings/kurtz.webp" srcset="/assets/img/drawings/kurtz-700.webp 700w, /assets/img/drawings/kurtz.webp 1100w" sizes="(min-width: 760px) 40vw, 100vw" width="1100" height="1040" alt="Ink drawing of Colonel Kurtz from Apocalypse Now, white on black: a shaved head with the eyes lost in shadow, and dog tags on a chain at his collar." loading="lazy" decoding="async">
+  </div>
+</section>
+
+<section class="wrap sec" aria-labelledby="essays-h">
+  <div class="sec-head"><h2 class="note" id="essays-h">Writing</h2><a class="note" href="https://classiccottrell.substack.com/subscribe">Subscribe on Substack <span aria-hidden="true">↗</span></a></div>
+  <ol class="essays">
+<li class="essay">
+  <a class="essay-a" href="https://classiccottrell.substack.com/p/the-last-20">
+    <span class="n">No. 03</span>
+    <h3 class="t">The Last 20%</h3>
+    <span class="s">Where AI prototyping stops saving time.</span>
+    <span class="m note"><time datetime="2026-09-24">24 September 2026</time> · Substack <span aria-hidden="true">↗</span></span>
+    
+  </a>
+</li>
+<li class="essay">
+  <a class="essay-a" href="https://classiccottrell.substack.com/p/built-to-break-a-lifelong-education">
+    <span class="n">No. 02</span>
+    <h3 class="t">Built to Break: A Lifelong Education</h3>
+    <span class="s">How a childhood urge to destroy things built a career in multimodal design.</span>
+    <span class="m note"><time datetime="2026-07-01">1 July 2026</time> · Substack <span aria-hidden="true">↗</span></span>
+    
+  </a>
+</li>
+<li class="essay">
+  <a class="essay-a" href="https://classiccottrell.substack.com/p/the-disposable-architecture-of-tomorrow">
+    <span class="n">No. 01</span>
+    <h3 class="t">The Disposable Architecture of Tomorrow</h3>
+    <span class="s">What a roll of packing tape tells us about the future of AI.</span>
+    <span class="m note"><time datetime="2026-06-18">18 June 2026</time> · Substack <span aria-hidden="true">↗</span></span>
+    
+  </a>
+</li></ol>
+</section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-cta">
+      <p class="foot-h">Bring me a problem.</p>
+      <p class="foot-row"><a class="btn" href="/work-with-me/">Work with me <span aria-hidden="true">→</span></a><a class="avail" href="/work-with-me/#availability"><i class="sm sm-live" aria-hidden="true"></i>Open to new projects</a></p>
+    </div>
+    <div class="foot-grid">
+      <nav aria-label="Elsewhere"><p class="note">Elsewhere</p><ul><li><a class="lnk" href="https://www.linkedin.com/in/classiccottrell/">LinkedIn<span class="ext" aria-hidden="true"> ↗</span></a></li><li><a class="lnk" href="https://github.com/Classiccottrell">GitHub<span class="ext" aria-hidden="true"> ↗</span></a></li><li><a class="lnk" href="https://classiccottrell.substack.com/">Substack<span class="ext" aria-hidden="true"> ↗</span></a></li><li><a class="lnk" href="https://www.instagram.com/classiccottrell">Instagram<span class="ext" aria-hidden="true"> ↗</span></a></li></ul></nav>
+      <nav aria-label="This site"><p class="note">This site</p><ul><li><a class="lnk" href="/work/">Work</a></li><li><a class="lnk" href="/writing/">Writing</a></li><li><a class="lnk" href="/drawings/">Drawings</a></li><li><a class="lnk" href="/about/">About</a></li><li><a class="lnk" href="/takes/">Takes</a></li><li><a class="lnk" href="/work-with-me/">Work with me</a></li><li><a class="lnk" href="/colophon/">Colophon</a></li></ul></nav>
+    </div>
+    <div class="foot-base">
+      <a class="terry-a" href="/work/terry-time/" aria-label="Terry Time, Terry’s shop"><span class="terry" aria-hidden="true"></span></a>
+      <p>Product designer. Enterprise IT, design systems, accessibility and AI tooling.</p>
+      <p class="note">© 2009–<span data-year>2026</span> Matthew A. Cottrell</p>
+      <button type="button" class="tool" data-pencils aria-pressed="false" hidden>Pencils</button>
+    </div>
   </div>
 </footer>
 
-<script>
-  document.getElementById("current-year").textContent = new Date().getFullYear();
-</script>
-<!-- /build:footer --></div>
-
-    <script src="nav.js"></script>
-  <script src="particles.js?v=20260826-2"></script>
 </body>
-
 </html>

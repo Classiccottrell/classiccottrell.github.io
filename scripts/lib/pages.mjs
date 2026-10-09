@@ -446,7 +446,10 @@ export function notFound(ctx) {
   <ul class="nf-links">${[...ctx.site.nav, { label: 'Work with me', href: '/work-with-me/' }].map((n) => h`<li><a class="lnk" href="${esc(n.href)}">${esc(n.label)}</a></li>`)}</ul>
   <p class="nf-more">Looking for Terry? He has ${link('/work/terry-time/', 'a shop now')}.</p>
 </div>`;
-  return page(ctx, { path: '/404.html', title: 'Not found', card: 'home', main, noindex: true });
+  // GitHub Pages can't redirect, so its 404 forwards the old writing.html address
+  // (Netlify 301s it in netlify.toml before this page is ever served).
+  const scripts = h`<script>(function(){var m={'/writing.html':'/writing/'};var t=m[location.pathname];if(t)location.replace(t+location.hash);})();</script>`;
+  return page(ctx, { path: '/404.html', title: 'Not found', card: 'home', main, scripts, noindex: true });
 }
 
 // Old URLs keep working: a tiny page that forwards, mapping #hash links too.

@@ -114,7 +114,8 @@ for (const [file, render] of pages) outputs.set(file, render());
 const legacy = Object.fromEntries(ctx.work.flatMap((p) => p.legacyIds.map((id) => [id, `/work/${p.slug}/`])));
 outputs.set('projects.html', P.moved(ctx, '/work/', legacy));
 outputs.set('art.html', P.moved(ctx, '/drawings/'));
-outputs.set('writing.html', P.moved(ctx, '/writing/'));
+// No writing.html stub: it would hide writing/ (see below). Netlify 301s the
+// old address, and the 404 page forwards it on GitHub Pages.
 
 const indexable = pages.map(([f]) => f).filter((f) => f !== '404.html' && !f.includes('thanks'));
 outputs.set('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>
@@ -123,6 +124,13 @@ ${indexable.map((f) => `  <url><loc>${ctx.site.url}/${f.replace(/index\.html$/, 
 </urlset>
 `);
 outputs.set('robots.txt', `User-agent: *\nAllow: /\n\nSitemap: ${ctx.site.url}/sitemap.xml\n`);
+
+// A page and a folder can't share a name. Netlify serves x.html for both /x
+// and /x/, so x/index.html would never be reached (this once looped /writing/).
+for (const file of outputs.keys()) {
+  const dir = file.match(/^(.+)\/index\.html$/);
+  if (dir && (outputs.has(`${dir[1]}.html`) || existsSync(path.join(ROOT, `${dir[1]}.html`)))) fail(`${dir[1]}.html would hide ${file} on Netlify; remove one of them`);
+}
 
 // ---------------------------------------------------------------- write or check
 const stale = [];

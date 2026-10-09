@@ -38,9 +38,14 @@ tests/                Playwright: axe on every page, no-JS, redirects, interacti
 
 Generated output: `index.html`, `404.html`, `work/`, `takes/`, `work-with-me/`,
 `writing/`, `drawings/`, `about/`, `colophon/`, `sitemap.xml`, `robots.txt`, and
-the stubs `projects.html`, `art.html` and `writing.html` that forward old links
-(including `projects.html#forma`-style hashes) to their new homes. Don't edit
-them by hand; edit `data/` or `scripts/lib/` and rebuild.
+the stubs `projects.html` and `art.html` that forward old links (including
+`projects.html#forma`-style hashes) to their new homes. Don't edit them by
+hand; edit `data/` or `scripts/lib/` and rebuild.
+
+A page and a folder can never share a name: Netlify serves `writing.html` for
+both `/writing` and `/writing/`, which hides `writing/index.html`. So there is
+no `writing.html` stub. Netlify 301s that old address, the 404 page forwards it
+on GitHub Pages, and the build fails if a collision like that comes back.
 
 ## Commands
 

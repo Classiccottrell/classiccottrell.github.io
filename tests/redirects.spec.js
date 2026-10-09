@@ -9,6 +9,7 @@ const CASES = [
   ['/work/#linefield', '/work/linefield/'],
   ['/art.html', '/drawings/'],
   ['/writing.html', '/writing/'],
+  ['/writing', '/writing/'],
 ];
 
 for (const [from, to] of CASES) {

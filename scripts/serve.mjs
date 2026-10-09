@@ -22,7 +22,11 @@ createServer((req, res) => {
   const url = new URL(req.url, 'http://localhost');
   let file = path.join(ROOT, decodeURIComponent(url.pathname));
   if (!file.startsWith(ROOT)) { res.writeHead(403).end(); return; }
-  if (existsSync(file) && statSync(file).isDirectory()) {
+  // Like Netlify: /about and /about/ both serve about.html ahead of
+  // about/index.html, so a page and a folder must never share a name.
+  const bare = file.replace(/[\\/]+$/, '');
+  if (bare !== ROOT && existsSync(`${bare}.html`)) file = `${bare}.html`;
+  else if (existsSync(file) && statSync(file).isDirectory()) {
     if (!url.pathname.endsWith('/')) { res.writeHead(301, { Location: url.pathname + '/' + url.search }).end(); return; }
     file = path.join(file, 'index.html');
   }

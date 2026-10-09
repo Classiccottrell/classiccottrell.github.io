@@ -7,7 +7,7 @@ import {
   projectMeta, receipts, rule, status, takeItem, tblock,
 } from './parts.mjs';
 
-const GROUPS = ['Products', 'Agents', 'Systems', 'Tools'];
+const GROUPS = ['Products', 'Agents', 'Systems', 'Tools', 'Client work'];
 const takeOf = (ctx, id) => ctx.takes.find((t) => t.id === id);
 const live = (takes) => takes.filter((t) => !t.retired);
 const drawingSrcset = (d) => `${d.image.replace('.webp', '-700.webp')} 700w, ${d.image} 1100w`;
@@ -112,19 +112,20 @@ export function workIndex(ctx) {
   const { work } = ctx;
   const legacy = Object.fromEntries(work.flatMap((p) => p.legacyIds.map((id) => [id, p.slug])));
   const main = h`
-${pageHead({ kicker: `Work · ${work.length} projects`, title: 'Work', lede: 'Products, systems, agents and tools. Each case study opens with a title block and the take it proves, and ends with what it actually took.' })}
+${pageHead({ kicker: `Work · ${work.length} projects`, title: 'Work', lede: 'Products, systems, agents and tools, and the client work before them. Each case study opens with a title block and the take it proves, and ends with what it actually took.' })}
 <div class="wrap groups">${GROUPS.map((g) => {
     const items = work.filter((p) => p.group === g);
+    const id = `g-${g.toLowerCase().replace(/\s+/g, '-')}`;
     return items.length ? h`
-  <section class="group" aria-labelledby="g-${g.toLowerCase()}">
-    <h2 class="note" id="g-${g.toLowerCase()}">${esc(g)}</h2>
+  <section class="group" aria-labelledby="${id}">
+    <h2 class="note" id="${id}">${esc(g)}</h2>
     <ol class="idx">${items.map((p) => idxRow(p))}</ol>
   </section>` : '';
   })}
 </div>`;
   // Old projects.html#id links arrive here (Netlify keeps the hash on its 301).
   const scripts = h`<script>(function(){var m=${JSON.stringify(legacy)};var id=location.hash.slice(1);if(m[id])location.replace('/work/'+m[id]+'/');})();</script>`;
-  return page(ctx, { path: '/work/', title: 'Work', description: 'Case studies by Matthew A. Cottrell: products, design systems, AI agents and tools.', card: 'work', main, scripts });
+  return page(ctx, { path: '/work/', title: 'Work', description: 'Case studies by Matthew A. Cottrell: products, design systems, AI agents, tools and client work.', card: 'work', main, scripts });
 }
 
 const roadmap = (stages, linkTo) => {
@@ -159,7 +160,7 @@ export function caseStudy(ctx, p) {
     { dt: 'Status', dd: status(p.status) },
     { dt: 'Stack', dd: esc(p.stack) },
     { dt: 'Numbers', dd: esc(p.numbers.join(' · ')) },
-    { dt: 'Links', dd: p.links.length ? p.links.map((l, j) => h`${j ? ' · ' : ''}${link(l.url, l.label)}`).join('') : 'Private repository' },
+    { dt: 'Links', dd: p.links.length ? p.links.map((l, j) => h`${j ? ' · ' : ''}${link(l.url, l.label)}`).join('') : esc(p.linksNote || 'Private repository') },
   ];
   if (take) rows.push({ dt: `Take · ${take.id}`, dd: h`<a class="tb-take" href="/takes/${esc(take.slug)}/">${inline(take.text)}</a>`, wide: true });
   const main = h`

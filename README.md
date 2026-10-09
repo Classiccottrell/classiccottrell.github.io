@@ -68,6 +68,8 @@ already installed, set `PW_CHROMIUM=/path/to/chrome`.
   `source/work/`, add it to `scripts/images.mjs`, then `npm run images && npm run build && npm run cards`.
   A plate much wider than it is tall crops badly into the share card; give the
   entry a `cardImage` (Terry Time's is in `source/work/`) and the card uses that.
+  With no public `links`, the title block says "Private repository" unless
+  `linksNote` says something truer (Creative services: the sites retired).
 - **Inline marks:** text in `data/` can use `` `code` ``, `*emphasis*` and
   `[a link](/work/forma/)` to another page on this site. The build fails if a
   link doesn't land on a page it writes.

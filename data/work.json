@@ -327,8 +327,8 @@
     ],
     "links": [
       {
-        "label": "terryterry\u200blarryberry.com",
-        "url": "https://terryterrylarryberry.com/"
+        "label": "www.terryterry\u200blarryberry.com",
+        "url": "https://www.terryterrylarryberry.com/"
       },
       {
         "label": "Source",
@@ -460,7 +460,7 @@
           {
             "label": "The build",
             "status": "Shipped",
-            "detail": "Both stores, the lookbook, sizes, shipping and checkout, running on preview deploys, with all nine sizes linked to Printful."
+            "detail": "Both stores, the lookbook, sizes, shipping and checkout, with all nine sizes linked to Printful."
           },
           {
             "label": "Real-money test",
@@ -470,7 +470,7 @@
           {
             "label": "Launch",
             "status": "Planned",
-            "detail": "Both stores open on terryterrylarryberry.com and the split starts counting."
+            "detail": "Checkout goes live and the split starts counting."
           },
           {
             "label": "Call it",
@@ -968,6 +968,157 @@
       {
         "paragraphs": [
           "The measure of a framework isn't the first tool built on it, it's the fifth. Three internal apps and one shipped product in, the pattern's held: brand a class, register a command, ship."
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "creative-services",
+    "number": 10,
+    "title": "Creative services",
+    "kind": "Campaigns and platform UI",
+    "group": "Client work",
+    "featured": false,
+    "summary": "Six years of campaigns for adidas, the NBA, MLS and E.D. Smith, and the platform behind them.",
+    "standfirst": "From 2011 to 2017 I designed cross-channel campaigns at Tagga: for adidas with the NBA, the NCAA and MLS, for E.D. Smith, and for brands like Kicking Horse Coffee and Lindt. Then I led the UI of the customer data platform they all fed.",
+    "take": null,
+    "year": "2011–2017",
+    "role": "Lead design, then UI/UX lead",
+    "status": {
+      "mark": "ship",
+      "label": "Shipped"
+    },
+    "stack": "Campaign sites · Social · In-store print · SMS",
+    "numbers": [
+      "6 years",
+      "14 E.D. Smith campaigns",
+      "2 MLS seasons"
+    ],
+    "links": [],
+    "linksNote": "Sites retired with the campaigns",
+    "plate": {
+      "src": "/assets/img/work/creative-services.webp",
+      "width": 1360,
+      "height": 726,
+      "alt": "A grid of nine campaign graphics. Top row: an adidas and UCLA stadium video board that reads Win a VIP game experience, March to March, text ucla to 47170 to enter; an NBA Store banner with three swingman jerseys and the headline How Swingman are you?; a Mississippi State graphic that reads Win Bulldogs home game gear. Middle row: three MLS graphics offering a VIP game experience, for the LA Galaxy, Seattle Sounders FC and the Philadelphia Union, each with a player. Bottom row: E.D. Smith’s #SummerFun key visual of a girl in sunglasses, a Pack a Lunch with Triple Fruits graphic offering cash prizes, and a Kicking Horse Coffee graphic offering a year of free ground coffee.",
+      "caption": "Campaign work for adidas with the NCAA, the NBA and MLS, for E.D. Smith and for Kicking Horse Coffee.",
+      "callouts": [
+        {
+          "x": 29.5,
+          "y": 5.5,
+          "text": "adidas and the NCAA: stadium video boards asked fans to text a keyword to a short code, and the reply was a link to a mobile entry page."
+        },
+        {
+          "x": 52,
+          "y": 4.5,
+          "text": "adidas and the NBA: *How Swingman are you?*, a video contest on Instagram and Vine for two tickets to the NBA Finals."
+        },
+        {
+          "x": 16,
+          "y": 38.5,
+          "text": "adidas and MLS: two seasons of VIP game experiences, entered from store displays, social posts and team takeover sites."
+        },
+        {
+          "x": 29,
+          "y": 72.5,
+          "text": "E.D. Smith: 14 seasonal campaigns over three years, under TasteCreator, the community we built for the brand."
+        }
+      ]
+    },
+    "cardImage": "/source/work/creative-services-card.webp",
+    "pullQuote": "When we disagreed on a flow, I built each version, sometimes as a video, so everyone could see it work before we chose.",
+    "live": null,
+    "legacyIds": [],
+    "sections": [
+      {
+        "paragraphs": [
+          "Tagga was a small team running cross-channel campaigns for national and international brands. Past adidas and E.D. Smith, the list ran from Kicking Horse Coffee, Lindt and Sun-Maid to Gordmans, Vita Foods and Banamex.",
+          "Under the creative, every campaign had the same job: turn someone in a store, a stadium or a feed into a profile the brand could use. In my last two years I moved onto the platform that did that, as its UI/UX lead."
+        ]
+      },
+      {
+        "heading": "The campaigns",
+        "intro": "The biggest of them:",
+        "items": [
+          {
+            "lead": "adidas: engaged fans.",
+            "text": "adidas wanted to find the people who bought team gear and talked about it, and group them with their teams, online and off. Retailers and teams promoted photo and video contests on their own social channels, with VIP experiences, weekly ticket giveaways and signed merchandise as prizes."
+          },
+          {
+            "lead": "#NBASwingman.",
+            "text": "To find the real market for the swingman jersey, fans filmed *How Swingman are you?* videos and posted them on Instagram or Vine with the campaign hashtag. The prize was two tickets to the NBA Finals."
+          },
+          {
+            "lead": "NCAA football and basketball.",
+            "text": "Event campaigns. I designed for jumbotrons and stadium video boards that asked fans to text a keyword to a short code. The reply was a link to a mobile entry page."
+          },
+          {
+            "lead": "MLS.",
+            "text": "To help MLS compete with the bigger U.S. leagues, adidas wanted to know who its fans were. Over two seasons we ran in-store signings and displays, social posts and photo-contest sites for VIP game experiences."
+          },
+          {
+            "lead": "E.D. Smith: TasteCreator.",
+            "text": "The 133-year-old Canadian brand had an out-of-date website and no social presence. Over three years we built TasteCreator, an online community that became the new face of the brand, with new social channels, a new website and 14 seasonal campaigns aimed at a younger audience."
+          }
+        ],
+        "image": {
+          "src": "/assets/img/work/creative-services-print.webp",
+          "width": 1100,
+          "height": 601,
+          "alt": "Three MLS posters for stores, side by side, for Sporting Kansas City, Seattle Sounders FC and the Philadelphia Union. Each shows a player above the line Win a VIP game experience, a QR code, a keyword to text to 82442, and the prizes: weekly ticket giveaways and a grand prize of game tickets, a gift card, pre-game field access and a post-game meet and greet.",
+          "caption": "In store for MLS: a stanchion card, a four-way banner and an H-frame panel, each with its own keyword and QR code."
+        }
+      },
+      {
+        "heading": "How a campaign worked",
+        "paragraphs": [
+          "Every campaign ran on one flow. Each channel had its own URL, keyword or hashtag, from a store stand or a stadium screen to a tweet or an email banner. They all led to one responsive landing page and one entry form, often with social sign-in to make entering easier.",
+          "Entering always paid something back: exclusive content, a coupon or a store locator. Then the platform mapped and grouped the people behind the entries into profiles the brand could use.",
+          "We also made the content calendars and collateral that teams, players and retailers used to keep each campaign going."
+        ],
+        "image": {
+          "src": "/assets/img/work/creative-services-flow.webp",
+          "width": 900,
+          "height": 517,
+          "alt": "A wireframe flow. Online channels (social media, desktop, web and email banners, Google) and in-store channels (in-store stands and in-stadium screens, with SMS and QR codes) all point to one responsive landing page with an entry form. It leads to a thank-you page with a coupon code, then to a store locator and a social takeover page, with Facebook and Twitter share links looping back to the form.",
+          "caption": "The campaign flow: every channel, online or in store, led to one entry form, then a coupon, a store locator or exclusive content."
+        }
+      },
+      {
+        "heading": "The platform",
+        "paragraphs": [
+          "All those entries fed Tagga’s own software. When I started it was a white-label SMS and mobile-site platform. It grew into a cross-channel campaign reporting tool, then a customer data platform that turned raw data from campaigns, APIs, file uploads and point-of-sale systems into customer profiles.",
+          "As UI/UX lead I worked with the product designer and the CTO. I started on paper, sketching layouts and motion from the user stories, and took the sketches to the front-end developer before the whole team reviewed them. When we disagreed on a flow, I built each version, sometimes as a video, so everyone could see it work before we chose. The last step was a working prototype in Adobe XD for the front-end developer."
+        ],
+        "image": {
+          "src": "/assets/img/work/creative-services-sketches.webp",
+          "width": 1100,
+          "height": 750,
+          "alt": "Pencil sketches of interface layouts and a flow diagram on sheets of paper, on a desk in front of a laptop, with a purple ruler, markers and pencils.",
+          "caption": "Paper first, before anything went on screen."
+        }
+      },
+      {
+        "heading": "The segment page",
+        "paragraphs": [
+          "The segment page holds the groups of customers a brand cares about, like people who abandon their carts. It had to bend with the roadmap as the company grew and clients asked for more.",
+          "My first version was one long list. That broke when bigger clients had hundreds of segments. I tried two fixes: the page split between the list and segment groups, and folders in a sidebar the client could sort segments into. The sidebar won.",
+          "Later the detail panel’s tabs were hard to read, and information disappeared as you switched between them. I replaced the tabs with an accordion and kept a summary at the top that stays put, whichever section is open."
+        ],
+        "image": {
+          "src": "/assets/img/work/creative-services-segments.webp",
+          "width": 1100,
+          "height": 1143,
+          "alt": "Two versions of the My Segments page. The first is a single list of three segments with profile counts and who created them. The final one adds a sidebar of segment folders on the left and a Segment Info panel on the right with the profile count, export and edit buttons, and collapsible sections for rules, snapshots and exports.",
+          "caption": "The segment page, first and final: one long list, then folders in a sidebar and a summary panel."
+        }
+      },
+      {
+        "heading": "What it actually took",
+        "paragraphs": [
+          "A small team doing everything. On most campaigns I was lead designer, front-end developer, UX and QA at once: the key visuals, the in-store print, the social posts, the responsive entry site, and the testing before it went live.",
+          "Over three years of E.D. Smith campaigns the team went from five people to two, which put the client relationship and the creative in my hands. For the Triple Fruits back-to-school campaign I worked with the recipe photography team on the key photo, directing how the items were laid out.",
+          "Before Tagga I spent ten years in print, making signs and running large-format printers and presses."
         ]
       }
     ]

@@ -1,135 +1,95 @@
-# ClassicCottrell Portfolio Site
+# classiccottrell.github.io
 
-A minimal, fast-loading personal portfolio website hosted on **GitHub Pages**, featuring reusable headers/footers, responsive layouts, and simple HTML/CSS/JS architecture.
+The portfolio of Matthew A. Cottrell, product designer. Version 2, art
+direction “Ink & Rule”: Bristol board, India ink and two blue pencils.
 
----
+The previous site is kept intact on the [`v1-classic`](https://github.com/Classiccottrell/classiccottrell.github.io/tree/v1-classic) branch.
 
-## 🚀 Features
-- Reusable `header.html` and `footer.html` inlined into every page at build time (`npm run build:html`) — no runtime fetch, no flash-of-missing-nav with JS disabled
-- Mobile-responsive layout
-- Google Fonts integration
-- Social icons
-- Lightweight HTML/CSS (no frameworks)
-- Easy to maintain and extend
+## How it works
 
----
+Every page is generated from the JSON files in `data/` by a small Node build
+(`scripts/build.mjs`) and committed. GitHub Pages and Netlify serve the repo
+exactly as it is, with no build step on the host. There is no framework and no
+bundler, and every page reads with JavaScript turned off. `assets/js/site.js`
+only adds the optional layer: the pencil cursor, take it apart, hot takes,
+the brief's work order, Pencils (redline) mode and Run the checks.
 
-## 📁 Project Structure
 ```
-classiccottrell.github.io/
-│
-├── index.html
-├── about.html          (or other future pages)
-├── header.html         (source of truth for site header — inlined by scripts/build-html.mjs)
-├── footer.html         (source of truth for site footer — inlined by scripts/build-html.mjs)
-├── scripts/build-html.mjs (inlines header/footer into each page; --check verifies sync)
-├── styles.css
-├── nav.js              (mobile nav drawer + theme select wiring)
-├── playwright.config.js (browser test configuration)
-├── tests/              (Playwright browser checks)
-│
-└── img/
-    ├── Imag-Matthew.png
-    ├── linked.svg
-    └── instagram.svg
+data/                 the content: edit these, then npm run build
+  site.json           name, headline, availability, navigation, links, bio, url
+  work.json           case studies: title block fields, plate, callouts, sections
+  takes.json          hot takes with receipts (set "retired" to retire one in public)
+  rules.json          the rules, R-01 onward
+  writing.json        essays (they live on Substack)
+  drawings.json       drawings, with credits and alt text
+  hire.json           Work with me: offers, brief options, next steps, quotes
+assets/
+  css/site.css        the whole stylesheet, tokens first
+  js/site.js          the optional layer
+  fonts/              Familjen Grotesk, Newsreader, Red Hat Mono (OFL)
+  img/                images the site serves (made by npm run images)
+  cards/              share cards, 1200 × 630 (made by npm run cards)
+  linefield/          the baked linefield piece in the ink band (made by the build)
+  vendor/axe.min.js   axe-core for Run the checks (copied by the build)
+source/               originals: drawings, screenshots, covers, the portrait, Terry, linefield
+scripts/              build, images, cards, contact sheet, contrast check, local server
+tests/                Playwright: axe on every page, no-JS, redirects, interactions, budgets
 ```
 
----
+Generated output: `index.html`, `404.html`, `work/`, `takes/`, `work-with-me/`,
+`writing/`, `drawings/`, `about/`, `colophon/`, `sitemap.xml`, `robots.txt`, and
+the stubs `projects.html`, `art.html` and `writing.html` that forward old links
+(including `projects.html#forma`-style hashes) to their new homes. Don't edit
+them by hand; edit `data/` or `scripts/lib/` and rebuild.
 
-## 🔧 Header/Footer Build Step
-`header.html` and `footer.html` are the source of truth. They are **not** loaded at
-runtime — `scripts/build-html.mjs` inlines them into each page's
-`<div id="header">`/`<div id="footer">` (between `<!-- build:header -->` /
-`<!-- build:footer -->` sentinel comments) so the site renders fully with
-JavaScript disabled and without layout shift.
+## Commands
 
-**Whenever you edit `header.html` or `footer.html`, you must run:**
 ```bash
-npm run build:html
-```
-and commit the resulting changes to `index.html`, `art.html`, `projects.html`,
-and `writing.html` before pushing. This site has no CI build
-step (GitHub Pages / Netlify serve the raw committed repo — see `netlify.toml`),
-so the inlined HTML must already be correct in the committed files.
-
-To verify the pages are in sync (e.g. in a pre-commit hook or CI check) without
-writing anything:
-```bash
-npm run build:html:check
-```
-This exits non-zero and lists any page that doesn't match `header.html`/`footer.html`.
-
-`npm run build` (the Vite/React build for other assets) also runs `build:html`
-automatically via `prebuild`, but the HTML build must still be run and committed
-manually for plain GitHub Pages / Netlify deploys, which don't run `npm run build`.
-
----
-
-## 🛠 Local Development (with http-server)
-To view the site locally and allow inline HTML imports:
-
-### **1. Navigate to the project folder:**
-```bash
-cd /path/to/classiccottrell.github.io
+npm install
+npm run build            # write every page from data/
+npm run build:check      # fail if anything committed is out of date
+npm run check:contrast   # every text colour pair in both polarities, at least 4.5:1
+npm run images           # re-make assets/img from source/ (after adding a drawing, say)
+npm run cards            # re-make the share cards (after changing titles or takes)
+npm run contact-sheet    # every page at 390, 768 and 1440 px, light and dark, into contact-sheet/
+npm run serve            # http://127.0.0.1:4173
+npm test                 # build check, contrast check, then the Playwright suite
 ```
 
-### **2. Start the local server:**
-If installed globally:
-```bash
-http-server .
-```
-Or using npx:
-```bash
-npx http-server .
-```
-Your site will be visible at:
-```
-http://localhost:8080
-```
+`npm run cards`, `npm run contact-sheet` and `npm test` use Playwright's
+Chromium (`npx playwright install chromium` once). To use a Chromium that's
+already installed, set `PW_CHROMIUM=/path/to/chrome`.
 
-### **3. Verify includes:**
-- Header/footer content is visible immediately (inlined at build time, no fetch)
-- Icons/images appear
-- No console errors
+## Common edits
 
-### **4. Run browser checks:**
-```bash
-npm run test:browser
-```
+- **Availability:** `data/site.json` → `availability` (`mark` is `live`, `prog`,
+  `priv` or `ship`). It's stamped into the masthead, the footer and Work with me.
+- **A new case study:** add an entry to `data/work.json`, put its screenshot in
+  `source/work/`, add it to `scripts/images.mjs`, then `npm run images && npm run build && npm run cards`.
+- **Retire a take:** set `"retired": { "date": "2027-01-15", "reason": "…" }` in
+  `data/takes.json`. It moves to a Retired list on /takes/ and its page goes away.
+- **The inked self-portrait:** replace `source/self/ink.png` (black ink on a
+  transparent background, 900 × 1075), run `npm run images`; the pencil layer is
+  generated from it. Then update `portrait` in `data/site.json`.
+- **A drawing's year or medium:** `drawn` and `medium` in `data/drawings.json`
+  appear in its credits as soon as they're set.
 
-Project copy lives in `data/projects_data.json`. The top-level `image`, `imageAlt`,
-and `imageCaption` fields render a full-width preview with a caption before the case
-study. Images inside `sections` stay alongside their supporting text. Product
-images without a caption retain their compact layout.
+## Hosting
 
----
+- **Netlify** (`netlify.toml`): publishes the folder as-is, 301s the old
+  `.html` addresses, and caches `assets/` for a year (every asset URL carries a
+  content hash). The brief on /work-with-me/ is a Netlify form: in the Netlify
+  dashboard, turn on **Forms → form detection**, then add an email notification
+  for the `brief` form.
+- **GitHub Pages:** serves the same files (`.nojekyll` switches Jekyll off).
+  Static hosts can't receive forms, so on this copy the brief offers to copy
+  the work order and send it on LinkedIn instead.
+- **The address:** `url` in `data/site.json` sets canonical links, share cards
+  and the sitemap. Point it at classiccottrell.ca once that serves this site,
+  then `npm run build`.
 
-## 💾 Deployment (GitHub Pages)
-After making changes:
+## Credits
 
-### **1. Stage changes**
-```bash
-git add .
-```
-
-### **2. Commit**
-```bash
-git commit -m "Update site"
-```
-
-### **3. Push**
-```bash
-git push
-```
-Your live site will update automatically:
-```
-https://classiccottrell.github.io
-```
-(Propagation usually takes 10–60 seconds.)
-
----
-
-## 📱 Responsive Design Notes
-Mobile adjustments use media queries in `styles.css`, for example:
-```css
-@
+Fonts under the SIL Open Font License (`assets/fonts/OFL-*.txt`). axe-core
+under the Mozilla Public License 2.0. Grain Field is from
+[linefield](https://github.com/Classiccottrell/linefield) (MIT). Terry drew himself.

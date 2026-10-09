@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Brutal UX · Matthew A. Cottrell</title>
+<meta name="description" content="A design system that removes every soft-UI hierarchy cue at once, and defends the trade in writing.">
+<link rel="canonical" href="https://classiccottrell.github.io/work/brutal-ux/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Matthew A. Cottrell">
+<meta property="og:title" content="Brutal UX">
+<meta property="og:description" content="A design system that removes every soft-UI hierarchy cue at once, and defends the trade in writing.">
+<meta property="og:url" content="https://classiccottrell.github.io/work/brutal-ux/">
+<meta property="og:image" content="https://classiccottrell.github.io/assets/cards/work-brutal-ux.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFFFFF">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0A0A0A">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" href="/assets/fonts/familjen-grotesk.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/site.css?v=959059224c">
+<script>document.documentElement.className='js'</script>
+<script src="/assets/js/site.js?v=c3818911f5" defer></script>
+
+</head>
+<body class="case">
+
+<a class="skip" href="#main">Skip to content</a>
+<header class="mast">
+  <div class="wrap mast-in">
+    <a class="mast-name" href="/">Matthew A. Cottrell</a>
+    <nav class="mast-nav" aria-label="Main"><ul><li><a href="/work/" aria-current="true">Work</a></li><li><a href="/writing/">Writing</a></li><li><a href="/drawings/">Drawings</a></li><li><a href="/about/">About</a></li></ul></nav>
+    <div class="mast-end"><a class="avail" href="/work-with-me/#availability"><i class="sm sm-live" aria-hidden="true"></i>Open to new projects</a><a class="lnk mast-cta" href="/work-with-me/">Work with me</a></div>
+    <details class="menu">
+      <summary>Menu</summary>
+      <nav class="menu-panel" aria-label="Menu"><ul><li><a href="/work/" aria-current="true">Work</a></li><li><a href="/writing/">Writing</a></li><li><a href="/drawings/">Drawings</a></li><li><a href="/about/">About</a></li><li><a class="lnk mast-cta" href="/work-with-me/">Work with me</a></li></ul><a class="avail" href="/work-with-me/#availability"><i class="sm sm-live" aria-hidden="true"></i>Open to new projects</a></nav>
+    </details>
+  </div>
+</header>
+<main id="main">
+
+<article class="cs">
+  
+<header class="wrap ph">
+  <p class="note"><a href="/work/">Work</a> / 06 · Design system</p>
+  <h1 class="splash">Brutal UX</h1>
+  <p class="lede">A design system that removes every soft-UI hierarchy cue at once, and defends the trade in writing.</p>
+  
+<dl class="tblock cs-tb"><div><dt>Role</dt><dd>Design and build</dd></div><div><dt>Year</dt><dd>2026</dd></div><div><dt>Status</dt><dd><i class="sm sm-live" aria-hidden="true"></i>Live</dd></div><div><dt>Stack</dt><dd>One CSS enforcement layer</dd></div><div><dt>Numbers</dt><dd>0 radius · 0 shadows · 0 ms easing</dd></div><div><dt>Links</dt><dd><a class="lnk" href="https://classiccottrell.github.io/Brutal-UX/">Live system<span class="ext" aria-hidden="true"> ↗</span></a> · <a class="lnk" href="https://github.com/Classiccottrell/Brutal-UX">Source<span class="ext" aria-hidden="true"> ↗</span></a></dd></div><div class="wide"><dt>Take · T-05</dt><dd><a class="tb-take" href="/takes/decoration/">Decoration is where hierarchy goes to hide.</a></dd></div></dl>
+</header>
+  
+  
+  <div class="wrap cs-body">
+<section class="cs-sec cs-print">
+  
+  
+  <p>Most redesigns dial decoration down a little: a smaller shadow, a tighter radius, one fewer gradient. Brutal UX asks a blunter question: what's actually load-bearing if you remove all of it at once? No rounded corners. No shadows. No gradients. No easing. No custom font.</p><p>The bet is that hierarchy doesn't disappear when you strip the decoration. It just moves, from the channel your eye scans automatically to the one you have to read.</p>
+  
+  
+  
+  
+</section>
+
+<section class="cs-sec cs-print">
+  <h2 class="cs-h">What it is</h2>
+  <p class="cs-intro">One enforcement layer, applied globally and irreversibly:</p>
+  
+  <ul class="items"><li><strong>Every soft-UI cue removed at once, not dialed down.</strong> Zero border-radius, zero box-shadow, zero transition duration, system monospace only, all forced with <code>!important</code> at the root so no component can quietly opt back in.</li><li><strong>Hierarchy still exists, it just moved.</strong> A five-step type scale (48/32/24/16/13px) and 2-3px black borders carry the entire structure that shadow and rounding used to carry.</li><li><strong>Color is rationed like a budget, not a palette.</strong> Red for alerts, green for live data, blue for raw hyperlinks, never decoration, never the only signal a state changed.</li></ul>
+  
+  
+  
+</section>
+
+<section class="cs-sec cs-print">
+  <h2 class="cs-h">The UX thinking</h2>
+  
+  
+  <ul class="items"><li><strong>Removing polish doesn't remove hierarchy, it relocates it.</strong> From the pre-attentive visual channel to the semantic one. The system's own validation pass names the trade directly: novices pay a visual-search penalty, experts get near-zero-friction spatial memory.</li><li><strong>Instant feedback is a decision, not a missing feature.</strong> Every transition and animation duration is zeroed globally. State changes land in the same frame instead of easing into existence, an anvil dropping, not a soft landing.</li><li><strong>A brutal system still has to pass accessibility, or it's just ugly.</strong> The manifesto ships its own amendments: a loud, instant focus ring, uppercase capped at short labels only, and color always paired with text so it's never the sole carrier of meaning.</li></ul>
+  
+  
+  
+</section>
+
+<section class="cs-sec cs-print">
+  
+  
+  <p>Most design systems soften over time. This one is the control group. Building the extreme version first makes it obvious which comfort you're actually buying when you add rounding, shadow, or motion back in.</p>
+  
+  
+  
+  
+</section>
+</div>
+  <nav class="wrap pn-wrap" aria-label="More work"><div class="pn-nav">
+    <a class="lnk" href="/work/ux-skill-repo/"><span aria-hidden="true">←</span> 05 UX Skill Repo 1.0</a>
+    <a class="lnk" href="/work/design-system/">07 Classic Cottrell Design System <span aria-hidden="true">→</span></a>
+  </div></nav>
+</article>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-cta">
+      <p class="foot-h">Bring me a problem.</p>
+      <p class="foot-row"><a class="btn" href="/work-with-me/">Work with me <span aria-hidden="true">→</span></a><a class="avail" href="/work-with-me/#availability"><i class="sm sm-live" aria-hidden="true"></i>Open to new projects</a></p>
+    </div>
+    <div class="foot-grid">
+      <nav aria-label="Elsewhere"><p class="note">Elsewhere</p><ul><li><a class="lnk" href="https://www.linkedin.com/in/classiccottrell/">LinkedIn<span class="ext" aria-hidden="true"> ↗</span></a></li><li><a class="lnk" href="https://github.com/Classiccottrell">GitHub<span class="ext" aria-hidden="true"> ↗</span></a></li><li><a class="lnk" href="https://classiccottrell.substack.com/">Substack<span class="ext" aria-hidden="true"> ↗</span></a></li><li><a class="lnk" href="https://www.instagram.com/classiccottrell">Instagram<span class="ext" aria-hidden="true"> ↗</span></a></li></ul></nav>
+      <nav aria-label="This site"><p class="note">This site</p><ul><li><a class="lnk" href="/work/" aria-current="true">Work</a></li><li><a class="lnk" href="/writing/">Writing</a></li><li><a class="lnk" href="/drawings/">Drawings</a></li><li><a class="lnk" href="/about/">About</a></li><li><a class="lnk" href="/takes/">Takes</a></li><li><a class="lnk" href="/work-with-me/">Work with me</a></li><li><a class="lnk" href="/colophon/">Colophon</a></li></ul></nav>
+    </div>
+    <div class="foot-base">
+      <span class="terry" aria-hidden="true"></span>
+      <p>Product designer. Enterprise IT, design systems, accessibility and AI tooling.</p>
+      <p class="note">© 2009–<span data-year>2026</span> Matthew A. Cottrell</p>
+      <button type="button" class="tool" data-pencils aria-pressed="false" hidden>Pencils</button>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

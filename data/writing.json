@@ -1,0 +1,12 @@
+{
+  "intro": "Essays on design, AI, and the occasional roll of packing tape.",
+  "subscribe": "https://classiccottrell.substack.com/subscribe",
+  "essays": [
+    { "number": 3, "title": "The Last 20%", "subtitle": "Where AI prototyping stops saving time.", "date": "2026-09-24",
+      "url": "https://classiccottrell.substack.com/p/the-last-20", "image": "/assets/img/writing/the-last-20.webp" },
+    { "number": 2, "title": "Built to Break: A Lifelong Education", "subtitle": "How a childhood urge to destroy things built a career in multimodal design.", "date": "2026-07-01",
+      "url": "https://classiccottrell.substack.com/p/built-to-break-a-lifelong-education", "image": "/assets/img/writing/built-to-break-a-lifelong-education.webp" },
+    { "number": 1, "title": "The Disposable Architecture of Tomorrow", "subtitle": "What a roll of packing tape tells us about the future of AI.", "date": "2026-06-18",
+      "url": "https://classiccottrell.substack.com/p/the-disposable-architecture-of-tomorrow", "image": "/assets/img/writing/the-disposable-architecture-of-tomorrow.webp" }
+  ]
+}

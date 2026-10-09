@@ -1,0 +1,36 @@
+{
+  "name": "Matthew A. Cottrell",
+  "url": "https://classiccottrell.github.io",
+  "description": "Product designer. I take complicated software apart until it makes sense: enterprise IT, design systems, accessibility and AI tooling.",
+  "headline": "I take complicated software apart until it makes sense.",
+  "standfirst": "Seven years designing enterprise IT software. I also draw in ink, write about design and AI, and build the tools I wish I’d had.",
+  "kicker": "Product designer · Enterprise IT · Design systems · Accessibility · AI tooling",
+  "footerLine": "Product designer. Enterprise IT, design systems, accessibility and AI tooling.",
+  "since": 2009,
+  "availability": { "mark": "live", "label": "Open to new projects" },
+  "nav": [
+    { "label": "Work", "href": "/work/" },
+    { "label": "Writing", "href": "/writing/" },
+    { "label": "Drawings", "href": "/drawings/" },
+    { "label": "About", "href": "/about/" }
+  ],
+  "social": [
+    { "label": "LinkedIn", "url": "https://www.linkedin.com/in/classiccottrell/" },
+    { "label": "GitHub", "url": "https://github.com/Classiccottrell" },
+    { "label": "Substack", "url": "https://classiccottrell.substack.com/" },
+    { "label": "Instagram", "url": "https://www.instagram.com/classiccottrell" }
+  ],
+  "contact": { "label": "LinkedIn", "url": "https://www.linkedin.com/in/classiccottrell/" },
+  "portrait": {
+    "ink": "/assets/img/self/ink.webp",
+    "pencil": "/assets/img/self/pencil.webp",
+    "width": 900,
+    "height": 1075,
+    "alt": "A two-tone stencil portrait of Matthew in profile, with cap, sunglasses and backpack.",
+    "caption": "Self-portrait · stencil from a photo"
+  },
+  "bio": [
+    "I’m a product designer. For seven years I’ve designed enterprise IT software, the kind of tool people use all day at work and only notice when it slows them down. I like the complicated parts. I take them apart until they make sense, then put them back together with fewer steps and clearer status.",
+    "Outside the day job I build the tools I wish I’d had: VPAT Vault for accessibility reports, linefield for generative backgrounds, Forma for 3D renders, and an agent bench that runs my own projects. I write about design and AI on Substack, and I draw ink portraits of film characters who stuck with me."
+  ]
+}

@@ -4,16 +4,16 @@
   "offers": [
     { "id": "teardown", "title": "The Teardown", "kind": "A complicated workflow",
       "text": "Your most complicated workflow, taken apart and rebuilt. You get the new flow, a redline spec and a working prototype.",
-      "time": "About two weeks", "proof": [{ "label": "Seven years of enterprise IT", "href": "/about/" }] },
+      "time": "2 weeks", "proof": [{ "label": "Seven years of enterprise IT", "href": "/about/" }] },
     { "id": "rulebook", "title": "The Rulebook", "kind": "A design system",
       "text": "Your design system rewritten as rules a script can check: tokens, rule IDs and build gates that fail.",
-      "time": "About three weeks", "proof": [{ "label": "UX Skill Repo", "href": "/work/ux-skill-repo/" }, { "label": "linefield", "href": "/work/linefield/" }, { "label": "Classic Cottrell Design System", "href": "/work/design-system/" }] },
+      "time": "3 to 4 weeks", "proof": [{ "label": "UX Skill Repo", "href": "/work/ux-skill-repo/" }, { "label": "linefield", "href": "/work/linefield/" }, { "label": "Classic Cottrell Design System", "href": "/work/design-system/" }] },
     { "id": "vpat-sprint", "title": "The VPAT Sprint", "kind": "Accessibility and a VPAT",
       "text": "An accessibility audit that ends in a publishable VPAT 2.5, with the evidence attached to every row.",
-      "time": "About two weeks", "proof": [{ "label": "VPAT Vault", "href": "/work/vpat-vault/" }] },
+      "time": "2 weeks per product", "proof": [{ "label": "VPAT Vault", "href": "/work/vpat-vault/" }] },
     { "id": "agent-bench", "title": "The Agent Bench", "kind": "An AI workspace",
       "text": "An AI workspace for your team: scoped agents, a Markdown second brain and a status page, so nothing runs unseen.",
-      "time": "About one week", "proof": [{ "label": "The Agent Bench", "href": "/work/agent-bench/" }] }
+      "time": "1 week", "proof": [{ "label": "The Agent Bench", "href": "/work/agent-bench/" }] }
   ],
   "brief": {
     "kinds": ["A complicated workflow", "A design system", "Accessibility and a VPAT", "An AI workspace", "Something else"],

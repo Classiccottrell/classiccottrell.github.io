@@ -117,6 +117,9 @@ a.avail:hover{background:var(--highlight)}
 .foot-base .note{margin-left:auto}
 @media (max-width:599px){.foot-base .note{margin-left:0}}
 .terry{display:inline-block;width:52px;height:52px;flex:none;background:var(--fg);-webkit-mask:url(/assets/img/terry.svg) center/contain no-repeat;mask:url(/assets/img/terry.svg) center/contain no-repeat}
+.terry-a{display:inline-flex;flex:none}
+.terry-a .terry{transition:transform .18s cubic-bezier(.2,.9,.3,1.25),background-color .18s}
+.terry-a:hover .terry,.terry-a:focus-visible .terry{background:var(--proof);transform:rotate(-8deg)}
 
 /* ---------- page header, sections, title block */
 .ph{padding-top:clamp(40px,7vw,104px)}
@@ -410,6 +413,7 @@ a.avail:hover{background:var(--highlight)}
 .nf-terry{width:clamp(120px,22vw,220px);height:clamp(120px,22vw,220px)}
 .nf .h1{max-width:16ch}
 .nf-links{display:flex;flex-wrap:wrap;gap:12px 26px;margin-top:12px;font-size:1.15rem}
+.nf-more{margin-top:12px}
 
 /* ---------- pencils: grid, rulers and a redline inspector (built by site.js) */
 .pgrid{position:fixed;inset:0;z-index:35;pointer-events:none;display:none}
@@ -443,7 +447,7 @@ a.avail:hover{background:var(--highlight)}
 
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
-  .lnk,.terry-pop{transition:none}
+  .lnk,.terry-pop,.terry-a .terry{transition:none}
   .stamp.on{animation:none}
   ::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}
 }

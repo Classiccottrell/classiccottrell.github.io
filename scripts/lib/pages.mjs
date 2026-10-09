@@ -142,7 +142,7 @@ const section = (sec, p, printIt) => h`
   ${sec.items ? h`<ul class="items">${sec.items.map((it) => h`<li><strong>${inline(it.lead)}</strong> ${inline(it.text)}</li>`)}</ul>` : ''}
   ${sec.outro ? h`<p>${inline(sec.outro)}</p>` : ''}
   ${sec.roadmap ? roadmap(sec.roadmap, p.roadmapLink) : ''}
-  ${sec.image ? h`<figure class="cs-fig panel">${img(sec.image)}</figure>` : ''}
+  ${sec.image ? h`<figure class="cs-fig"><div class="panel">${img(sec.image)}</div>${sec.image.caption ? h`<figcaption class="note cap">${inline(sec.image.caption)}</figcaption>` : ''}</figure>` : ''}
 </section>
 ${p.pullQuote && (sec.paragraphs || []).some((t) => t.includes(p.pullQuote)) ? h`<figure class="pq-fig"><blockquote class="pq"><p>${inline(p.pullQuote)}</p></blockquote><figcaption class="note">From “${inline(sec.heading)}”</figcaption></figure>` : ''}`;
 
@@ -428,7 +428,7 @@ ${pageHead({ kicker: 'Colophon', title: 'Colophon', lede: 'How this site is made
 
 <section class="wrap sec" aria-labelledby="credits-h"><div class="prose">
   <h2 class="h2" id="credits-h">Credits</h2>
-  <p>Familjen Grotesk, Newsreader and Red Hat Mono are used under the SIL Open Font License and served from this site. Run the checks uses <a href="https://github.com/dequelabs/axe-core">axe-core</a> under the Mozilla Public License 2.0. The ink band runs Grain Field from ${link('/work/linefield/', 'linefield')}, which is MIT licensed. Terry drew himself.</p>
+  <p>Familjen Grotesk, Newsreader and Red Hat Mono are used under the SIL Open Font License and served from this site. Run the checks uses <a href="https://github.com/dequelabs/axe-core">axe-core</a> under the Mozilla Public License 2.0. The ink band runs Grain Field from ${link('/work/linefield/', 'linefield')}, which is MIT licensed. Terry drew himself, and he has ${link('/work/terry-time/', 'a shop')}.</p>
   <p>The source is on ${link('https://github.com/Classiccottrell/classiccottrell.github.io', 'GitHub')}. The previous version of the site is kept on the <code>v1-classic</code> branch.</p>
 </div></section>`;
   return page(ctx, { path: '/colophon/', title: 'Colophon', description: 'How this site is made, what it’s made of, and a button that checks it.', card: 'colophon', main });
@@ -443,6 +443,7 @@ export function notFound(ctx) {
   <h1 class="h1">Terry took this page apart and lost a piece.</h1>
   <p class="lede">The page you wanted isn’t here. These are:</p>
   <ul class="nf-links">${[...ctx.site.nav, { label: 'Work with me', href: '/work-with-me/' }].map((n) => h`<li><a class="lnk" href="${esc(n.href)}">${esc(n.label)}</a></li>`)}</ul>
+  <p class="nf-more">Looking for Terry? He has ${link('/work/terry-time/', 'a shop now')}.</p>
 </div>`;
   return page(ctx, { path: '/404.html', title: 'Not found', card: 'home', main, noindex: true });
 }

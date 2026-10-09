@@ -90,6 +90,13 @@ const pages = [
   ['colophon/index.html', () => P.colophon(ctx)],
   ['404.html', () => P.notFound(ctx)],
 ];
+// Inline links in the data, [label](/path/), have to land on a page this build writes.
+const routes = new Set(pages.map(([f]) => `/${f.replace(/index\.html$/, '')}`));
+const linksIn = (v) => (typeof v === 'string' ? [...v.matchAll(/\]\((\/[^)\s]*)\)/g)].map((m) => m[1])
+  : v && typeof v === 'object' ? Object.values(v).flatMap(linksIn) : []);
+for (const key of ['site', 'work', 'takes', 'rules', 'writing', 'drawings', 'hire']) {
+  for (const href of linksIn(ctx[key])) if (!routes.has(href.split('#')[0])) fail(`data/${key}.json links to missing ${href}`);
+}
 ctx.stats = {
   pages: pages.length,
   cssLines: css.split('\n').length,

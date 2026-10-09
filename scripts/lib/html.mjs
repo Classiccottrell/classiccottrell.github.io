@@ -4,13 +4,15 @@
 export const esc = (value) => String(value ?? '')
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
-// Escaped text with two inline marks from the data files: `code` and *emphasis*.
+// Escaped text with three inline marks from the data files: `code`, *emphasis*
+// and [a link](/work/) to another page on this site (the build checks it lands).
 export const inline = (value) => esc(value)
   .replace(/`([^`]+)`/g, '<code>$1</code>')
-  .replace(/\*([^*]+)\*/g, '<em>$1</em>');
+  .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+  .replace(/\[([^\]]+)\]\((\/[^)\s]*)\)/g, '<a href="$2">$1</a>');
 
 // Plain text for attributes and meta tags: inline marks removed.
-export const plain = (value) => String(value ?? '').replace(/[`*]/g, '');
+export const plain = (value) => String(value ?? '').replace(/\[([^\]]+)\]\(\/[^)\s]*\)/g, '$1').replace(/[`*]/g, '');
 
 const flat = (v) => (v == null || v === false ? '' : Array.isArray(v) ? v.map(flat).join('') : String(v));
 

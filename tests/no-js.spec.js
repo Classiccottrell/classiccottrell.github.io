@@ -25,6 +25,16 @@ test('every case study is a real page with its title block and sections', async 
   }
 });
 
+test('Terry in the footer goes to his shop, and so does the bio', async ({ page }) => {
+  await page.goto('/about/');
+  const terry = page.locator('.foot-base a.terry-a');
+  await expect(terry).toHaveAttribute('href', '/work/terry-time/');
+  await expect(terry).toHaveAccessibleName('Terry Time, Terry’s shop');
+  await page.locator('.about-text a[href="/work/terry-time/"]').click();
+  await expect(page.locator('h1')).toHaveText('Terry Time');
+  await expect(page.locator('.foot-base a.terry-a')).toHaveAttribute('aria-current', 'page');
+});
+
 test('the work index lists every project, grouped', async ({ page }) => {
   await page.goto('/work/');
   await expect(page.locator('.groups .idx-row')).toHaveCount(work.length);

@@ -66,6 +66,11 @@ already installed, set `PW_CHROMIUM=/path/to/chrome`.
   `priv` or `ship`). It's stamped into the masthead, the footer and Work with me.
 - **A new case study:** add an entry to `data/work.json`, put its screenshot in
   `source/work/`, add it to `scripts/images.mjs`, then `npm run images && npm run build && npm run cards`.
+  A plate much wider than it is tall crops badly into the share card; give the
+  entry a `cardImage` (Terry Time's is in `source/work/`) and the card uses that.
+- **Inline marks:** text in `data/` can use `` `code` ``, `*emphasis*` and
+  `[a link](/work/forma/)` to another page on this site. The build fails if a
+  link doesn't land on a page it writes.
 - **Retire a take:** set `"retired": { "date": "2027-01-15", "reason": "…" }` in
   `data/takes.json`. It moves to a Retired list on /takes/ and its page goes away.
 - **The inked self-portrait:** replace `source/self/ink.png` (black ink on a

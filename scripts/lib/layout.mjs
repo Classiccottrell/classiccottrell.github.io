@@ -44,7 +44,7 @@ const footer = (ctx, path) => {
       <nav aria-label="This site"><p class="note">This site</p><ul>${pages.map((p) => h`<li><a class="lnk" href="${esc(p.href)}"${current(p.href, path)}>${esc(p.label)}</a></li>`)}</ul></nav>
     </div>
     <div class="foot-base">
-      <span class="terry" aria-hidden="true"></span>
+      <a class="terry-a" href="/work/terry-time/" aria-label="Terry Time, Terry’s shop"${current('/work/terry-time/', path)}><span class="terry" aria-hidden="true"></span></a>
       <p>${esc(site.footerLine)}</p>
       <p class="note">© ${site.since}–<span data-year>${ctx.year}</span> ${esc(site.name)}</p>
       <button type="button" class="tool" data-pencils aria-pressed="false" hidden>Pencils</button>

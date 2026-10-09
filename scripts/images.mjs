@@ -6,7 +6,7 @@
 //   npm run images
 //
 // Drawings: flattened onto their paper, greyscale, WebP at two widths.
-// Plates (screenshots): WebP at up to 1360 px, colour kept.
+// Plates (screenshots): WebP at up to 1360 px, colour kept (lossless for flat type).
 // Photos (product shots, essay covers): greyscale, so they sit with the ink.
 // Self-portrait: the ink layer as-is, plus a non-photo-blue pencil layer
 // generated from it for the pencils-to-inks animation.
@@ -34,11 +34,11 @@ async function drawing(name, ground) {
   }
 }
 
-async function plate(name, ext, { grey = false, width = 1360, quality = 80 } = {}) {
+async function plate(name, ext, { grey = false, width = 1360, quality = 80, lossless = false } = {}) {
   const file = out('assets/img/work', `${name}.webp`);
   let img = sharp(src('work', `${name}.${ext}`)).resize({ width, withoutEnlargement: true });
   if (grey) img = img.greyscale();
-  log(file, await img.webp({ quality, effort: 6 }).toFile(file));
+  log(file, await img.webp(lossless ? { lossless: true, effort: 6 } : { quality, effort: 6 }).toFile(file));
 }
 
 async function cover(name) {
@@ -112,6 +112,10 @@ await plate('agentic-light', 'webp');
 await plate('vpat-vault', 'jpg', { grey: true });
 await plate('photo-curator-cli', 'jpg', { grey: true });
 await plate('vpat-vault-evidence', 'webp', { grey: true, width: 1100, quality: 62 });
+await plate('terry-time', 'webp');
+await plate('terry-time-exhibit', 'webp', { width: 1100, quality: 72 });
+await plate('terry-time-after-hours', 'webp', { width: 1100, quality: 72 });
+await plate('terry-time-404', 'webp', { width: 1100, lossless: true });
 for (const name of ['the-last-20', 'built-to-break-a-lifelong-education', 'the-disposable-architecture-of-tomorrow']) await cover(name);
 await self();
 await terry();

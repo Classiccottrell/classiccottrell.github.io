@@ -6,6 +6,9 @@
 //   npm run cards
 //
 // Uses Playwright's Chromium. Set PW_CHROMIUM to use an installed Chromium.
+//
+// A case study's card shows its plate, or `cardImage` when the plate is too wide
+// to crop well into the card's near-square frame.
 
 import { chromium } from '@playwright/test';
 import sharp from 'sharp';
@@ -75,7 +78,7 @@ const cards = [
   ['work', card({ kicker: `Work · ${work.length} projects`, title: 'Work', sub: 'Products, systems, agents and tools, each with a title block and the take it proves.', terry: true })],
   ...work.map((p) => [`work-${p.slug}`, card({
     kicker: `Work / ${pad2(p.number)} · ${esc(p.kind)}`, title: plain(p.title), size: p.title.length > 14 ? 's' : 'm', sub: plain(p.summary),
-    img: p.plate && p.plate.src, right: p.status.label, terry: !p.plate,
+    img: p.cardImage || (p.plate && p.plate.src), right: p.status.label, terry: !p.plate,
   })]),
   ['takes', card({ kicker: `Takes · ${takes.length}, with receipts`, title: 'Takes', sub: 'Opinions I’ll defend in a meeting, each backed by work you can check.', ink: true, terry: true })],
   ...takes.map((t) => [`take-${t.slug}`, card({ kicker: `${esc(t.id)}${heat(t.heat)}`, title: plain(t.text), size: 's', ink: true, right: 'Takes, with receipts' })]),

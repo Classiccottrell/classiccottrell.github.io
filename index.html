@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="no-js">
+<html lang="en-CA" class="no-js">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,13 +8,16 @@
 <link rel="canonical" href="https://classiccottrell.ca/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Matthew A. Cottrell">
-<meta property="og:title" content="Matthew A. Cottrell">
+<meta property="og:title" content="Matthew A. Cottrell · Product designer">
+<meta property="og:locale" content="en_CA">
 <meta property="og:description" content="Product designer. I take complicated software apart until it makes sense: enterprise IT, design systems, accessibility and AI tooling.">
 <meta property="og:url" content="https://classiccottrell.ca/">
 <meta property="og:image" content="https://classiccottrell.ca/assets/cards/home.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Matthew A. Cottrell · Product designer">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image:alt" content="Matthew A. Cottrell · Product designer">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFFFFF">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0A0A0A">
@@ -23,9 +26,9 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/familjen-grotesk.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/css/site.css?v=9f9431ddf5">
+<link rel="stylesheet" href="/assets/css/site.css?v=e658396b3c">
 <script>document.documentElement.className='js'</script>
-<script src="/assets/js/site.js?v=c3818911f5" defer></script>
+<script src="/assets/js/site.js?v=754b330afa" defer></script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Matthew A. Cottrell","jobTitle":"Product designer","url":"https://classiccottrell.ca","sameAs":["https://www.linkedin.com/in/classiccottrell/","https://github.com/Classiccottrell","https://classiccottrell.substack.com/","https://www.instagram.com/classiccottrell"]}</script>
 </head>
 <body>
@@ -43,6 +46,7 @@
   </div>
 </header>
 <main id="main">
+<p class="print-id">Matthew A. Cottrell · classiccottrell.ca/</p>
 
 <section class="hero wrap" aria-labelledby="hero-h">
   <canvas class="trail" aria-hidden="true"></canvas>
@@ -74,14 +78,14 @@
     <div class="xv-text">
       <p class="note">The job</p>
       <h2 class="h2" id="xv-h">Take it apart.</h2>
-      <p>Drag the slider. A sample service-desk screen comes apart into the five layers I design, from the words on top to the rules underneath. Most fixes live a layer or two below where the problem shows.</p>
+      <p><span data-js>Drag the slider. </span>A sample service-desk screen comes apart into the five layers I design, from the words on top to the rules underneath. Most fixes live a layer or two below where the problem shows.</p>
       <div class="ink-ctl" data-js>
         <label class="note" for="explode">Apart</label>
         <input type="range" id="explode" min="0" max="100" value="0">
         <output for="explode">0%</output>
         <button type="button" class="tool" id="explode-btn">Take it apart</button>
       </div>
-      <p class="note xv-legend">05 Content · 04 Components · 03 Layout · 02 Tokens · 01 Rules</p>
+      <p class="note xv-legend"><span class="nw">05 Content</span> · <span class="nw">04 Components</span> · <span class="nw">03 Layout</span> · <span class="nw">02 Tokens</span> · <span class="nw">01 Rules</span></p>
       <p class="note cap">A sample screen. On a real project, it’s yours.</p>
     </div>
     
@@ -142,16 +146,18 @@
   <div class="wrap stage-in">
     <div>
       <h2 class="note" id="stage-h">Hot takes</h2>
-      <p class="stage-n note"><span data-stage-n>T-01</span><span data-stage-heat><span class="heat" role="img" aria-label="Heat 3 of 3"><i class="f"></i><i class="f"></i><i class="f"></i></span></span></p>
-      <p class="stage-t"><a href="/takes/go-home-on-time/" data-stage-text>Enterprise users don’t want delight. They want to go home on time.</a></p>
-      <p class="note" data-stage-src>Receipts · Brutal UX</p>
+      <div data-stage-live aria-live="off" aria-atomic="true">
+        <p class="stage-n note"><span data-stage-n>T-01</span><span data-stage-heat><span class="heat" role="img" aria-label="Heat 3 of 3"><i class="f"></i><i class="f"></i><i class="f"></i></span></span></p>
+        <p class="stage-t"><a href="/takes/go-home-on-time/" data-stage-text>Enterprise users don’t want delight. They want to go home on time.</a></p>
+        <p class="note" data-stage-src>Receipts · Brutal UX</p>
+      </div>
     </div>
     <div class="stage-ctl">
       <span class="stage-btns" data-js><button type="button" class="tool" data-stage-prev>← Prev</button><button type="button" class="tool" data-stage-play>Pause</button><button type="button" class="tool" data-stage-next>Next →</button></span>
       <a class="lnk" href="/takes/">All 12 takes</a>
     </div>
   </div>
-  <script type="application/json" id="takes-data">[{"id":"T-01","heat":3,"text":"Enterprise users don’t want delight. They want to go home on time.","href":"/takes/go-home-on-time/","src":"Receipts · Brutal UX"},{"id":"T-02","heat":2,"text":"A design system is a mood board until a script can fail it.","href":"/takes/mood-board/","src":"Receipts · linefield"},{"id":"T-03","heat":2,"text":"AI gets you to 80% by lunch. The last 20% is still the job.","href":"/takes/the-last-20/","src":"Receipts · The Last 20%"},{"id":"T-04","heat":2,"text":"An accessibility report nobody can find is a liability with a cover page.","href":"/takes/liability-with-a-cover-page/","src":"Receipts · VPAT Vault"},{"id":"T-05","heat":2,"text":"Decoration is where hierarchy goes to hide.","href":"/takes/decoration/","src":"Receipts · Brutal UX"},{"id":"T-06","heat":1,"text":"Software should be disposable. Your data shouldn’t be.","href":"/takes/disposable/","src":"Receipts · The Disposable Architecture of Tomorrow, The Agent Bench"},{"id":"T-07","heat":3,"text":"Dead controls do more damage than dark patterns, because nobody goes looking for them.","href":"/takes/dead-controls/","src":"Receipts · linefield"},{"id":"T-08","heat":3,"text":"A design review that can’t cite a number is an opinion with a calendar invite.","href":"/takes/cite-a-number/","src":"Receipts · UX Skill Repo"},{"id":"T-09","heat":2,"text":"Background automation without a status page is a haunting.","href":"/takes/status-page/","src":"Receipts · The Agent Bench"},{"id":"T-10","heat":1,"text":"Build the extreme version first. Then buy back only the comfort you can justify.","href":"/takes/extreme-version/","src":"Receipts · Brutal UX"},{"id":"T-11","heat":2,"text":"Hiring managers don’t read case studies. They read captions and numbers.","href":"/takes/captions-and-numbers/","src":"Receipts · Work"},{"id":"T-12","heat":1,"text":"Breaking things is a design method. You don’t grow out of it.","href":"/takes/breaking-things/","src":"Receipts · Built to Break"}]</script>
+  <script type="application/json" id="takes-data">[{"id":"T-01","heat":3,"text":"Enterprise users don’t want delight. They want to go home on time.","href":"/takes/go-home-on-time/","src":"Receipts · Brutal UX"},{"id":"T-02","heat":2,"text":"A design system is a mood board until a script can fail it.","href":"/takes/mood-board/","src":"Receipts · linefield"},{"id":"T-03","heat":2,"text":"AI gets you to 80% by lunch. The last 20% is still the job.","href":"/takes/the-last-20/","src":"Receipts · The Last 20%"},{"id":"T-04","heat":2,"text":"An accessibility report nobody can find is a liability with a cover page.","href":"/takes/liability-with-a-cover-page/","src":"Receipts · VPAT Vault"},{"id":"T-05","heat":2,"text":"Decoration is where hierarchy goes to hide.","href":"/takes/decoration/","src":"Receipts · Brutal UX"},{"id":"T-06","heat":1,"text":"Software should be disposable. Your data shouldn’t be.","href":"/takes/disposable/","src":"Receipts · The Disposable Architecture of Tomorrow, The Agent Bench"},{"id":"T-07","heat":3,"text":"Dead controls do more damage than dark patterns, because nobody goes looking for them.","href":"/takes/dead-controls/","src":"Receipts · linefield"},{"id":"T-08","heat":3,"text":"A design review that can’t cite a number is an opinion with a calendar invite.","href":"/takes/cite-a-number/","src":"Receipts · UX Skill Repo, Terry Time"},{"id":"T-09","heat":2,"text":"Background automation without a status page is a haunting.","href":"/takes/status-page/","src":"Receipts · The Agent Bench"},{"id":"T-10","heat":1,"text":"Build the extreme version first. Then buy back only the comfort you can justify.","href":"/takes/extreme-version/","src":"Receipts · Brutal UX"},{"id":"T-11","heat":2,"text":"Hiring managers don’t read case studies. They read captions and numbers.","href":"/takes/captions-and-numbers/","src":"Receipts · Work"},{"id":"T-12","heat":1,"text":"Breaking things is a design method. You don’t grow out of it.","href":"/takes/breaking-things/","src":"Receipts · Built to Break"}]</script>
 </section>
 
 <section class="wrap sec" aria-labelledby="rules-h">
@@ -215,7 +221,7 @@
       <p class="foot-row"><a class="btn" href="/work-with-me/">Work with me <span aria-hidden="true">→</span></a><a class="avail" href="/work-with-me/#availability"><i class="sm sm-live" aria-hidden="true"></i>Open to new projects</a></p>
     </div>
     <div class="foot-grid">
-      <nav aria-label="Elsewhere"><p class="note">Elsewhere</p><ul><li><a class="lnk" href="https://www.linkedin.com/in/classiccottrell/">LinkedIn<span class="ext" aria-hidden="true"> ↗</span></a></li><li><a class="lnk" href="https://github.com/Classiccottrell">GitHub<span class="ext" aria-hidden="true"> ↗</span></a></li><li><a class="lnk" href="https://classiccottrell.substack.com/">Substack<span class="ext" aria-hidden="true"> ↗</span></a></li><li><a class="lnk" href="https://www.instagram.com/classiccottrell">Instagram<span class="ext" aria-hidden="true"> ↗</span></a></li></ul></nav>
+      <nav aria-label="Elsewhere"><p class="note">Elsewhere</p><ul><li><a class="lnk" href="https://www.linkedin.com/in/classiccottrell/">LinkedIn<span class="ext" aria-hidden="true"> ↗</span></a></li><li><a class="lnk" href="https://github.com/Classiccottrell">GitHub<span class="ext" aria-hidden="true"> ↗</span></a></li><li><a class="lnk" href="https://classiccottrell.substack.com/">Substack<span class="ext" aria-hidden="true"> ↗</span></a></li><li><a class="lnk" href="https://www.instagram.com/classiccottrell">Instagram<span class="ext" aria-hidden="true"> ↗</span></a></li></ul></nav>
       <nav aria-label="This site"><p class="note">This site</p><ul><li><a class="lnk" href="/work/">Work</a></li><li><a class="lnk" href="/writing/">Writing</a></li><li><a class="lnk" href="/drawings/">Drawings</a></li><li><a class="lnk" href="/about/">About</a></li><li><a class="lnk" href="/takes/">Takes</a></li><li><a class="lnk" href="/work-with-me/">Work with me</a></li><li><a class="lnk" href="/colophon/">Colophon</a></li></ul></nav>
     </div>
     <div class="foot-base">

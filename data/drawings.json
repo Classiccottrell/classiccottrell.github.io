@@ -1,5 +1,5 @@
 {
-  "intro": "Ink portraits of characters who stuck with me. One film, one face, one line of dialogue.",
+  "intro": "Ink portraits of characters who stuck with me. One film, one face, one quote.",
   "drawings": [
     {
       "slug": "kurtz",
@@ -40,7 +40,7 @@
       "year": 2019,
       "director": "Guy Ritchie",
       "actor": "Colin Farrell",
-      "quote": "You’re embarrassing yourself here lads. Kids stab, girls shoot, boys punch. Grown-ups fight with their heads. That’s where the real battle is up here, in the gray. Now, wake up, lads. Life’s quick. You’re slow. Life’s hard on a bone top.",
+      "quote": "You’re embarrassing yourself here, lads. Kids stab, girls shoot, boys punch. Grown-ups fight with their heads. That’s where the real battle is up here, in the grey. Now, wake up, lads. Life’s quick. You’re slow. Life’s hard on a bone top.",
       "ground": "white",
       "image": "/assets/img/drawings/coach.webp",
       "width": 1100,

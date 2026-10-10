@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="no-js">
+<html lang="en-CA" class="no-js">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,13 +8,16 @@
 <link rel="canonical" href="https://classiccottrell.ca/work/agent-bench/">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Matthew A. Cottrell">
-<meta property="og:title" content="The Agent Bench">
+<meta property="og:title" content="The Agent Bench · Matthew A. Cottrell">
+<meta property="og:locale" content="en_CA">
 <meta property="og:description" content="Agent Workspace Template and Agentic Light: a folder that turns an AI chat tool into an operating environment, and the same bench with the night shift removed.">
 <meta property="og:url" content="https://classiccottrell.ca/work/agent-bench/">
 <meta property="og:image" content="https://classiccottrell.ca/assets/cards/work-agent-bench.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Agent Bench · Matthew A. Cottrell">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image:alt" content="The Agent Bench · Matthew A. Cottrell">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFFFFF">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0A0A0A">
@@ -23,9 +26,9 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/familjen-grotesk.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/css/site.css?v=9f9431ddf5">
+<link rel="stylesheet" href="/assets/css/site.css?v=e658396b3c">
 <script>document.documentElement.className='js'</script>
-<script src="/assets/js/site.js?v=c3818911f5" defer></script>
+<script src="/assets/js/site.js?v=754b330afa" defer></script>
 
 </head>
 <body class="case">
@@ -43,6 +46,7 @@
   </div>
 </header>
 <main id="main">
+<p class="print-id">Matthew A. Cottrell · classiccottrell.ca/work/agent-bench/</p>
 
 <article class="cs">
   
@@ -51,7 +55,7 @@
   <h1 class="splash">The Agent Bench</h1>
   <p class="lede">Agent Workspace Template and Agentic Light: a folder that turns an AI chat tool into an operating environment, and the same bench with the night shift removed.</p>
   
-<dl class="tblock cs-tb"><div><dt>Role</dt><dd>Design and build</dd></div><div><dt>Year</dt><dd>2026</dd></div><div><dt>Status</dt><dd><i class="sm sm-priv" aria-hidden="true"></i>Private, with a public light fork</dd></div><div><dt>Stack</dt><dd>Codex, Claude Code or the Gemini CLI · plain Markdown</dd></div><div><dt>Numbers</dt><dd>7 scoped agents · 6 presets · 4 providers</dd></div><div><dt>Links</dt><dd><a class="lnk" href="https://github.com/Classiccottrell/Agentic_Light">Agentic Light source<span class="ext" aria-hidden="true"> ↗</span></a></dd></div><div class="wide"><dt>Take · T-09</dt><dd><a class="tb-take" href="/takes/status-page/">Background automation without a status page is a haunting.</a></dd></div></dl>
+<dl class="tblock cs-tb"><div><dt>Role</dt><dd>Design and build</dd></div><div><dt>Year</dt><dd>2026</dd></div><div><dt>Status</dt><dd><i class="sm sm-priv" aria-hidden="true"></i>Private, with a public light fork</dd></div><div><dt>Stack</dt><dd>Codex, Claude Code or the Gemini CLI · plain Markdown</dd></div><div><dt>Numbers</dt><dd>7 scoped agents · 6 presets · 4 providers</dd></div><div><dt>Links</dt><dd><span class="tb-links"><a class="lnk" href="https://github.com/Classiccottrell/Agentic_Light">Agentic Light source<span class="ext" aria-hidden="true"> ↗</span></a></span></dd></div><div class="wide"><dt>Take · T-09</dt><dd><a class="tb-take" href="/takes/status-page/">Background automation without a status page is a haunting.</a></dd></div></dl>
 </header>
   <div class="wrap">
 <figure class="plate has-legend">
@@ -94,7 +98,7 @@
 <section class="cs-sec cs-print">
   <h2 class="cs-h">The light fork: Agentic Light</h2>
   
-  <p>The Agent Workspace Template runs all night. Daily ingest, a Friday close-out, a health check every four hours. That is the right shape when you live in it. It is the wrong shape when you want to point an agent at one repo for an afternoon.</p><p>Agentic Light is the same bench with the night shift removed. No scheduler, no background service, no retry queue. You start it by hand, one provider runs once in the foreground, and you watch what it does.</p>
+  <p>The full bench runs all night. Daily ingest, a Friday close-out, a health check every four hours. That is the right shape when you live in it. It is the wrong shape when you want to point an agent at one repo for an afternoon.</p><p>Agentic Light is the same bench with the night shift removed. No scheduler, no background service, no retry queue. You start it by hand, one provider runs once in the foreground, and you watch what it does.</p>
   
   
   
@@ -105,7 +109,7 @@
   <h2 class="cs-h">What the light fork is</h2>
   <p class="cs-intro">A small fork you specialize once, then run by hand:</p>
   
-  <ul class="items"><li><strong>Six roles, cut down to what you need.</strong> It ships as a generic fork with architect, coder, engineering manager, curator, creative director and QA. Run one script and it becomes a specific tool: you pick the roles, the gates, and the skills the router may reach for.</li><li><strong>Six presets to start from.</strong> A web app, a CLI tool, a data pipeline, a design review, a server review and a WCAG audit. Each preset decides which roles switch on, which gates run before a pull request opens, and which skills are on the shelf. The WCAG preset runs Playwright, axe and a VPAT lint.</li><li><strong>Four providers, one run.</strong> Claude, Gemini, Codex or Ollama, in the order you set. If the first choice is missing, the launcher falls back before anything starts. Once a run starts it is never retried, and Ollama will not run a workflow that writes. A fake-binary test suite covers all of it without touching a real provider.</li><li><strong>A second brain that knows the project.</strong> Plain Markdown records with offline full-text search and optional Ollama embeddings. When you ask for it, a context packet gets prepended to the coder's prompt. The index is disposable and rebuilds from the files, so the Markdown stays the store.</li><li><strong>A dashboard that reads its own config.</strong> A static microsite shows repo health, every preset, and which roles each one switches on. The preset and roster pages are generated from the config files, and it opens straight from a folder, with no server and no build.</li></ul>
+  <ul class="items"><li><strong>Six roles, cut down to what you need.</strong> It ships as a generic fork with architect, coder, engineering manager, curator, creative director and QA. Run one script and it becomes a specific tool: you pick the roles, the gates, and the skills the router may reach for.</li><li><strong>Six presets to start from.</strong> A web app, a CLI tool, a data pipeline, a design review, a server review and a WCAG audit. Each preset decides which roles switch on, which gates run before a pull request opens, and which skills are on the shelf. The WCAG preset runs Playwright, axe and a VPAT lint.</li><li><strong>Four providers, one run.</strong> Claude, Gemini, Codex or Ollama, in the order you set. If the first choice is missing, the launcher falls back before anything starts. Once a run starts it is never retried, and Ollama will not run a workflow that writes. A fake-binary test suite covers all of it without touching a real provider.</li><li><strong>A second brain that knows the project.</strong> Plain Markdown records with offline full-text search and optional Ollama embeddings. When you ask for it, a context packet gets prepended to the coder’s prompt. The index is disposable and rebuilds from the files, so the Markdown stays the store.</li><li><strong>A dashboard that reads its own config.</strong> A static microsite shows repo health, every preset, and which roles each one switches on. The preset and roster pages are generated from the config files, and it opens straight from a folder, with no server and no build.</li></ul>
   
   
   
@@ -115,7 +119,7 @@
   <h2 class="cs-h">The UX thinking, without a night shift</h2>
   
   
-  <ul class="items"><li><strong>Nothing runs that you did not start.</strong> Every background job is a place for something to fail while you are not looking. Removing the scheduler removes that whole class of surprise.</li><li><strong>Specialize once, commit the result.</strong> Specializing writes three config files: the active roles, the gate list and the selected skills. In a fork you commit them, so the setup lives in the repo, not in anyone's memory.</li><li><strong>One human gate, and it does not auto-approve.</strong> The gates you picked run first. Then the run stops and waits for a yes at the terminal. Only after that can anything open a pull request.</li></ul>
+  <ul class="items"><li><strong>Nothing runs that you did not start.</strong> Every background job is a place for something to fail while you are not looking. Removing the scheduler removes that whole class of surprise.</li><li><strong>Specialize once, commit the result.</strong> Specializing writes three config files: the active roles, the gate list and the selected skills. In a fork you commit them, so the setup lives in the repo, not in anyone’s memory.</li><li><strong>One human gate, and it does not auto-approve.</strong> The gates you picked run first. Then the run stops and waits for a yes at the terminal. Only after that can anything open a pull request.</li></ul>
   
   
   
@@ -145,7 +149,7 @@
       <p class="foot-row"><a class="btn" href="/work-with-me/">Work with me <span aria-hidden="true">→</span></a><a class="avail" href="/work-with-me/#availability"><i class="sm sm-live" aria-hidden="true"></i>Open to new projects</a></p>
     </div>
     <div class="foot-grid">
-      <nav aria-label="Elsewhere"><p class="note">Elsewhere</p><ul><li><a class="lnk" href="https://www.linkedin.com/in/classiccottrell/">LinkedIn<span class="ext" aria-hidden="true"> ↗</span></a></li><li><a class="lnk" href="https://github.com/Classiccottrell">GitHub<span class="ext" aria-hidden="true"> ↗</span></a></li><li><a class="lnk" href="https://classiccottrell.substack.com/">Substack<span class="ext" aria-hidden="true"> ↗</span></a></li><li><a class="lnk" href="https://www.instagram.com/classiccottrell">Instagram<span class="ext" aria-hidden="true"> ↗</span></a></li></ul></nav>
+      <nav aria-label="Elsewhere"><p class="note">Elsewhere</p><ul><li><a class="lnk" href="https://www.linkedin.com/in/classiccottrell/">LinkedIn<span class="ext" aria-hidden="true"> ↗</span></a></li><li><a class="lnk" href="https://github.com/Classiccottrell">GitHub<span class="ext" aria-hidden="true"> ↗</span></a></li><li><a class="lnk" href="https://classiccottrell.substack.com/">Substack<span class="ext" aria-hidden="true"> ↗</span></a></li><li><a class="lnk" href="https://www.instagram.com/classiccottrell">Instagram<span class="ext" aria-hidden="true"> ↗</span></a></li></ul></nav>
       <nav aria-label="This site"><p class="note">This site</p><ul><li><a class="lnk" href="/work/" aria-current="true">Work</a></li><li><a class="lnk" href="/writing/">Writing</a></li><li><a class="lnk" href="/drawings/">Drawings</a></li><li><a class="lnk" href="/about/">About</a></li><li><a class="lnk" href="/takes/">Takes</a></li><li><a class="lnk" href="/work-with-me/">Work with me</a></li><li><a class="lnk" href="/colophon/">Colophon</a></li></ul></nav>
     </div>
     <div class="foot-base">

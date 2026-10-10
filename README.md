@@ -90,8 +90,9 @@ already installed, set `PW_CHROMIUM=/path/to/chrome`.
 ## Hosting
 
 - **Netlify** (`netlify.toml`): publishes the folder as-is, 301s the old
-  `.html` addresses, and caches `assets/` for a year (every asset URL carries a
-  content hash). The brief on /work-with-me/ is a Netlify form: in the Netlify
+  `.html` addresses, and caches the stylesheet and scripts for a year (their
+  URLs carry a content hash) and the rest of `assets/` for a day, since images,
+  cards and fonts keep their names when they're regenerated. The brief on /work-with-me/ is a Netlify form: in the Netlify
   dashboard, turn on **Forms → form detection**, then add an email notification
   for the `brief` form.
 - **GitHub Pages:** serves the same files (`.nojekyll` switches Jekyll off).

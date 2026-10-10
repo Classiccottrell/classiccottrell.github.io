@@ -30,6 +30,102 @@ test('take it apart follows the slider and the button', async ({ page }) => {
   await expect(page.locator('#explode-btn')).toHaveText('Put it back');
 });
 
+// Nothing on the page moves when a control changes its own label or a take
+// rotates in: the widths where it used to (393 and 1024) are tested.
+test('the hot takes band keeps its height and its buttons stay put', async ({ page }) => {
+  await page.setViewportSize({ width: 1024, height: 800 });
+  await page.goto('/');
+  const stage = page.locator('[data-stage]'), next = stage.locator('[data-stage-next]');
+  await page.evaluate(() => document.fonts.ready);
+  const height = (await stage.boundingBox()).height;
+  for (let i = 0; i < takes.length; i++) {
+    await next.click();
+    expect((await stage.boundingBox()).height).toBe(height);
+  }
+  const x = (await next.boundingBox()).x;
+  await stage.locator('[data-stage-play]').click();
+  expect((await next.boundingBox()).x).toBe(x);
+});
+
+test('take it apart keeps its layout when the button label changes', async ({ page }) => {
+  await page.setViewportSize({ width: 393, height: 852 });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/');
+  const legend = page.locator('.xv-legend');
+  await page.locator('#explode').fill('40');
+  const y = (await legend.boundingBox()).y;
+  await page.locator('#explode').fill('60');
+  await expect(page.locator('#explode-btn')).toHaveText('Put it back');
+  expect((await legend.boundingBox()).y).toBe(y);
+});
+
+test('the case-study breadcrumb can be clicked above the big title', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/work/forma/');
+  await page.locator('.ph .note a[href="/work/"]').click();
+  await expect(page).toHaveURL(/\/work\/$/);
+});
+
+test('the phone menu closes when focus moves past it', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  await page.locator('.menu summary').click();
+  await expect(page.locator('.menu')).toHaveAttribute('open', '');
+  const links = await page.locator('.menu-panel a').count();
+  for (let i = 0; i <= links; i++) await page.keyboard.press('Tab');
+  await expect(page.locator('.menu')).not.toHaveAttribute('open', '');
+});
+
+test('hot takes stay quiet while they rotate and speak when a person moves them', async ({ page }) => {
+  await page.goto('/');
+  const live = page.locator('[data-stage-live]');
+  await expect(live).toHaveAttribute('aria-live', 'off');
+  await page.locator('[data-stage-next]').focus();
+  await expect(live).toHaveAttribute('aria-live', 'polite');
+  await page.keyboard.press('Enter');
+  await expect(page.locator('[data-stage-n]')).toHaveText(takes[1].id);
+});
+
+for (const scheme of ['light', 'dark']) {
+  test(`the linefield art paints the band's own colour, so there's no seam (${scheme})`, async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.emulateMedia({ colorScheme: scheme });
+    await page.goto('/');
+    const stage = page.locator('[data-stage]');
+    await stage.scrollIntoViewIfNeeded();
+    const band = await stage.evaluate((el) => getComputedStyle(el).backgroundColor);
+    const art = page.frameLocator('[data-stage] .band-art').locator('body');
+    await expect(art).toHaveCSS('background-color', band);
+    const ground = await page.frame({ url: /grain-field/ }).evaluate(() => window.__LF_GROUND__);
+    const [r, g, b] = band.match(/\d+/g).map(Number);
+    expect(ground.toLowerCase()).toBe(`#${[r, g, b].map((n) => n.toString(16).padStart(2, '0')).join('')}`);
+  });
+}
+
+test('in dark mode the bands stand off the page and the portrait loses its white sheet', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await page.goto('/');
+  const [ground, band] = await page.evaluate(() => [getComputedStyle(document.body).backgroundColor, getComputedStyle(document.querySelector('[data-stage]')).backgroundColor]);
+  expect(band).not.toBe(ground);
+  await expect(page.locator('.inking').first()).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+});
+
+test('on phones no Selected work row looks stuck on, since there is no preview to point at', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  for (const row of await page.locator('.sel .idx-row').all()) await expect(row).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+});
+
+test('phones fetch none of the Selected work previews they never show', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  const plates = [];
+  page.on('request', (r) => { if (r.url().includes('/assets/img/work/')) plates.push(r.url()); });
+  await page.goto('/', { waitUntil: 'load' });
+  await page.locator('.sel .idx-row').first().hover();
+  await page.waitForTimeout(300);
+  expect(plates).toEqual([]);
+});
+
 test('pencils show the grid and stay on across pages', async ({ page }) => {
   await page.goto('/');
   const btn = page.locator('[data-pencils]');
@@ -63,11 +159,43 @@ test('the brief writes a work order, and falls back where forms can’t be sent'
   await expect(page.locator('[data-wo="from"]')).toHaveText('Dana Example, Northwind');
   await expect(page.locator('[data-wo="kind"]')).toHaveText('A design system');
   await expect(page.locator('[data-wo-no]')).toHaveText(/^CC-\d{4}-\d{3}$/);
-  expect(await page.locator('input[name="order"]').inputValue()).toMatch(/^CC-\d{4}-\d{3}$/);
+  const number = await page.locator('input[name="order"]').inputValue();
+  expect(number).toMatch(/^CC-\d{4}-\d{3}$/);
+  await page.locator('#bf-what').pressSequentially(' And our docs.');
+  expect(await page.locator('input[name="order"]').inputValue(), 'the number holds while you type').toBe(number);
   // The local server refuses POST like GitHub Pages does.
-  await page.locator('.bf button[type="submit"]').click();
+  const send = page.locator('.bf button[type="submit"]');
+  await send.click();
   await expect(page.locator('[data-bf-status]')).toContainText('can’t send the brief');
   await expect(page.locator('[data-bf-status] button')).toHaveText('Copy work order');
+  await expect(send).toBeFocused();
+  await expect(send).not.toHaveAttribute('aria-disabled', 'true');
+});
+
+test('the brief sends once, keeps focus, and only blames the host when it refuses forms', async ({ page }) => {
+  let posts = 0, reply = 500;
+  await page.route((url) => url.pathname === '/', (route) => {
+    if (route.request().method() !== 'POST') return route.continue();
+    posts++;
+    return route.fulfill({ status: reply, body: '' });
+  });
+  await page.goto('/work-with-me/');
+  await page.locator('#bf-what').fill('Our tokens drift between web and mobile.');
+  await page.locator('#bf-name').fill('Dana Example');
+  await page.locator('#bf-email').fill('dana@example.com');
+  const send = page.locator('.bf button[type="submit"]'), status = page.locator('[data-bf-status]');
+  await send.press('Enter');
+  await expect(status).toContainText('That didn’t send. Try again');
+  await expect(status.locator('button')).toHaveCount(0);
+  await expect(send).toBeFocused();
+  reply = 200;
+  await send.press('Enter');
+  await expect(status).toContainText('Received. Work order');
+  await expect(page.locator('[data-wo-stamp]')).toHaveClass(/on/);
+  await expect(send).toBeFocused();
+  await send.press('Enter');
+  await page.waitForTimeout(300);
+  expect(posts, 'one failed send, one sent, and no second copy').toBe(2);
 });
 
 test('the brief is ready for Netlify Forms', async ({ page }) => {

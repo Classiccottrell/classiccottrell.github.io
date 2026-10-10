@@ -45,6 +45,7 @@
     document.addEventListener('click', function (e) { if (menu.open && !menu.contains(e.target)) menu.open = false; });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && menu.open) { menu.open = false; $('summary', menu).focus(); } });
     menu.addEventListener('click', function (e) { if (e.target.closest('a')) menu.open = false; });
+    menu.addEventListener('focusout', function (e) { if (menu.open && e.relatedTarget && !menu.contains(e.relatedTarget)) menu.open = false; });
   }
 
   // ------------------------------------------------------------ pencils: the grid, rulers and a redline inspector
@@ -53,7 +54,7 @@
     var built = false, box, tag, rx, ry, ryBox, pending = null, raf = 0;
     var TOKENS = {
       '10,10,10': 'India ink', '255,255,255': 'Bristol', '85,88,92': 'Graphite', '164,221,237': 'Non-photo blue', '27,98,160': 'Blueline',
-      '242,241,238': 'Bristol (ink)', '163,166,170': 'Graphite (ink)', '0,0,0': 'Ink band', '216,240,247': 'Pencil highlight',
+      '242,241,238': 'Bristol (ink)', '163,166,170': 'Graphite (ink)', '21,21,23': 'Ink band', '216,240,247': 'Pencil highlight',
       '29,69,82': 'Pencil highlight (ink)', '46,101,119': 'Pencil (ink)'
     };
     var tokenOf = function (c) {
@@ -137,15 +138,24 @@
   }
 
   // ------------------------------------------------------------ the cut: pictures change in the same frame
+  // Only where the preview shows (900 px and up), so phones don't fetch plates
+  // they never see; the preloads wait for the page to finish loading.
+  var wide = window.matchMedia('(min-width: 900px)');
   $$('[data-cut]').forEach(function (list) {
     var pic = $('.' + list.getAttribute('data-cut') + ' img'); if (!pic) return;
-    var rows = $$('[data-src]', list);
+    var rows = $$('[data-src]', list), armed = false;
+    var arm = function () {
+      if (armed || !wide.matches) return;
+      armed = true;
+      rows.forEach(function (row) { new Image().src = row.getAttribute('data-src'); });
+    };
     rows.forEach(function (row, i) {
-      new Image().src = row.getAttribute('data-src');
-      var show = function () { pic.src = row.getAttribute('data-src'); rows.forEach(function (x) { x.classList.toggle('on', x === row); }); };
+      var show = function () { if (!wide.matches) return; arm(); pic.src = row.getAttribute('data-src'); rows.forEach(function (x) { x.classList.toggle('on', x === row); }); };
       row.addEventListener('mouseenter', show); row.addEventListener('focus', show);
       if (i === 0) row.classList.add('on');
     });
+    if (document.readyState === 'complete') arm(); else window.addEventListener('load', arm);
+    if (wide.addEventListener) wide.addEventListener('change', arm);
   });
 
   // ------------------------------------------------------------ take it apart
@@ -201,15 +211,31 @@
       sN.textContent = t.id; sText.textContent = t.text; sText.href = t.href; sSrc.textContent = t.src;
       sHeat.innerHTML = '<span class="heat" role="img" aria-label="Heat ' + t.heat + ' of 3">' + [1, 2, 3].map(function (n) { return '<i' + (n <= t.heat ? ' class="f"' : '') + '></i>'; }).join('') + '</span>';
     };
-    var schedule = function () { clearTimeout(timer); if (playing && !hold) timer = setTimeout(function () { show(idx + 1); schedule(); }, 7000); };
+    var sLive = $('[data-stage-live]', stage);
+    var schedule = function () {
+      clearTimeout(timer);
+      if (sLive) sLive.setAttribute('aria-live', playing && !hold ? 'off' : 'polite');
+      if (playing && !hold) timer = setTimeout(function () { show(idx + 1); schedule(); }, 7000);
+    };
     var paintPlay = function () { sPlay.textContent = playing ? 'Pause' : 'Play'; };
     $('[data-stage-prev]', stage).addEventListener('click', function () { show(idx - 1); schedule(); });
     $('[data-stage-next]', stage).addEventListener('click', function () { show(idx + 1); schedule(); });
     sPlay.addEventListener('click', function () { playing = !playing; paintPlay(); schedule(); });
-    stage.addEventListener('mouseenter', function () { hold = true; clearTimeout(timer); });
+    stage.addEventListener('mouseenter', function () { hold = true; schedule(); });
     stage.addEventListener('mouseleave', function () { hold = false; schedule(); });
-    stage.addEventListener('focusin', function () { hold = true; clearTimeout(timer); });
+    stage.addEventListener('focusin', function () { hold = true; schedule(); });
     stage.addEventListener('focusout', function () { hold = false; schedule(); });
+    // The band holds the height of its tallest take at this width, so the page
+    // under it doesn't jump when a long one rotates in.
+    var stageIn = $('.stage-in', stage), stageW = 0;
+    var fitStage = function () {
+      var cur = idx, tall = 0;
+      stageIn.style.minHeight = '';
+      for (var i = 0; i < takes.length; i++) { show(i); tall = Math.max(tall, stageIn.getBoundingClientRect().height); }
+      show(cur); stageIn.style.minHeight = Math.ceil(tall) + 'px';
+    };
+    if (window.ResizeObserver) new ResizeObserver(function () { if (stageIn.clientWidth !== stageW) { stageW = stageIn.clientWidth; fitStage(); } }).observe(stageIn);
+    if (document.fonts) document.fonts.ready.then(fitStage);
     paintPlay(); schedule();
   }
 
@@ -268,10 +294,16 @@
     var wo = $('[data-wo]'), status = $('[data-bf-status]'), orderField = form.elements.order;
     var field = function (key) { return $('[data-wo="' + key + '"]', wo); };
     var val = function (name) { var el = form.elements[name]; return el ? String(el.value || '').trim() : ''; };
+    // One work order number per visit, so it doesn't reshuffle as you type.
+    var ORDER_KEY = 'cc-work-order', orderNo = '';
     var number = function () {
-      var seed = ['name', 'company', 'broken', 'kind', 'when', 'team'].map(val).join('|'), h = 7;
-      for (var i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
-      return 'CC-' + new Date().getFullYear() + '-' + String(100 + h % 900);
+      if (orderNo) return orderNo;
+      try { orderNo = sessionStorage.getItem(ORDER_KEY) || ''; } catch (e) { orderNo = ''; }
+      if (!orderNo) {
+        orderNo = 'CC-' + new Date().getFullYear() + '-' + (100 + Math.floor(Math.random() * 900));
+        try { sessionStorage.setItem(ORDER_KEY, orderNo); } catch (e) { /* private mode: the number lasts as long as the page */ }
+      }
+      return orderNo;
     };
     var update = function () {
       if (!wo) return;
@@ -295,26 +327,33 @@
         setTimeout(function () { form.elements.broken.focus({ preventScroll: true }); }, reduce.matches ? 0 : 450);
       });
     });
+    // Sending keeps focus on the button (aria-disabled, not disabled), sends once,
+    // and only blames the host when it really can't take forms (404 or 405).
+    var send = $('button[type="submit"]', form), sending = false, sent = false;
     form.addEventListener('submit', function (e) {
       e.preventDefault(); update();
-      var send = $('button[type="submit"]', form); send.disabled = true; status.textContent = 'Sending…';
+      if (sending || sent) return;
+      sending = true; send.setAttribute('aria-disabled', 'true'); status.textContent = 'Sending…';
       fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(new FormData(form)).toString() })
         .then(function (res) {
-          if (!res.ok) throw new Error(res.status);
-          $('[data-wo-stamp]').classList.add('on');
+          if (!res.ok) { var err = new Error(res.status); err.status = res.status; throw err; }
+          sent = true; $('[data-wo-stamp]').classList.add('on'); send.textContent = 'Sent';
           status.textContent = 'Received. Work order ' + orderField.value + ' is in, and I’ll reply to ' + val('email') + '.';
+          try { sessionStorage.removeItem(ORDER_KEY); } catch (x) { /* nothing to clear */ }
         })
-        .catch(function () {
-          var linkedIn = $('.foot-grid a[href*="linkedin"]');
+        .catch(function (err) {
+          var linkedIn = $('.foot-grid a[href*="linkedin"]'), cantSend = err && (err.status === 404 || err.status === 405);
           status.innerHTML = '';
-          status.appendChild(document.createTextNode('This copy of the site can’t send the brief. Copy the work order and send it to me on '));
+          status.appendChild(document.createTextNode(cantSend ? 'This copy of the site can’t send the brief. Copy the work order and send it to me on ' : 'That didn’t send. Try again, or message me on '));
           var a = document.createElement('a'); a.href = linkedIn ? linkedIn.href : 'https://www.linkedin.com/'; a.textContent = 'LinkedIn'; status.appendChild(a);
-          status.appendChild(document.createTextNode('. '));
-          var copy = document.createElement('button'); copy.type = 'button'; copy.className = 'tool'; copy.textContent = 'Copy work order';
-          copy.addEventListener('click', function () { copyText(orderText(), status, 'Copied. Paste it into a message to me on LinkedIn.', wo); });
-          status.appendChild(copy);
+          status.appendChild(document.createTextNode('.'));
+          if (cantSend) {
+            var copy = document.createElement('button'); copy.type = 'button'; copy.className = 'tool'; copy.textContent = 'Copy work order';
+            copy.addEventListener('click', function () { copyText(orderText(), status, 'Copied. Paste it into a message to me on LinkedIn.', wo); });
+            status.appendChild(copy);
+          }
         })
-        .then(function () { send.disabled = false; });
+        .then(function () { sending = false; if (!sent) send.removeAttribute('aria-disabled'); });
     });
     var preset = new URLSearchParams(location.search).get('kind');
     if (preset) pick(preset); else update();

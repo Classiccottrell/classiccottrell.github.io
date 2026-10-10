@@ -75,7 +75,7 @@ const kurtz = drawings.drawings.find((d) => d.slug === 'kurtz');
 
 const cards = [
   ['home', card({ kicker: 'Product designer · Enterprise IT · Design systems', title: site.headline, size: 'm', img: site.portrait.ink, drawing: true })],
-  ['work', card({ kicker: `Work · ${work.length} projects`, title: 'Work', sub: 'Products, systems, agents and tools, each with a title block and the take it proves.', terry: true })],
+  ['work', card({ kicker: `Work · ${work.length} projects`, title: 'Work', sub: 'Products, systems, agents, tools and client work, each opening with a title block.', terry: true })],
   ...work.map((p) => [`work-${p.slug}`, card({
     kicker: `Work / ${pad2(p.number)} · ${esc(p.kind)}`, title: plain(p.title), size: p.title.length > 14 ? 's' : 'm', sub: plain(p.summary),
     img: p.cardImage || (p.plate && p.plate.src), right: p.status.label, terry: !p.plate,
@@ -84,7 +84,7 @@ const cards = [
   ...takes.map((t) => [`take-${t.slug}`, card({ kicker: `${esc(t.id)}${heat(t.heat)}`, title: plain(t.text), size: 's', ink: true, right: 'Takes, with receipts' })]),
   ['work-with-me', card({ kicker: 'Work with me', title: 'Bring me a problem.', size: 'm', sub: `${site.availability.label}. Four ways in, and a brief that writes itself.`, terry: true })],
   ['writing', card({ kicker: 'Writing · on Substack', title: 'Writing', sub: 'Essays on design, AI, and the occasional roll of packing tape.', terry: true })],
-  ['drawings', card({ kicker: `Drawings · ${drawings.drawings.length} portraits in ink`, title: 'Drawings', sub: 'One film, one face, one line of dialogue.', img: kurtz.image, drawing: true, ink: true })],
+  ['drawings', card({ kicker: `Drawings · ${drawings.drawings.length} portraits in ink`, title: 'Drawings', sub: 'One film, one face, one quote.', img: kurtz.image, drawing: true, ink: true })],
   ['about', card({ kicker: 'About', title: site.name, size: 'm', sub: site.headline, img: site.portrait.ink, drawing: true })],
   ['colophon', card({ kicker: 'Colophon', title: 'Colophon', sub: 'How this site is made, and a button that checks it.', terry: true })],
 ];

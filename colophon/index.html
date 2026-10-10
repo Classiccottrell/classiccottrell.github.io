@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="no-js">
+<html lang="en-CA" class="no-js">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,13 +8,16 @@
 <link rel="canonical" href="https://classiccottrell.ca/colophon/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Matthew A. Cottrell">
-<meta property="og:title" content="Colophon">
+<meta property="og:title" content="Colophon · Matthew A. Cottrell">
+<meta property="og:locale" content="en_CA">
 <meta property="og:description" content="How this site is made, what it’s made of, and a button that checks it.">
 <meta property="og:url" content="https://classiccottrell.ca/colophon/">
 <meta property="og:image" content="https://classiccottrell.ca/assets/cards/colophon.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Colophon · Matthew A. Cottrell">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image:alt" content="Colophon · Matthew A. Cottrell">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFFFFF">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0A0A0A">
@@ -23,9 +26,9 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/familjen-grotesk.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/css/site.css?v=9f9431ddf5">
+<link rel="stylesheet" href="/assets/css/site.css?v=e658396b3c">
 <script>document.documentElement.className='js'</script>
-<script src="/assets/js/site.js?v=c3818911f5" defer></script>
+<script src="/assets/js/site.js?v=754b330afa" defer></script>
 
 </head>
 <body>
@@ -43,6 +46,7 @@
   </div>
 </header>
 <main id="main">
+<p class="print-id">Matthew A. Cottrell · classiccottrell.ca/colophon/</p>
 
 
 <header class="wrap ph">
@@ -56,17 +60,17 @@
   <div class="g12">
     <div class="s5">
       <h2 class="h2" id="checks-h">The page audits itself.</h2>
-      <p>This runs axe-core, the same engine inside VPAT Vault’s scanner, against this page right now, then checks its images, headings, fonts and colour pairs. Every page also runs it in the test suite before it ships.</p>
+      <p><span data-js>This runs axe-core, the same engine inside VPAT Vault’s scanner, against this page right now, then checks its images, headings, fonts and colour pairs. </span>Every page also runs axe-core in the test suite before it ships.</p>
       <p class="ctas" data-js><button type="button" class="btn" data-audit>Run the checks</button></p>
     </div>
-    <div class="s7"><pre class="term" data-audit-out tabindex="0" role="log" aria-label="Audit output">$ ready. Press “Run the checks”.</pre></div>
+    <div class="s7" data-js><pre class="term" data-audit-out tabindex="0" role="log" aria-label="Audit output">$ ready. Press “Run the checks”.</pre></div>
   </div>
 </section>
 
 <section class="wrap sec" aria-labelledby="numbers-h">
   <h2 class="h2" id="numbers-h">By the numbers</h2>
   
-<dl class="tblock "><div><dt>Pages</dt><dd>32</dd></div><div><dt>Stylesheet</dt><dd>485 lines · 9.3 KB gzipped</dd></div><div><dt>Script</dt><dd>8.4 KB gzipped · optional</dd></div><div><dt>Fonts</dt><dd>3 faces · 160.1 KB</dd></div><div><dt>Images</dt><dd>29 files · 1419.7 KB</dd></div><div><dt>Contrast</dt><dd>22 text pairs · lowest 6.36:1</dd></div></dl>
+<dl class="tblock "><div><dt>Pages</dt><dd>32</dd></div><div><dt>Stylesheet</dt><dd>524 lines · 10.2 KB gzipped</dd></div><div><dt>Script</dt><dd>9.2 KB gzipped · optional</dd></div><div><dt>Fonts</dt><dd>3 faces · 160.1 KB</dd></div><div><dt>Images</dt><dd>29 files · 1419.7 KB</dd></div><div><dt>Contrast</dt><dd>22 text pairs · lowest 6.36:1</dd></div></dl>
   <p class="note cap">Counted by the build. No framework, no tracking, no cookies. Every page reads with JavaScript off.</p>
 </section>
 
@@ -87,7 +91,7 @@
 
 <section class="wrap sec" aria-labelledby="parts-h">
   <h2 class="h2" id="parts-h">Parts</h2>
-  <p class="sub-intro">The pieces every page is built from. Switch on Pencils in the footer to see the grid under them, with rulers and a spec for anything you point at.</p>
+  <p class="sub-intro">The pieces every page is built from.<span data-js> Switch on Pencils in the footer to see the grid under them, with rulers and a spec for anything you point at.</span></p>
   <div class="parts">
     <div class="part"><p class="note">Buttons and links</p><p class="ctas"><a class="btn" href="/work-with-me/">Work with me <span aria-hidden="true">→</span></a><a class="lnk" href="/work/">See the work</a></p></div>
     <div class="part"><p class="note">Availability</p><p><a class="avail" href="/work-with-me/#availability"><i class="sm sm-live" aria-hidden="true"></i>Open to new projects</a></p></div>
@@ -104,13 +108,13 @@
   <h2 class="h2" id="a11y-h">Accessibility</h2>
   <p>This site aims to meet WCAG 2.2 at level AA. Every page is checked with axe-core in the test suite, every text colour pair is checked by a script at build time, and every page works with a keyboard and with JavaScript turned off.</p>
   <p>Motion is optional. With reduced motion turned on in your system settings, drawings arrive inked, the hot takes stop rotating, and the linefield piece holds still. The take-it-apart figure on the home page is an illustration; its text description says what it shows.</p>
-  <p>If something doesn’t work for you, tell me through <a class="lnk" href="https://www.linkedin.com/in/classiccottrell/">LinkedIn<span class="ext" aria-hidden="true"> ↗</span></a> or <a href="/work-with-me/#brief">the brief</a>, and I’ll fix it.</p>
+  <p>If something doesn’t work for you, tell me through <a href="https://www.linkedin.com/in/classiccottrell/">LinkedIn<span class="ext" aria-hidden="true"> ↗</span></a> or <a href="/work-with-me/#brief">the brief</a>, and I’ll fix it.</p>
 </div></section>
 
 <section class="wrap sec" aria-labelledby="credits-h"><div class="prose">
   <h2 class="h2" id="credits-h">Credits</h2>
-  <p>Familjen Grotesk, Newsreader and Red Hat Mono are used under the SIL Open Font License and served from this site. Run the checks uses <a href="https://github.com/dequelabs/axe-core">axe-core</a> under the Mozilla Public License 2.0. The ink band runs Grain Field from <a class="lnk" href="/work/linefield/">linefield</a>, which is MIT licensed. Terry drew himself, and he has <a class="lnk" href="/work/terry-time/">a shop</a>.</p>
-  <p>The source is on <a class="lnk" href="https://github.com/Classiccottrell/classiccottrell.github.io">GitHub<span class="ext" aria-hidden="true"> ↗</span></a>. The previous version of the site is kept on the <code>v1-classic</code> branch.</p>
+  <p>Familjen Grotesk, Newsreader and Red Hat Mono are used under the SIL Open Font License and served from this site. Run the checks uses <a href="https://github.com/dequelabs/axe-core">axe-core<span class="ext" aria-hidden="true"> ↗</span></a> under the Mozilla Public License 2.0. The ink band runs Grain Field from <a href="/work/linefield/">linefield</a>, which is MIT licensed. Terry drew himself, and he has <a href="/work/terry-time/">a shop</a>.</p>
+  <p>The source is on <a href="https://github.com/Classiccottrell/classiccottrell.github.io">GitHub<span class="ext" aria-hidden="true"> ↗</span></a>. The previous version of the site is kept on the <code>v1-classic</code> branch.</p>
 </div></section>
 </main>
 
@@ -121,7 +125,7 @@
       <p class="foot-row"><a class="btn" href="/work-with-me/">Work with me <span aria-hidden="true">→</span></a><a class="avail" href="/work-with-me/#availability"><i class="sm sm-live" aria-hidden="true"></i>Open to new projects</a></p>
     </div>
     <div class="foot-grid">
-      <nav aria-label="Elsewhere"><p class="note">Elsewhere</p><ul><li><a class="lnk" href="https://www.linkedin.com/in/classiccottrell/">LinkedIn<span class="ext" aria-hidden="true"> ↗</span></a></li><li><a class="lnk" href="https://github.com/Classiccottrell">GitHub<span class="ext" aria-hidden="true"> ↗</span></a></li><li><a class="lnk" href="https://classiccottrell.substack.com/">Substack<span class="ext" aria-hidden="true"> ↗</span></a></li><li><a class="lnk" href="https://www.instagram.com/classiccottrell">Instagram<span class="ext" aria-hidden="true"> ↗</span></a></li></ul></nav>
+      <nav aria-label="Elsewhere"><p class="note">Elsewhere</p><ul><li><a class="lnk" href="https://www.linkedin.com/in/classiccottrell/">LinkedIn<span class="ext" aria-hidden="true"> ↗</span></a></li><li><a class="lnk" href="https://github.com/Classiccottrell">GitHub<span class="ext" aria-hidden="true"> ↗</span></a></li><li><a class="lnk" href="https://classiccottrell.substack.com/">Substack<span class="ext" aria-hidden="true"> ↗</span></a></li><li><a class="lnk" href="https://www.instagram.com/classiccottrell">Instagram<span class="ext" aria-hidden="true"> ↗</span></a></li></ul></nav>
       <nav aria-label="This site"><p class="note">This site</p><ul><li><a class="lnk" href="/work/">Work</a></li><li><a class="lnk" href="/writing/">Writing</a></li><li><a class="lnk" href="/drawings/">Drawings</a></li><li><a class="lnk" href="/about/">About</a></li><li><a class="lnk" href="/takes/">Takes</a></li><li><a class="lnk" href="/work-with-me/">Work with me</a></li><li><a class="lnk" href="/colophon/" aria-current="page">Colophon</a></li></ul></nav>
     </div>
     <div class="foot-base">

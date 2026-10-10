@@ -5,6 +5,7 @@
   --ground:#FFFFFF; --fg:#0A0A0A; --muted:#55585C; --pencil:#A4DDED; --pencil-wash:rgba(164,221,237,.22);
   --proof:#1B62A0; --proof-on:#FFFFFF; --highlight:#D8F0F7; --sheet:#FFFFFF;
   --band:#0A0A0A; --band-fg:#F2F1EE; --band-muted:#A3A6AA; --band-pencil:#2E6577; --band-proof:#A4DDED; --band-proof-on:#0A0A0A; --band-highlight:#1D4552;
+  --tt-ink:#1233C7; --tt-paper:#F7F6F1;
   --f-ink:"Familjen Grotesk","Helvetica Neue",Arial,sans-serif;
   --f-voice:"Newsreader",Georgia,"Times New Roman",serif;
   --f-pencil:"Red Hat Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
@@ -296,6 +297,23 @@ a.avail:hover{background:var(--highlight)}
 .live-in{position:relative;z-index:1;min-height:clamp(300px,34vw,460px);display:flex;flex-direction:column;justify-content:flex-end;gap:12px;padding-block:28px}
 .live-in .h2,.live-in p:last-child{max-width:24ch}
 .live-in p:last-child{max-width:42ch}
+/* Terry Time's footer, running live: its own cobalt on warm paper, in both
+   schemes, with the message boxed like the shop's 404. terry-symbols.js reads
+   --tt-ink and --tt-paper, and draws the face over .tt-face. */
+.tt-band{--band:var(--tt-paper);--band-fg:var(--tt-ink);--band-muted:var(--tt-ink);--band-pencil:var(--tt-ink);--band-proof:var(--tt-ink);--band-proof-on:var(--tt-paper);--band-highlight:rgba(18,51,199,.12);--pencil-wash:rgba(18,51,199,.08)}
+.tt-canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.tt-in{position:relative;z-index:1;display:grid;gap:20px;padding-block:clamp(24px,4vw,56px)}
+.tt-box{background:var(--tt-paper);border:2px solid var(--tt-ink);padding:clamp(18px,2.4vw,32px);width:min(100%,520px);justify-self:center}
+.tt-box .h2{margin:10px 0 14px}
+.tt-hint{margin-top:16px}
+.tt-face{order:-1;aspect-ratio:1;width:min(100%,520px);justify-self:center}
+.tt-still{width:100%;height:100%;object-fit:contain}
+.js .tt-still{display:none}
+@media (min-width:900px){
+  .tt-in{grid-template-columns:minmax(0,5fr) minmax(0,7fr);align-items:center;min-height:clamp(560px,46vw,700px)}
+  .tt-box{width:auto;max-width:34rem;justify-self:stretch}
+  .tt-face{order:0;width:100%;height:100%;aspect-ratio:auto;justify-self:stretch;align-self:stretch}
+}
 .cs-body{display:grid;gap:clamp(36px,4.5vw,56px);margin-top:clamp(48px,6vw,88px)}
 .cs-sec{max-width:68ch}
 .cs-sec>*+*{margin-top:.9em}

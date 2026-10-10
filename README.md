@@ -26,6 +26,7 @@ data/                 the content: edit these, then npm run build
 assets/
   css/site.css        the whole stylesheet, tokens first
   js/site.js          the optional layer
+  js/terry-symbols.js Terry Time's footer, running live on its case study (only that page loads it)
   fonts/              Familjen Grotesk, Newsreader, Red Hat Mono (OFL)
   img/                images the site serves (made by npm run images)
   cards/              share cards, 1200 × 630 (made by npm run cards)
@@ -96,9 +97,10 @@ already installed, set `PW_CHROMIUM=/path/to/chrome`.
 - **GitHub Pages:** serves the same files (`.nojekyll` switches Jekyll off).
   Static hosts can't receive forms, so on this copy the brief offers to copy
   the work order and send it on LinkedIn instead.
-- **The address:** `url` in `data/site.json` sets canonical links, share cards
-  and the sitemap. Point it at classiccottrell.ca once that serves this site,
-  then `npm run build`.
+- **The address:** `url` in `data/site.json` is https://classiccottrell.ca (on
+  Netlify). It sets canonical links, share cards and the sitemap, so the GitHub
+  Pages copy points search engines at the .ca address too. Change it, then
+  `npm run build`.
 
 ## Credits
 

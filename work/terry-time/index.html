@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Terry Time · Matthew A. Cottrell</title>
 <meta name="description" content="A shop for Terry, the face that keeps turning up on East Van walls. I designed seven storefronts, put two of them in a 50/50 split, and wrote down how the winner gets picked before the first visitor arrives.">
-<link rel="canonical" href="https://classiccottrell.github.io/work/terry-time/">
+<link rel="canonical" href="https://classiccottrell.ca/work/terry-time/">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Matthew A. Cottrell">
 <meta property="og:title" content="Terry Time">
 <meta property="og:description" content="A shop for Terry, the face that keeps turning up on East Van walls. I designed seven storefronts, put two of them in a 50/50 split, and wrote down how the winner gets picked before the first visitor arrives.">
-<meta property="og:url" content="https://classiccottrell.github.io/work/terry-time/">
-<meta property="og:image" content="https://classiccottrell.github.io/assets/cards/work-terry-time.png">
+<meta property="og:url" content="https://classiccottrell.ca/work/terry-time/">
+<meta property="og:image" content="https://classiccottrell.ca/assets/cards/work-terry-time.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -23,7 +23,7 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/familjen-grotesk.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/css/site.css?v=626e87340f">
+<link rel="stylesheet" href="/assets/css/site.css?v=9f9431ddf5">
 <script>document.documentElement.className='js'</script>
 <script src="/assets/js/site.js?v=c3818911f5" defer></script>
 
@@ -60,6 +60,18 @@
   <figcaption class="note cap">Fig. 1 · Store A and Store B. A visitor only ever sees one of them.</figcaption>
 </figure></div>
   
+  <section class="band live-band tt-band" aria-labelledby="live-h">
+    <canvas class="tt-canvas" data-terry-symbols data-src="/assets/img/terry-face-drawing.png" aria-hidden="true"></canvas>
+    <div class="wrap tt-in">
+      <div class="tt-box">
+        <h2 class="note" id="live-h">Running live</h2>
+        <p class="h2">Terry, set in type.</p>
+        <p>The footer from Terry Time, running here on the shop’s own code, ported from React to plain JavaScript. Every cell reads the drawing under it, picks a glyph by weight and stroke direction, then keeps picking.</p>
+        <p class="note tt-hint" data-js data-tt-hint data-still="Reduced motion is on, so it holds one frame." data-flat="This browser can’t run WebGL2 here, so it holds one frame.">Move across it and the type switches faster. Flick fast and the ink smears into a red second plate, then settles.</p>
+      </div>
+      <div class="tt-face" data-tt-face><img class="tt-still" src="/assets/img/work/terry-time-symbols.webp" width="1040" height="1040" alt="" loading="lazy" decoding="async"></div>
+    </div>
+  </section>
   <div class="wrap cs-body">
 <section class="cs-sec">
   
@@ -114,7 +126,7 @@
 <section class="cs-sec">
   <h2 class="cs-h">Terry keeps appearing</h2>
   
-  <p>Footers and error pages draw Terry’s face in a grid of type symbols that never stops switching. It runs on WebGL2, falls back to a canvas still, and holds a single frame for anyone who has asked for reduced motion.</p>
+  <p>Footers and error pages draw Terry’s face in a grid of type symbols that never stops switching. It runs on WebGL2, falls back to a canvas still, and holds a single frame for anyone who has asked for reduced motion. The same piece is running live near the top of this page.</p>
   
   
   
@@ -158,6 +170,6 @@
     </div>
   </div>
 </footer>
-
+<script src="/assets/js/terry-symbols.js?v=1abf25df46" defer></script>
 </body>
 </html>

@@ -23,9 +23,9 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/familjen-grotesk.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/css/site.css?v=9f9431ddf5">
+<link rel="stylesheet" href="/assets/css/site.css?v=2974c08723">
 <script>document.documentElement.className='js'</script>
-<script src="/assets/js/site.js?v=c3818911f5" defer></script>
+<script src="/assets/js/site.js?v=3dd5bfa070" defer></script>
 
 </head>
 <body class="case">
@@ -73,6 +73,7 @@
   
   
   
+  
 </section>
 
 <section class="cs-sec">
@@ -80,6 +81,7 @@
   <p class="cs-intro">Twenty pieces in five collections, one shared control surface:</p>
   
   <ul class="items"><li><strong>Monochrome by default.</strong> Near-white hairlines on near-black, one object per frame, and a declared empty zone where your headline goes. Brightness comes from lines crossing, not from colour. Colour is still one preset away. It just isn't the default any more.</li><li><strong>Sixteen controls on every piece.</strong> Scale, speed, stroke, opacity, saturation, color mode, two colors, two hues, invert, glow, angle, motion, phase and density, plus whatever each piece needs on its own. A script drives every control on every piece and diffs the rendered frames: 299 controls, none of them dead. It exists because twice a control shipped that read its value and changed nothing, and both times a human review passed it.</li><li><strong>Five ways out.</strong> A baked HTML file with every shared module inlined, the untouched source, PNG at 2x or 4x, SVG, and a written prompt describing the current settings. The baked file is the point. It has zero external references, so it runs from any folder on any host. For decks and mockups there is also a pack of square stills of all twenty, and a catalogue listing each piece's empty zone and controls.</li><li><strong>Two new materials.</strong> Dune is a ridge of film grain under one low light. Swell is an ocean swell drawn as a halftone screen, where the size of each dot carries the light. Both step outside pure linework, and both still run in plain Canvas 2D.</li><li><strong>A gallery that will not cook your laptop.</strong> Twenty canvas animations running at once will crawl, so the grid shows stills and swaps only the card you are pointing at for a live preview. One at a time, torn down when you look away. Keyboard focus does the same thing, because hover-only interaction is invisible to anyone not using a mouse.</li></ul>
+  
   
   
   
@@ -93,12 +95,14 @@
   
   
   
+  
 </section>
 <figure class="pq-fig"><blockquote class="pq"><p>So the checks are scripts now instead of opinions.</p></blockquote><figcaption class="note">From “What it actually took”</figcaption></figure>
 <section class="cs-sec">
   <h2 class="cs-h">Version two</h2>
   
   <p>Version one worked and still looked like a demo. Laid out side by side, the problem was colour. Every piece had its own saturated hue, so eighteen pieces read as eighteen different products instead of one collection.</p><p>So version two is monochrome first. Every piece was redrawn as one object: hairlines, one bright point, and a lot of empty space for whatever sits on top of it. A new gate fails the build if a default carries colour or marks too much or too little of the frame.</p><p>There is no target count. A new piece ships when it clears the same gates as the other twenty.</p>
+  
   
   
   

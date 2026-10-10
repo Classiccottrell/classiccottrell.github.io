@@ -26,7 +26,7 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/familjen-grotesk.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/css/site.css?v=25e0680349">
+<link rel="stylesheet" href="/assets/css/site.css?v=e658396b3c">
 <script>document.documentElement.className='js'</script>
 <script src="/assets/js/site.js?v=754b330afa" defer></script>
 
@@ -60,17 +60,17 @@
   <div class="g12">
     <div class="s5">
       <h2 class="h2" id="checks-h">The page audits itself.</h2>
-      <p>This runs axe-core, the same engine inside VPAT Vault’s scanner, against this page right now, then checks its images, headings, fonts and colour pairs. Every page also runs it in the test suite before it ships.</p>
+      <p><span data-js>This runs axe-core, the same engine inside VPAT Vault’s scanner, against this page right now, then checks its images, headings, fonts and colour pairs. </span>Every page also runs axe-core in the test suite before it ships.</p>
       <p class="ctas" data-js><button type="button" class="btn" data-audit>Run the checks</button></p>
     </div>
-    <div class="s7"><pre class="term" data-audit-out tabindex="0" role="log" aria-label="Audit output">$ ready. Press “Run the checks”.</pre></div>
+    <div class="s7" data-js><pre class="term" data-audit-out tabindex="0" role="log" aria-label="Audit output">$ ready. Press “Run the checks”.</pre></div>
   </div>
 </section>
 
 <section class="wrap sec" aria-labelledby="numbers-h">
   <h2 class="h2" id="numbers-h">By the numbers</h2>
   
-<dl class="tblock "><div><dt>Pages</dt><dd>32</dd></div><div><dt>Stylesheet</dt><dd>508 lines · 9.8 KB gzipped</dd></div><div><dt>Script</dt><dd>9.2 KB gzipped · optional</dd></div><div><dt>Fonts</dt><dd>3 faces · 160.1 KB</dd></div><div><dt>Images</dt><dd>29 files · 1419.7 KB</dd></div><div><dt>Contrast</dt><dd>22 text pairs · lowest 6.36:1</dd></div></dl>
+<dl class="tblock "><div><dt>Pages</dt><dd>32</dd></div><div><dt>Stylesheet</dt><dd>524 lines · 10.2 KB gzipped</dd></div><div><dt>Script</dt><dd>9.2 KB gzipped · optional</dd></div><div><dt>Fonts</dt><dd>3 faces · 160.1 KB</dd></div><div><dt>Images</dt><dd>29 files · 1419.7 KB</dd></div><div><dt>Contrast</dt><dd>22 text pairs · lowest 6.36:1</dd></div></dl>
   <p class="note cap">Counted by the build. No framework, no tracking, no cookies. Every page reads with JavaScript off.</p>
 </section>
 
@@ -91,7 +91,7 @@
 
 <section class="wrap sec" aria-labelledby="parts-h">
   <h2 class="h2" id="parts-h">Parts</h2>
-  <p class="sub-intro">The pieces every page is built from. Switch on Pencils in the footer to see the grid under them, with rulers and a spec for anything you point at.</p>
+  <p class="sub-intro">The pieces every page is built from.<span data-js> Switch on Pencils in the footer to see the grid under them, with rulers and a spec for anything you point at.</span></p>
   <div class="parts">
     <div class="part"><p class="note">Buttons and links</p><p class="ctas"><a class="btn" href="/work-with-me/">Work with me <span aria-hidden="true">→</span></a><a class="lnk" href="/work/">See the work</a></p></div>
     <div class="part"><p class="note">Availability</p><p><a class="avail" href="/work-with-me/#availability"><i class="sm sm-live" aria-hidden="true"></i>Open to new projects</a></p></div>

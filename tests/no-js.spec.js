@@ -1,6 +1,6 @@
 // The whole site reads with JavaScript turned off.
 import { expect, test } from '@playwright/test';
-import { PAGES, work } from './helpers.js';
+import { PAGES, takes, work } from './helpers.js';
 
 test.use({ javaScriptEnabled: false });
 
@@ -77,6 +77,14 @@ test('a printed case study says whose it is and spells out its links', async ({ 
   expect(after).toContain('https://');
   await page.emulateMedia({ media: 'screen' });
   await expect(page.locator('.print-id')).toBeHidden();
+});
+
+test('a take page points to the next take by what it says, not just its number', async ({ page }) => {
+  await page.goto(`/takes/${takes[0].slug}/`);
+  const next = page.locator('.pn-next');
+  await expect(next).toHaveAttribute('href', `/takes/${takes[1].slug}/`);
+  await expect(next).toContainText(takes[1].id);
+  await expect(next).toContainText(takes[1].text.replace(/[*`]/g, ''));
 });
 
 test('the work index lists every project, grouped', async ({ page }) => {

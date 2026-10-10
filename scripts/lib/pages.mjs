@@ -48,7 +48,7 @@ export function home(ctx) {
     <div class="xv-text">
       <p class="note">The job</p>
       <h2 class="h2" id="xv-h">Take it apart.</h2>
-      <p>Drag the slider. A sample service-desk screen comes apart into the five layers I design, from the words on top to the rules underneath. Most fixes live a layer or two below where the problem shows.</p>
+      <p><span data-js>Drag the slider. </span>A sample service-desk screen comes apart into the five layers I design, from the words on top to the rules underneath. Most fixes live a layer or two below where the problem shows.</p>
       <div class="ink-ctl" data-js>
         <label class="note" for="explode">Apart</label>
         <input type="range" id="explode" min="0" max="100" value="0">
@@ -231,8 +231,8 @@ export function takePage(ctx, t) {
     </div>
   </section>
   <nav class="wrap pn-wrap" aria-label="More takes"><div class="pn-nav">
-    ${prev ? h`<a class="lnk" href="/takes/${esc(prev.slug)}/"><span aria-hidden="true">←</span> ${esc(prev.id)}</a>` : h`<a class="lnk" href="/takes/">All takes</a>`}
-    ${next ? h`<a class="lnk" href="/takes/${esc(next.slug)}/">${esc(next.id)} <span aria-hidden="true">→</span></a>` : h`<a class="lnk" href="/takes/">All takes</a>`}
+    ${prev ? h`<a class="pn" href="/takes/${esc(prev.slug)}/"><span class="note"><span aria-hidden="true">← </span>${esc(prev.id)}</span> <span class="pn-t">${inline(prev.text)}</span></a>` : h`<a class="lnk" href="/takes/">All takes</a>`}
+    ${next ? h`<a class="pn pn-next" href="/takes/${esc(next.slug)}/"><span class="note">${esc(next.id)}<span aria-hidden="true"> →</span></span> <span class="pn-t">${inline(next.text)}</span></a>` : h`<a class="lnk" href="/takes/">All takes</a>`}
   </div></nav>
 </article>`;
   return page(ctx, { path: `/takes/${t.slug}/`, title: `${t.id}: ${plain(t.text)}`, description: plain(t.description || t.receipt), card: `take-${t.slug}`, type: 'article', bodyClass: 'take-body', main });
@@ -267,7 +267,7 @@ ${pageHead({ kicker: 'Work with me', title: esc(H.headline), lede: esc(H.standfi
   <div class="g12 brief">
     <div class="s6">
       <h2 class="h2" id="brief-h">The brief</h2>
-      <p class="sub-intro">Tell me what’s broken. While you type, the page writes it up as a work order.</p>
+      <p class="sub-intro">Tell me what’s broken.<span data-js> While you type, the page writes it up as a work order.</span></p>
       <form class="bf" name="brief" method="POST" action="/work-with-me/thanks/" data-netlify="true" netlify-honeypot="website">
         <input type="hidden" name="form-name" value="brief">
         <input type="hidden" name="order" value="">
@@ -388,10 +388,10 @@ ${pageHead({ kicker: 'Colophon', title: 'Colophon', lede: 'How this site is made
   <div class="g12">
     <div class="s5">
       <h2 class="h2" id="checks-h">The page audits itself.</h2>
-      <p>This runs axe-core, the same engine inside VPAT Vault’s scanner, against this page right now, then checks its images, headings, fonts and colour pairs. Every page also runs it in the test suite before it ships.</p>
+      <p><span data-js>This runs axe-core, the same engine inside VPAT Vault’s scanner, against this page right now, then checks its images, headings, fonts and colour pairs. </span>Every page also runs axe-core in the test suite before it ships.</p>
       <p class="ctas" data-js><button type="button" class="btn" data-audit>Run the checks</button></p>
     </div>
-    <div class="s7"><pre class="term" data-audit-out tabindex="0" role="log" aria-label="Audit output">$ ready. Press “Run the checks”.</pre></div>
+    <div class="s7" data-js><pre class="term" data-audit-out tabindex="0" role="log" aria-label="Audit output">$ ready. Press “Run the checks”.</pre></div>
   </div>
 </section>
 
@@ -428,7 +428,7 @@ ${pageHead({ kicker: 'Colophon', title: 'Colophon', lede: 'How this site is made
 
 <section class="wrap sec" aria-labelledby="parts-h">
   <h2 class="h2" id="parts-h">Parts</h2>
-  <p class="sub-intro">The pieces every page is built from. Switch on Pencils in the footer to see the grid under them, with rulers and a spec for anything you point at.</p>
+  <p class="sub-intro">The pieces every page is built from.<span data-js> Switch on Pencils in the footer to see the grid under them, with rulers and a spec for anything you point at.</span></p>
   <div class="parts">
     <div class="part"><p class="note">Buttons and links</p><p class="ctas">${btn('/work-with-me/', 'Work with me')}<a class="lnk" href="/work/">See the work</a></p></div>
     <div class="part"><p class="note">Availability</p><p>${avail(site)}</p></div>

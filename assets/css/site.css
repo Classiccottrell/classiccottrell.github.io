@@ -102,7 +102,7 @@ a.avail:hover{background:var(--highlight)}
 .mast-nav a[aria-current]{text-decoration:underline;text-decoration-color:var(--proof);text-decoration-thickness:2px;text-underline-offset:7px}
 .mast-nav a:hover{text-decoration:underline;text-decoration-color:var(--pencil);text-underline-offset:7px}
 .mast-end{margin-left:auto;display:flex;gap:18px;align-items:center}
-.mast-cta{white-space:nowrap}
+.mast-cta{white-space:nowrap;font-size:1.02rem;font-weight:600;padding-top:3px}
 .menu{display:none;margin-left:auto}
 .menu summary{list-style:none;font:600 .78rem/1 var(--f-pencil);letter-spacing:.07em;text-transform:uppercase;border:1.5px solid var(--fg);padding:9px 11px;cursor:pointer}
 .menu summary::-webkit-details-marker{display:none}
@@ -234,7 +234,7 @@ a.avail:hover{background:var(--highlight)}
 
 /* ---------- take it apart */
 .xv-wrap{display:grid;gap:clamp(20px,3vw,36px);align-items:center}
-@media (min-width:980px){.xv-wrap{grid-template-columns:minmax(0,4fr) minmax(0,8fr)}}
+@media (min-width:980px){.xv-wrap{grid-template-columns:minmax(0,4fr) minmax(0,8fr);align-items:start}.xv-text{padding-top:clamp(24px,4vw,64px)}}
 .xv-text .h2{margin:10px 0 14px}
 .ink-ctl{display:flex;align-items:center;gap:12px;margin-top:20px;flex-wrap:wrap}
 .ink-ctl input[type=range]{flex:1 1 140px;min-width:0;accent-color:var(--proof)}
@@ -340,10 +340,18 @@ a.avail:hover{background:var(--highlight)}
 .cs-fig{margin-top:24px}
 .roadmap{display:grid;gap:0 var(--gap);border-top:1.5px solid var(--fg)}
 @media (min-width:700px){.roadmap{grid-template-columns:repeat(4,minmax(0,1fr))}}
+/* A roadmap is a timeline: it takes the full width; its words keep the measure. */
+.cs-sec:has(.roadmap){max-width:none}
+.cs-sec:has(.roadmap)>:not(.roadmap){max-width:68ch}
 .roadmap li{border-bottom:1px solid var(--pencil);padding:12px 0 16px;font-size:.98rem;line-height:1.45}
 .rm-l{font:700 1.1rem var(--f-ink);margin:6px 0 4px}
 .pn-nav{display:flex;justify-content:space-between;gap:12px 24px;flex-wrap:wrap;border-top:1.5px solid var(--fg);padding-top:16px}
 .pn-wrap{margin-top:clamp(56px,7vw,96px)}
+/* Take pages: the next take reads as a take, not just an ID. */
+.pn{display:grid;gap:6px;align-content:start;flex:1 1 15rem;max-width:30rem;text-decoration:none;padding-block:4px}
+.pn-t{font:700 var(--t-h3)/1.1 var(--f-ink);letter-spacing:-.015em;text-wrap:balance}
+.pn:hover .pn-t,.pn:focus-visible .pn-t{text-decoration:underline;text-decoration-color:var(--proof);text-decoration-thickness:2px;text-underline-offset:.15em}
+.pn-next{text-align:right;justify-items:end;margin-left:auto}
 
 /* ---------- takes */
 .takes{display:grid;gap:clamp(24px,3vw,36px) var(--gap);margin-top:clamp(36px,4.5vw,64px)}
@@ -487,6 +495,14 @@ a.avail:hover{background:var(--highlight)}
 }
 
 /* ---------- print: a case study becomes a spec sheet */
+/* Touch screens: small standalone links get a taller tap area without moving
+   anything. Flex items take a matching negative margin; inline links don't
+   change the line box. */
+@media (pointer:coarse){
+  .mast-name,.sec-head a,.crumb a{padding-block:12px;margin-block:-12px}
+  .rule .src a,.offer dd a{padding-block:12px}
+  .ink-ctl input[type=range]{height:32px}
+}
 .print-id{display:none}
 @media print{
   :root{--ground:#fff;--fg:#000;--muted:#333;--proof:#1B62A0;--pencil:#A4DDED}

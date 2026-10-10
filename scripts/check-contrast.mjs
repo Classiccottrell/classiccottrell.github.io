@@ -51,6 +51,7 @@ const PAIRS = [
   ['Band secondary', 'band-muted', 'band'],
   ['Band notes', 'band-proof', 'band'],
   ['Band highlight', 'band-fg', 'band-highlight'],
+  ['Terry Time band', 'tt-ink', 'tt-paper'],
 ];
 
 export function checkContrast() {

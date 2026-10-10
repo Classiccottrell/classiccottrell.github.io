@@ -66,7 +66,7 @@ for (const name of readdirSync(path.join(ROOT, 'source/linefield')).filter((f) =
 
 const css = read('assets/css/site.css');
 const js = read('assets/js/site.js');
-ctx.assets = { css: hash(css), js: hash(js) };
+ctx.assets = { css: hash(css), js: hash(js), terry: hash(read('assets/js/terry-symbols.js')) };
 
 const contrast = checkContrast();
 if (contrast.failures.length) fail(`contrast below 4.5:1: ${contrast.failures.map((p) => p.name).join(', ')}`);

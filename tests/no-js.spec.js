@@ -35,6 +35,15 @@ test('Terry in the footer goes to his shop, and so does the bio', async ({ page 
   await expect(page.locator('.foot-base a.terry-a')).toHaveAttribute('aria-current', 'page');
 });
 
+test('Terry’s footer shows a still frame without JavaScript', async ({ page }) => {
+  await page.goto('/work/terry-time/');
+  const still = page.locator('.tt-band .tt-still');
+  await still.scrollIntoViewIfNeeded();
+  await expect(still).toBeVisible();
+  expect(await still.evaluate((img) => img.complete && img.naturalWidth > 0)).toBe(true);
+  await expect(page.locator('[data-tt-hint]')).toBeHidden();
+});
+
 test('the work index lists every project, grouped', async ({ page }) => {
   await page.goto('/work/');
   await expect(page.locator('.groups .idx-row')).toHaveCount(work.length);

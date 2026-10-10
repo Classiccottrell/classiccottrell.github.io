@@ -100,3 +100,31 @@ test('linefield runs in its band and holds still off screen', async ({ page }) =
   await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
   await expect.poll(() => page.locator('.stage .band-art').evaluate((f) => f.contentDocument.hidden)).toBe(true);
 });
+
+test('Terry Time’s footer runs live on its case study', async ({ page }) => {
+  await page.goto('/work/terry-time/');
+  const canvas = page.locator('canvas[data-terry-symbols]');
+  await canvas.scrollIntoViewIfNeeded();
+  // WebGL2 where the browser has it, a still typed frame where it doesn't.
+  await expect(canvas).toHaveAttribute('data-state', /^(live|flat)$/);
+  expect(await canvas.evaluate((c) => c.width > 0 && c.height > 0)).toBe(true);
+  await expect(page.locator('.tt-still')).toBeHidden();
+  await expect(page.locator('script[src^="/assets/js/terry-symbols.js"]')).toHaveCount(1);
+});
+
+test('Terry’s footer holds one frame under reduced motion, and says so', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/work/terry-time/');
+  const canvas = page.locator('canvas[data-terry-symbols]');
+  await canvas.scrollIntoViewIfNeeded();
+  await expect(canvas).toHaveAttribute('data-state', /^(still|flat)$/);
+  const hint = page.locator('[data-tt-hint]');
+  const state = await canvas.getAttribute('data-state');
+  await expect(hint).toHaveText((await hint.getAttribute(state === 'still' ? 'data-still' : 'data-flat')) ?? '');
+});
+
+test('only the Terry Time page loads the Terry script', async ({ page }) => {
+  await page.goto('/work/linefield/');
+  await expect(page.locator('script[src^="/assets/js/terry-symbols.js"]')).toHaveCount(0);
+  await expect(page.locator('.live-band iframe.band-art')).toHaveCount(1);
+});

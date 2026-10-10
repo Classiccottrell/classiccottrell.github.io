@@ -26,6 +26,7 @@ data/                 the content: edit these, then npm run build
 assets/
   css/site.css        the whole stylesheet, tokens first
   js/site.js          the optional layer
+  js/terry-symbols.js Terry Time's footer, running live on its case study (only that page loads it)
   fonts/              Familjen Grotesk, Newsreader, Red Hat Mono (OFL)
   img/                images the site serves (made by npm run images)
   cards/              share cards, 1200 × 630 (made by npm run cards)

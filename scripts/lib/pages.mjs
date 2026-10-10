@@ -147,6 +147,26 @@ const section = (sec, p, printIt) => h`
 </section>
 ${p.pullQuote && (sec.paragraphs || []).some((t) => t.includes(p.pullQuote)) ? h`<figure class="pq-fig"><blockquote class="pq"><p>${inline(p.pullQuote)}</p></blockquote><figcaption class="note">From “${inline(sec.heading)}”</figcaption></figure>` : ''}`;
 
+// A piece running live in a band under the plate: a baked linefield export in an
+// iframe, or Terry Time's footer drawn on a canvas by terry-symbols.js.
+const liveBand = (live) => (live.kind === 'terry' ? h`
+  <section class="band live-band tt-band" aria-labelledby="live-h">
+    <canvas class="tt-canvas" data-terry-symbols data-src="/assets/img/terry-face-drawing.png" aria-hidden="true"></canvas>
+    <div class="wrap tt-in">
+      <div class="tt-box">
+        <h2 class="note" id="live-h">Running live</h2>
+        <p class="h2">${inline(live.heading)}</p>
+        <p>${inline(live.text)}</p>
+        <p class="note tt-hint" data-js data-tt-hint data-still="${esc(live.still)}" data-flat="${esc(live.flat)}">${inline(live.hint)}</p>
+      </div>
+      <div class="tt-face" data-tt-face>${img({ ...live.image, cls: 'tt-still' })}</div>
+    </div>
+  </section>` : h`
+  <section class="band live-band" aria-labelledby="live-h">
+    ${linefield(live.piece, live.title)}
+    <div class="wrap live-in"><h2 class="note" id="live-h">Running live</h2><p class="h2">${inline(live.heading)}</p><p>${inline(live.text)}</p></div>
+  </section>`);
+
 export function caseStudy(ctx, p) {
   const { work } = ctx;
   const i = work.indexOf(p);
@@ -167,18 +187,15 @@ export function caseStudy(ctx, p) {
 <article class="cs">
   ${pageHead({ kicker: h`<a href="/work/">Work</a> / ${pad2(p.number)} · ${esc(p.kind)}`, title: inline(p.title), lede: inline(p.standfirst), extra: tblock(rows, 'cs-tb') })}
   ${p.plate ? h`<div class="wrap">${plate(p.plate, { label: 'Fig. 1' })}</div>` : ''}
-  ${p.live ? h`
-  <section class="band live-band" aria-labelledby="live-h">
-    ${linefield(p.live, 'Grain Field, a linefield piece, running live')}
-    <div class="wrap live-in"><h2 class="note" id="live-h">Running live</h2><p class="h2">Grain Field, baked.</p><p>One of the twenty, exported as a single HTML file and dropped into this page. No dependencies, no build step.</p></div>
-  </section>` : ''}
+  ${p.live ? liveBand(p.live) : ''}
   <div class="wrap cs-body">${p.sections.map((s) => section(s, p, !took || s === took))}</div>
   <nav class="wrap pn-wrap" aria-label="More work"><div class="pn-nav">
     ${prev ? h`<a class="lnk" href="/work/${esc(prev.slug)}/"><span aria-hidden="true">←</span> ${pad2(prev.number)} ${inline(prev.title)}</a>` : h`<a class="lnk" href="/work/">All work</a>`}
     ${next ? h`<a class="lnk" href="/work/${esc(next.slug)}/">${pad2(next.number)} ${inline(next.title)} <span aria-hidden="true">→</span></a>` : h`<a class="lnk" href="/work/">All work</a>`}
   </div></nav>
 </article>`;
-  return page(ctx, { path: `/work/${p.slug}/`, title: plain(p.title), description: plain(p.standfirst), card: `work-${p.slug}`, type: 'article', bodyClass: 'case', main });
+  const scripts = p.live && p.live.kind === 'terry' ? h`<script src="/assets/js/terry-symbols.js?v=${ctx.assets.terry}" defer></script>` : '';
+  return page(ctx, { path: `/work/${p.slug}/`, title: plain(p.title), description: plain(p.standfirst), card: `work-${p.slug}`, type: 'article', bodyClass: 'case', main, scripts });
 }
 
 // ---------------------------------------------------------------- takes

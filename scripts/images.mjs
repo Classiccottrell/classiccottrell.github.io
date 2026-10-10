@@ -101,6 +101,10 @@ async function terry() {
     log(target, await sharp({ create: { width: size, height: size, channels: 4, background: pad ? '#FFFFFF' : { r: 0, g: 0, b: 0, alpha: 0 } } })
       .composite([{ input: inner, left: pad, top: pad }]).png({ compressionLevel: 9, palette: true }).toFile(target));
   }
+  // The face drawing Terry Time's footer reads as ink coverage. Sixteen greys is
+  // plenty for a mask, at half the weight of the original.
+  const face = out('assets/img/terry-face-drawing.png');
+  log(face, await sharp(src('terry-face-drawing.png')).png({ compressionLevel: 9, palette: true, colours: 16 }).toFile(face));
 }
 
 await drawing('kurtz', '#000000');
@@ -116,6 +120,7 @@ await plate('terry-time', 'webp');
 await plate('terry-time-exhibit', 'webp', { width: 1100, quality: 72 });
 await plate('terry-time-after-hours', 'webp', { width: 1100, quality: 72 });
 await plate('terry-time-404', 'webp', { width: 1100, lossless: true });
+await plate('terry-time-symbols', 'webp', { width: 1040, quality: 72 });
 await plate('creative-services', 'webp', { quality: 72 });
 await plate('creative-services-flow', 'jpg', { width: 1100 });
 await plate('creative-services-print', 'webp', { width: 1100, quality: 70 });

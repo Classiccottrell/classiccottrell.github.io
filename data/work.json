@@ -152,7 +152,13 @@
       ]
     },
     "pullQuote": "So the checks are scripts now instead of opinions.",
-    "live": "grain-field",
+    "live": {
+      "kind": "linefield",
+      "piece": "grain-field",
+      "title": "Grain Field, a linefield piece, running live",
+      "heading": "Grain Field, baked.",
+      "text": "One of the twenty, exported as a single HTML file and dropped into this page. No dependencies, no build step."
+    },
     "legacyIds": [
       "linefield"
     ],
@@ -361,7 +367,20 @@
     },
     "cardImage": "/source/work/terry-time-card.webp",
     "pullQuote": "Selling a shirt is easy. Selling one without losing money on it is the job.",
-    "live": null,
+    "live": {
+      "kind": "terry",
+      "heading": "Terry, set in type.",
+      "text": "The footer from Terry Time, running here on the shop’s own code, ported from React to plain JavaScript. Every cell reads the drawing under it, picks a glyph by weight and stroke direction, then keeps picking.",
+      "hint": "Move across it and the type switches faster. Flick fast and the ink smears into a red second plate, then settles.",
+      "still": "Reduced motion is on, so it holds one frame.",
+      "flat": "This browser can’t run WebGL2 here, so it holds one frame.",
+      "image": {
+        "src": "/assets/img/work/terry-time-symbols.webp",
+        "width": 1040,
+        "height": 1040,
+        "alt": ""
+      }
+    },
     "legacyIds": [],
     "sections": [
       {
@@ -443,7 +462,7 @@
       {
         "heading": "Terry keeps appearing",
         "paragraphs": [
-          "Footers and error pages draw Terry’s face in a grid of type symbols that never stops switching. It runs on WebGL2, falls back to a canvas still, and holds a single frame for anyone who has asked for reduced motion."
+          "Footers and error pages draw Terry’s face in a grid of type symbols that never stops switching. It runs on WebGL2, falls back to a canvas still, and holds a single frame for anyone who has asked for reduced motion. The same piece is running live near the top of this page."
         ],
         "image": {
           "src": "/assets/img/work/terry-time-404.webp",

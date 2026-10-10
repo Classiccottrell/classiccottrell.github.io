@@ -97,9 +97,10 @@ already installed, set `PW_CHROMIUM=/path/to/chrome`.
 - **GitHub Pages:** serves the same files (`.nojekyll` switches Jekyll off).
   Static hosts can't receive forms, so on this copy the brief offers to copy
   the work order and send it on LinkedIn instead.
-- **The address:** `url` in `data/site.json` sets canonical links, share cards
-  and the sitemap. Point it at classiccottrell.ca once that serves this site,
-  then `npm run build`.
+- **The address:** `url` in `data/site.json` is https://classiccottrell.ca (on
+  Netlify). It sets canonical links, share cards and the sitemap, so the GitHub
+  Pages copy points search engines at the .ca address too. Change it, then
+  `npm run build`.
 
 ## Credits
 

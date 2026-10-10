@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://classiccottrell.github.io/sitemap.xml
+Sitemap: https://classiccottrell.ca/sitemap.xml

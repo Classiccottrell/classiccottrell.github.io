@@ -114,7 +114,7 @@ export function workIndex(ctx) {
   const { work } = ctx;
   const legacy = Object.fromEntries(work.flatMap((p) => p.legacyIds.map((id) => [id, p.slug])));
   const main = h`
-${pageHead({ kicker: `Work · ${work.length} projects`, title: 'Work', lede: 'Products, systems, agents and tools, and the client work before them. Each case study opens with a title block and the take it proves, and ends with what it actually took.' })}
+${pageHead({ kicker: `Work · ${work.length} projects`, title: 'Work', lede: 'Products, systems, agents and tools, and the client work before them. Each case study opens with a title block, and most carry the take they prove.' })}
 <div class="wrap groups">${GROUPS.map((g) => {
     const items = work.filter((p) => p.group === g);
     const id = `g-${g.toLowerCase().replace(/\s+/g, '-')}`;
@@ -197,7 +197,7 @@ export function caseStudy(ctx, p) {
   </div></nav>
 </article>`;
   const scripts = p.live && p.live.kind === 'terry' ? h`<script src="/assets/js/terry-symbols.js?v=${ctx.assets.terry}" defer></script>` : '';
-  return page(ctx, { path: `/work/${p.slug}/`, title: plain(p.title), description: plain(p.standfirst), card: `work-${p.slug}`, type: 'article', bodyClass: 'case', main, scripts });
+  return page(ctx, { path: `/work/${p.slug}/`, title: plain(p.title), description: plain(p.description || p.standfirst), card: `work-${p.slug}`, type: 'article', bodyClass: 'case', main, scripts });
 }
 
 // ---------------------------------------------------------------- takes
@@ -235,7 +235,7 @@ export function takePage(ctx, t) {
     ${next ? h`<a class="lnk" href="/takes/${esc(next.slug)}/">${esc(next.id)} <span aria-hidden="true">→</span></a>` : h`<a class="lnk" href="/takes/">All takes</a>`}
   </div></nav>
 </article>`;
-  return page(ctx, { path: `/takes/${t.slug}/`, title: `${t.id}: ${plain(t.text)}`, description: plain(t.receipt), card: `take-${t.slug}`, type: 'article', bodyClass: 'take-body', main });
+  return page(ctx, { path: `/takes/${t.slug}/`, title: `${t.id}: ${plain(t.text)}`, description: plain(t.description || t.receipt), card: `take-${t.slug}`, type: 'article', bodyClass: 'take-body', main });
 }
 
 // ---------------------------------------------------------------- work with me
@@ -366,7 +366,7 @@ ${pageHead({ kicker: 'About', title: esc(site.name), lede: esc(site.headline) })
   <h2 class="h2" id="what-h">What I work on</h2>
   <ul class="what">${H.offers.map((o) => h`<li><a href="/work-with-me/#offer-${esc(o.id)}"><b>${esc(o.title)}</b></a> ${inline(o.text)}</li>`)}</ul>
 </section>`;
-  return page(ctx, { path: '/about/', title: 'About', description: plain(site.bio[0]), card: 'about', main });
+  return page(ctx, { path: '/about/', title: 'About', description: 'I’m a product designer. I take complicated enterprise software apart until it makes sense, and I draw, write and build tools on the side.', card: 'about', main });
 }
 
 // ---------------------------------------------------------------- colophon

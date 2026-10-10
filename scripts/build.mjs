@@ -43,6 +43,19 @@ for (const p of ctx.work) if (p.take && !ctx.takes.some((t) => t.id === p.take))
 for (const t of ctx.takes) for (const s of t.sources) if (s.href.startsWith('/work/') && s.href !== '/work/' && !slugs.has(s.href.split('/')[2])) fail(`${t.id} links to missing ${s.href}`);
 for (const r of ctx.rules) if (!slugs.has(r.href.split('/')[2])) fail(`${r.id} links to missing ${r.href}`);
 
+// House style in the copy: curly apostrophes and Canadian spelling. Text in
+// `code` is exempt, so terminal terms like `256-color` stay as they are.
+const US_SPELLING = /\b(colors?|colored|coloring|behaviors?|behavioral|labeling|labeled|dialed|favorites?|gray|centers?|centered|catalogs?|maths)\b/i;
+const prose = (v) => (typeof v === 'string' ? (/^(https?:|\/)/.test(v) ? [] : [v.replace(/`[^`]*`/g, '')])
+  : v && typeof v === 'object' ? Object.values(v).flatMap(prose) : []);
+for (const key of ['site', 'work', 'takes', 'rules', 'writing', 'drawings', 'hire']) {
+  for (const text of prose(ctx[key])) {
+    const straight = text.match(/\w'\w/), us = text.match(US_SPELLING);
+    if (straight) fail(`data/${key}.json has a straight apostrophe ("${straight[0]}"); use ’`);
+    if (us) fail(`data/${key}.json uses US spelling "${us[0]}"; this site writes Canadian English`);
+  }
+}
+
 // ---------------------------------------------------------------- generated assets
 const outputs = new Map(); // repo path -> string | Buffer
 

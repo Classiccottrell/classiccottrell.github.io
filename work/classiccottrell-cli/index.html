@@ -55,16 +55,16 @@
 </header>
   <div class="wrap">
 <figure class="plate">
-  <div class="panel crop callouts"><img src="/assets/img/work/photo-curator-cli.webp" width="1600" height="872" alt="Product box for the Photo Curation Skill v1: a white box with a black spine, a green aperture logo, a large orange v1 with an AI-powered badge, and the line Photo Curation Skill, Provider-Neutral Real Estate Photo Selection."></div>
+  <div class="panel crop callouts"><img src="/assets/img/work/photo-curator-cli.webp" width="1600" height="872" alt="The Photo Curation Skill v1 product box: white with a black spine, a green aperture logo and a large orange v1, for provider-neutral real estate photo selection."></div>
   
-  <figcaption class="note cap">Fig. 1 · Photo Curator CLI, the first shipped product on the framework.</figcaption>
+  <figcaption class="note cap">Fig. 1 · Photo Curator CLI, boxed as Photo Curation Skill v1: the first shipped product on the framework.</figcaption>
 </figure></div>
   
   <div class="wrap cs-body">
 <section class="cs-sec cs-print">
   
   
-  <p>Every new internal tool started the same way: a blank argparse script, a copy-pasted color function, a welcome message written once and never touched again. The branding lived in whichever script wrote it last.</p><p>ClassicCottrell CLI is the fix: subclass a Brand, register a few commands, and every tool that ships gets the same welcome page, the same terminal styling, and the same fallback behavior for free.</p>
+  <p>Every new internal tool started the same way: a blank argparse script, a copy-pasted colour function, a welcome message written once and never touched again. The branding lived in whichever script wrote it last.</p><p>ClassicCottrell CLI is the fix: subclass a Brand, register a few commands, and every tool that ships gets the same welcome page, the same terminal styling, and the same fallback behaviour for free.</p>
   
   
   
@@ -75,7 +75,7 @@
   <h2 class="cs-h">What it is</h2>
   <p class="cs-intro">One framework, three fields to brand it:</p>
   
-  <ul class="items"><li><strong>Brand once, in three fields.</strong> Subclass Brand with a name, tagline, and hex accent, and every command inherits a welcome page, an ASCII-rendered logo, and a branded first-run splash. No copy-paste between projects.</li><li><strong>Terminal color that actually degrades.</strong> The success/warning/error/info helpers detect truecolor, 256-color, or 16-color terminals automatically, fall back to plain text under NO_COLOR or a pipe, and never assume a capability that isn't there.</li><li><strong>Three bundled apps prove the framework holds up.</strong> ccasset (responsive image variants and blurhash), ccsync (frontmatter validation and content indexing), and cctokens (CSS custom-property extraction) each ship in roughly 80 to 145 lines because the framework does the heavy lifting, not the app.</li></ul>
+  <ul class="items"><li><strong>Brand once, in three fields.</strong> Subclass Brand with a name, tagline, and hex accent, and every command inherits a welcome page, an ASCII-rendered logo, and a branded first-run splash. No copy-paste between projects.</li><li><strong>Terminal colour that actually degrades.</strong> The success/warning/error/info helpers detect <code>truecolor</code>, <code>256-color</code>, or <code>16-color</code> terminals automatically, fall back to plain text under <code>NO_COLOR</code> or a pipe, and never assume a capability that isn’t there.</li><li><strong>Three bundled apps prove the framework holds up.</strong> ccasset (responsive image variants and blurhash), ccsync (frontmatter validation and content indexing), and cctokens (CSS custom-property extraction) each ship in roughly 80 to 145 lines because the framework does the heavy lifting, not the app.</li></ul>
   
   
   
@@ -85,7 +85,7 @@
   <h2 class="cs-h">The UX thinking</h2>
   
   
-  <ul class="items"><li><strong>A first run should look considered, not empty.</strong> Every tool built on the framework gets the same branded welcome page and splash banner by default, so “we didn’t have time for onboarding” stops being the default outcome.</li><li><strong>Degrade honestly instead of assuming a terminal.</strong> Color support is detected, not assumed, so the same command reads correctly whether it's a modern terminal, an old one, or a log file redirected to disk.</li><li><strong>White-labeling should never require a fork.</strong> Every brand token overrides through an env var prefix at runtime, so the same framework ships five differently branded tools without five copies of the code.</li></ul>
+  <ul class="items"><li><strong>A first run should look considered, not empty.</strong> Every tool built on the framework gets the same branded welcome page and splash banner by default, so “we didn’t have time for onboarding” stops being the default outcome.</li><li><strong>Degrade honestly instead of assuming a terminal.</strong> Colour support is detected, not assumed, so the same command reads correctly whether it’s a modern terminal, an old one, or a log file redirected to disk.</li><li><strong>White-labelling should never require a fork.</strong> Every brand token overrides through an env var prefix at runtime, so one framework can ship any number of differently branded tools without a copy of the code for each.</li></ul>
   
   
   
@@ -95,7 +95,7 @@
   <h2 class="cs-h">Photo Curator CLI: a real product on the framework</h2>
   <p class="cs-intro">The framework needed proof it could carry a shipped product, not just internal tools. Photo Curator CLI is that proof:</p>
   
-  <ul class="items"><li><strong>Automated shortlisting, not manual triage.</strong> Point it at a shoot folder and it scores every frame, then ranks a keep/reject shortlist automatically — the first pass done for you, fast, instead of scrubbing hundreds of near-duplicates by eye.</li><li><strong>Thresholds you set, not a black box.</strong> Keep/reject cutoffs are configurable, so the tool's judgment stays tunable to how strict a pass you actually want.</li><li><strong>Built on the same branded shell as everything else.</strong> It ships as a command-line tool on the Classic Cottrell CLI toolkit, so it inherits the same welcome page, terminal styling, and fallback behavior as ccasset, ccsync, and cctokens for free.</li></ul>
+  <ul class="items"><li><strong>Automated shortlisting, not manual triage.</strong> Point it at a shoot folder and it scores every frame, then ranks a keep/reject shortlist automatically — the first pass done for you, fast, instead of scrubbing hundreds of near-duplicates by eye.</li><li><strong>Thresholds you set, not a black box.</strong> Keep/reject cutoffs are configurable, so the tool’s judgment stays tunable to how strict a pass you actually want.</li><li><strong>Built on the same branded shell as everything else.</strong> It ships as a command-line tool on ClassicCottrell CLI, so it inherits the same welcome page, terminal styling, and fallback behaviour as ccasset, ccsync, and cctokens for free.</li></ul>
   
   
   
@@ -104,7 +104,7 @@
 <section class="cs-sec cs-print">
   
   
-  <p>The measure of a framework isn't the first tool built on it, it's the fifth. Three internal apps and one shipped product in, the pattern's held: brand a class, register a command, ship.</p>
+  <p>The measure of a framework isn’t the first tool built on it, it’s the fifth. Three internal apps and one shipped product in, the pattern’s held: brand a class, register a command, ship.</p>
   
   
   

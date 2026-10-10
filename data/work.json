@@ -31,7 +31,7 @@
       "src": "/assets/img/work/vpat-vault.webp",
       "width": 1600,
       "height": 872,
-      "alt": "Product box for VPAT Vault: a white box with a black spine, a green leaf logo, a large orange 2.1 with an Accessible badge, and the line VPAT, Voluntary Product Accessibility Template, WCAG 2.1 Conformance Report.",
+      "alt": "The VPAT Vault product box: white with a black spine, a green leaf logo, a large orange 2.1 and the line WCAG 2.1 Conformance Report.",
       "caption": "The VPAT Vault box: nine prompts, a validator, a dataset, a report template and a Chrome scanner.",
       "callouts": []
     },
@@ -55,7 +55,7 @@
           "alt": "Illustration: two hands hold a magnifying glass over a bug on a web page covered in accessibility checks."
         },
         "paragraphs": [
-          "I wanted a scanning tool I would actually use alongside VPAT creation. The extension captures automated evidence where the work starts, while the prompts and template turn that evidence into a reviewable report. I exercised the workflow with my harness so the pieces stay connected from scan to draft."
+          "I wanted a scanning tool I would actually use alongside VPAT creation. The extension captures automated evidence where the work starts, while the prompts and template turn that evidence into a reviewable report. I tested the workflow end to end, so the pieces stay connected from scan to draft."
         ]
       },
       {
@@ -131,7 +131,7 @@
       "src": "/assets/img/work/linefield.webp",
       "width": 1360,
       "height": 1611,
-      "alt": "The top of the linefield gallery: the headline Generative backgrounds, shipped as one file, a short intro, the Wake overlay panel, five collection filters, and the first row of the Currents collection, three monochrome hairline pieces on near-black.",
+      "alt": "The top of the linefield gallery: the headline Generative backgrounds, shipped as one file, five collection filters and three hairline pieces on near-black.",
       "caption": "The gallery: twenty pieces in five collections, monochrome by default.",
       "callouts": [
         {
@@ -175,15 +175,15 @@
         "items": [
           {
             "lead": "Monochrome by default.",
-            "text": "Near-white hairlines on near-black, one object per frame, and a declared empty zone where your headline goes. Brightness comes from lines crossing, not from colour. Colour is still one preset away. It just isn't the default any more."
+            "text": "Near-white hairlines on near-black, one object per frame, and a declared empty zone where your headline goes. Brightness comes from lines crossing, not from colour. Colour is still one preset away. It just isn’t the default any more."
           },
           {
-            "lead": "Sixteen controls on every piece.",
-            "text": "Scale, speed, stroke, opacity, saturation, color mode, two colors, two hues, invert, glow, angle, motion, phase and density, plus whatever each piece needs on its own. A script drives every control on every piece and diffs the rendered frames: 299 controls, none of them dead. It exists because twice a control shipped that read its value and changed nothing, and both times a human review passed it."
+            "lead": "Fourteen controls on every piece.",
+            "text": "Scale, speed, stroke, opacity, saturation, colour mode, two colours, invert, glow, angle, motion, phase and density, plus whatever each piece needs on its own. A script drives every control on every piece and diffs the rendered frames: 299 controls, none of them dead. It exists because twice a control shipped that read its value and changed nothing, and both times a human review passed it."
           },
           {
             "lead": "Five ways out.",
-            "text": "A baked HTML file with every shared module inlined, the untouched source, PNG at 2x or 4x, SVG, and a written prompt describing the current settings. The baked file is the point. It has zero external references, so it runs from any folder on any host. For decks and mockups there is also a pack of square stills of all twenty, and a catalogue listing each piece's empty zone and controls."
+            "text": "A baked HTML file with every shared module inlined, the untouched source, PNG at 2x or 4x, SVG, and a written prompt describing the current settings. The baked file is the point. It has zero external references, so it runs from any folder on any host. For decks and mockups there is also a pack of square stills of all twenty, and a catalogue listing each piece’s empty zone and controls."
           },
           {
             "lead": "Two new materials.",
@@ -198,7 +198,7 @@
       {
         "heading": "What it actually took",
         "paragraphs": [
-          "Drawing the pieces was the easy half. The hard half was catching the things that look correct on paper. A control whose maths is right but whose effect is smaller than the line it draws. A baked export that silently produced a blank page for two pieces because a new module was never registered for inlining, which two separate reviews reported as passing.",
+          "Drawing the pieces was the easy half. The hard half was catching the things that look correct on paper. A control whose math is right but whose effect is smaller than the line it draws. A baked export that silently produced a blank page for two pieces because a new module was never registered for inlining, which two separate reviews reported as passing.",
           "The worst one was not a bug at all. Five pieces shipped that were each individually fine and collectively looked like one thing, because every review judged a piece against its own intent and never against the others.",
           "So the checks are scripts now instead of opinions. The build refuses to run when the manifest, the pieces and the README disagree. The control audit fails on anything that reads a value without changing a pixel. And the last gate before shipping is looking at all twenty side by side, which is the only one that would have caught the thing a person actually noticed."
         ]
@@ -317,6 +317,7 @@
     "group": "Products",
     "featured": true,
     "summary": "One merch shop, two storefronts, and paid orders pick the winner.",
+    "description": "A shop for Terry, the face on East Van walls: seven storefronts designed, two in a 50/50 test, and the rule for picking the winner written first.",
     "standfirst": "A shop for Terry, the face that keeps turning up on East Van walls. I designed seven storefronts, put two of them in a 50/50 split, and wrote down how the winner gets picked before the first visitor arrives.",
     "take": "T-08",
     "year": 2026,
@@ -345,7 +346,7 @@
       "src": "/assets/img/work/terry-time.webp",
       "width": 1360,
       "height": 809,
-      "alt": "The two Terry Time storefronts side by side, cobalt blue on warm paper. Left, Store A, the Street Evidence Archive: a three-line headline, a tilted Case 003 stamp and black-and-white street photos filed as evidence. Right, Store B, the Corner Store Receipt: the headline Rung up in East Van beside a long paper receipt that lists a black polo and a black hoodie with dot leaders and prices.",
+      "alt": "The two Terry Time storefronts side by side in cobalt on warm paper: Store A, an archive of street photos filed as evidence, and Store B, a corner-store receipt.",
       "caption": "Store A and Store B. A visitor only ever sees one of them.",
       "callouts": [
         {
@@ -411,7 +412,7 @@
           "src": "/assets/img/work/terry-time-exhibit.webp",
           "width": 1100,
           "height": 558,
-          "alt": "Exhibit 001 in Store A: a black pique polo on a blue grid, beside a spec table that reads Condition, ready for circulation; Marking, embroidered Terry face; Finish, black; Sizes, S to XL; Value, $37.83 CAD. A Cleared to wear stamp sits in the corner, above a size picker.",
+          "alt": "Exhibit 001: a black pique polo on a blue grid, beside a spec table (embroidered Terry face, S to XL, $37.83 CAD) and a Cleared to wear stamp.",
           "caption": "Exhibit 001 in Store A. The polo, filed like evidence."
         }
       },
@@ -420,7 +421,7 @@
         "items": [
           {
             "lead": "Seven storefronts is a decision you haven’t made yet.",
-            "text": "A UX audit in September caught it: the home page was a chooser between five shops, so a visitor would land on a design review instead of a store. Five directions went to a branch, and two went into the test."
+            "text": "A UX audit in September caught it: the home page was a chooser between the first five shops, so a visitor would land on a design review instead of a store. Five directions went to a branch, and two went into the test."
           },
           {
             "lead": "A visitor only ever sees one store.",
@@ -439,13 +440,13 @@
       {
         "heading": "After hours",
         "paragraphs": [
-          "Both stores link to one shoppable lookbook, told in timestamps: 18:51, Dusk, 21:55. Each chapter is a photo, a line and the kit to wear in it, with the size picker right there."
+          "Both stores link to one shoppable lookbook, laid out as a single evening: 18:51, Dusk, 21:55. The times are the photos’ own camera timestamps; the skyline shot has none, so it’s Dusk. Each chapter is a photo, a line and the kit to wear in it, with the size picker right there."
         ],
         "image": {
           "src": "/assets/img/work/terry-time-after-hours.webp",
           "width": 1100,
           "height": 991,
-          "alt": "The 18:51 chapter of the lookbook: a cobalt-toned photo of a person standing in tall hedges at golden hour, captioned Hedge line, East Van, beside the headline Clock out, a short paragraph and a Kit for 18:51 card with the black polo and its size picker.",
+          "alt": "The 18:51 chapter of the lookbook: a cobalt-toned photo of someone in tall hedges at golden hour, the headline Clock out, and a kit card with the black polo.",
           "caption": "Hour 01, 18:51. *Clock out.*"
         }
       },
@@ -604,7 +605,7 @@
       {
         "heading": "The light fork: Agentic Light",
         "paragraphs": [
-          "The Agent Workspace Template runs all night. Daily ingest, a Friday close-out, a health check every four hours. That is the right shape when you live in it. It is the wrong shape when you want to point an agent at one repo for an afternoon.",
+          "The full bench runs all night. Daily ingest, a Friday close-out, a health check every four hours. That is the right shape when you live in it. It is the wrong shape when you want to point an agent at one repo for an afternoon.",
           "Agentic Light is the same bench with the night shift removed. No scheduler, no background service, no retry queue. You start it by hand, one provider runs once in the foreground, and you watch what it does."
         ]
       },
@@ -626,7 +627,7 @@
           },
           {
             "lead": "A second brain that knows the project.",
-            "text": "Plain Markdown records with offline full-text search and optional Ollama embeddings. When you ask for it, a context packet gets prepended to the coder's prompt. The index is disposable and rebuilds from the files, so the Markdown stays the store."
+            "text": "Plain Markdown records with offline full-text search and optional Ollama embeddings. When you ask for it, a context packet gets prepended to the coder’s prompt. The index is disposable and rebuilds from the files, so the Markdown stays the store."
           },
           {
             "lead": "A dashboard that reads its own config.",
@@ -643,7 +644,7 @@
           },
           {
             "lead": "Specialize once, commit the result.",
-            "text": "Specializing writes three config files: the active roles, the gate list and the selected skills. In a fork you commit them, so the setup lives in the repo, not in anyone's memory."
+            "text": "Specializing writes three config files: the active roles, the gate list and the selected skills. In a fork you commit them, so the setup lives in the repo, not in anyone’s memory."
           },
           {
             "lead": "One human gate, and it does not auto-approve.",
@@ -691,7 +692,7 @@
       {
         "paragraphs": [
           "Ask a general AI to review your interface and you get a pep talk: make it feel simpler, tighten the hierarchy, smooth out the flow. It sounds like feedback. It changes nothing, because the model has no floor to hold itself to and no way to prove its advice actually works.",
-          "UX Skill Repo is the fix: twelve narrowly scoped AI agent skills, strategists, critics, writers, builders, run by one orchestrator and held to a single measurable standard instead of general-purpose opinion."
+          "UX Skill Repo is the fix: twelve narrowly scoped AI agent skills (strategists, critics, writers and builders), run by one orchestrator and held to a single measurable standard instead of general-purpose opinion."
         ]
       },
       {
@@ -708,7 +709,7 @@
           },
           {
             "lead": "A loop that finds its own bugs.",
-            "text": "improvement-loop runs audit, execute, systematize, re-audit, escalate, and won’t advance a round unless the rulebook itself learned something. Six rounds in, it’s caught its own accent color failing contrast as text, a selection state that broke in dark mode, and a fully built page nothing on the site linked to."
+            "text": "improvement-loop runs audit, execute, systematize, re-audit, escalate, and won’t advance a round unless the rulebook itself learned something. Six rounds in, it’s caught its own accent colour failing contrast as text, a selection state that broke in dark mode, and a fully built page nothing on the site linked to."
           }
         ],
         "outro": "I run the skills from .agents/skills/ in Claude Code and Cursor. The repository is private; this case study covers the rules and review loop."
@@ -722,7 +723,7 @@
           },
           {
             "lead": "The rulebook only grows from evidence.",
-            "text": "It started at nine color rules and six interaction rules. It’s grown because rounds kept finding real, unstaged bugs, not because someone guessed a rule might matter someday."
+            "text": "It started at nine colour rules and six interaction rules. It’s grown because rounds kept finding real, unstaged bugs, not because someone guessed a rule might matter someday."
           },
           {
             "lead": "A clean pass that teaches nothing doesn’t count.",
@@ -778,8 +779,8 @@
     "sections": [
       {
         "paragraphs": [
-          "Most redesigns dial decoration down a little: a smaller shadow, a tighter radius, one fewer gradient. Brutal UX asks a blunter question: what's actually load-bearing if you remove all of it at once? No rounded corners. No shadows. No gradients. No easing. No custom font.",
-          "The bet is that hierarchy doesn't disappear when you strip the decoration. It just moves, from the channel your eye scans automatically to the one you have to read."
+          "Most redesigns dial decoration down a little: a smaller shadow, a tighter radius, one fewer gradient. Brutal UX asks a blunter question: what’s actually load-bearing if you remove all of it at once? No rounded corners. No shadows. No gradients. No easing. No custom font.",
+          "The bet is that hierarchy doesn’t disappear when you strip the decoration. It just moves, from the channel your eye scans automatically to the one you have to read."
         ]
       },
       {
@@ -787,15 +788,15 @@
         "intro": "One enforcement layer, applied globally and irreversibly:",
         "items": [
           {
-            "lead": "Every soft-UI cue removed at once, not dialed down.",
+            "lead": "Every soft-UI cue removed at once, not dialled down.",
             "text": "Zero border-radius, zero box-shadow, zero transition duration, system monospace only, all forced with `!important` at the root so no component can quietly opt back in."
           },
           {
             "lead": "Hierarchy still exists, it just moved.",
-            "text": "A five-step type scale (48/32/24/16/13px) and 2-3px black borders carry the entire structure that shadow and rounding used to carry."
+            "text": "A five-step type scale (48/32/24/16/13 px) and 2–3 px black borders carry the entire structure that shadow and rounding used to carry."
           },
           {
-            "lead": "Color is rationed like a budget, not a palette.",
+            "lead": "Colour is rationed like a budget, not a palette.",
             "text": "Red for alerts, green for live data, blue for raw hyperlinks, never decoration, never the only signal a state changed."
           }
         ]
@@ -804,22 +805,22 @@
         "heading": "The UX thinking",
         "items": [
           {
-            "lead": "Removing polish doesn't remove hierarchy, it relocates it.",
-            "text": "From the pre-attentive visual channel to the semantic one. The system's own validation pass names the trade directly: novices pay a visual-search penalty, experts get near-zero-friction spatial memory."
+            "lead": "Removing polish doesn’t remove hierarchy, it relocates it.",
+            "text": "From the pre-attentive visual channel to the semantic one. The system’s own validation pass names the trade directly: novices pay a visual-search penalty, experts get near-zero-friction spatial memory."
           },
           {
             "lead": "Instant feedback is a decision, not a missing feature.",
             "text": "Every transition and animation duration is zeroed globally. State changes land in the same frame instead of easing into existence, an anvil dropping, not a soft landing."
           },
           {
-            "lead": "A brutal system still has to pass accessibility, or it's just ugly.",
-            "text": "The manifesto ships its own amendments: a loud, instant focus ring, uppercase capped at short labels only, and color always paired with text so it's never the sole carrier of meaning."
+            "lead": "A brutal system still has to pass accessibility, or it’s just ugly.",
+            "text": "The manifesto ships its own amendments: a loud, instant focus ring, uppercase capped at short labels only, and colour always paired with text so it’s never the sole carrier of meaning."
           }
         ]
       },
       {
         "paragraphs": [
-          "Most design systems soften over time. This one is the control group. Building the extreme version first makes it obvious which comfort you're actually buying when you add rounding, shadow, or motion back in.",
+          "Most design systems soften over time. This one is the control group. Building the extreme version first makes it obvious which comfort you’re actually buying when you add rounding, shadow, or motion back in.",
           "[Terry Time](/work/terry-time/) is built on it, in cobalt."
         ]
       }
@@ -866,7 +867,7 @@
       {
         "paragraphs": [
           "Every new interface started as a fresh set of decisions: which green, which radius, which type pairing, made again from scratch each time and drifting a little further from the last one. Re-theming meant hunting down hardcoded values across a dozen components.",
-          "The Classic Cottrell Design System is the fix: one set of CSS custom properties for color, type, and spacing, and a library of primitives built on top of them, so re-theming is a values-only edit instead of a rewrite."
+          "The Classic Cottrell Design System is the fix: one set of CSS custom properties for colour, type, and spacing, and a library of primitives built on top of them, so re-theming is a values-only edit instead of a rewrite."
         ]
       },
       {
@@ -915,8 +916,8 @@
       "src": "/assets/img/work/photo-curator-cli.webp",
       "width": 1600,
       "height": 872,
-      "alt": "Product box for the Photo Curation Skill v1: a white box with a black spine, a green aperture logo, a large orange v1 with an AI-powered badge, and the line Photo Curation Skill, Provider-Neutral Real Estate Photo Selection.",
-      "caption": "Photo Curator CLI, the first shipped product on the framework.",
+      "alt": "The Photo Curation Skill v1 product box: white with a black spine, a green aperture logo and a large orange v1, for provider-neutral real estate photo selection.",
+      "caption": "Photo Curator CLI, boxed as Photo Curation Skill v1: the first shipped product on the framework.",
       "callouts": []
     },
     "pullQuote": null,
@@ -927,8 +928,8 @@
     "sections": [
       {
         "paragraphs": [
-          "Every new internal tool started the same way: a blank argparse script, a copy-pasted color function, a welcome message written once and never touched again. The branding lived in whichever script wrote it last.",
-          "ClassicCottrell CLI is the fix: subclass a Brand, register a few commands, and every tool that ships gets the same welcome page, the same terminal styling, and the same fallback behavior for free."
+          "Every new internal tool started the same way: a blank argparse script, a copy-pasted colour function, a welcome message written once and never touched again. The branding lived in whichever script wrote it last.",
+          "ClassicCottrell CLI is the fix: subclass a Brand, register a few commands, and every tool that ships gets the same welcome page, the same terminal styling, and the same fallback behaviour for free."
         ]
       },
       {
@@ -940,8 +941,8 @@
             "text": "Subclass Brand with a name, tagline, and hex accent, and every command inherits a welcome page, an ASCII-rendered logo, and a branded first-run splash. No copy-paste between projects."
           },
           {
-            "lead": "Terminal color that actually degrades.",
-            "text": "The success/warning/error/info helpers detect truecolor, 256-color, or 16-color terminals automatically, fall back to plain text under NO_COLOR or a pipe, and never assume a capability that isn't there."
+            "lead": "Terminal colour that actually degrades.",
+            "text": "The success/warning/error/info helpers detect `truecolor`, `256-color`, or `16-color` terminals automatically, fall back to plain text under `NO_COLOR` or a pipe, and never assume a capability that isn’t there."
           },
           {
             "lead": "Three bundled apps prove the framework holds up.",
@@ -958,11 +959,11 @@
           },
           {
             "lead": "Degrade honestly instead of assuming a terminal.",
-            "text": "Color support is detected, not assumed, so the same command reads correctly whether it's a modern terminal, an old one, or a log file redirected to disk."
+            "text": "Colour support is detected, not assumed, so the same command reads correctly whether it’s a modern terminal, an old one, or a log file redirected to disk."
           },
           {
-            "lead": "White-labeling should never require a fork.",
-            "text": "Every brand token overrides through an env var prefix at runtime, so the same framework ships five differently branded tools without five copies of the code."
+            "lead": "White-labelling should never require a fork.",
+            "text": "Every brand token overrides through an env var prefix at runtime, so one framework can ship any number of differently branded tools without a copy of the code for each."
           }
         ]
       },
@@ -976,17 +977,17 @@
           },
           {
             "lead": "Thresholds you set, not a black box.",
-            "text": "Keep/reject cutoffs are configurable, so the tool's judgment stays tunable to how strict a pass you actually want."
+            "text": "Keep/reject cutoffs are configurable, so the tool’s judgment stays tunable to how strict a pass you actually want."
           },
           {
             "lead": "Built on the same branded shell as everything else.",
-            "text": "It ships as a command-line tool on the Classic Cottrell CLI toolkit, so it inherits the same welcome page, terminal styling, and fallback behavior as ccasset, ccsync, and cctokens for free."
+            "text": "It ships as a command-line tool on ClassicCottrell CLI, so it inherits the same welcome page, terminal styling, and fallback behaviour as ccasset, ccsync, and cctokens for free."
           }
         ]
       },
       {
         "paragraphs": [
-          "The measure of a framework isn't the first tool built on it, it's the fifth. Three internal apps and one shipped product in, the pattern's held: brand a class, register a command, ship."
+          "The measure of a framework isn’t the first tool built on it, it’s the fifth. Three internal apps and one shipped product in, the pattern’s held: brand a class, register a command, ship."
         ]
       }
     ]
@@ -998,7 +999,8 @@
     "kind": "Campaigns and platform UI",
     "group": "Client work",
     "featured": false,
-    "summary": "Six years of campaigns for adidas, the NBA, MLS and E.D. Smith, and the platform behind them.",
+    "summary": "Six years of campaigns for adidas with the NBA and MLS, for E.D. Smith, and the platform behind them.",
+    "description": "Six years of cross-channel campaigns at Tagga, for adidas with the NBA, NCAA and MLS and for E.D. Smith, then the UI of the data platform behind them.",
     "standfirst": "From 2011 to 2017 I designed cross-channel campaigns at Tagga: for adidas with the NBA, the NCAA and MLS, for E.D. Smith, and for brands like Kicking Horse Coffee and Lindt. Then I led the UI of the customer data platform they all fed.",
     "take": null,
     "year": "2011–2017",
@@ -1019,7 +1021,7 @@
       "src": "/assets/img/work/creative-services.webp",
       "width": 1360,
       "height": 726,
-      "alt": "A grid of nine campaign graphics. Top row: an adidas and UCLA stadium video board that reads Win a VIP game experience, March to March, text ucla to 47170 to enter; an NBA Store banner with three swingman jerseys and the headline How Swingman are you?; a Mississippi State graphic that reads Win Bulldogs home game gear. Middle row: three MLS graphics offering a VIP game experience, for the LA Galaxy, Seattle Sounders FC and the Philadelphia Union, each with a player. Bottom row: E.D. Smith’s #SummerFun key visual of a girl in sunglasses, a Pack a Lunch with Triple Fruits graphic offering cash prizes, and a Kicking Horse Coffee graphic offering a year of free ground coffee.",
+      "alt": "Nine campaign graphics in a grid: adidas promotions for UCLA, Mississippi State, the NBA Store and three MLS clubs, plus E.D. Smith and Kicking Horse Coffee.",
       "caption": "Campaign work for adidas with the NCAA, the NBA and MLS, for E.D. Smith and for Kicking Horse Coffee.",
       "callouts": [
         {
@@ -1073,7 +1075,7 @@
           },
           {
             "lead": "MLS.",
-            "text": "To help MLS compete with the bigger U.S. leagues, adidas wanted to know who its fans were. Over two seasons we ran in-store signings and displays, social posts and photo-contest sites for VIP game experiences."
+            "text": "To help MLS compete with the bigger US leagues, adidas wanted to know who its fans were. Over two seasons we ran in-store signings and displays, social posts and photo-contest sites for VIP game experiences."
           },
           {
             "lead": "E.D. Smith: TasteCreator.",
@@ -1084,7 +1086,7 @@
           "src": "/assets/img/work/creative-services-print.webp",
           "width": 1100,
           "height": 601,
-          "alt": "Three MLS posters for stores, side by side, for Sporting Kansas City, Seattle Sounders FC and the Philadelphia Union. Each shows a player above the line Win a VIP game experience, a QR code, a keyword to text to 82442, and the prizes: weekly ticket giveaways and a grand prize of game tickets, a gift card, pre-game field access and a post-game meet and greet.",
+          "alt": "Three MLS in-store posters, for Sporting Kansas City, Seattle Sounders FC and the Philadelphia Union, each offering a VIP game experience by text or QR code.",
           "caption": "In store for MLS: a stanchion card, a four-way banner and an H-frame panel, each with its own keyword and QR code."
         }
       },
@@ -1099,7 +1101,7 @@
           "src": "/assets/img/work/creative-services-flow.webp",
           "width": 900,
           "height": 517,
-          "alt": "A wireframe flow. Online channels (social media, desktop, web and email banners, Google) and in-store channels (in-store stands and in-stadium screens, with SMS and QR codes) all point to one responsive landing page with an entry form. It leads to a thank-you page with a coupon code, then to a store locator and a social takeover page, with Facebook and Twitter share links looping back to the form.",
+          "alt": "A wireframe of the campaign flow: every online and in-store channel points to one entry form, which leads to a coupon, a store locator and a social page.",
           "caption": "The campaign flow: every channel, online or in store, led to one entry form, then a coupon, a store locator or exclusive content."
         }
       },
@@ -1128,7 +1130,7 @@
           "src": "/assets/img/work/creative-services-segments.webp",
           "width": 1100,
           "height": 1143,
-          "alt": "Two versions of the My Segments page. The first is a single list of three segments with profile counts and who created them. The final one adds a sidebar of segment folders on the left and a Segment Info panel on the right with the profile count, export and edit buttons, and collapsible sections for rules, snapshots and exports.",
+          "alt": "Two versions of the My Segments page: first a single list of segments, then a folder sidebar and a Segment Info panel with counts, exports and rules.",
           "caption": "The segment page, first and final: one long list, then folders in a sidebar and a summary panel."
         }
       },

@@ -59,7 +59,7 @@
 <section class="cs-sec cs-print">
   
   
-  <p>Ask a general AI to review your interface and you get a pep talk: make it feel simpler, tighten the hierarchy, smooth out the flow. It sounds like feedback. It changes nothing, because the model has no floor to hold itself to and no way to prove its advice actually works.</p><p>UX Skill Repo is the fix: twelve narrowly scoped AI agent skills, strategists, critics, writers, builders, run by one orchestrator and held to a single measurable standard instead of general-purpose opinion.</p>
+  <p>Ask a general AI to review your interface and you get a pep talk: make it feel simpler, tighten the hierarchy, smooth out the flow. It sounds like feedback. It changes nothing, because the model has no floor to hold itself to and no way to prove its advice actually works.</p><p>UX Skill Repo is the fix: twelve narrowly scoped AI agent skills (strategists, critics, writers and builders), run by one orchestrator and held to a single measurable standard instead of general-purpose opinion.</p>
   
   
   
@@ -70,7 +70,7 @@
   <h2 class="cs-h">What it is</h2>
   <p class="cs-intro">One repo, twelve skills, one shared rulebook.</p>
   
-  <ul class="items"><li><strong>A shared vocabulary, not twelve opinions.</strong> Craft rules live once in design-rules.md, cited by ID (R-COL-1, R-BAN-6). UX heuristics live in ux_laws.json, cited by name. No skill restates “use 4.5:1 contrast” in its own words and drifts out of sync.</li><li><strong>Skills grouped by job, not origin.</strong> Plan (ux-governance, ux-strategy), review (ui-expert, ux-black-hat), make (front-end-design, implement-design, canvas-design, brand-steward, ux-writer), and meta (orchestrator, improvement-loop, find-skills) all route through one front door.</li><li><strong>A loop that finds its own bugs.</strong> improvement-loop runs audit, execute, systematize, re-audit, escalate, and won’t advance a round unless the rulebook itself learned something. Six rounds in, it’s caught its own accent color failing contrast as text, a selection state that broke in dark mode, and a fully built page nothing on the site linked to.</li></ul>
+  <ul class="items"><li><strong>A shared vocabulary, not twelve opinions.</strong> Craft rules live once in design-rules.md, cited by ID (R-COL-1, R-BAN-6). UX heuristics live in ux_laws.json, cited by name. No skill restates “use 4.5:1 contrast” in its own words and drifts out of sync.</li><li><strong>Skills grouped by job, not origin.</strong> Plan (ux-governance, ux-strategy), review (ui-expert, ux-black-hat), make (front-end-design, implement-design, canvas-design, brand-steward, ux-writer), and meta (orchestrator, improvement-loop, find-skills) all route through one front door.</li><li><strong>A loop that finds its own bugs.</strong> improvement-loop runs audit, execute, systematize, re-audit, escalate, and won’t advance a round unless the rulebook itself learned something. Six rounds in, it’s caught its own accent colour failing contrast as text, a selection state that broke in dark mode, and a fully built page nothing on the site linked to.</li></ul>
   <p>I run the skills from .agents/skills/ in Claude Code and Cursor. The repository is private; this case study covers the rules and review loop.</p>
   
   
@@ -80,7 +80,7 @@
   <h2 class="cs-h">The UX thinking</h2>
   
   
-  <ul class="items"><li><strong>Feedback that can’t cite a number isn’t feedback.</strong> Every finding ties to a contrast ratio or a named law, so “improve the hierarchy” becomes a rule ID and a fix, not a vibe.</li><li><strong>The rulebook only grows from evidence.</strong> It started at nine color rules and six interaction rules. It’s grown because rounds kept finding real, unstaged bugs, not because someone guessed a rule might matter someday.</li><li><strong>A clean pass that teaches nothing doesn’t count.</strong> Advancing a round requires two things: no blocking findings left, and the rulebook learned something new. That forces harder test surfaces, like a data-dense ops console built specifically because a static landing page had run out of complexity to break.</li></ul>
+  <ul class="items"><li><strong>Feedback that can’t cite a number isn’t feedback.</strong> Every finding ties to a contrast ratio or a named law, so “improve the hierarchy” becomes a rule ID and a fix, not a vibe.</li><li><strong>The rulebook only grows from evidence.</strong> It started at nine colour rules and six interaction rules. It’s grown because rounds kept finding real, unstaged bugs, not because someone guessed a rule might matter someday.</li><li><strong>A clean pass that teaches nothing doesn’t count.</strong> Advancing a round requires two things: no blocking findings left, and the rulebook learned something new. That forces harder test surfaces, like a data-dense ops console built specifically because a static landing page had run out of complexity to break.</li></ul>
   
   
   

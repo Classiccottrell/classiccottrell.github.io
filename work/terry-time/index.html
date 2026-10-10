@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Terry Time · Matthew A. Cottrell</title>
-<meta name="description" content="A shop for Terry, the face that keeps turning up on East Van walls. I designed seven storefronts, put two of them in a 50/50 split, and wrote down how the winner gets picked before the first visitor arrives.">
+<meta name="description" content="A shop for Terry, the face on East Van walls: seven storefronts designed, two in a 50/50 test, and the rule for picking the winner written first.">
 <link rel="canonical" href="https://classiccottrell.ca/work/terry-time/">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Matthew A. Cottrell">
 <meta property="og:title" content="Terry Time">
-<meta property="og:description" content="A shop for Terry, the face that keeps turning up on East Van walls. I designed seven storefronts, put two of them in a 50/50 split, and wrote down how the winner gets picked before the first visitor arrives.">
+<meta property="og:description" content="A shop for Terry, the face on East Van walls: seven storefronts designed, two in a 50/50 test, and the rule for picking the winner written first.">
 <meta property="og:url" content="https://classiccottrell.ca/work/terry-time/">
 <meta property="og:image" content="https://classiccottrell.ca/assets/cards/work-terry-time.png">
 <meta property="og:image:width" content="1200">
@@ -55,7 +55,7 @@
 </header>
   <div class="wrap">
 <figure class="plate has-legend">
-  <div class="panel crop callouts"><img src="/assets/img/work/terry-time.webp" width="1360" height="809" alt="The two Terry Time storefronts side by side, cobalt blue on warm paper. Left, Store A, the Street Evidence Archive: a three-line headline, a tilted Case 003 stamp and black-and-white street photos filed as evidence. Right, Store B, the Corner Store Receipt: the headline Rung up in East Van beside a long paper receipt that lists a black polo and a black hoodie with dot leaders and prices."><span class="mk" style="--x:9.4%;--y:23.5%" aria-hidden="true">1</span><span class="mk" style="--x:71.6%;--y:10.8%" aria-hidden="true">2</span><span class="mk" style="--x:77%;--y:66.4%" aria-hidden="true">3</span></div>
+  <div class="panel crop callouts"><img src="/assets/img/work/terry-time.webp" width="1360" height="809" alt="The two Terry Time storefronts side by side in cobalt on warm paper: Store A, an archive of street photos filed as evidence, and Store B, a corner-store receipt."><span class="mk" style="--x:9.4%;--y:23.5%" aria-hidden="true">1</span><span class="mk" style="--x:71.6%;--y:10.8%" aria-hidden="true">2</span><span class="mk" style="--x:77%;--y:66.4%" aria-hidden="true">3</span></div>
   <ol class="legend"><li><span class="mk" aria-hidden="true">1</span><span>Store A, the Street Evidence Archive. The shop is a municipal case file: Terry’s photos are filed as evidence and every product is an exhibit.</span></li><li><span class="mk" aria-hidden="true">2</span><span>Store B, the Corner Store Receipt. The catalogue prints as one long thermal receipt from register 07, rung up by Terry.</span></li><li><span class="mk" aria-hidden="true">3</span><span>Same products, prices, size picker and Stripe checkout in both. Nothing is preselected, so the button says <em>Select a size</em> until you pick one.</span></li></ol>
   <figcaption class="note cap">Fig. 1 · Store A and Store B. A visitor only ever sees one of them.</figcaption>
 </figure></div>
@@ -90,14 +90,14 @@
   <ul class="items"><li><strong>Store A, the Street Evidence Archive.</strong> The shop as a municipal case file. Terry’s street photos are filed with evidence numbers, and each product is an exhibit with a condition, a marking and a value, stamped <em>Cleared to wear</em>.</li><li><strong>Store B, the Corner Store Receipt.</strong> The shop as one long thermal receipt: line items, dot leaders, a shelf total and a torn edge. <em>Thermal paper fades in a week. The list on it stays honest.</em></li><li><strong>One design system under both.</strong> <a href="/work/brutal-ux/">Brutal UX</a>, ported in cobalt: <code>#1233c7</code> ink on warm paper, zero radius, zero shadow. The two shops look nothing alike and share every rule.</li></ul>
   
   
-  <figure class="cs-fig"><div class="panel"><img src="/assets/img/work/terry-time-exhibit.webp" width="1100" height="558" alt="Exhibit 001 in Store A: a black pique polo on a blue grid, beside a spec table that reads Condition, ready for circulation; Marking, embroidered Terry face; Finish, black; Sizes, S to XL; Value, $37.83 CAD. A Cleared to wear stamp sits in the corner, above a size picker." loading="lazy" decoding="async"></div><figcaption class="note cap">Exhibit 001 in Store A. The polo, filed like evidence.</figcaption></figure>
+  <figure class="cs-fig"><div class="panel"><img src="/assets/img/work/terry-time-exhibit.webp" width="1100" height="558" alt="Exhibit 001: a black pique polo on a blue grid, beside a spec table (embroidered Terry face, S to XL, $37.83 CAD) and a Cleared to wear stamp." loading="lazy" decoding="async"></div><figcaption class="note cap">Exhibit 001 in Store A. The polo, filed like evidence.</figcaption></figure>
 </section>
 
 <section class="cs-sec">
   <h2 class="cs-h">The UX thinking</h2>
   
   
-  <ul class="items"><li><strong>Seven storefronts is a decision you haven’t made yet.</strong> A UX audit in September caught it: the home page was a chooser between five shops, so a visitor would land on a design review instead of a store. Five directions went to a branch, and two went into the test.</li><li><strong>A visitor only ever sees one store.</strong> Middleware splits <code>/</code> and <code>/shop</code> 50/50 and pins each visitor to their store with a cookie for 30 days. <code>?v=a</code> or <code>?v=b</code> forces one, so a post can promise a specific shop, and every Stripe checkout records which store it started in.</li><li><strong>The rule came before the data.</strong> Each store needs at least 300 visitors, and the launch promotion has to be over. Then the store with more paid orders per visitor wins. If that’s within noise, the higher average order wins, then the one I’d rather maintain.</li><li><strong>Honest while it’s off.</strong> The site builds and runs with no keys at all. Until checkout is switched on, the buttons say it isn’t live yet instead of failing.</li></ul>
+  <ul class="items"><li><strong>Seven storefronts is a decision you haven’t made yet.</strong> A UX audit in September caught it: the home page was a chooser between the first five shops, so a visitor would land on a design review instead of a store. Five directions went to a branch, and two went into the test.</li><li><strong>A visitor only ever sees one store.</strong> Middleware splits <code>/</code> and <code>/shop</code> 50/50 and pins each visitor to their store with a cookie for 30 days. <code>?v=a</code> or <code>?v=b</code> forces one, so a post can promise a specific shop, and every Stripe checkout records which store it started in.</li><li><strong>The rule came before the data.</strong> Each store needs at least 300 visitors, and the launch promotion has to be over. Then the store with more paid orders per visitor wins. If that’s within noise, the higher average order wins, then the one I’d rather maintain.</li><li><strong>Honest while it’s off.</strong> The site builds and runs with no keys at all. Until checkout is switched on, the buttons say it isn’t live yet instead of failing.</li></ul>
   
   
   
@@ -106,11 +106,11 @@
 <section class="cs-sec">
   <h2 class="cs-h">After hours</h2>
   
-  <p>Both stores link to one shoppable lookbook, told in timestamps: 18:51, Dusk, 21:55. Each chapter is a photo, a line and the kit to wear in it, with the size picker right there.</p>
+  <p>Both stores link to one shoppable lookbook, laid out as a single evening: 18:51, Dusk, 21:55. The times are the photos’ own camera timestamps; the skyline shot has none, so it’s Dusk. Each chapter is a photo, a line and the kit to wear in it, with the size picker right there.</p>
   
   
   
-  <figure class="cs-fig"><div class="panel"><img src="/assets/img/work/terry-time-after-hours.webp" width="1100" height="991" alt="The 18:51 chapter of the lookbook: a cobalt-toned photo of a person standing in tall hedges at golden hour, captioned Hedge line, East Van, beside the headline Clock out, a short paragraph and a Kit for 18:51 card with the black polo and its size picker." loading="lazy" decoding="async"></div><figcaption class="note cap">Hour 01, 18:51. <em>Clock out.</em></figcaption></figure>
+  <figure class="cs-fig"><div class="panel"><img src="/assets/img/work/terry-time-after-hours.webp" width="1100" height="991" alt="The 18:51 chapter of the lookbook: a cobalt-toned photo of someone in tall hedges at golden hour, the headline Clock out, and a kit card with the black polo." loading="lazy" decoding="async"></div><figcaption class="note cap">Hour 01, 18:51. <em>Clock out.</em></figcaption></figure>
 </section>
 
 <section class="cs-sec cs-print">

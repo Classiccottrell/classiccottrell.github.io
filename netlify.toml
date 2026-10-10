@@ -4,8 +4,11 @@
   publish = "."
   command = ""
 
-# HTML revalidates every time. Assets carry a ?v= content hash, so they can be
-# cached for a long time.
+# HTML revalidates every time. The stylesheet and scripts are linked with a
+# ?v= content hash, so they cache for a year; everything else in assets/ keeps
+# its name when it's regenerated, so it caches for a day (the linefield piece
+# is HTML, so the rule above covers it). The paths don't overlap, so Netlify
+# never has two Cache-Control values to merge.
 [[headers]]
   for = "/*"
   [headers.values]
@@ -18,9 +21,34 @@
     Cache-Control = "public, max-age=0, must-revalidate"
 
 [[headers]]
-  for = "/assets/*"
+  for = "/assets/css/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/assets/js/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/assets/img/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/assets/cards/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/assets/fonts/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/assets/vendor/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
 
 # Old addresses. The #hash on projects.html survives the redirect, and
 # /work/ forwards it to the right case study.

@@ -57,6 +57,28 @@ test('an external arrow never wraps away from its link in a title block', async 
   }
 });
 
+test('every page declares its English, a share-image alt and a description that fits', async ({ page }) => {
+  for (const path of PAGES) {
+    await page.goto(path);
+    await expect(page.locator('html'), path).toHaveAttribute('lang', 'en-CA');
+    await expect(page.locator('meta[property="og:locale"]'), path).toHaveAttribute('content', 'en_CA');
+    await expect(page.locator('meta[property="og:image:alt"]'), path).toHaveAttribute('content', /Matthew A\. Cottrell/);
+    const description = await page.locator('meta[name="description"]').getAttribute('content');
+    expect(description.length, `${path} description`).toBeLessThanOrEqual(160);
+  }
+});
+
+test('a printed case study says whose it is and spells out its links', async ({ page }) => {
+  await page.emulateMedia({ media: 'print' });
+  await page.goto('/work/terry-time/');
+  await expect(page.locator('.print-id')).toBeVisible();
+  await expect(page.locator('.print-id')).toContainText('classiccottrell.ca/work/terry-time/');
+  const after = await page.locator('.cs-tb a[href^="http"]').first().evaluate((a) => getComputedStyle(a, '::after').content);
+  expect(after).toContain('https://');
+  await page.emulateMedia({ media: 'screen' });
+  await expect(page.locator('.print-id')).toBeHidden();
+});
+
 test('the work index lists every project, grouped', async ({ page }) => {
   await page.goto('/work/');
   await expect(page.locator('.groups .idx-row')).toHaveCount(work.length);

@@ -63,7 +63,7 @@ export const page = (ctx, meta) => {
   // An ink page tints the phone's browser chrome to match it.
   const ink = meta.bodyClass === 'ink-page';
   return h`<!doctype html>
-<html lang="en" class="no-js">
+<html lang="en-CA" class="no-js">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -72,13 +72,16 @@ export const page = (ctx, meta) => {
 ${meta.noindex ? '<meta name="robots" content="noindex">' : h`<link rel="canonical" href="${esc(url)}">`}
 <meta property="og:type" content="${meta.type || 'website'}">
 <meta property="og:site_name" content="${esc(site.name)}">
-<meta property="og:title" content="${esc(meta.title || site.name)}">
+<meta property="og:title" content="${esc(title)}">
+<meta property="og:locale" content="en_CA">
 <meta property="og:description" content="${esc(description)}">
 <meta property="og:url" content="${esc(url)}">
 <meta property="og:image" content="${esc(card)}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="${esc(title)}">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image:alt" content="${esc(title)}">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="${ink ? ctx.band.light : '#FFFFFF'}">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="${ink ? ctx.band.dark : '#0A0A0A'}">
@@ -95,6 +98,7 @@ ${meta.head || ''}
 <body${meta.bodyClass ? h` class="${meta.bodyClass}"` : ''}>
 ${masthead(ctx, meta.path)}
 <main id="main">
+<p class="print-id">${esc(site.name)} · ${esc(url.replace(/^https?:\/\//, ''))}</p>
 ${meta.main}
 </main>
 ${footer(ctx, meta.path)}

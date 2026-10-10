@@ -282,7 +282,7 @@ ${pageHead({ kicker: 'Work with me', title: esc(H.headline), lede: esc(H.standfi
         </div>
         <div class="fld"><label for="bf-email">Email for my reply</label><input type="email" id="bf-email" name="email" autocomplete="email" required></div>
         <p class="bf-send"><button type="submit" class="btn">Send the brief ${arrow}</button></p>
-        <p class="note bf-status" role="status" data-bf-status></p>
+        <p class="bf-status" role="status" data-bf-status></p>
       </form>
     </div>
     <div class="s6 wo-col" data-js>
@@ -475,12 +475,11 @@ export function notFound(ctx) {
 export function moved(ctx, to, hashMap = {}) {
   const map = JSON.stringify(hashMap);
   return h`<!doctype html>
-<html lang="en">
+<html lang="en-CA">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Moved · ${esc(ctx.site.name)}</title>
-<meta name="robots" content="noindex">
 <link rel="canonical" href="${esc(ctx.site.url + to)}">
 <script>(function(){var m=${map};var id=location.hash.slice(1);location.replace(m[id]?m[id]:'${to}'+location.hash);})();</script>
 <meta http-equiv="refresh" content="0; url=${esc(to)}">

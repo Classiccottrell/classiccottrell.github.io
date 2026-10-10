@@ -70,7 +70,7 @@ p,li{text-wrap:pretty}
 /* ---------- buttons, links, marks */
 .btn{display:inline-flex;align-items:center;gap:10px;background:var(--fg);color:var(--ground);font:600 1rem/1.2 var(--f-ink);padding:13px 18px;border:0;border-radius:0;text-decoration:none;cursor:pointer}
 .btn:hover{background:var(--proof);color:var(--proof-on)}
-.btn[disabled]{opacity:.6;cursor:progress}
+.btn[disabled],.btn[aria-disabled="true"]{opacity:.6;cursor:default}
 .lnk{font-family:var(--f-ink);font-weight:500;text-decoration:none;cursor:pointer;padding-bottom:3px;
   background:linear-gradient(var(--proof),var(--proof)) 0 100%/0 2px no-repeat,linear-gradient(var(--pencil),var(--pencil)) 0 100%/100% 1px no-repeat;transition:background-size .16s linear}
 .lnk:hover,.lnk:focus-visible,.lnk[aria-current]{background-size:100% 2px,100% 1px}
@@ -390,7 +390,8 @@ a.avail:hover{background:var(--highlight)}
 .fld ::placeholder{color:var(--muted);opacity:1}
 .pair{display:grid;gap:0 14px}
 @media (min-width:600px){.pair{grid-template-columns:repeat(2,minmax(0,1fr))}}
-.bf-status{margin-top:12px;min-height:1.4em;max-width:52ch}
+.bf-status{margin-top:12px;min-height:1.45em;max-width:52ch;font-size:1rem;line-height:1.45}
+.bf-status .tool{display:block;margin-top:10px}
 .bf-status a{color:inherit}
 @media (min-width:860px){.wo-col{position:sticky;top:calc(var(--mast) + 24px)}}
 .wo{--fg:#0A0A0A;--ground:#FFFFFF;--muted:#55585C;--pencil:#A4DDED;--proof:#1B62A0;--proof-on:#FFFFFF;--highlight:#D8F0F7;
@@ -486,8 +487,12 @@ a.avail:hover{background:var(--highlight)}
 }
 
 /* ---------- print: a case study becomes a spec sheet */
+.print-id{display:none}
 @media print{
   :root{--ground:#fff;--fg:#000;--muted:#333;--proof:#1B62A0;--pencil:#A4DDED}
+  .print-id{display:block;font:500 8pt/1.4 var(--f-pencil);letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid #000;padding:0 var(--gx) 6pt;margin:0 auto 14pt;max-width:var(--max)}
+  .tblock a[href^="http"]::after{content:" " attr(href);font-weight:400;overflow-wrap:anywhere}
+  .tblock .ext{display:none}
   body{font-size:11pt}
   .mast,.foot,.skip,.stage,.band-art,.trail,.sel-pic,.pn-nav,.live-band,.ctas,[data-js]{display:none!important}
   .band,.ink-page{--ground:#fff;--fg:#000;--muted:#333;--proof:#1B62A0;background:#fff;color:#000}
@@ -495,5 +500,8 @@ a.avail:hover{background:var(--highlight)}
   .ph{padding-top:0}
   .splash{font-size:48pt}
   .plate,.cs-sec,.take,.offer,.rule{break-inside:avoid}
+  .plate.has-legend{grid-template-columns:minmax(0,7fr) minmax(0,5fr);align-items:start;margin-top:18pt}
+  .plate .cap{grid-column:1/-1;margin-top:0}
+  .pq-fig{display:none}
   a{text-decoration:none}
 }

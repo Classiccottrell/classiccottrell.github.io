@@ -294,10 +294,16 @@
     var wo = $('[data-wo]'), status = $('[data-bf-status]'), orderField = form.elements.order;
     var field = function (key) { return $('[data-wo="' + key + '"]', wo); };
     var val = function (name) { var el = form.elements[name]; return el ? String(el.value || '').trim() : ''; };
+    // One work order number per visit, so it doesn't reshuffle as you type.
+    var ORDER_KEY = 'cc-work-order', orderNo = '';
     var number = function () {
-      var seed = ['name', 'company', 'broken', 'kind', 'when', 'team'].map(val).join('|'), h = 7;
-      for (var i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
-      return 'CC-' + new Date().getFullYear() + '-' + String(100 + h % 900);
+      if (orderNo) return orderNo;
+      try { orderNo = sessionStorage.getItem(ORDER_KEY) || ''; } catch (e) { orderNo = ''; }
+      if (!orderNo) {
+        orderNo = 'CC-' + new Date().getFullYear() + '-' + (100 + Math.floor(Math.random() * 900));
+        try { sessionStorage.setItem(ORDER_KEY, orderNo); } catch (e) { /* private mode: the number lasts as long as the page */ }
+      }
+      return orderNo;
     };
     var update = function () {
       if (!wo) return;
@@ -321,26 +327,33 @@
         setTimeout(function () { form.elements.broken.focus({ preventScroll: true }); }, reduce.matches ? 0 : 450);
       });
     });
+    // Sending keeps focus on the button (aria-disabled, not disabled), sends once,
+    // and only blames the host when it really can't take forms (404 or 405).
+    var send = $('button[type="submit"]', form), sending = false, sent = false;
     form.addEventListener('submit', function (e) {
       e.preventDefault(); update();
-      var send = $('button[type="submit"]', form); send.disabled = true; status.textContent = 'Sending…';
+      if (sending || sent) return;
+      sending = true; send.setAttribute('aria-disabled', 'true'); status.textContent = 'Sending…';
       fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(new FormData(form)).toString() })
         .then(function (res) {
-          if (!res.ok) throw new Error(res.status);
-          $('[data-wo-stamp]').classList.add('on');
+          if (!res.ok) { var err = new Error(res.status); err.status = res.status; throw err; }
+          sent = true; $('[data-wo-stamp]').classList.add('on'); send.textContent = 'Sent';
           status.textContent = 'Received. Work order ' + orderField.value + ' is in, and I’ll reply to ' + val('email') + '.';
+          try { sessionStorage.removeItem(ORDER_KEY); } catch (x) { /* nothing to clear */ }
         })
-        .catch(function () {
-          var linkedIn = $('.foot-grid a[href*="linkedin"]');
+        .catch(function (err) {
+          var linkedIn = $('.foot-grid a[href*="linkedin"]'), cantSend = err && (err.status === 404 || err.status === 405);
           status.innerHTML = '';
-          status.appendChild(document.createTextNode('This copy of the site can’t send the brief. Copy the work order and send it to me on '));
+          status.appendChild(document.createTextNode(cantSend ? 'This copy of the site can’t send the brief. Copy the work order and send it to me on ' : 'That didn’t send. Try again, or message me on '));
           var a = document.createElement('a'); a.href = linkedIn ? linkedIn.href : 'https://www.linkedin.com/'; a.textContent = 'LinkedIn'; status.appendChild(a);
-          status.appendChild(document.createTextNode('. '));
-          var copy = document.createElement('button'); copy.type = 'button'; copy.className = 'tool'; copy.textContent = 'Copy work order';
-          copy.addEventListener('click', function () { copyText(orderText(), status, 'Copied. Paste it into a message to me on LinkedIn.', wo); });
-          status.appendChild(copy);
+          status.appendChild(document.createTextNode('.'));
+          if (cantSend) {
+            var copy = document.createElement('button'); copy.type = 'button'; copy.className = 'tool'; copy.textContent = 'Copy work order';
+            copy.addEventListener('click', function () { copyText(orderText(), status, 'Copied. Paste it into a message to me on LinkedIn.', wo); });
+            status.appendChild(copy);
+          }
         })
-        .then(function () { send.disabled = false; });
+        .then(function () { sending = false; if (!sent) send.removeAttribute('aria-disabled'); });
     });
     var preset = new URLSearchParams(location.search).get('kind');
     if (preset) pick(preset); else update();

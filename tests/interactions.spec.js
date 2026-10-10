@@ -159,11 +159,43 @@ test('the brief writes a work order, and falls back where forms can’t be sent'
   await expect(page.locator('[data-wo="from"]')).toHaveText('Dana Example, Northwind');
   await expect(page.locator('[data-wo="kind"]')).toHaveText('A design system');
   await expect(page.locator('[data-wo-no]')).toHaveText(/^CC-\d{4}-\d{3}$/);
-  expect(await page.locator('input[name="order"]').inputValue()).toMatch(/^CC-\d{4}-\d{3}$/);
+  const number = await page.locator('input[name="order"]').inputValue();
+  expect(number).toMatch(/^CC-\d{4}-\d{3}$/);
+  await page.locator('#bf-what').pressSequentially(' And our docs.');
+  expect(await page.locator('input[name="order"]').inputValue(), 'the number holds while you type').toBe(number);
   // The local server refuses POST like GitHub Pages does.
-  await page.locator('.bf button[type="submit"]').click();
+  const send = page.locator('.bf button[type="submit"]');
+  await send.click();
   await expect(page.locator('[data-bf-status]')).toContainText('can’t send the brief');
   await expect(page.locator('[data-bf-status] button')).toHaveText('Copy work order');
+  await expect(send).toBeFocused();
+  await expect(send).not.toHaveAttribute('aria-disabled', 'true');
+});
+
+test('the brief sends once, keeps focus, and only blames the host when it refuses forms', async ({ page }) => {
+  let posts = 0, reply = 500;
+  await page.route((url) => url.pathname === '/', (route) => {
+    if (route.request().method() !== 'POST') return route.continue();
+    posts++;
+    return route.fulfill({ status: reply, body: '' });
+  });
+  await page.goto('/work-with-me/');
+  await page.locator('#bf-what').fill('Our tokens drift between web and mobile.');
+  await page.locator('#bf-name').fill('Dana Example');
+  await page.locator('#bf-email').fill('dana@example.com');
+  const send = page.locator('.bf button[type="submit"]'), status = page.locator('[data-bf-status]');
+  await send.press('Enter');
+  await expect(status).toContainText('That didn’t send. Try again');
+  await expect(status.locator('button')).toHaveCount(0);
+  await expect(send).toBeFocused();
+  reply = 200;
+  await send.press('Enter');
+  await expect(status).toContainText('Received. Work order');
+  await expect(page.locator('[data-wo-stamp]')).toHaveClass(/on/);
+  await expect(send).toBeFocused();
+  await send.press('Enter');
+  await page.waitForTimeout(300);
+  expect(posts, 'one failed send, one sent, and no second copy').toBe(2);
 });
 
 test('the brief is ready for Netlify Forms', async ({ page }) => {

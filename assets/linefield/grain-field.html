@@ -7,7 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>linefield — grain-field</title>
 <style>
-  html, body { margin: 0; height: 100%; background: #0a0a0d; overflow: hidden; }
+  html, body { margin: 0; height: 100%; background: #0A0A0A; overflow: hidden; }
+  @media (prefers-color-scheme: dark) { html, body { background: #151517; } }
   canvas { display: block; width: 100vw; height: 100vh; }
   .lf-export-row { position: fixed; top: 12px; right: 12px; display: flex; gap: 6px; z-index: 9999; }
   .lf-export-row button { background: #222; color: #eee; border: 1px solid #444; border-radius: 4px;
@@ -1425,7 +1426,7 @@ function describeForAI({ pieceName, values }) {
     // Full repaint, not a fade — grain should not smear into trails, and
     // a full clear keeps ink exactly what this frame draws.
     ctx.globalCompositeOperation = 'source-over';
-    ctx.fillStyle = values.invert ? '#f2f2f4' : '#0a0a0d';
+    ctx.fillStyle = values.invert ? '#f2f2f4' : (window.__LF_GROUND__ || '#0a0a0d');
     ctx.fillRect(0, 0, W, H);
     ctx.globalCompositeOperation = values.invert ? 'source-over' : 'lighter';
 
@@ -1511,4 +1512,5 @@ function describeForAI({ pieceName, values }) {
   });
 
 Object.assign(window.__LF_BAKED_VALUES__, {"density":1.8});
-if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches){window.__LF_BAKED_VALUES__.speed=0;}</script></body></html>
+if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches){window.__LF_BAKED_VALUES__.speed=0;}
+(function(){var q=window.matchMedia&&matchMedia('(prefers-color-scheme: dark)');var g=function(){window.__LF_GROUND__=q&&q.matches?'#151517':'#0A0A0A';};g();if(q&&q.addEventListener)q.addEventListener('change',g);})();</script></body></html>

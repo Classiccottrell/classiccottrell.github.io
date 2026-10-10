@@ -86,6 +86,30 @@ test('hot takes stay quiet while they rotate and speak when a person moves them'
   await expect(page.locator('[data-stage-n]')).toHaveText(takes[1].id);
 });
 
+for (const scheme of ['light', 'dark']) {
+  test(`the linefield art paints the band's own colour, so there's no seam (${scheme})`, async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.emulateMedia({ colorScheme: scheme });
+    await page.goto('/');
+    const stage = page.locator('[data-stage]');
+    await stage.scrollIntoViewIfNeeded();
+    const band = await stage.evaluate((el) => getComputedStyle(el).backgroundColor);
+    const art = page.frameLocator('[data-stage] .band-art').locator('body');
+    await expect(art).toHaveCSS('background-color', band);
+    const ground = await page.frame({ url: /grain-field/ }).evaluate(() => window.__LF_GROUND__);
+    const [r, g, b] = band.match(/\d+/g).map(Number);
+    expect(ground.toLowerCase()).toBe(`#${[r, g, b].map((n) => n.toString(16).padStart(2, '0')).join('')}`);
+  });
+}
+
+test('in dark mode the bands stand off the page and the portrait loses its white sheet', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await page.goto('/');
+  const [ground, band] = await page.evaluate(() => [getComputedStyle(document.body).backgroundColor, getComputedStyle(document.querySelector('[data-stage]')).backgroundColor]);
+  expect(band).not.toBe(ground);
+  await expect(page.locator('.inking').first()).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+});
+
 test('pencils show the grid and stay on across pages', async ({ page }) => {
   await page.goto('/');
   const btn = page.locator('[data-pencils]');

@@ -52,15 +52,28 @@ if (existsSync(axeSrc)) outputs.set('assets/vendor/axe.min.js', readFileSync(axe
 // linefield pieces: the baked export, tuned the way the control panel would,
 // plus one line that holds the piece still under reduced motion (site.js also
 // pauses it while it's off screen).
+// The piece repaints its own ground every frame, so it is given the band's
+// colour in each scheme (read from site.css) and meets the band with no seam.
 const TUNING = { 'grain-field.html': { density: 1.8 } };
+const siteCss = read('assets/css/site.css');
+const bandOf = (css) => (css.match(/--band:\s*(#[0-9a-fA-F]{6})/) || [])[1];
+const BAND = { light: bandOf(siteCss), dark: bandOf(siteCss.slice(siteCss.indexOf('@media (prefers-color-scheme:dark)'))) };
+if (!BAND.light || !BAND.dark) fail('site.css: could not read --band for both schemes');
+ctx.band = BAND;
+const GROUND_PAINT = "ctx.fillStyle = values.invert ? '#f2f2f4' : '#0a0a0d';";
+const GROUND_CSS = 'html, body { margin: 0; height: 100%; background: #0a0a0d; overflow: hidden; }';
 for (const name of readdirSync(path.join(ROOT, 'source/linefield')).filter((f) => f.endsWith('.html'))) {
-  const raw = read(`source/linefield/${name}`);
+  let raw = read(`source/linefield/${name}`);
+  if (raw.split(GROUND_PAINT).length !== 2 || raw.split(GROUND_CSS).length !== 2) fail(`source/linefield/${name}: its ground paint has changed; update the band-colour bake in build.mjs`);
+  raw = raw.replace(GROUND_PAINT, "ctx.fillStyle = values.invert ? '#f2f2f4' : (window.__LF_GROUND__ || '#0a0a0d');")
+    .replace(GROUND_CSS, `html, body { margin: 0; height: 100%; background: ${BAND.light}; overflow: hidden; }\n  @media (prefers-color-scheme: dark) { html, body { background: ${BAND.dark}; } }`);
   const marker = '<script>window.__LF_BAKED_VALUES__ = ';
   const i = raw.indexOf(marker);
   if (i < 0) fail(`source/linefield/${name} is not a baked linefield export`);
   const end = raw.indexOf('</script>', i);
   const shim = `\nObject.assign(window.__LF_BAKED_VALUES__, ${JSON.stringify(TUNING[name] || {})});`
-    + "\nif(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches){window.__LF_BAKED_VALUES__.speed=0;}";
+    + "\nif(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches){window.__LF_BAKED_VALUES__.speed=0;}"
+    + `\n(function(){var q=window.matchMedia&&matchMedia('(prefers-color-scheme: dark)');var g=function(){window.__LF_GROUND__=q&&q.matches?'${BAND.dark}':'${BAND.light}';};g();if(q&&q.addEventListener)q.addEventListener('change',g);})();`;
   outputs.set(`assets/linefield/${name}`, raw.slice(0, end) + shim + raw.slice(end));
 }
 

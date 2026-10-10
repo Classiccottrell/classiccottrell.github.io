@@ -60,6 +60,8 @@ export const page = (ctx, meta) => {
   const title = meta.title ? `${meta.title} · ${site.name}` : `${site.name} · Product designer`;
   const description = plain(meta.description || site.description);
   const card = `${site.url}/assets/cards/${meta.card || 'home'}.png`;
+  // An ink page tints the phone's browser chrome to match it.
+  const ink = meta.bodyClass === 'ink-page';
   return h`<!doctype html>
 <html lang="en" class="no-js">
 <head>
@@ -78,8 +80,8 @@ ${meta.noindex ? '<meta name="robots" content="noindex">' : h`<link rel="canonic
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="color-scheme" content="light dark">
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFFFFF">
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0A0A0A">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="${ink ? ctx.band.light : '#FFFFFF'}">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="${ink ? ctx.band.dark : '#0A0A0A'}">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">

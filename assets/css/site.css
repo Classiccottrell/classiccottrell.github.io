@@ -16,7 +16,7 @@
 }
 @media (prefers-color-scheme:dark){:root{
   --ground:#0A0A0A; --fg:#F2F1EE; --muted:#A3A6AA; --pencil:#2E6577; --pencil-wash:rgba(80,160,190,.14);
-  --proof:#A4DDED; --proof-on:#0A0A0A; --highlight:#1D4552; --band:#000000;
+  --proof:#A4DDED; --proof-on:#0A0A0A; --highlight:#1D4552; --band:#151517;
 }}
 /* An ink band, or a whole ink page: the polarity flips, the tokens follow. */
 .band,.ink-page{--fg:var(--band-fg);--muted:var(--band-muted);--pencil:var(--band-pencil);--proof:var(--band-proof);--proof-on:var(--band-proof-on);--highlight:var(--band-highlight);--ground:var(--band);--pencil-wash:rgba(80,160,190,.14)}
@@ -171,6 +171,7 @@ a.avail:hover{background:var(--highlight)}
 [data-inking]{--inked:107}
 .inking{position:relative;background:var(--sheet)}
 .inking img{width:100%}
+@media (prefers-color-scheme:dark){.inking{background:none}.inking .ink{filter:invert(.95)}}
 .inking .ink{position:absolute;inset:0;-webkit-mask-image:linear-gradient(180deg,#000 calc(var(--inked) * 1% - 6%),transparent calc(var(--inked) * 1% + 6%));mask-image:linear-gradient(180deg,#000 calc(var(--inked) * 1% - 6%),transparent calc(var(--inked) * 1% + 6%))}
 .screen{mix-blend-mode:screen}
 .sheet{background:var(--sheet);padding:clamp(10px,1.8vw,22px)}

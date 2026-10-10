@@ -54,7 +54,7 @@
     var built = false, box, tag, rx, ry, ryBox, pending = null, raf = 0;
     var TOKENS = {
       '10,10,10': 'India ink', '255,255,255': 'Bristol', '85,88,92': 'Graphite', '164,221,237': 'Non-photo blue', '27,98,160': 'Blueline',
-      '242,241,238': 'Bristol (ink)', '163,166,170': 'Graphite (ink)', '0,0,0': 'Ink band', '216,240,247': 'Pencil highlight',
+      '242,241,238': 'Bristol (ink)', '163,166,170': 'Graphite (ink)', '21,21,23': 'Ink band', '216,240,247': 'Pencil highlight',
       '29,69,82': 'Pencil highlight (ink)', '46,101,119': 'Pencil (ink)'
     };
     var tokenOf = function (c) {

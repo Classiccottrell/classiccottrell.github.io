@@ -51,6 +51,7 @@ test('copy falls back to a textarea when the clipboard API is missing or refuses
   await expect(buttons.nth(3).locator('xpath=following-sibling::*[@role="status"]')).toHaveText('Copied');
   expect(await page.evaluate(() => window.__copied)).toEqual([PROMPTS[3]]);
   expect(await page.locator('textarea').count()).toBe(0);
+  await expect(buttons.nth(3)).toBeFocused();
 });
 
 test('the slider and the button take it apart and put it back', async ({ page }) => {
@@ -67,6 +68,20 @@ test('the slider and the button take it apart and put it back', async ({ page })
   await expect(page.locator('#lab-btn')).toHaveText('Put it back');
   await page.locator('#lab-btn').click();
   await expect(page.locator('#lab-range')).toHaveValue('0');
+});
+
+test('the slider says its value in words', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto(GUIDE);
+  await settle(page);
+  await page.locator('#lab-range').fill('40');
+  await expect(page.locator('#lab-range')).toHaveAttribute('aria-valuetext', '40 percent apart');
+});
+
+test('no date is printed anywhere in the drawings or the table', async ({ page }) => {
+  await page.goto(GUIDE);
+  const text = await page.locator('main').evaluate((el) => el.textContent);
+  expect(text.replace(/Last updated: 2026-10-09/, '')).not.toMatch(/\b20\d\d-\d\d-\d\d\b/);
 });
 
 test('it opens by itself the first time it is seen, and by keyboard', async ({ page }) => {
@@ -166,6 +181,46 @@ test('on a phone the exploded view is sticky above the steps, about 38vh, and ne
   expect(dock.height).toBeLessThan(0.5 * 844);
 });
 
+for (const [width, height] of [[390, 800], [320, 568]]) {
+  test(`Tab never lands under the sticky dock at ${width}x${height}`, async ({ page }) => {
+    await page.setViewportSize({ width, height });
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto(GUIDE);
+    await settle(page);
+    let seen = 0;
+    for (let i = 0; i < 90; i++) {
+      await page.keyboard.press('Tab');
+      const r = await page.evaluate(() => {
+        const el = document.activeElement;
+        if (!el || el === document.body) return null;
+        if (el.closest('footer, .mast, .lab-dock, .skip')) return { skip: el.closest('footer') ? 'end' : true };
+        const dock = document.querySelector('.lab-dock');
+        if (!(dock.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING)) return { skip: true }; // above the dock in the page
+        const b = el.getBoundingClientRect(), d = dock.getBoundingClientRect();
+        return { top: b.top, bottom: b.bottom, dock: d.bottom, name: el.getAttribute('aria-label') || el.textContent.trim().slice(0, 30) };
+      });
+      if (!r) continue;
+      if (r.skip === 'end') break;
+      if (r.skip) continue;
+      seen++;
+      expect(r.top, `${r.name} under the dock at ${width}x${height}`).toBeGreaterThanOrEqual(r.dock - 1);
+      expect(r.bottom).toBeLessThanOrEqual(height + 1);
+    }
+    expect(seen).toBeGreaterThan(20); // 7 index links, 11 copy buttons, and the rest
+  });
+}
+
+test('without JavaScript the dock does not stick on a phone', async ({ browser }) => {
+  const ctx = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 390, height: 800 } });
+  const page = await ctx.newPage();
+  await page.goto(GUIDE);
+  expect(await page.locator('.lab-dock').evaluate((el) => getComputedStyle(el).position)).toBe('static');
+  await page.evaluate(() => window.scrollTo(0, 1500));
+  const b = await page.locator('.lab-dock').boundingBox();
+  expect(b.y + b.height).toBeLessThan(0); // scrolled away, not pinned
+  await ctx.close();
+});
+
 test('on a desktop the exploded view stays beside the steps', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.emulateMedia({ reducedMotion: 'reduce' });
@@ -232,8 +287,8 @@ test('Known mistakes is a real table', async ({ page }) => {
     await page.goto(GUIDE);
     const table = page.getByRole('table', { name: guide.mistakes.caption });
     await expect(table).toBeVisible();
-    await expect(table.getByRole('columnheader')).toHaveText(['Date', 'What happened', 'Fix']);
-    await expect(table.getByRole('rowheader')).toHaveCount(guide.mistakes.rows.length);
+    await expect(table.getByRole('columnheader')).toHaveText(['What happened', 'Fix']);
+    expect(await table.innerText()).not.toMatch(/\b20\d\d-\d\d-\d\d\b/);
     await expect(table.getByRole('row')).toHaveCount(guide.mistakes.rows.length + 1);
   }
 });

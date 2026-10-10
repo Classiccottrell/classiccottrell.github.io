@@ -168,6 +168,7 @@
     var setX = function (v) {
       xv.style.setProperty('--x', (v / 100).toFixed(3)); xr.value = String(Math.round(v));
       if (xo) xo.textContent = Math.round(v) + '%';
+      xr.setAttribute('aria-valuetext', Math.round(v) + ' percent apart');
       if (xb) xb.textContent = v > 50 ? 'Put it back' : 'Take it apart';
       if (v > 30) xv.setAttribute('data-open', ''); else xv.removeAttribute('data-open');
       placeTags();
@@ -282,6 +283,7 @@
       document.body.appendChild(ta); ta.select();
       try { ok = document.execCommand('copy'); } catch (e) {}
       document.body.removeChild(ta);
+      btn.focus({ preventScroll: true });
       say(ok ? 'Copied' : 'Select the prompt and copy it.');
     };
     btn.addEventListener('click', function () {

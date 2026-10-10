@@ -23,9 +23,9 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/familjen-grotesk.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/css/site.css?v=2974c08723">
+<link rel="stylesheet" href="/assets/css/site.css?v=6f9652a738">
 <script>document.documentElement.className='js'</script>
-<script src="/assets/js/site.js?v=3dd5bfa070" defer></script>
+<script src="/assets/js/site.js?v=48c5f25c5f" defer></script>
 
 </head>
 <body class="case">
@@ -69,7 +69,6 @@
   
   
   
-  
 </section>
 
 <section class="cs-sec">
@@ -80,14 +79,12 @@
   
   
   
-  
 </section>
 
 <section class="cs-sec cs-print">
   <h2 class="cs-h">What it actually took</h2>
   
-  <p>The install was a weekend. The useful part came after, when I wrote down how I deployed things. My second project, a desktop app, failed on its first push because I had cloned it shallow. That fix went into the process the same day.</p><p>The same habit rebuilt my backups after the server’s disk crept up to 71 percent, with 100 GB of it one folder stored three times. The new backups keep dated copies, refuse to run when space is low, and show a warning when I log in if last night failed. One firewall rule is still blocking a second offsite copy, and this page will say so until that is fixed.</p>
-  
+  <p>The install was the easy part. The useful part came after, when I wrote down how I deployed things. My second project, a desktop app, failed on its first push because I had cloned it shallow. That fix went into the process the same day.</p><p>The same habit rebuilt my backups after the server’s disk crept up to 71 percent, with 100 GB of it one folder stored three times. The new backups keep dated copies, refuse to run when space is low, and show a warning when I log in if last night failed. One firewall rule is still blocking a second offsite copy, and this page will say so until that is fixed.</p>
   
   
   
@@ -104,14 +101,12 @@
 <ol class="roadmap rm-3"><li><p class="note"><i class="sm sm-ship" aria-hidden="true"></i>Done</p><p class="rm-l">Server online</p><p>An old Intel Mac running headless Ubuntu Server, with a fixed address, passwordless SSH and a private network.</p></li><li><p class="note"><i class="sm sm-ship" aria-hidden="true"></i>Done</p><p class="rm-l">Local models</p><p>A 2015 MacBook serving local language models and speech-to-text to the rest of the network.</p></li><li><p class="note"><i class="sm sm-prog" aria-hidden="true"></i>In progress</p><p class="rm-l">Repeatable deploys and backups</p><p>A mirror-and-launch process proven on two projects, and nightly dated backups. A firewall rule still blocks the second offsite copy.</p></li><li><p class="note"><i class="sm sm-priv" aria-hidden="true"></i>Planned</p><p class="rm-l">Mac mini node</p><p>Add a Mac mini as the next node, with enough memory to run a larger local model than the lab can today.</p></li><li><p class="note"><i class="sm sm-priv" aria-hidden="true"></i>Planned</p><p class="rm-l">A small agent on each node</p><p>Give every machine its own small, narrow agent setup with one job, instead of one big assistant that touches everything.</p></li><li><p class="note"><i class="sm sm-priv" aria-hidden="true"></i>Planned</p><p class="rm-l">A bigger local model</p><p>Bring a stronger model onto the network so more of the daily work stays local, with a fallback model and a self-test so the lab fails safely.</p></li></ol>
 
   
-  
 </section>
 
 <section class="cs-sec">
   <h2 class="cs-h">Build your own</h2>
   
   <p>I turned the whole process into a step-by-step guide with the prompts I would give an AI assistant at each stage. It works for any old computer, and you do not need to be a sysadmin.</p>
-  
   
   
   <p class="cs-cta"><a class="btn" href="/work/terry-home-lab/guide/">Build your own: the step-by-step guide <span aria-hidden="true">→</span></a></p>

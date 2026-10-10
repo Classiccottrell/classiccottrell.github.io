@@ -98,7 +98,7 @@ ${P('M310 150V186', 'ln pr dash')}${P('M272 224H196', 'ln pr')}${P('M202 218l-6 
 
 // 07 The backups: dated copies, pulled by the other machine, with a free-space floor.
 const backups = () => {
-  const day = (i) => `2026-10-${String(9 - i).padStart(2, '0')}`;
+  const day = (i) => (i === 0 ? 'last night' : `${i + 1} days ago`);
   const slab = (i) => {
     const y = 104 + i * 26, x = 176;
     return `<polygon class="ln ${i ? 'f' : 'wash'}" points="${x},${y} ${x + 150},${y} ${x + 174},${y - 12} ${x + 24},${y - 12}"/>` +

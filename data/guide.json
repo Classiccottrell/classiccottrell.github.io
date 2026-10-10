@@ -15,8 +15,14 @@
     "quote": "Give me one step, tell me what it will change, and wait for me to confirm before the next."
   },
   "sources": {
-    "install": { "title": "Resurrecting an Old Intel Mac as a Headless Ubuntu Server", "url": null },
-    "story": { "title": "The Second Deploy Is the Real One", "url": null }
+    "install": {
+      "title": "Resurrecting an Old Intel Mac as a Headless Ubuntu Server",
+      "url": null
+    },
+    "story": {
+      "title": "The Second Deploy Is the Real One",
+      "url": null
+    }
   },
   "steps": [
     {
@@ -24,9 +30,15 @@
       "label": "The machine",
       "heading": "Pick the machine and give it one job",
       "blocks": [
-        { "p": "Check what you have before you wipe anything: model, year, RAM, disk size, and whether its operating system is end-of-life." },
-        { "prompt": "I have a [model, year, RAM, disk]. It is stuck on [OS version]. Can it run Ubuntu Server LTS? What will likely break (Wi-Fi, fans, boot)? List three realistic jobs for it. Ask me questions before you answer." },
-        { "check": "you can finish the sentence “this machine exists to ___”." }
+        {
+          "p": "Check what you have before you wipe anything: model, year, RAM, disk size, and whether its operating system is end-of-life."
+        },
+        {
+          "prompt": "I have a [model, year, RAM, disk]. It is stuck on [OS version]. Can it run Ubuntu Server LTS? What will likely break (Wi-Fi, fans, boot)? List three realistic jobs for it. Ask me questions before you answer."
+        },
+        {
+          "check": "you can finish the sentence “this machine exists to ___”."
+        }
       ]
     },
     {
@@ -34,9 +46,15 @@
       "label": "The OS",
       "heading": "Install Ubuntu Server, headless",
       "blocks": [
-        { "p": "The full walk-through is in {{install}}. Short version: flash the ISO, boot holding Option, install OpenSSH, skip the extras, then expand the disk." },
-        { "prompt": "Walk me through installing Ubuntu Server LTS on a [model] from a [my computer, e.g. Apple Silicon Mac]. Flag anything specific to this hardware, including the boot key, the Wi-Fi driver, and whether I should use Ethernet. If I'm flashing from a different CPU type than the target, tell me which downloads need to match which." },
-        { "check": "the machine boots with no monitor attached, and `df -h /` shows the whole disk." }
+        {
+          "p": "The full walk-through is in {{install}}. Short version: flash the ISO, boot holding Option, install OpenSSH, skip the extras, then expand the disk."
+        },
+        {
+          "prompt": "Walk me through installing Ubuntu Server LTS on a [model] from a [my computer, e.g. Apple Silicon Mac]. Flag anything specific to this hardware, including the boot key, the Wi-Fi driver, and whether I should use Ethernet. If I'm flashing from a different CPU type than the target, tell me which downloads need to match which."
+        },
+        {
+          "check": "the machine boots with no monitor attached, and `df -h /` shows the whole disk."
+        }
       ]
     },
     {
@@ -44,9 +62,15 @@
       "label": "The network",
       "heading": "Make it reachable and keep it private",
       "blocks": [
-        { "p": "A DHCP reservation in your router so the address never moves. An SSH key instead of a password. A one-word alias. A private network like Tailscale if you want to reach it away from home." },
-        { "prompt": "Explain, in plain terms, a DHCP reservation, an SSH key pair, and an `~/.ssh/config` alias. Then give me the exact commands to set up passwordless SSH from [my computer] to [server name]. After that, explain what Tailscale adds and what it exposes to the internet (I want the answer to be nothing)." },
-        { "check": "`ssh server` works from a fresh terminal with no password prompt." }
+        {
+          "p": "A DHCP reservation in your router so the address never moves. An SSH key instead of a password. A one-word alias. A private network like Tailscale if you want to reach it away from home."
+        },
+        {
+          "prompt": "Explain, in plain terms, a DHCP reservation, an SSH key pair, and an `~/.ssh/config` alias. Then give me the exact commands to set up passwordless SSH from [my computer] to [server name]. After that, explain what Tailscale adds and what it exposes to the internet (I want the answer to be nothing)."
+        },
+        {
+          "check": "`ssh server` works from a fresh terminal with no password prompt."
+        }
       ]
     },
     {
@@ -54,10 +78,18 @@
       "label": "The services",
       "heading": "Deploy one service with Docker Compose",
       "blocks": [
-        { "p": "Pick something small that publishes a `docker-compose.yml`. Do not run it yet. Have the AI read it first." },
-        { "prompt": "Here is the docker-compose.yml for [project]. Don't run anything. Tell me which ports it binds, which volumes hold data I'd lose if the disk died, which environment variables are secrets, and every place it says `localhost` that must change to my server's address." },
-        { "prompt": "Now give me the minimum commands to start it, check it answers over HTTP, and stop it cleanly." },
-        { "check": "a plain HTTP request to the port returns a normal status before you call it done." }
+        {
+          "p": "Pick something small that publishes a `docker-compose.yml`. Do not run it yet. Have the AI read it first."
+        },
+        {
+          "prompt": "Here is the docker-compose.yml for [project]. Don't run anything. Tell me which ports it binds, which volumes hold data I'd lose if the disk died, which environment variables are secrets, and every place it says `localhost` that must change to my server's address."
+        },
+        {
+          "prompt": "Now give me the minimum commands to start it, check it answers over HTTP, and stop it cleanly."
+        },
+        {
+          "check": "a plain HTTP request to the port returns a normal status before you call it done."
+        }
       ]
     },
     {
@@ -65,9 +97,15 @@
       "label": "The ports",
       "heading": "Keep a port list and a secrets rule",
       "blocks": [
-        { "p": "The cheapest habit in the whole setup. A running note of what is bound where, so no new service ever guesses a port. Tokens live in your OS keychain and are read at call time, never saved in a file or typed into a command." },
-        { "prompt": "Here are the services on my server and their ports: [list]. Build me a one-page table, then write a short pre-deploy check that picks a free port, refuses to reuse one, and tells me when it's done." },
-        { "prompt": "I need to store an API token on my Mac and read it from a script without writing it to disk. Show me how with the macOS keychain, and show me the safe way to reference it in a command." }
+        {
+          "p": "The cheapest habit in the whole setup. A running note of what is bound where, so no new service ever guesses a port. Tokens live in your OS keychain and are read at call time, never saved in a file or typed into a command."
+        },
+        {
+          "prompt": "Here are the services on my server and their ports: [list]. Build me a one-page table, then write a short pre-deploy check that picks a free port, refuses to reuse one, and tells me when it's done."
+        },
+        {
+          "prompt": "I need to store an API token on my Mac and read it from a script without writing it to disk. Show me how with the macOS keychain, and show me the safe way to reference it in a command."
+        }
       ]
     },
     {
@@ -75,11 +113,21 @@
       "label": "The runbook",
       "heading": "Turn what you just did into a runbook",
       "blocks": [
-        { "p": "This is the step that made Terry repeatable. Right after the first deploy, while the details are fresh, hand the AI your terminal history and ask for the process back." },
-        { "prompt": "Here is my terminal history from deploying [service]. Turn it into a numbered runbook with these sections: prerequisites, steps, how to verify each step worked, and known mistakes. Mark every point where I made a judgment call, so I can decide whether it belongs in the rules." },
-        { "p": "Then do a second deploy of a different kind. A web app first, then a command-line tool or a desktop app. Whatever breaks, add it to the runbook that day." },
-        { "prompt": "This step failed with [error text]. Explain why in one paragraph, give me the fix, and write the one-line entry I should add to my runbook's \"known mistakes\" so I never debug it again." },
-        { "check": "a second person, or a second AI session with no memory of yours, could follow the runbook and get the same result." }
+        {
+          "p": "This is the step that made Terry repeatable. Right after the first deploy, while the details are fresh, hand the AI your terminal history and ask for the process back."
+        },
+        {
+          "prompt": "Here is my terminal history from deploying [service]. Turn it into a numbered runbook with these sections: prerequisites, steps, how to verify each step worked, and known mistakes. Mark every point where I made a judgment call, so I can decide whether it belongs in the rules."
+        },
+        {
+          "p": "Then do a second deploy of a different kind. A web app first, then a command-line tool or a desktop app. Whatever breaks, add it to the runbook that day."
+        },
+        {
+          "prompt": "This step failed with [error text]. Explain why in one paragraph, give me the fix, and write the one-line entry I should add to my runbook's \"known mistakes\" so I never debug it again."
+        },
+        {
+          "check": "a second person, or a second AI session with no memory of yours, could follow the runbook and get the same result."
+        }
       ]
     },
     {
@@ -87,10 +135,18 @@
       "label": "The backups",
       "heading": "Set up backups before you need them",
       "blocks": [
-        { "p": "Write the restore steps first. A backup you have never restored is a hope." },
-        { "prompt": "Review this backup script: [paste]. What is it copying that it shouldn't? What happens when the disk is 90% full? How would I find out it failed? Then write me the restore steps as if I'm doing them at 2 a.m. on a clean machine." },
-        { "prompt": "Suggest a retention plan for a small home server: how many dated copies to keep, how to prune safely only after a new copy verifies, and how to get a second copy onto a different physical machine." },
-        { "check": "you restored one file from a backup into a scratch folder, and it opened." }
+        {
+          "p": "Write the restore steps first. A backup you have never restored is a hope."
+        },
+        {
+          "prompt": "Review this backup script: [paste]. What is it copying that it shouldn't? What happens when the disk is 90% full? How would I find out it failed? Then write me the restore steps as if I'm doing them at 2 a.m. on a clean machine."
+        },
+        {
+          "prompt": "Suggest a retention plan for a small home server: how many dated copies to keep, how to prune safely only after a new copy verifies, and how to get a second copy onto a different physical machine."
+        },
+        {
+          "check": "you restored one file from a backup into a scratch folder, and it opened."
+        }
       ]
     }
   ],
@@ -115,11 +171,20 @@
     "id": "known-mistakes",
     "heading": "Known mistakes",
     "note": "This list grows. Each entry cost me real time once.",
-    "caption": "Known mistakes, with the date each was logged and the fix",
+    "caption": "Known mistakes, with what happened and the fix",
     "rows": [
-      { "date": "2026-10-09", "what": "Pushing a shallow clone (`--depth 1`) to my git server fails with `shallow update not allowed`.", "fix": "Run `git fetch --unshallow`, then push again." },
-      { "date": "2026-10-09", "what": "A nightly backup copied a 100 GB media folder that was already stored twice elsewhere. The disk hit 71 percent.", "fix": "Decide what each backup is for, exclude what is not data you made, and refuse to run under a free-space floor." },
-      { "date": "2026-10-09", "what": "A backup warning sat unnoticed because nothing told me.", "fix": "Show the last backup status as a banner when you log in over SSH." }
+      {
+        "what": "Pushing a shallow clone (`--depth 1`) to my git server fails with `shallow update not allowed`.",
+        "fix": "Run `git fetch --unshallow`, then push again."
+      },
+      {
+        "what": "A nightly backup copied a 100 GB media folder that was already stored twice elsewhere. The disk hit 71 percent.",
+        "fix": "Decide what each backup is for, exclude what is not data you made, and refuse to run under a free-space floor."
+      },
+      {
+        "what": "A backup warning sat unnoticed because nothing told me.",
+        "fix": "Show the last backup status as a banner when you log in over SSH."
+      }
     ]
   },
   "next": {

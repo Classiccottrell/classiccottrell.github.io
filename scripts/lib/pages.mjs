@@ -142,8 +142,7 @@ const section = (sec, p, printIt) => h`
   ${(sec.paragraphs || []).map((t) => h`<p>${inline(t)}</p>`)}
   ${sec.items ? h`<ul class="items">${sec.items.map((it) => h`<li><strong>${inline(it.lead)}</strong> ${inline(it.text)}</li>`)}</ul>` : ''}
   ${sec.outro ? h`<p>${inline(sec.outro)}</p>` : ''}
-  ${sec.roadmap ? roadmap(sec.roadmap, p.roadmapLink) : ''}
-  ${sec.cta ? h`<p class="cs-cta">${btn(sec.cta.href, sec.cta.label)}</p>` : ''}
+  ${sec.roadmap ? roadmap(sec.roadmap, p.roadmapLink) : ''}${sec.cta ? h`<p class="cs-cta">${btn(sec.cta.href, sec.cta.label)}</p>` : ''}
   ${sec.image ? h`<figure class="cs-fig"><div class="panel">${img(sec.image)}</div>${sec.image.caption ? h`<figcaption class="note cap">${inline(sec.image.caption)}</figcaption>` : ''}</figure>` : ''}
 </section>
 ${p.pullQuote && (sec.paragraphs || []).some((t) => t.includes(p.pullQuote)) ? h`<figure class="pq-fig"><blockquote class="pq"><p>${inline(p.pullQuote)}</p></blockquote><figcaption class="note">From “${inline(sec.heading)}”</figcaption></figure>` : ''}`;

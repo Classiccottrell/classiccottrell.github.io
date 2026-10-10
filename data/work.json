@@ -744,7 +744,7 @@
       {
         "heading": "What it actually took",
         "paragraphs": [
-          "The install was a weekend. The useful part came after, when I wrote down how I deployed things. My second project, a desktop app, failed on its first push because I had cloned it shallow. That fix went into the process the same day.",
+          "The install was the easy part. The useful part came after, when I wrote down how I deployed things. My second project, a desktop app, failed on its first push because I had cloned it shallow. That fix went into the process the same day.",
           "The same habit rebuilt my backups after the server’s disk crept up to 71 percent, with 100 GB of it one folder stored three times. The new backups keep dated copies, refuse to run when space is low, and show a warning when I log in if last night failed. One firewall rule is still blocking a second offsite copy, and this page will say so until that is fixed."
         ]
       },

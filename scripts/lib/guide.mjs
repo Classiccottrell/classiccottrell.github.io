@@ -52,7 +52,7 @@ export function guidePage(ctx) {
         <p class="note lab-now" data-js data-lab-now aria-hidden="true">Seven layers, one per step</p>
         <div class="ink-ctl lab-ctl" data-js>
           <label class="note" for="lab-range">Apart</label>
-          <input type="range" id="lab-range" min="0" max="100" value="0" aria-label="How far apart">
+          <input type="range" id="lab-range" min="0" max="100" value="0" aria-label="How far apart" aria-valuetext="0 percent apart">
           <output for="lab-range">0%</output>
           <button type="button" class="tool" id="lab-btn">Take it apart</button>
         </div>
@@ -85,8 +85,8 @@ export function guidePage(ctx) {
       <p class="cs-intro">${inline(g.mistakes.note)}</p>
       <table class="kt">
         <caption class="vh">${esc(g.mistakes.caption)}</caption>
-        <thead><tr><th scope="col">Date</th><th scope="col">What happened</th><th scope="col">Fix</th></tr></thead>
-        <tbody>${g.mistakes.rows.map((r) => h`<tr><th scope="row" data-label="Date"><time datetime="${r.date}">${r.date}</time></th><td data-label="What happened">${inline(r.what)}</td><td data-label="Fix">${inline(r.fix)}</td></tr>`)}</tbody>
+        <thead><tr><th scope="col">What happened</th><th scope="col">Fix</th></tr></thead>
+        <tbody>${g.mistakes.rows.map((r) => h`<tr><td data-label="What happened">${inline(r.what)}</td><td data-label="Fix">${inline(r.fix)}</td></tr>`)}</tbody>
       </table>
     </section>
     <section class="guide-sec" id="${g.next.id}" aria-labelledby="${g.next.id}-h">

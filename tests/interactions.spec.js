@@ -30,6 +30,35 @@ test('take it apart follows the slider and the button', async ({ page }) => {
   await expect(page.locator('#explode-btn')).toHaveText('Put it back');
 });
 
+// Nothing on the page moves when a control changes its own label or a take
+// rotates in: the widths where it used to (393 and 1024) are tested.
+test('the hot takes band keeps its height and its buttons stay put', async ({ page }) => {
+  await page.setViewportSize({ width: 1024, height: 800 });
+  await page.goto('/');
+  const stage = page.locator('[data-stage]'), next = stage.locator('[data-stage-next]');
+  await page.evaluate(() => document.fonts.ready);
+  const height = (await stage.boundingBox()).height;
+  for (let i = 0; i < takes.length; i++) {
+    await next.click();
+    expect((await stage.boundingBox()).height).toBe(height);
+  }
+  const x = (await next.boundingBox()).x;
+  await stage.locator('[data-stage-play]').click();
+  expect((await next.boundingBox()).x).toBe(x);
+});
+
+test('take it apart keeps its layout when the button label changes', async ({ page }) => {
+  await page.setViewportSize({ width: 393, height: 852 });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/');
+  const legend = page.locator('.xv-legend');
+  await page.locator('#explode').fill('40');
+  const y = (await legend.boundingBox()).y;
+  await page.locator('#explode').fill('60');
+  await expect(page.locator('#explode-btn')).toHaveText('Put it back');
+  expect((await legend.boundingBox()).y).toBe(y);
+});
+
 test('pencils show the grid and stay on across pages', async ({ page }) => {
   await page.goto('/');
   const btn = page.locator('[data-pencils]');

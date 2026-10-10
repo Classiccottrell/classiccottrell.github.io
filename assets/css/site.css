@@ -75,6 +75,11 @@ p,li{text-wrap:pretty}
 .tool{display:inline-block;font:600 .7rem/1 var(--f-pencil);letter-spacing:.07em;text-transform:uppercase;padding:9px 10px;border:1.5px solid var(--fg);background:var(--ground);color:var(--fg);border-radius:0;cursor:pointer;white-space:nowrap}
 .tool:hover{background:var(--highlight)}
 .tool[aria-pressed="true"]{background:var(--fg);color:var(--ground)}
+/* Buttons that swap their label keep the longer one's width, so nothing beside
+   them moves: "Take it apart" / "Put it back", "Pause" / "Play" (site.js). The
+   mono face makes ch exact: letters, .07em tracking each, then padding and border. */
+#explode-btn{min-width:calc(13ch + 13 * .07em + 23px)}
+[data-stage-play]{min-width:calc(5ch + 5 * .07em + 23px)}
 .sm{display:inline-block;width:.62em;height:.62em;border:1.5px solid currentColor;border-radius:50%;margin-right:.42em;vertical-align:-.03em;flex:none}
 .sm-live{background:currentColor}
 .sm-prog{background:linear-gradient(90deg,currentColor 50%,transparent 50%)}
@@ -213,6 +218,7 @@ a.avail:hover{background:var(--highlight)}
 .essay .n{font:500 .75rem/1 var(--f-pencil);color:var(--proof);padding-top:6px;letter-spacing:.04em;grid-row:span 3}
 .essay .t{font-size:var(--t-h3);line-height:1.1;letter-spacing:-.02em}
 .essay .s{font-style:italic;font-size:1rem;line-height:1.4}
+.essays.big{margin-top:clamp(40px,5vw,72px)}
 .essays.big .n{font:700 var(--t-h3)/1 var(--f-ink);color:var(--fg);letter-spacing:-.02em;padding-top:0;min-width:3.4em}
 .essays.big img{width:180px;max-width:100%;border:1.5px solid var(--fg);grid-column:2;margin-top:10px}
 @media (min-width:700px){.essays.big .essay-a{grid-template-columns:5.5rem minmax(0,1fr) 180px}.essays.big img{grid-column:3;grid-row:1/4;margin-top:0}}

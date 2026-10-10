@@ -210,6 +210,17 @@
     stage.addEventListener('mouseleave', function () { hold = false; schedule(); });
     stage.addEventListener('focusin', function () { hold = true; clearTimeout(timer); });
     stage.addEventListener('focusout', function () { hold = false; schedule(); });
+    // The band holds the height of its tallest take at this width, so the page
+    // under it doesn't jump when a long one rotates in.
+    var stageIn = $('.stage-in', stage), stageW = 0;
+    var fitStage = function () {
+      var cur = idx, tall = 0;
+      stageIn.style.minHeight = '';
+      for (var i = 0; i < takes.length; i++) { show(i); tall = Math.max(tall, stageIn.getBoundingClientRect().height); }
+      show(cur); stageIn.style.minHeight = Math.ceil(tall) + 'px';
+    };
+    if (window.ResizeObserver) new ResizeObserver(function () { if (stageIn.clientWidth !== stageW) { stageW = stageIn.clientWidth; fitStage(); } }).observe(stageIn);
+    if (document.fonts) document.fonts.ready.then(fitStage);
     paintPlay(); schedule();
   }
 

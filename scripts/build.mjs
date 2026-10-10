@@ -12,6 +12,7 @@ import { fileURLToPath } from 'node:url';
 import { gzipSync } from 'node:zlib';
 import { checkContrast, ratio } from './check-contrast.mjs';
 import * as P from './lib/pages.mjs';
+import { guidePage } from './lib/guide.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const CHECK = process.argv.includes('--check');
@@ -32,6 +33,7 @@ const ctx = {
   writing: json('data/writing.json'),
   drawings: json('data/drawings.json'),
   hire: json('data/hire.json'),
+  guide: json('data/guide.json'),
   year: 2026,
 };
 ctx.ratio = ratio;
@@ -41,6 +43,7 @@ const slugs = new Set(ctx.work.map((p) => p.slug));
 const fail = (msg) => { console.error(`build: ${msg}`); process.exit(1); };
 for (const p of ctx.work) if (p.take && !ctx.takes.some((t) => t.id === p.take)) fail(`${p.slug} cites missing take ${p.take}`);
 for (const t of ctx.takes) for (const s of t.sources) if (s.href.startsWith('/work/') && s.href !== '/work/' && !slugs.has(s.href.split('/')[2])) fail(`${t.id} links to missing ${s.href}`);
+if (!slugs.has(ctx.guide.slug)) fail(`guide belongs to missing case study ${ctx.guide.slug}`);
 for (const r of ctx.rules) if (!slugs.has(r.href.split('/')[2])) fail(`${r.id} links to missing ${r.href}`);
 
 // ---------------------------------------------------------------- generated assets
@@ -80,6 +83,7 @@ const pages = [
   ['index.html', () => P.home(ctx)],
   ['work/index.html', () => P.workIndex(ctx)],
   ...ctx.work.map((p) => [`work/${p.slug}/index.html`, () => P.caseStudy(ctx, p)]),
+  [`work/${ctx.guide.slug}/guide/index.html`, () => guidePage(ctx)],
   ['takes/index.html', () => P.takesIndex(ctx)],
   ...ctx.takes.filter((t) => !t.retired).map((t) => [`takes/${t.slug}/index.html`, () => P.takePage(ctx, t)]),
   ['work-with-me/index.html', () => P.hire(ctx)],
@@ -94,7 +98,7 @@ const pages = [
 const routes = new Set(pages.map(([f]) => `/${f.replace(/index\.html$/, '')}`));
 const linksIn = (v) => (typeof v === 'string' ? [...v.matchAll(/\]\((\/[^)\s]*)\)/g)].map((m) => m[1])
   : v && typeof v === 'object' ? Object.values(v).flatMap(linksIn) : []);
-for (const key of ['site', 'work', 'takes', 'rules', 'writing', 'drawings', 'hire']) {
+for (const key of ['site', 'work', 'takes', 'rules', 'writing', 'drawings', 'hire', 'guide']) {
   for (const href of linksIn(ctx[key])) if (!routes.has(href.split('#')[0])) fail(`data/${key}.json links to missing ${href}`);
 }
 ctx.stats = {

@@ -16,7 +16,7 @@ import { fileURLToPath } from 'node:url';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = path.join(ROOT, 'contact-sheet');
 const json = (p) => JSON.parse(readFileSync(path.join(ROOT, p), 'utf8'));
-const PAGES = ['/', '/work/', ...json('data/work.json').map((p) => `/work/${p.slug}/`), '/takes/', '/takes/mood-board/', '/work-with-me/', '/writing/', '/drawings/', '/about/', '/colophon/', '/404.html'];
+const PAGES = ['/', '/work/', ...json('data/work.json').map((p) => `/work/${p.slug}/`), '/work/terry-home-lab/guide/', '/takes/', '/takes/mood-board/', '/work-with-me/', '/writing/', '/drawings/', '/about/', '/colophon/', '/404.html'];
 const THUMB = 320, MAX_H = 2400;
 
 const browser = await chromium.launch({ executablePath: process.env.PW_CHROMIUM || undefined });

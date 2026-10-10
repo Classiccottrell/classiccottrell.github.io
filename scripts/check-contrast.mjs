@@ -52,6 +52,8 @@ const PAIRS = [
   ['Band notes', 'band-proof', 'band'],
   ['Band highlight', 'band-fg', 'band-highlight'],
   ['Terry Time band', 'tt-ink', 'tt-paper'],
+  // The Terry guide's lifted layer sits on highlight (its secondary text turns to full ink); dimmed layers use muted on ground, already above.
+  ['Notes on highlight', 'proof', 'highlight'],
 ];
 
 export function checkContrast() {

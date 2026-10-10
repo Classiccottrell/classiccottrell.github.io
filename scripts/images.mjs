@@ -121,6 +121,7 @@ await plate('terry-time-exhibit', 'webp', { width: 1100, quality: 72 });
 await plate('terry-time-after-hours', 'webp', { width: 1100, quality: 72 });
 await plate('terry-time-404', 'webp', { width: 1100, lossless: true });
 await plate('terry-time-symbols', 'webp', { width: 1040, quality: 72 });
+await plate('terry-home-lab', 'png');
 await plate('creative-services', 'webp', { quality: 72 });
 await plate('creative-services-flow', 'jpg', { width: 1100 });
 await plate('creative-services-print', 'webp', { width: 1100, quality: 70 });

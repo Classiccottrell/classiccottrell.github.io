@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Terry: Home AI Lab · Matthew A. Cottrell</title>
+<meta name="description" content="Three retired computers, one private network, and a lab that runs my AI work at home.">
+<link rel="canonical" href="https://classiccottrell.github.io/work/terry-home-lab/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Matthew A. Cottrell">
+<meta property="og:title" content="Terry: Home AI Lab">
+<meta property="og:description" content="Three retired computers, one private network, and a lab that runs my AI work at home.">
+<meta property="og:url" content="https://classiccottrell.github.io/work/terry-home-lab/">
+<meta property="og:image" content="https://classiccottrell.github.io/assets/cards/work-terry-home-lab.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFFFFF">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0A0A0A">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" href="/assets/fonts/familjen-grotesk.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/site.css?v=debbf0f5f8">
+<script>document.documentElement.className='js'</script>
+<script src="/assets/js/site.js?v=3dd5bfa070" defer></script>
+
+</head>
+<body class="case">
+
+<a class="skip" href="#main">Skip to content</a>
+<header class="mast">
+  <div class="wrap mast-in">
+    <a class="mast-name" href="/">Matthew A. Cottrell</a>
+    <nav class="mast-nav" aria-label="Main"><ul><li><a href="/work/" aria-current="true">Work</a></li><li><a href="/writing/">Writing</a></li><li><a href="/drawings/">Drawings</a></li><li><a href="/about/">About</a></li></ul></nav>
+    <div class="mast-end"><a class="avail" href="/work-with-me/#availability"><i class="sm sm-live" aria-hidden="true"></i>Open to new projects</a><a class="lnk mast-cta" href="/work-with-me/">Work with me</a></div>
+    <details class="menu">
+      <summary>Menu</summary>
+      <nav class="menu-panel" aria-label="Menu"><ul><li><a href="/work/" aria-current="true">Work</a></li><li><a href="/writing/">Writing</a></li><li><a href="/drawings/">Drawings</a></li><li><a href="/about/">About</a></li><li><a class="lnk mast-cta" href="/work-with-me/">Work with me</a></li></ul><a class="avail" href="/work-with-me/#availability"><i class="sm sm-live" aria-hidden="true"></i>Open to new projects</a></nav>
+    </details>
+  </div>
+</header>
+<main id="main">
+
+<article class="cs">
+  
+<header class="wrap ph">
+  <p class="note"><a href="/work/">Work</a> / 06 · Home lab</p>
+  <h1 class="splash">Terry: Home AI Lab</h1>
+  <p class="lede">Three retired computers, one private network, and a lab that runs my AI work at home.</p>
+  
+<dl class="tblock cs-tb"><div><dt>Role</dt><dd>Design and build</dd></div><div><dt>Year</dt><dd>2026</dd></div><div><dt>Status</dt><dd><i class="sm sm-prog" aria-hidden="true"></i>Ongoing</dd></div><div><dt>Stack</dt><dd>Ubuntu Server · Docker Compose · a private network</dd></div><div><dt>Numbers</dt><dd>3 machines · 4 services · 7-step guide</dd></div><div><dt>Links</dt><dd>A private home network, so there’s no repository to link. The <a href="/work/terry-home-lab/guide/">build-your-own guide</a> is public.</dd></div></dl>
+</header>
+  <div class="wrap">
+<figure class="plate has-legend">
+  <div class="panel crop callouts"><img src="/assets/img/work/terry-home-lab.webp" width="1360" height="860" alt="The Terry home lab drawn two ways in ink and blue pencil. On the left, one sheet face-on: the server in the middle, a 2015 MacBook, an old iMac and my own computer around it inside a dashed private-network border, and a dashed Mac mini marked planned. On the right, seven numbered sheets taken apart and stacked, from 01 The machine at the bottom to 07 The backups on top."><span class="mk" style="--x:30%;--y:62%" aria-hidden="true">1</span><span class="mk" style="--x:37%;--y:13%" aria-hidden="true">2</span><span class="mk" style="--x:56%;--y:57%" aria-hidden="true">3</span></div>
+  <ol class="legend"><li><span class="mk" aria-hidden="true">1</span><span>Three machines and a planned fourth on one private network. The Mac mini is dashed because it isn’t bought yet.</span></li><li><span class="mk" aria-hidden="true">2</span><span>Seven layers, one for each step of the guide, from the machine at the bottom to the backups on top.</span></li><li><span class="mk" aria-hidden="true">3</span><span>On the guide, the layer for the step you’re reading lifts while the others dim.</span></li></ol>
+  <figcaption class="note cap">Fig. 1 · The lab taken apart. One sheet face-on, and all seven stacked.</figcaption>
+</figure></div>
+  
+  <div class="wrap cs-body">
+<section class="cs-sec">
+  
+  
+  <p>I had an old Intel MacBook stuck on an operating system that modern tools had stopped supporting. The hardware was fine. The software was the problem.</p><p>Terry is what I did about it. I wiped the Mac, put Ubuntu Server on it, and it became the first node in a small lab on my home network. The other nodes are a 2015 MacBook that runs the language models and an old iMac that handles search and backups. Everything talks over a private network, and none of it is open to the internet.</p>
+  
+  
+  
+  
+  
+</section>
+
+<section class="cs-sec">
+  <h2 class="cs-h">What it is</h2>
+  <p class="cs-intro">Three machines, one job each:</p>
+  
+  <ul class="items"><li><strong>The server.</strong> An Ubuntu box that hosts my git server, a chat interface for local models, a design tool and a media library. New projects get mirrored to it and launched from a desktop icon.</li><li><strong>The thinking machine.</strong> A 2015 MacBook running local language models and speech-to-text, so a lot of everyday AI work never leaves the house.</li><li><strong>The memory and the backups.</strong> An old iMac that builds document search embeddings and pulls its own dated snapshots of the server every night.</li><li><strong>A repeatable process.</strong> A short skill that mirrors any repo to the lab, decides whether it is a web app or a native app, and launches it the right way. It has been through two very different projects with no steps re-invented.</li></ul>
+  
+  
+  
+  
+</section>
+
+<section class="cs-sec cs-print">
+  <h2 class="cs-h">What it actually took</h2>
+  
+  <p>The install was a weekend. The useful part came after, when I wrote down how I deployed things. My second project, a desktop app, failed on its first push because I had cloned it shallow. That fix went into the process the same day.</p><p>The same habit rebuilt my backups after the server’s disk crept up to 71 percent, with 100 GB of it one folder stored three times. The new backups keep dated copies, refuse to run when space is low, and show a warning when I log in if last night failed. One firewall rule is still blocking a second offsite copy, and this page will say so until that is fixed.</p>
+  
+  
+  
+  
+  
+</section>
+
+<section class="cs-sec">
+  <h2 class="cs-h">Roadmap</h2>
+  <p class="cs-intro">The lab grows one node at a time. Each step has to work on its own before the next one starts.</p>
+  
+  
+  
+  
+<ol class="roadmap rm-3"><li><p class="note"><i class="sm sm-ship" aria-hidden="true"></i>Done</p><p class="rm-l">Server online</p><p>An old Intel Mac running headless Ubuntu Server, with a fixed address, passwordless SSH and a private network.</p></li><li><p class="note"><i class="sm sm-ship" aria-hidden="true"></i>Done</p><p class="rm-l">Local models</p><p>A 2015 MacBook serving local language models and speech-to-text to the rest of the network.</p></li><li><p class="note"><i class="sm sm-prog" aria-hidden="true"></i>In progress</p><p class="rm-l">Repeatable deploys and backups</p><p>A mirror-and-launch process proven on two projects, and nightly dated backups. A firewall rule still blocks the second offsite copy.</p></li><li><p class="note"><i class="sm sm-priv" aria-hidden="true"></i>Planned</p><p class="rm-l">Mac mini node</p><p>Add a Mac mini as the next node, with enough memory to run a larger local model than the lab can today.</p></li><li><p class="note"><i class="sm sm-priv" aria-hidden="true"></i>Planned</p><p class="rm-l">A small agent on each node</p><p>Give every machine its own small, narrow agent setup with one job, instead of one big assistant that touches everything.</p></li><li><p class="note"><i class="sm sm-priv" aria-hidden="true"></i>Planned</p><p class="rm-l">A bigger local model</p><p>Bring a stronger model onto the network so more of the daily work stays local, with a fallback model and a self-test so the lab fails safely.</p></li></ol>
+
+  
+  
+</section>
+
+<section class="cs-sec">
+  <h2 class="cs-h">Build your own</h2>
+  
+  <p>I turned the whole process into a step-by-step guide with the prompts I would give an AI assistant at each stage. It works for any old computer, and you do not need to be a sysadmin.</p>
+  
+  
+  
+  <p class="cs-cta"><a class="btn" href="/work/terry-home-lab/guide/">Build your own: the step-by-step guide <span aria-hidden="true">→</span></a></p>
+  
+</section>
+</div>
+  <nav class="wrap pn-wrap" aria-label="More work"><div class="pn-nav">
+    <a class="lnk" href="/work/agent-bench/"><span aria-hidden="true">←</span> 05 The Agent Bench</a>
+    <a class="lnk" href="/work/ux-skill-repo/">07 UX Skill Repo 1.0 <span aria-hidden="true">→</span></a>
+  </div></nav>
+</article>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-cta">
+      <p class="foot-h">Bring me a problem.</p>
+      <p class="foot-row"><a class="btn" href="/work-with-me/">Work with me <span aria-hidden="true">→</span></a><a class="avail" href="/work-with-me/#availability"><i class="sm sm-live" aria-hidden="true"></i>Open to new projects</a></p>
+    </div>
+    <div class="foot-grid">
+      <nav aria-label="Elsewhere"><p class="note">Elsewhere</p><ul><li><a class="lnk" href="https://www.linkedin.com/in/classiccottrell/">LinkedIn<span class="ext" aria-hidden="true"> ↗</span></a></li><li><a class="lnk" href="https://github.com/Classiccottrell">GitHub<span class="ext" aria-hidden="true"> ↗</span></a></li><li><a class="lnk" href="https://classiccottrell.substack.com/">Substack<span class="ext" aria-hidden="true"> ↗</span></a></li><li><a class="lnk" href="https://www.instagram.com/classiccottrell">Instagram<span class="ext" aria-hidden="true"> ↗</span></a></li></ul></nav>
+      <nav aria-label="This site"><p class="note">This site</p><ul><li><a class="lnk" href="/work/" aria-current="true">Work</a></li><li><a class="lnk" href="/writing/">Writing</a></li><li><a class="lnk" href="/drawings/">Drawings</a></li><li><a class="lnk" href="/about/">About</a></li><li><a class="lnk" href="/takes/">Takes</a></li><li><a class="lnk" href="/work-with-me/">Work with me</a></li><li><a class="lnk" href="/colophon/">Colophon</a></li></ul></nav>
+    </div>
+    <div class="foot-base">
+      <a class="terry-a" href="/work/terry-time/" aria-label="Terry Time, Terry’s shop"><span class="terry" aria-hidden="true"></span></a>
+      <p>Product designer. Enterprise IT, design systems, accessibility and AI tooling.</p>
+      <p class="note">© 2009–<span data-year>2026</span> Matthew A. Cottrell</p>
+      <button type="button" class="tool" data-pencils aria-pressed="false" hidden>Pencils</button>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

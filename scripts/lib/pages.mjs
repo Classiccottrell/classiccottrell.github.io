@@ -55,7 +55,7 @@ export function home(ctx) {
         <output for="explode">0%</output>
         <button type="button" class="tool" id="explode-btn">Take it apart</button>
       </div>
-      <p class="note xv-legend">05 Content · 04 Components · 03 Layout · 02 Tokens · 01 Rules</p>
+      <p class="note xv-legend">${["05 Content", "04 Components", "03 Layout", "02 Tokens", "01 Rules"].map((l, i) => h`${i ? ' · ' : ''}<span class="nw">${l}</span>`)}</p>
       <p class="note cap">A sample screen. On a real project, it’s yours.</p>
     </div>
     ${exploded(['R-02', 'R-04', 'R-05', 'R-07', 'R-09'].map((id) => rules.find((r) => r.id === id)))}
@@ -182,7 +182,7 @@ export function caseStudy(ctx, p) {
     { dt: 'Status', dd: status(p.status) },
     { dt: 'Stack', dd: esc(p.stack) },
     { dt: 'Numbers', dd: esc(p.numbers.join(' · ')) },
-    { dt: 'Links', dd: p.links.length ? p.links.map((l, j) => h`${j ? ' · ' : ''}${link(l.url, l.label)}`).join('') : esc(p.linksNote || 'Private repository') },
+    { dt: 'Links', dd: p.links.length ? h`<span class="tb-links">${p.links.map((l) => link(l.url, l.label))}</span>` : esc(p.linksNote || 'Private repository') },
   ];
   if (take) rows.push({ dt: `Take · ${take.id}`, dd: h`<a class="tb-take" href="/takes/${esc(take.slug)}/">${inline(take.text)}</a>`, wide: true });
   const main = h`
@@ -304,7 +304,7 @@ ${pageHead({ kicker: 'Work with me', title: esc(H.headline), lede: esc(H.standfi
 <section class="wrap sec" aria-labelledby="next-h">
   <h2 class="h2" id="next-h">What happens next</h2>
   <ol class="steps">${H.steps.map((s) => h`<li>${inline(s)}</li>`)}</ol>
-  <p class="sub-intro">Rather talk first? ${link(site.contact.url, `Message me on ${site.contact.label}`)}.</p>
+  <p class="sub-intro">Rather talk first? ${link(site.contact.url, `Message me on ${site.contact.label}`, '')}.</p>
 </section>`;
   return page(ctx, { path: '/work-with-me/', title: 'Work with me', description: `${H.headline} ${H.standfirst}`, card: 'work-with-me', main });
 }
@@ -443,13 +443,13 @@ ${pageHead({ kicker: 'Colophon', title: 'Colophon', lede: 'How this site is made
   <h2 class="h2" id="a11y-h">Accessibility</h2>
   <p>This site aims to meet WCAG 2.2 at level AA. Every page is checked with axe-core in the test suite, every text colour pair is checked by a script at build time, and every page works with a keyboard and with JavaScript turned off.</p>
   <p>Motion is optional. With reduced motion turned on in your system settings, drawings arrive inked, the hot takes stop rotating, and the linefield piece holds still. The take-it-apart figure on the home page is an illustration; its text description says what it shows.</p>
-  <p>If something doesn’t work for you, tell me through ${link(site.contact.url, site.contact.label)} or <a href="/work-with-me/#brief">the brief</a>, and I’ll fix it.</p>
+  <p>If something doesn’t work for you, tell me through ${link(site.contact.url, site.contact.label, '')} or <a href="/work-with-me/#brief">the brief</a>, and I’ll fix it.</p>
 </div></section>
 
 <section class="wrap sec" aria-labelledby="credits-h"><div class="prose">
   <h2 class="h2" id="credits-h">Credits</h2>
-  <p>Familjen Grotesk, Newsreader and Red Hat Mono are used under the SIL Open Font License and served from this site. Run the checks uses <a href="https://github.com/dequelabs/axe-core">axe-core</a> under the Mozilla Public License 2.0. The ink band runs Grain Field from ${link('/work/linefield/', 'linefield')}, which is MIT licensed. Terry drew himself, and he has ${link('/work/terry-time/', 'a shop')}.</p>
-  <p>The source is on ${link('https://github.com/Classiccottrell/classiccottrell.github.io', 'GitHub')}. The previous version of the site is kept on the <code>v1-classic</code> branch.</p>
+  <p>Familjen Grotesk, Newsreader and Red Hat Mono are used under the SIL Open Font License and served from this site. Run the checks uses ${link('https://github.com/dequelabs/axe-core', 'axe-core', '')} under the Mozilla Public License 2.0. The ink band runs Grain Field from ${link('/work/linefield/', 'linefield', '')}, which is MIT licensed. Terry drew himself, and he has ${link('/work/terry-time/', 'a shop', '')}.</p>
+  <p>The source is on ${link('https://github.com/Classiccottrell/classiccottrell.github.io', 'GitHub', '')}. The previous version of the site is kept on the <code>v1-classic</code> branch.</p>
 </div></section>`;
   return page(ctx, { path: '/colophon/', title: 'Colophon', description: 'How this site is made, what it’s made of, and a button that checks it.', card: 'colophon', main });
 }
@@ -463,7 +463,7 @@ export function notFound(ctx) {
   <h1 class="h1">Terry took this page apart and lost a piece.</h1>
   <p class="lede">The page you wanted isn’t here. These are:</p>
   <ul class="nf-links">${[...ctx.site.nav, { label: 'Work with me', href: '/work-with-me/' }].map((n) => h`<li><a class="lnk" href="${esc(n.href)}">${esc(n.label)}</a></li>`)}</ul>
-  <p class="nf-more">Looking for Terry? He has ${link('/work/terry-time/', 'a shop now')}.</p>
+  <p class="nf-more">Looking for Terry? He has ${link('/work/terry-time/', 'a shop now', '')}.</p>
 </div>`;
   // GitHub Pages can't redirect, so its 404 forwards the old writing.html address
   // (Netlify 301s it in netlify.toml before this page is ever served).

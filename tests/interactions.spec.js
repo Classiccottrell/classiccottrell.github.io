@@ -110,6 +110,22 @@ test('in dark mode the bands stand off the page and the portrait loses its white
   await expect(page.locator('.inking').first()).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
 });
 
+test('on phones no Selected work row looks stuck on, since there is no preview to point at', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  for (const row of await page.locator('.sel .idx-row').all()) await expect(row).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+});
+
+test('phones fetch none of the Selected work previews they never show', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  const plates = [];
+  page.on('request', (r) => { if (r.url().includes('/assets/img/work/')) plates.push(r.url()); });
+  await page.goto('/', { waitUntil: 'load' });
+  await page.locator('.sel .idx-row').first().hover();
+  await page.waitForTimeout(300);
+  expect(plates).toEqual([]);
+});
+
 test('pencils show the grid and stay on across pages', async ({ page }) => {
   await page.goto('/');
   const btn = page.locator('[data-pencils]');

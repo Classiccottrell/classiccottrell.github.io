@@ -138,15 +138,24 @@
   }
 
   // ------------------------------------------------------------ the cut: pictures change in the same frame
+  // Only where the preview shows (900 px and up), so phones don't fetch plates
+  // they never see; the preloads wait for the page to finish loading.
+  var wide = window.matchMedia('(min-width: 900px)');
   $$('[data-cut]').forEach(function (list) {
     var pic = $('.' + list.getAttribute('data-cut') + ' img'); if (!pic) return;
-    var rows = $$('[data-src]', list);
+    var rows = $$('[data-src]', list), armed = false;
+    var arm = function () {
+      if (armed || !wide.matches) return;
+      armed = true;
+      rows.forEach(function (row) { new Image().src = row.getAttribute('data-src'); });
+    };
     rows.forEach(function (row, i) {
-      new Image().src = row.getAttribute('data-src');
-      var show = function () { pic.src = row.getAttribute('data-src'); rows.forEach(function (x) { x.classList.toggle('on', x === row); }); };
+      var show = function () { if (!wide.matches) return; arm(); pic.src = row.getAttribute('data-src'); rows.forEach(function (x) { x.classList.toggle('on', x === row); }); };
       row.addEventListener('mouseenter', show); row.addEventListener('focus', show);
       if (i === 0) row.classList.add('on');
     });
+    if (document.readyState === 'complete') arm(); else window.addEventListener('load', arm);
+    if (wide.addEventListener) wide.addEventListener('change', arm);
   });
 
   // ------------------------------------------------------------ take it apart

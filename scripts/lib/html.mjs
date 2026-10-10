@@ -22,8 +22,9 @@ export const h = (strings, ...values) => strings.reduce((out, s, i) => out + s +
 export const isExternal = (href) => /^https?:\/\//.test(href);
 
 // A link that marks external destinations with ↗, without opening new tabs.
+// cls '' writes a plain link for use inside prose, styled like the words around it.
 export const link = (href, label, cls = 'lnk') =>
-  h`<a class="${cls}" href="${esc(href)}">${inline(label)}${isExternal(href) ? h`<span class="ext" aria-hidden="true"> ↗</span>` : ''}</a>`;
+  h`<a${cls ? h` class="${cls}"` : ''} href="${esc(href)}">${inline(label)}${isExternal(href) ? h`<span class="ext" aria-hidden="true">\u00a0↗</span>` : ''}</a>`;
 
 export const pad2 = (n) => String(n).padStart(2, '0');
 

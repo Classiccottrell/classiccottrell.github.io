@@ -44,6 +44,19 @@ test('Terry’s footer shows a still frame without JavaScript', async ({ page })
   await expect(page.locator('[data-tt-hint]')).toBeHidden();
 });
 
+test('an external arrow never wraps away from its link in a title block', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  for (const p of work.filter((w) => w.links.length)) {
+    await page.goto(`/work/${p.slug}/`);
+    const lone = await page.evaluate(() => [...document.querySelectorAll('.cs-tb .ext')].filter((ext) => {
+      const range = document.createRange(); range.setStart(ext.parentElement, 0); range.setEndBefore(ext);
+      const rects = [...range.getClientRects()].filter((r) => r.width > 0);
+      return rects.length && Math.abs(ext.getBoundingClientRect().top - rects[rects.length - 1].top) > 4;
+    }).map((ext) => ext.parentElement.textContent.trim()));
+    expect(lone, p.slug).toEqual([]);
+  }
+});
+
 test('the work index lists every project, grouped', async ({ page }) => {
   await page.goto('/work/');
   await expect(page.locator('.groups .idx-row')).toHaveCount(work.length);

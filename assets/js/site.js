@@ -156,6 +156,7 @@
   function explode(xv, xr, xb) {
     var xo = $('output[for="' + xr.id + '"]'), tags = $$('.xv-tag', xv), pins = {};
     $$('.xv-layer', xv).forEach(function (l) { pins[l.getAttribute('data-l')] = $('.xv-pin', l); });
+    xr.setAttribute('aria-valuetext', Math.round(+xr.value) + ' percent apart');
     var placeTags = function () {
       var B = xv.getBoundingClientRect();
       tags.forEach(function (t) {
@@ -261,7 +262,11 @@
       labWatch.forEach(function (el) { labIO.observe(el); });
     };
     var labSize = function () {
-      if (labDock && labMobile.matches) root.style.setProperty('--dock-h', labDock.offsetHeight + 'px'); else root.style.removeProperty('--dock-h');
+      // The dock pins under the masthead on phones: keep scrolled-to and focused things below it. Set here, so only this page is touched.
+      if (labDock && labMobile.matches) {
+        root.style.setProperty('--dock-h', labDock.offsetHeight + 'px');
+        root.style.scrollPaddingTop = ((mast ? mast.offsetHeight : 56) + labDock.offsetHeight + 14) + 'px';
+      } else { root.style.removeProperty('--dock-h'); root.style.removeProperty('scroll-padding-top'); }
       labWatchLine();
     };
     labSize();

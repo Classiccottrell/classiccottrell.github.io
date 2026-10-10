@@ -374,11 +374,8 @@ a.avail:hover{background:var(--highlight)}
   .kt td::before{content:attr(data-label);display:block;font:500 .66rem var(--f-pencil);letter-spacing:.08em;text-transform:uppercase;color:var(--proof)}
 }
 @media (max-width:979px){
-  html{scroll-padding-top:calc(var(--mast) + var(--dock-h,calc(38vh + 70px)) + 14px)}
-  .guide [id]{scroll-margin-top:0}
+  .js .guide [id]{scroll-margin-top:0}
   .no-js .lab-dock{position:static}
-  html.no-js{scroll-padding-top:calc(var(--mast) + 12px)}
-  .no-js .guide [id]{scroll-margin-top:0}
   .lab-ctl .tool{padding:8px 9px}
   .lab-ctl output{min-width:3.6ch}
 }

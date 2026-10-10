@@ -368,3 +368,39 @@ test('the old projects.html address for the card still lands on the case study',
   await page.goto('/projects.html#terry-home-ai-lab');
   await expect(page).toHaveURL(/\/work\/terry-home-lab\/$/);
 });
+
+// ---- the guide's dock offsets must not leak onto any other page
+const OTHER = ['/', '/work/', '/work/terry-time/', '/takes/', '/about/', '/work-with-me/', '/writing/', '/drawings/', '/colophon/'];
+
+for (const [width, height] of [[390, 800], [768, 1024]]) {
+  test(`other pages keep scroll-padding-top auto and land anchors near the top at ${width}x${height}`, async ({ page }) => {
+    await page.setViewportSize({ width, height });
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    for (const path of OTHER) {
+      await page.goto(path);
+      expect(await page.evaluate(() => getComputedStyle(document.documentElement).scrollPaddingTop), path).toBe('auto');
+    }
+    for (const [path, id] of [['/work-with-me/', 'offers-h'], ['/work-with-me/', 'offer-teardown'], ['/about/', 'rules']]) {
+      await page.goto(`${path}#${id}`);
+      await page.waitForTimeout(150);
+      const top = await page.evaluate((i) => document.getElementById(i).getBoundingClientRect().top, id);
+      expect(top, `${path}#${id}`).toBeGreaterThanOrEqual(0);
+      expect(top, `${path}#${id}`).toBeLessThan(130);
+    }
+  });
+}
+
+test('the guide, on a phone, pads its scrolling for the dock; on a desktop it does not', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.setViewportSize({ width: 390, height: 800 });
+  await page.goto(GUIDE);
+  const mobile = await page.evaluate(() => ({ pad: parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop), dock: document.querySelector('.lab-dock').offsetHeight }));
+  expect(mobile.pad).toBeGreaterThan(mobile.dock + 56);
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await expect.poll(() => page.evaluate(() => getComputedStyle(document.documentElement).scrollPaddingTop)).toBe('auto');
+});
+
+test('the home slider has value text from load', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('#explode')).toHaveAttribute('aria-valuetext', /^\d+ percent apart$/);
+});

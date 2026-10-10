@@ -45,6 +45,7 @@
     document.addEventListener('click', function (e) { if (menu.open && !menu.contains(e.target)) menu.open = false; });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && menu.open) { menu.open = false; $('summary', menu).focus(); } });
     menu.addEventListener('click', function (e) { if (e.target.closest('a')) menu.open = false; });
+    menu.addEventListener('focusout', function (e) { if (menu.open && e.relatedTarget && !menu.contains(e.relatedTarget)) menu.open = false; });
   }
 
   // ------------------------------------------------------------ pencils: the grid, rulers and a redline inspector
@@ -201,14 +202,19 @@
       sN.textContent = t.id; sText.textContent = t.text; sText.href = t.href; sSrc.textContent = t.src;
       sHeat.innerHTML = '<span class="heat" role="img" aria-label="Heat ' + t.heat + ' of 3">' + [1, 2, 3].map(function (n) { return '<i' + (n <= t.heat ? ' class="f"' : '') + '></i>'; }).join('') + '</span>';
     };
-    var schedule = function () { clearTimeout(timer); if (playing && !hold) timer = setTimeout(function () { show(idx + 1); schedule(); }, 7000); };
+    var sLive = $('[data-stage-live]', stage);
+    var schedule = function () {
+      clearTimeout(timer);
+      if (sLive) sLive.setAttribute('aria-live', playing && !hold ? 'off' : 'polite');
+      if (playing && !hold) timer = setTimeout(function () { show(idx + 1); schedule(); }, 7000);
+    };
     var paintPlay = function () { sPlay.textContent = playing ? 'Pause' : 'Play'; };
     $('[data-stage-prev]', stage).addEventListener('click', function () { show(idx - 1); schedule(); });
     $('[data-stage-next]', stage).addEventListener('click', function () { show(idx + 1); schedule(); });
     sPlay.addEventListener('click', function () { playing = !playing; paintPlay(); schedule(); });
-    stage.addEventListener('mouseenter', function () { hold = true; clearTimeout(timer); });
+    stage.addEventListener('mouseenter', function () { hold = true; schedule(); });
     stage.addEventListener('mouseleave', function () { hold = false; schedule(); });
-    stage.addEventListener('focusin', function () { hold = true; clearTimeout(timer); });
+    stage.addEventListener('focusin', function () { hold = true; schedule(); });
     stage.addEventListener('focusout', function () { hold = false; schedule(); });
     // The band holds the height of its tallest take at this width, so the page
     // under it doesn't jump when a long one rotates in.

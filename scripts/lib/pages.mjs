@@ -67,9 +67,11 @@ export function home(ctx) {
   <div class="wrap stage-in">
     <div>
       <h2 class="note" id="stage-h">Hot takes</h2>
-      <p class="stage-n note"><span data-stage-n>${esc(first.id)}</span><span data-stage-heat>${heat(first.heat)}</span></p>
-      <p class="stage-t"><a href="/takes/${esc(first.slug)}/" data-stage-text>${inline(first.text)}</a></p>
-      <p class="note" data-stage-src>Receipts · ${esc(first.sources.map((s) => s.label).join(', '))}</p>
+      <div data-stage-live aria-live="off" aria-atomic="true">
+        <p class="stage-n note"><span data-stage-n>${esc(first.id)}</span><span data-stage-heat>${heat(first.heat)}</span></p>
+        <p class="stage-t"><a href="/takes/${esc(first.slug)}/" data-stage-text>${inline(first.text)}</a></p>
+        <p class="note" data-stage-src>Receipts · ${esc(first.sources.map((s) => s.label).join(', '))}</p>
+      </div>
     </div>
     <div class="stage-ctl">
       <span class="stage-btns" data-js><button type="button" class="tool" data-stage-prev>← Prev</button><button type="button" class="tool" data-stage-play>Pause</button><button type="button" class="tool" data-stage-next>Next →</button></span>

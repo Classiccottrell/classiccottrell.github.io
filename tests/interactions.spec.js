@@ -59,6 +59,33 @@ test('take it apart keeps its layout when the button label changes', async ({ pa
   expect((await legend.boundingBox()).y).toBe(y);
 });
 
+test('the case-study breadcrumb can be clicked above the big title', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/work/forma/');
+  await page.locator('.ph .note a[href="/work/"]').click();
+  await expect(page).toHaveURL(/\/work\/$/);
+});
+
+test('the phone menu closes when focus moves past it', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  await page.locator('.menu summary').click();
+  await expect(page.locator('.menu')).toHaveAttribute('open', '');
+  const links = await page.locator('.menu-panel a').count();
+  for (let i = 0; i <= links; i++) await page.keyboard.press('Tab');
+  await expect(page.locator('.menu')).not.toHaveAttribute('open', '');
+});
+
+test('hot takes stay quiet while they rotate and speak when a person moves them', async ({ page }) => {
+  await page.goto('/');
+  const live = page.locator('[data-stage-live]');
+  await expect(live).toHaveAttribute('aria-live', 'off');
+  await page.locator('[data-stage-next]').focus();
+  await expect(live).toHaveAttribute('aria-live', 'polite');
+  await page.keyboard.press('Enter');
+  await expect(page.locator('[data-stage-n]')).toHaveText(takes[1].id);
+});
+
 test('pencils show the grid and stay on across pages', async ({ page }) => {
   await page.goto('/');
   const btn = page.locator('[data-pencils]');

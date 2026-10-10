@@ -49,6 +49,20 @@ test('the work index lists every project, grouped', async ({ page }) => {
   await expect(page.locator('.groups .idx-row')).toHaveCount(work.length);
 });
 
+test('no dead controls without JavaScript: the Pencils button stays hidden', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('[data-pencils]')).toBeHidden();
+});
+
+test('every page reflows at 320 px with no sideways scroll (WCAG 1.4.10)', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 700 });
+  for (const path of PAGES) {
+    await page.goto(path);
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    expect(overflow, path).toBeLessThanOrEqual(0);
+  }
+});
+
 test('the phone menu opens without JavaScript', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');

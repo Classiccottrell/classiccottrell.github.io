@@ -125,6 +125,30 @@ ${indexable.map((f) => `  <url><loc>${ctx.site.url}/${f.replace(/index\.html$/, 
 `);
 outputs.set('robots.txt', `User-agent: *\nAllow: /\n\nSitemap: ${ctx.site.url}/sitemap.xml\n`);
 
+// Every /assets/ reference in a page carries a ?v= content hash, as
+// netlify.toml promises: /assets/* is served immutable for a year, so an image
+// or baked piece replaced under the same name would otherwise stay stale in
+// every cache that already has it (the linefield plate did, for days). Only
+// attribute values are rewritten, and only for files that exist.
+const assetHashes = new Map();
+const assetHash = (rel) => {
+  if (!assetHashes.has(rel)) {
+    const out = outputs.get(rel);
+    const buf = out !== undefined ? (Buffer.isBuffer(out) ? out : Buffer.from(out))
+      : existsSync(path.join(ROOT, rel)) ? readFileSync(path.join(ROOT, rel)) : null;
+    assetHashes.set(rel, buf ? hash(buf) : null);
+  }
+  return assetHashes.get(rel);
+};
+const fingerprint = (html) => html.replace(/(\s(?:src|href|content|srcset|data-src|poster)=")([^"]*)"/g, (m, pre, value) =>
+  pre + value.replace(/\/(assets\/[\w./-]+)(?![\w./-]|\?)/g, (url, rel) => {
+    const h = assetHash(rel);
+    return h ? `${url}?v=${h}` : url;
+  }) + '"');
+for (const [file, content] of outputs) {
+  if (file.endsWith('.html') && !file.startsWith('assets/') && typeof content === 'string') outputs.set(file, fingerprint(content));
+}
+
 // A page and a folder can't share a name. Netlify serves x.html for both /x
 // and /x/, so x/index.html would never be reached (this once looped /writing/).
 for (const file of outputs.keys()) {

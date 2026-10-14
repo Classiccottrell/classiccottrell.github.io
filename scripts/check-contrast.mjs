@@ -52,6 +52,11 @@ const PAIRS = [
   ['Band notes', 'band-proof', 'band'],
   ['Band highlight', 'band-fg', 'band-highlight'],
   ['Terry Time band', 'tt-ink', 'tt-paper'],
+  // The Terry guide's exploded view: a lifted layer sits on highlight (its secondary text turns to full ink);
+  // dimmed layers use --dim, checked on the ground and on the highlight they can overlap.
+  ['Notes on highlight', 'proof', 'highlight'],
+  ['Dimmed layer text', 'dim', 'ground'],
+  ['Dimmed text on highlight', 'dim', 'highlight'],
 ];
 
 export function checkContrast() {

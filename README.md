@@ -11,13 +11,15 @@ Every page is generated from the JSON files in `data/` by a small Node build
 (`scripts/build.mjs`) and committed. GitHub Pages and Netlify serve the repo
 exactly as it is, with no build step on the host. There is no framework and no
 bundler, and every page reads with JavaScript turned off. `assets/js/site.js`
-only adds the optional layer: the pencil cursor, take it apart, hot takes,
+only adds the optional layer: the pencil cursor, take it apart (on the home page and,
+with scroll sync, on the Terry guide), prompt copy buttons, hot takes,
 the brief's work order, Pencils (redline) mode and Run the checks.
 
 ```
 data/                 the content: edit these, then npm run build
   site.json           name, headline, availability, navigation, links, bio, url
   work.json           case studies: title block fields, plate, callouts, sections
+  guide.json          the Terry build-your-own guide: steps, prompts, known mistakes, Substack sources
   takes.json          hot takes with receipts (set "retired" to retire one in public)
   rules.json          the rules, R-01 onward
   writing.json        essays (they live on Substack)
@@ -37,7 +39,8 @@ scripts/              build, images, cards, contact sheet, contrast check, local
 tests/                Playwright: axe on every page, no-JS, redirects, interactions, budgets
 ```
 
-Generated output: `index.html`, `404.html`, `work/`, `takes/`, `work-with-me/`,
+Generated output: `index.html`, `404.html`, `work/` (including the guide at
+`work/terry-home-lab/guide/`, drawn by `scripts/lib/guide.mjs` and `lab.mjs`), `takes/`, `work-with-me/`,
 `writing/`, `drawings/`, `about/`, `colophon/`, `sitemap.xml`, `robots.txt`, and
 the stubs `projects.html` and `art.html` that forward old links (including
 `projects.html#forma`-style hashes) to their new homes. Don't edit them by
@@ -58,7 +61,7 @@ npm run check:contrast   # every text colour pair in both polarities, at least 4
 npm run images           # re-make assets/img from source/ (after adding a drawing, say)
 npm run cards            # re-make the share cards (after changing titles or takes)
 npm run contact-sheet    # every page at 390, 768 and 1440 px, light and dark, into contact-sheet/
-npm run serve            # http://127.0.0.1:4173
+npm run serve            # http://127.0.0.1:4173 (PORT=4174 for another port; npm test honours it too)
 npm test                 # build check, contrast check, then the Playwright suite
 ```
 
@@ -76,6 +79,15 @@ already installed, set `PW_CHROMIUM=/path/to/chrome`.
   entry a `cardImage` (Terry Time's is in `source/work/`) and the card uses that.
   With no public `links`, the title block says "Private repository" unless
   `linksNote` says something truer (Creative services: the sites retired).
+- **A new guide page:** the Terry guide is the pattern. Content goes in a data file
+  (`data/guide.json`), the page in a `scripts/lib/` module, and one entry in the `pages`
+  list of `scripts/build.mjs` (nested under its case study, so no `guide.html` can hide it).
+  Add the path to `GUIDE`/`PAGES`/`CARDS` in `tests/helpers.js`, the contact sheet and
+  `scripts/cards.mjs`. Outside links (the Substack post) live in the data file's `sources`.
+- **The Terry exploded view:** the seven sheets are inline SVG in `scripts/lib/lab.mjs`;
+  `assets/js/site.js` ("the lab") lifts the sheet for the step being read. The plate for
+  its case study is a screenshot composed into `source/work/terry-home-lab.png`; redo it
+  if the drawings change.
 - **Inline marks:** text in `data/` can use `` `code` ``, `*emphasis*` and
   `[a link](/work/forma/)` to another page on this site. The build fails if a
   link doesn't land on a page it writes.

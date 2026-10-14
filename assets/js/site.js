@@ -149,10 +149,14 @@
   });
 
   // ------------------------------------------------------------ take it apart
-  var xv = $('#xv'), xr = $('#explode');
-  if (xv && xr) {
-    var xo = $('output[for="explode"]'), xb = $('#explode-btn'), tags = $$('.xv-tag', xv), pins = {};
+  // One implementation for every exploded view on the site: the home page's
+  // service-desk screen (#xv) and the Terry guide's seven layers (#lab-xv).
+  // Needs .xv-layer (each with an .xv-pin), optional .xv-tag leaders, a range
+  // input, an <output for=range> and an optional button.
+  function explode(xv, xr, xb) {
+    var xo = $('output[for="' + xr.id + '"]'), tags = $$('.xv-tag', xv), pins = {};
     $$('.xv-layer', xv).forEach(function (l) { pins[l.getAttribute('data-l')] = $('.xv-pin', l); });
+    xr.setAttribute('aria-valuetext', Math.round(+xr.value) + ' percent apart');
     var placeTags = function () {
       var B = xv.getBoundingClientRect();
       tags.forEach(function (t) {
@@ -165,7 +169,9 @@
     var setX = function (v) {
       xv.style.setProperty('--x', (v / 100).toFixed(3)); xr.value = String(Math.round(v));
       if (xo) xo.textContent = Math.round(v) + '%';
+      xr.setAttribute('aria-valuetext', Math.round(v) + ' percent apart');
       if (xb) xb.textContent = v > 50 ? 'Put it back' : 'Take it apart';
+      if (v > 30) xv.setAttribute('data-open', ''); else xv.removeAttribute('data-open');
       placeTags();
     };
     var animX = function (to) {
@@ -189,7 +195,108 @@
       }, { threshold: 0.45 });
       xio.observe(xv);
     }
+    return { setX: setX, animX: animX };
   }
+  var xv = $('#xv'), xr = $('#explode');
+  if (xv && xr) explode(xv, xr, $('#explode-btn'));
+
+  // ------------------------------------------------------------ the lab: the guide's layers follow the reader
+  // As each step of the Terry guide crosses a line near the top of the page,
+  // its layer lifts and the others dim. Clicking a layer or its tag jumps to
+  // the step (one announcement per jump). Without any of this, the guide reads
+  // the same and the step index links work as plain anchors.
+  var labXv = $('#lab-xv'), labRange = $('#lab-range');
+  if (labXv && labRange) {
+    explode(labXv, labRange, $('#lab-btn'));
+    var labDock = $('.lab-dock'), labNow = $('[data-lab-now]'), labLive = $('[data-lab-live]'), labMobile = window.matchMedia('(max-width: 979px)');
+    var labSteps = $$('.guide-step'), labWatch = [$('#guide-top'), $('#guide-intro')].concat(labSteps).filter(Boolean);
+    var labNames = {}, labIds = {};
+    $$('.xv-tag', labXv).forEach(function (t) { labNames[t.getAttribute('data-step')] = $('span', t).textContent; labIds[t.getAttribute('data-step')] = t.getAttribute('href').slice(1); });
+    var labOn = -1, labLock = 0;
+    var labActivate = function (n) {
+      if (n === labOn) return;
+      labOn = n;
+      $$('.xv-layer, .xv-tag', labXv).forEach(function (el) {
+        var mine = +el.getAttribute('data-step') === n;
+        el.classList.toggle('is-on', mine);
+        el.classList.toggle('is-dim', n > 0 && !mine);
+      });
+      $$('.step-index a').forEach(function (a) {
+        if (+a.getAttribute('data-step') === n) a.setAttribute('aria-current', 'step'); else a.removeAttribute('aria-current');
+      });
+      labSteps.forEach(function (sec) { sec.classList.toggle('is-on', +sec.getAttribute('data-step') === n); });
+      if (labNow) labNow.textContent = n > 0 ? 'Now: 0' + n + ' ' + labNames[n] : 'Seven layers, one per step';
+    };
+    var labJump = function (n) {
+      var target = document.getElementById(labIds[n]); if (!target) return;
+      labLock = Date.now() + 900;
+      labActivate(n);
+      target.scrollIntoView({ behavior: reduce.matches ? 'auto' : 'smooth', block: 'start' });
+      if (history.replaceState) history.replaceState(null, '', '#' + labIds[n]);
+      var h2 = $('h2', target); if (h2) h2.focus({ preventScroll: true });
+      if (labLive) {
+        labLive.textContent = '';
+        setTimeout(function () { labLive.textContent = 'Step ' + n + ' of 7: ' + labNames[n]; }, 40);
+      }
+    };
+    $$('.xv-tag, .step-index a', document).forEach(function (a) {
+      a.addEventListener('click', function (e) { e.preventDefault(); labJump(+a.getAttribute('data-step')); });
+    });
+    $('.xv-stage', labXv).addEventListener('click', function (e) {
+      var layer = e.target.closest('.xv-layer');
+      if (layer && labXv.hasAttribute('data-open')) labJump(+layer.getAttribute('data-step'));
+    });
+    var labIO = null;
+    var labWatchLine = function () {
+      if (labIO) labIO.disconnect();
+      if (!('IntersectionObserver' in window)) return;
+      var vh = window.innerHeight, m = mast ? mast.offsetHeight : 56;
+      var line = labMobile.matches && labDock ? m + labDock.offsetHeight + 40 : m + (vh - m) * 0.22;
+      line = Math.min(Math.max(line, m + 10), vh - 4);
+      labIO = new IntersectionObserver(function (es) {
+        if (Date.now() < labLock) return;
+        var hit = -1;
+        es.forEach(function (en) { if (en.isIntersecting) hit = Math.max(hit, +en.target.getAttribute('data-step')); });
+        if (hit >= 0) labActivate(hit);
+      }, { rootMargin: '-' + Math.round(line) + 'px 0px -' + Math.max(0, Math.round(vh - line - 2)) + 'px 0px', threshold: 0 });
+      labWatch.forEach(function (el) { labIO.observe(el); });
+    };
+    var labSize = function () {
+      // The dock pins under the masthead on phones: keep scrolled-to and focused things below it. Set here, so only this page is touched.
+      if (labDock && labMobile.matches) {
+        root.style.setProperty('--dock-h', labDock.offsetHeight + 'px');
+        root.style.scrollPaddingTop = ((mast ? mast.offsetHeight : 56) + labDock.offsetHeight + 14) + 'px';
+      } else { root.style.removeProperty('--dock-h'); root.style.removeProperty('scroll-padding-top'); }
+      labWatchLine();
+    };
+    labSize();
+    window.addEventListener('resize', labSize);
+    if (window.ResizeObserver && labDock) new ResizeObserver(labSize).observe(labDock);
+  }
+
+  // ------------------------------------------------------------ copy buttons on the guide's prompts
+  $$('[data-copy-prompt]').forEach(function (btn) {
+    var note = $('.prompt-s', btn.parentNode), src = document.getElementById(btn.getAttribute('data-copy-prompt'));
+    var say = function (msg) {
+      note.textContent = msg; clearTimeout(note._t);
+      if (msg === 'Copied') note._t = setTimeout(function () { note.textContent = ''; }, 2400);
+    };
+    var fallback = function (text) {
+      var ta = document.createElement('textarea'), ok = false;
+      ta.value = text; ta.setAttribute('readonly', ''); ta.setAttribute('aria-hidden', 'true');
+      ta.style.cssText = 'position:fixed;top:0;left:-9999px;opacity:0';
+      document.body.appendChild(ta); ta.select();
+      try { ok = document.execCommand('copy'); } catch (e) {}
+      document.body.removeChild(ta);
+      btn.focus({ preventScroll: true });
+      say(ok ? 'Copied' : 'Select the prompt and copy it.');
+    };
+    btn.addEventListener('click', function () {
+      var text = src.textContent;
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function () { say('Copied'); }, function () { fallback(text); });
+      else fallback(text);
+    });
+  });
 
   // ------------------------------------------------------------ hot takes, one at a time
   var stage = $('[data-stage]'), data = $('#takes-data');

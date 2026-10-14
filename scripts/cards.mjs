@@ -80,6 +80,7 @@ const cards = [
     kicker: `Work / ${pad2(p.number)} · ${esc(p.kind)}`, title: plain(p.title), size: p.title.length > 14 ? 's' : 'm', sub: plain(p.summary),
     img: p.cardImage || (p.plate && p.plate.src), right: p.status.label, terry: !p.plate,
   })]),
+  ['guide-terry-home-lab', card({ kicker: 'Work / Terry: Home AI Lab · Guide', title: 'Build a home AI lab from a retired computer', size: 's', sub: 'A step-by-step guide, with the prompts to give your AI assistant.', img: json('data/work.json').find((p) => p.slug === 'terry-home-lab').cardImage, right: 'Guide', ink: false })],
   ['takes', card({ kicker: `Takes · ${takes.length}, with receipts`, title: 'Takes', sub: 'Opinions I’ll defend in a meeting, each backed by work you can check.', ink: true, terry: true })],
   ...takes.map((t) => [`take-${t.slug}`, card({ kicker: `${esc(t.id)}${heat(t.heat)}`, title: plain(t.text), size: 's', ink: true, right: 'Takes, with receipts' })]),
   ['work-with-me', card({ kicker: 'Work with me', title: 'Bring me a problem.', size: 'm', sub: `${site.availability.label}. Four ways in, and a brief that writes itself.`, terry: true })],

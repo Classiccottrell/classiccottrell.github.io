@@ -129,9 +129,9 @@ ${pageHead({ kicker: `Work · ${work.length} projects`, title: 'Work', lede: 'Pr
 }
 
 const roadmap = (stages, linkTo) => {
-  const marks = { Shipped: 'ship', Next: 'prog', Planned: 'priv' };
+  const marks = { Shipped: 'ship', Done: 'ship', Next: 'prog', 'In progress': 'prog', Planned: 'priv' };
   return h`
-<ol class="roadmap">${stages.map((s) => h`<li><p class="note">${mark(marks[s.status] || 'priv')}${esc(s.status)}</p><p class="rm-l">${inline(s.label)}</p><p>${inline(s.detail)}</p></li>`)}</ol>
+<ol class="roadmap${stages.length > 4 ? ' rm-3' : ''}">${stages.map((s) => h`<li><p class="note">${mark(marks[s.status] || 'priv')}${esc(s.status)}</p><p class="rm-l">${inline(s.label)}</p><p>${inline(s.detail)}</p></li>`)}</ol>
 ${linkTo ? h`<p>${link(linkTo.url, linkTo.label)}</p>` : ''}`;
 };
 
@@ -142,7 +142,7 @@ const section = (sec, p, printIt) => h`
   ${(sec.paragraphs || []).map((t) => h`<p>${inline(t)}</p>`)}
   ${sec.items ? h`<ul class="items">${sec.items.map((it) => h`<li><strong>${inline(it.lead)}</strong> ${inline(it.text)}</li>`)}</ul>` : ''}
   ${sec.outro ? h`<p>${inline(sec.outro)}</p>` : ''}
-  ${sec.roadmap ? roadmap(sec.roadmap, p.roadmapLink) : ''}
+  ${sec.roadmap ? roadmap(sec.roadmap, p.roadmapLink) : ''}${sec.cta ? h`<p class="cs-cta">${btn(sec.cta.href, sec.cta.label)}</p>` : ''}
   ${sec.image ? h`<figure class="cs-fig"><div class="panel">${img(sec.image)}</div>${sec.image.caption ? h`<figcaption class="note cap">${inline(sec.image.caption)}</figcaption>` : ''}</figure>` : ''}
 </section>
 ${p.pullQuote && (sec.paragraphs || []).some((t) => t.includes(p.pullQuote)) ? h`<figure class="pq-fig"><blockquote class="pq"><p>${inline(p.pullQuote)}</p></blockquote><figcaption class="note">From “${inline(sec.heading)}”</figcaption></figure>` : ''}`;
@@ -180,7 +180,7 @@ export function caseStudy(ctx, p) {
     { dt: 'Status', dd: status(p.status) },
     { dt: 'Stack', dd: esc(p.stack) },
     { dt: 'Numbers', dd: esc(p.numbers.join(' · ')) },
-    { dt: 'Links', dd: p.links.length ? p.links.map((l, j) => h`${j ? ' · ' : ''}${link(l.url, l.label)}`).join('') : esc(p.linksNote || 'Private repository') },
+    { dt: 'Links', dd: p.links.length ? p.links.map((l, j) => h`${j ? ' · ' : ''}${link(l.url, l.label)}`).join('') : (p.linksNote ? inline(p.linksNote) : 'Private repository') },
   ];
   if (take) rows.push({ dt: `Take · ${take.id}`, dd: h`<a class="tb-take" href="/takes/${esc(take.slug)}/">${inline(take.text)}</a>`, wide: true });
   const main = h`

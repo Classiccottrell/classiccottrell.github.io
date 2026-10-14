@@ -664,8 +664,146 @@
     ]
   },
   {
-    "slug": "ux-skill-repo",
+    "slug": "terry-home-lab",
     "number": 6,
+    "title": "Terry: Home AI Lab",
+    "kind": "Home lab",
+    "group": "Agents",
+    "featured": false,
+    "summary": "Three retired computers, one private network, and a lab that runs my AI work at home.",
+    "standfirst": "Three retired computers, one private network, and a lab that runs my AI work at home.",
+    "take": null,
+    "year": 2026,
+    "role": "Design and build",
+    "status": {
+      "mark": "prog",
+      "label": "Ongoing"
+    },
+    "stack": "Ubuntu Server · Docker Compose · a private network",
+    "numbers": [
+      "3 machines",
+      "4 services",
+      "7-step guide"
+    ],
+    "links": [],
+    "linksNote": "A private home network, so there’s no repository to link. The [build-your-own guide](/work/terry-home-lab/guide/) is public.",
+    "plate": {
+      "src": "/assets/img/work/terry-home-lab.webp",
+      "width": 1360,
+      "height": 860,
+      "alt": "The Terry home lab drawn two ways in ink and blue pencil. On the left, one sheet face-on: the server in the middle, a 2015 MacBook, an old iMac and my own computer around it inside a dashed private-network border, and a dashed Mac mini marked planned. On the right, seven numbered sheets taken apart and stacked, from 01 The machine at the bottom to 07 The backups on top.",
+      "caption": "The lab taken apart. One sheet face-on, and all seven stacked.",
+      "callouts": [
+        {
+          "x": 30,
+          "y": 62,
+          "text": "Three machines and a planned fourth on one private network. The Mac mini is dashed because it isn’t bought yet."
+        },
+        {
+          "x": 37,
+          "y": 13,
+          "text": "Seven layers, one for each step of the guide, from the machine at the bottom to the backups on top."
+        },
+        {
+          "x": 56,
+          "y": 57,
+          "text": "On the guide, the layer for the step you’re reading lifts while the others dim."
+        }
+      ]
+    },
+    "cardImage": "/source/work/terry-home-lab-card.webp",
+    "pullQuote": null,
+    "live": null,
+    "legacyIds": [
+      "terry-home-ai-lab"
+    ],
+    "sections": [
+      {
+        "paragraphs": [
+          "I had an old Intel MacBook stuck on an operating system that modern tools had stopped supporting. The hardware was fine. The software was the problem.",
+          "Terry is what I did about it. I wiped the Mac, put Ubuntu Server on it, and it became the first node in a small lab on my home network. The other nodes are a 2015 MacBook that runs the language models and an old iMac that handles search and backups. Everything talks over a private network, and none of it is open to the internet."
+        ]
+      },
+      {
+        "heading": "What it is",
+        "intro": "Three machines, one job each:",
+        "items": [
+          {
+            "lead": "The server.",
+            "text": "An Ubuntu box that hosts my git server, a chat interface for local models, a design tool and a media library. New projects get mirrored to it and launched from a desktop icon."
+          },
+          {
+            "lead": "The thinking machine.",
+            "text": "A 2015 MacBook running local language models and speech-to-text, so a lot of everyday AI work never leaves the house."
+          },
+          {
+            "lead": "The memory and the backups.",
+            "text": "An old iMac that builds document search embeddings and pulls its own dated snapshots of the server every night."
+          },
+          {
+            "lead": "A repeatable process.",
+            "text": "A short skill that mirrors any repo to the lab, decides whether it is a web app or a native app, and launches it the right way. It has been through two very different projects with no steps re-invented."
+          }
+        ]
+      },
+      {
+        "heading": "What it actually took",
+        "paragraphs": [
+          "The install was the easy part. The useful part came after, when I wrote down how I deployed things. My second project, a desktop app, failed on its first push because I had cloned it shallow. That fix went into the process the same day.",
+          "The same habit rebuilt my backups after the server’s disk crept up to 71 percent, with 100 GB of it one folder stored three times. The new backups keep dated copies, refuse to run when space is low, and show a warning when I log in if last night failed. One firewall rule is still blocking a second offsite copy, and this page will say so until that is fixed."
+        ]
+      },
+      {
+        "heading": "Roadmap",
+        "intro": "The lab grows one node at a time. Each step has to work on its own before the next one starts.",
+        "roadmap": [
+          {
+            "label": "Server online",
+            "status": "Done",
+            "detail": "An old Intel Mac running headless Ubuntu Server, with a fixed address, passwordless SSH and a private network."
+          },
+          {
+            "label": "Local models",
+            "status": "Done",
+            "detail": "A 2015 MacBook serving local language models and speech-to-text to the rest of the network."
+          },
+          {
+            "label": "Repeatable deploys and backups",
+            "status": "In progress",
+            "detail": "A mirror-and-launch process proven on two projects, and nightly dated backups. A firewall rule still blocks the second offsite copy."
+          },
+          {
+            "label": "Mac mini node",
+            "status": "Planned",
+            "detail": "Add a Mac mini as the next node, with enough memory to run a larger local model than the lab can today."
+          },
+          {
+            "label": "A small agent on each node",
+            "status": "Planned",
+            "detail": "Give every machine its own small, narrow agent setup with one job, instead of one big assistant that touches everything."
+          },
+          {
+            "label": "A bigger local model",
+            "status": "Planned",
+            "detail": "Bring a stronger model onto the network so more of the daily work stays local, with a fallback model and a self-test so the lab fails safely."
+          }
+        ]
+      },
+      {
+        "heading": "Build your own",
+        "paragraphs": [
+          "I turned the whole process into a step-by-step guide with the prompts I would give an AI assistant at each stage. It works for any old computer, and you do not need to be a sysadmin."
+        ],
+        "cta": {
+          "label": "Build your own: the step-by-step guide",
+          "href": "/work/terry-home-lab/guide/"
+        }
+      }
+    ]
+  },
+  {
+    "slug": "ux-skill-repo",
+    "number": 7,
     "title": "UX Skill Repo 1.0",
     "kind": "AI agent skills",
     "group": "Systems",
@@ -744,7 +882,7 @@
   },
   {
     "slug": "brutal-ux",
-    "number": 7,
+    "number": 8,
     "title": "Brutal UX",
     "kind": "Design system",
     "group": "Systems",
@@ -832,7 +970,7 @@
   },
   {
     "slug": "design-system",
-    "number": 8,
+    "number": 9,
     "title": "Classic Cottrell Design System",
     "kind": "Design system",
     "group": "Systems",
@@ -896,7 +1034,7 @@
   },
   {
     "slug": "classiccottrell-cli",
-    "number": 9,
+    "number": 10,
     "title": "ClassicCottrell CLI",
     "kind": "CLI framework",
     "group": "Tools",
@@ -998,7 +1136,7 @@
   },
   {
     "slug": "creative-services",
-    "number": 10,
+    "number": 11,
     "title": "Creative services",
     "kind": "Campaigns and platform UI",
     "group": "Client work",

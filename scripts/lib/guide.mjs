@@ -5,13 +5,8 @@ import { esc, h, inline, link, pad2 } from './html.mjs';
 import { page } from './layout.mjs';
 import { LAYERS, lab } from './lab.mjs';
 
-// A source that has no address yet renders as plain text, never a dead link.
-// TODO(url): sources.install.url and sources.story.url in data/guide.json are
-// empty until the Substack posts are published; the HTML comments below mark
-// the spots in the generated page.
-const source = (src, what) => (src.url
-  ? link(src.url, src.title)
-  : h`${esc(src.title)}<!-- TODO(url): link this to the ${what} on Substack once it has an address (sources in data/guide.json) -->`);
+// Both Substack references point at the one combined post, Self-Hosting & Homelab Field Notes.
+const source = (src) => link(src.url, src.title);
 
 const promptBlock = (text, n, total) => h`
 <div class="prompt">
@@ -28,7 +23,7 @@ export function guidePage(ctx) {
     if (b.prompt) return promptBlock(b.prompt, ++n, total);
     if (b.check) return h`<p class="check"><strong>Check:</strong> ${inline(b.check)}</p>`;
     const [head, tail] = b.p.split('{{install}}');
-    return h`<p>${inline(head)}${tail === undefined ? '' : h`${source(g.sources.install, 'install article')}${inline(tail)}`}</p>`;
+    return h`<p>${inline(head)}${tail === undefined ? '' : h`${source(g.sources.install)}${inline(tail)}`}</p>`;
   };
   const steps = g.steps.map((st, i) => h`
 <section class="guide-step" id="${st.id}" data-step="${i + 1}" aria-labelledby="${st.id}-h">
@@ -92,7 +87,7 @@ export function guidePage(ctx) {
     <section class="guide-sec" id="${g.next.id}" aria-labelledby="${g.next.id}-h">
       <h2 class="cs-h" id="${g.next.id}-h">${esc(g.next.heading)}</h2>
       <ul class="items">
-        <li>${esc(g.next.storyLead)} ${source(g.sources.story, 'story')}</li>
+        <li>${esc(g.next.storyLead)} ${source(g.sources.story)}</li>
         <li>${inline(g.next.project)}</li>
       </ul>
     </section>

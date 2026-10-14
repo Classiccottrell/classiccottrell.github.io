@@ -340,12 +340,18 @@ for (const path of [GUIDE, CASE, '/work/']) {
   });
 }
 
-test('the guide marks its unknown Substack addresses instead of linking them', async ({ page }) => {
+test('the two Substack references are real external links to the combined post', async ({ page }) => {
+  const URL = 'https://classiccottrell.substack.com/p/self-hosting-and-homelab-field-notes';
   const html = await (await page.request.get(GUIDE)).text();
-  expect(html.match(/<!-- TODO\(url\)/g) || []).toHaveLength(2);
+  expect(html).not.toContain('TODO(url)');
   await page.goto(GUIDE);
-  await expect(page.locator(`a:has-text("${guide.sources.install.title}")`)).toHaveCount(0);
-  await expect(page.locator('#step-2-install')).toContainText(guide.sources.install.title);
+  for (const [scope, label] of [['#step-2-install', 'Field Note 01'], ['#next', 'Field Note 02']]) {
+    const a = page.locator(`${scope} a[href="${URL}"]`);
+    await expect(a).toHaveCount(1);
+    await expect(a).toContainText(`${label}, in Self-Hosting & Homelab Field Notes (on Substack)`);
+    await expect(a.locator('span.ext')).toHaveAttribute('aria-hidden', 'true'); // the site's external-link arrow
+    expect(await a.getAttribute('target')).toBeNull(); // the site opens no new tabs
+  }
 });
 
 // ---- the case study and the work index

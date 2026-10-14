@@ -16,12 +16,12 @@
   },
   "sources": {
     "install": {
-      "title": "Resurrecting an Old Intel Mac as a Headless Ubuntu Server",
-      "url": null
+      "title": "Field Note 01, in Self-Hosting & Homelab Field Notes (on Substack)",
+      "url": "https://classiccottrell.substack.com/p/self-hosting-and-homelab-field-notes"
     },
     "story": {
-      "title": "The Second Deploy Is the Real One",
-      "url": null
+      "title": "Field Note 02, in Self-Hosting & Homelab Field Notes (on Substack)",
+      "url": "https://classiccottrell.substack.com/p/self-hosting-and-homelab-field-notes"
     }
   },
   "steps": [
@@ -190,7 +190,7 @@
   "next": {
     "id": "next",
     "heading": "Where to next",
-    "storyLead": "The story behind this guide, on Substack:",
+    "storyLead": "The story behind this guide:",
     "project": "The project, with its roadmap: [Terry: Home AI Lab](/work/terry-home-lab/)"
   }
 }

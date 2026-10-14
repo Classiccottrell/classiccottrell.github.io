@@ -83,8 +83,7 @@ already installed, set `PW_CHROMIUM=/path/to/chrome`.
   (`data/guide.json`), the page in a `scripts/lib/` module, and one entry in the `pages`
   list of `scripts/build.mjs` (nested under its case study, so no `guide.html` can hide it).
   Add the path to `GUIDE`/`PAGES`/`CARDS` in `tests/helpers.js`, the contact sheet and
-  `scripts/cards.mjs`. A source without an address yet (`sources.*.url` null) renders as
-  plain text with a `TODO(url)` comment; fill the URL in and rebuild.
+  `scripts/cards.mjs`. Outside links (the Substack post) live in the data file's `sources`.
 - **The Terry exploded view:** the seven sheets are inline SVG in `scripts/lib/lab.mjs`;
   `assets/js/site.js` ("the lab") lifts the sheet for the step being read. The plate for
   its case study is a screenshot composed into `source/work/terry-home-lab.png`; redo it

@@ -102,8 +102,8 @@
     "kind": "Generative art",
     "group": "Products",
     "featured": true,
-    "summary": "Twenty-four generative backgrounds you own outright.",
-    "standfirst": "Twenty-four generative line-art backgrounds you own outright.",
+    "summary": "Twenty-nine generative backgrounds you own outright.",
+    "standfirst": "Twenty-nine generative line-art backgrounds you own outright.",
     "take": "T-02",
     "year": 2026,
     "role": "Design and build",
@@ -113,8 +113,8 @@
     },
     "stack": "Canvas 2D, no dependencies",
     "numbers": [
-      "24 pieces",
-      "359 controls",
+      "29 pieces",
+      "434 controls",
       "0 dead"
     ],
     "links": [
@@ -131,13 +131,13 @@
       "src": "/assets/img/work/linefield.webp",
       "width": 1360,
       "height": 1611,
-      "alt": "The top of the linefield gallery: the headline Generative backgrounds, shipped as one file, a short intro, the Wake overlay panel, five collection filters, and the first row of the Currents collection, three monochrome hairline pieces on near-black.",
-      "caption": "The gallery: twenty-four pieces in five collections, monochrome by default.",
+      "alt": "The top of the linefield gallery: the headline Generative backgrounds, shipped as one file, a short intro, the Wake overlay panel, six collection filters, and the first row of the Currents collection, three monochrome hairline pieces on near-black.",
+      "caption": "The gallery: twenty-nine pieces in six collections, monochrome by default.",
       "callouts": [
         {
-          "x": 58,
+          "x": 68,
           "y": 57,
-          "text": "Five collections behind one filter."
+          "text": "Six collections behind one filter. Space is the newest."
         },
         {
           "x": 80,
@@ -157,7 +157,7 @@
       "piece": "grain-field",
       "title": "Grain Field, a linefield piece, running live",
       "heading": "Grain Field, baked.",
-      "text": "One of the twenty-four, exported as a single HTML file and dropped into this page. No dependencies, no build step."
+      "text": "One of the twenty-nine, exported as a single HTML file and dropped into this page. No dependencies, no build step."
     },
     "legacyIds": [
       "linefield"
@@ -166,12 +166,12 @@
       {
         "paragraphs": [
           "A background is the kind of thing you should own outright. It sits on your site for years, it should not phone home, and when you want it slower or bluer you should be able to open the file and change it.",
-          "linefield is twenty-four of them. Each piece is one HTML file with no dependencies and no build step. Tune it with the on-screen controls, hit export, and you get a standalone file with your settings baked in. Paste it into any page and it runs."
+          "linefield is twenty-nine of them. Each piece is one HTML file with no dependencies and no build step. Tune it with the on-screen controls, hit export, and you get a standalone file with your settings baked in. Paste it into any page and it runs."
         ]
       },
       {
         "heading": "What it is",
-        "intro": "Twenty-four pieces in five collections, one shared control surface:",
+        "intro": "Twenty-nine pieces in six collections, one shared control surface:",
         "items": [
           {
             "lead": "Monochrome by default.",
@@ -183,7 +183,7 @@
           },
           {
             "lead": "Sixteen controls on every piece.",
-            "text": "Scale, speed, stroke, opacity, saturation, color mode, two colors, two hues, invert, glow, angle, motion, phase and density, plus whatever each piece needs on its own. A script drives every control on every piece and diffs the rendered frames: 359 controls, none of them dead. It exists because twice a control shipped that read its value and changed nothing, and both times a human review passed it."
+            "text": "Scale, speed, stroke, opacity, saturation, color mode, two colors, two hues, invert, glow, angle, motion, phase and density, plus whatever each piece needs on its own. A script drives every control on every piece and diffs the rendered frames: 434 controls, none of them dead. It exists because twice a control shipped that read its value and changed nothing, and both times a human review passed it."
           },
           {
             "lead": "Five ways out.",
@@ -194,8 +194,12 @@
             "text": "Dune is a ridge of film grain under one low light. Swell is an ocean swell drawn as a halftone screen, where the size of each dot carries the light. Both step outside pure linework, and both still run in plain Canvas 2D."
           },
           {
+            "lead": "A space series.",
+            "text": "Five pieces in a sixth collection: a planet's magnetic tail pinching where it reconnects, a galaxy seen edge-on with its dust lane turning, a stream of stars torn between two galaxies, a cratered planet's dawn line seen from low orbit, and a dust cloud cut out of a starfield. No glowing planets, no spirals. Each one started as a throwaway sketch and was only built once it held up at full width."
+          },
+          {
             "lead": "A gallery that will not cook your laptop.",
-            "text": "Two dozen canvas animations running at once will crawl, so the grid shows stills and swaps only the card you are pointing at for a live preview. One at a time, torn down when you look away. Keyboard focus does the same thing, because hover-only interaction is invisible to anyone not using a mouse."
+            "text": "Twenty-nine canvas animations running at once will crawl, so the grid shows stills and swaps only the card you are pointing at for a live preview. One at a time, torn down when you look away. Keyboard focus does the same thing, because hover-only interaction is invisible to anyone not using a mouse."
           }
         ]
       },

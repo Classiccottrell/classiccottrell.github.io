@@ -1,0 +1,1872 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<!-- Without this a phone uses a ~980px layout viewport, so the panel's
+     max-width:640px sheet rule never matches and the page renders zoomed
+     out — the controls become an unusable corner card. -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>linefield — terminator</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #0a0a0d; overflow: hidden; }
+  canvas { display: block; width: 100vw; height: 100vh; }
+  .lf-export-row { position: fixed; top: 12px; right: 12px; display: flex; gap: 6px; z-index: 9999; }
+  .lf-export-row button { background: #222; color: #eee; border: 1px solid #444; border-radius: 4px;
+    padding: 4px 8px; font: 11px -apple-system, sans-serif; cursor: pointer; }
+</style>
+<style id="lf-panel-css">
+/* Fix round 1: the panel is a flex column so the scrollable middle
+   (.lf-body) can't push the footer (.lf-reset) off screen, and section
+   headers are now toggle buttons so the panel fits at rest. */
+.lf-panel { position: fixed; bottom: 12px; right: 12px; width: 300px;
+  background: #0b0b0f; color: #e8e8e8; font: 12px/1.4 -apple-system,BlinkMacSystemFont,sans-serif;
+  border: 1px solid rgba(255,255,255,0.06); border-radius: 16px;
+  z-index: 9999; max-height: 80vh; overflow: hidden; box-sizing: border-box;
+  display: flex; flex-direction: column; }
+.lf-panel.collapsed .lf-body, .lf-panel.collapsed .lf-reset { display: none; }
+.lf-panel h3 { margin: 0; padding: 14px 18px 12px; font: 700 11px/1 ui-monospace,Menlo,monospace;
+  text-transform: uppercase; letter-spacing: .12em; color: #5fa07c; flex: none;
+  display: flex; align-items: center; justify-content: space-between; cursor: grab;
+  user-select: none; touch-action: none; }
+.lf-panel h3:active { cursor: grabbing; }
+.lf-panel h3 .lf-status { display: flex; align-items: center; gap: 5px; font: 500 10px/1 ui-monospace,Menlo,monospace;
+  letter-spacing: .05em; color: #8a8a9a; text-transform: none; }
+.lf-panel h3 .lf-dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e;
+  box-shadow: 0 0 6px rgba(34,197,94,0.8); flex: none; }
+/* .lf-body is the ONLY scrolling region — header, footer and the mobile
+   handle sit outside it so they never scroll out of view. min-height: 0 is
+   load-bearing: without it a flex child won't shrink below its content size
+   and this scroller simply never activates. */
+.lf-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 0 18px 14px; }
+.lf-section-head { all: revert; appearance: none; background: none; border: none; padding: 0;
+  margin: 0 0 10px; width: 100%; box-sizing: border-box; text-align: left; cursor: pointer;
+  font: 700 10px/1 ui-monospace,Menlo,monospace; text-transform: uppercase; letter-spacing: .12em;
+  color: #5fa07c; display: flex; align-items: center; justify-content: space-between; }
+.lf-section-head:focus-visible { outline: 2px solid #6fb4c9; outline-offset: 2px; }
+.lf-chevron { display: inline-block; font: 10px/1 ui-monospace,Menlo,monospace;
+  transition: transform .15s ease; }
+.lf-chevron::before { content: '\25be'; }
+.lf-section.lf-section-collapsed .lf-chevron { transform: rotate(-90deg); }
+.lf-section.lf-section-collapsed .lf-section-body { display: none; }
+.lf-section + .lf-section { margin-top: 14px; }
+.lf-divider { border: none; border-top: 1px solid rgba(255,255,255,0.08); margin: 16px 0; }
+.lf-row { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+.lf-row:last-child { margin-bottom: 0; }
+.lf-row-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.lf-row label { font: 10px/1 ui-monospace,Menlo,monospace; letter-spacing: .08em; text-transform: uppercase; color: #8a8a9a; }
+.lf-readout { font: 600 11px/1 ui-monospace,Menlo,monospace; color: #79af91; }
+.lf-row-checkbox { flex-direction: row; align-items: center; justify-content: space-between; }
+.lf-row-checkbox label { order: -1; }
+
+.lf-row select { width: 100%; box-sizing: border-box; appearance: none; -webkit-appearance: none;
+  background: #141419 url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="6"><path d="M0 0l5 6 5-6z" fill="%238a8a9a"/></svg>') no-repeat right 10px center;
+  color: #e8e8e8; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px;
+  padding: 7px 28px 7px 10px; font: 12px -apple-system,sans-serif; }
+
+/* Ruler-style slider (own design, ROADMAP 3.3): a thin band of tick marks
+   — a repeating-gradient track, minor ticks every 6.25% and a brighter
+   major tick every 25% — with the FILLED portion washed in the accent via
+   a second gradient layer sized by --lf-pct (same custom property
+   setRangeFill already writes on every value change, human-dragged or
+   gate-driven). The thumb is a hairline: a slim bar, not a dot, so it
+   reads as a position marker on the ruler rather than a ball riding a
+   pill. Hit area stays a generous 20px tall — only the drawn band is
+   thin — so touch/pointer accuracy doesn't suffer for the thinner look. */
+.lf-row input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 20px;
+  background: transparent; cursor: pointer; }
+.lf-row input[type=range]::-webkit-slider-runnable-track {
+  height: 3px; margin-top: 8px; border-radius: 0;
+  background-color: #24242b;
+  background-image:
+    linear-gradient(90deg, #7fa88c 0 var(--lf-pct, 0%), transparent 0),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.4) 0 1px, transparent 1px 8.3333%),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.75) 0 1px, transparent 1px 25%);
+  background-size: 100% 100%, 100% 100%, 100% 100%;
+  background-repeat: no-repeat;
+}
+.lf-row input[type=range]::-moz-range-track { height: 3px; margin-top: 8px; border-radius: 0;
+  background-color: #24242b;
+  background-image:
+    linear-gradient(90deg, #7fa88c 0 var(--lf-pct, 0%), transparent 0),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.4) 0 1px, transparent 1px 8.3333%),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.75) 0 1px, transparent 1px 25%);
+}
+.lf-row input[type=range]::-webkit-slider-thumb { -webkit-appearance: none;
+  width: 2px; height: 18px; margin-top: -8.5px; border-radius: 0;
+  background: #fff; box-shadow: 0 0 0 1px rgba(10,10,13,.9), 0 0 6px rgba(255,255,255,.7);
+  cursor: pointer; }
+.lf-row input[type=range]::-moz-range-thumb { width: 2px; height: 18px; border: none; border-radius: 0;
+  background: #fff; box-shadow: 0 0 0 1px rgba(10,10,13,.9), 0 0 6px rgba(255,255,255,.7); cursor: pointer; }
+.lf-row input[type=range]:focus-visible { outline: none; }
+.lf-row input[type=range]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 1px rgba(10,10,13,.9), 0 0 0 4px rgba(111,180,201,.55); }
+.lf-row input[type=range]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 1px rgba(10,10,13,.9), 0 0 0 4px rgba(111,180,201,.55); }
+
+.lf-color-row { display: flex; align-items: center; gap: 8px; }
+.lf-color-row input[type=color] { width: 30px; height: 26px; padding: 0; border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 6px; background: none; cursor: pointer; flex: none; }
+.lf-hex { font: 12px ui-monospace,Menlo,monospace; color: #c9c9d4; text-transform: uppercase; }
+
+.lf-segmented { display: flex; gap: 6px; margin-bottom: 8px; }
+.lf-seg-btn { flex: 1; background: #141419; color: #8a8a9a; border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px; padding: 7px 8px; font: 11px -apple-system,sans-serif; cursor: pointer;
+  display: flex; align-items: center; gap: 6px; justify-content: center; }
+.lf-seg-btn::before { content: ''; width: 9px; height: 9px; border-radius: 50%; border: 1px solid #55556a; flex: none; }
+.lf-seg-btn.lf-seg-btn-active { color: #e8e8e8; border-color: #437057; }
+.lf-seg-btn.lf-seg-btn-active::before { border-color: #437057; background: #437057; }
+.lf-visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+/* Sticky footer (fix round 1, finding 1): a flex sibling of .lf-body, not a
+   child of it, so it never scrolls with the sections above it. Its own
+   background covers content scrolling underneath; its top border is the
+   hairline that reads it as a footer rather than a floating button. */
+.lf-reset { flex: none; width: 100%; box-sizing: border-box; margin: 0; background: #0b0b0f;
+  color: #e8e8e8; border: none; border-top: 1px solid rgba(255,255,255,0.08);
+  border-radius: 0 0 16px 16px; padding: 12px 18px; cursor: pointer;
+  font: 11px -apple-system,sans-serif; }
+.lf-reset:hover { background: #141419; }
+.lf-presets { display: flex; flex-wrap: wrap; gap: 4px; margin: 0 0 14px; }
+.lf-chip { flex: 1 1 auto; background: #141419; color: #c9c9d4; border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 6px; padding: 5px 6px; font: 500 10px/1 ui-monospace,Menlo,monospace;
+  letter-spacing: .05em; text-transform: uppercase; cursor: pointer; }
+.lf-chip:hover { color: #fff; border-color: #55556a; }
+.lf-chip[aria-pressed="true"] { background: #437057; color: #e8e8e8; border-color: #437057; }
+.lf-chip:focus-visible { outline: 2px solid #6fb4c9; outline-offset: 1px; }
+
+/* Below ~640px: full-width sheet docked to the bottom edge, collapsed to a
+   handle by default so the artwork stays unobstructed. This is scoped
+   entirely to the media query and a separate in-memory flag — never the
+   persisted desktop 'collapsed' state — so it can't leak into desktop. */
+.lf-handle { display: none; }
+@media (max-width: 640px) {
+  .lf-panel { left: 0; right: 0; bottom: 0; width: 100%; max-height: 70vh;
+    border-radius: 16px 16px 0 0; border-bottom: none; }
+  .lf-handle { display: flex; flex: none; justify-content: center; padding: 8px 0; cursor: pointer; }
+  .lf-handle::before { content: ''; width: 36px; height: 4px; border-radius: 999px; background: #3a3a46; }
+  .lf-reset { border-radius: 0; }
+  .lf-panel.mobile-collapsed .lf-body,
+  .lf-panel.mobile-collapsed .lf-reset { display: none; }
+}
+</style></head>
+<body>
+<canvas id="canvas" width="1280" height="800"></canvas>
+
+<!--
+  terminator — a cratered planet seen from low orbit, its horizon a shallow
+  arc across the upper third, the lit ground on the left and a ragged
+  day/night line coming down the frame, all in stipple, on a 150 s dawn loop.
+
+  Text-safe zone: the sky above the horizon (the top third). Only a thin
+  haze of atmosphere sits on the lit end of the limb.
+  Anchor: the crater rims flaring along the terminator. The line stays where
+  it is (Motion rocks it gently); the ground slides through it from the
+  night, so each rim catches light as a bright crescent at the line, with
+  peaks lit out in the dark ahead of it, and settles into the plain beyond.
+
+  Technique (stipple): the sun is fixed and the planet turns about an axis
+  in the terminator plane, so terrain periodic in longitude makes the loop
+  seamless. About half a million surface-fixed dots, each with a fixed
+  random threshold, carry a precomputed normal and its horizon toward the
+  sun; per frame only the light, a shadow test and a box splat into a float
+  buffer run, and a LUT turns the buffer into pixels (bloom, when Glow is
+  up, is a quarter-resolution copy drawn back with drawImage under
+  'lighter').
+
+  Controls: Scale zooms the camera about the frame's centre, from a soft
+  patch of lit ground under a short horizon (0) to a closer pass that fills
+  the frame (2). Density sets the dot count, Stroke the dot size, Angle
+  turns the view, Phase picks a point in the loop. Sun scales the sun's
+  elevation over the ground: low rakes it, lengthening the light and
+  lighting more peaks past the line; high flattens and brightens the lit
+  side.
+
+  SVG export: a capped, uniformly sampled set of the dots drawn in the
+  current frame (at most 20,000 ground dots and 3,000 atmosphere dots), as
+  circles in screen space with Angle and Scale applied. The full stipple
+  and its accumulated brightness are a canvas property; use PNG for those.
+-->
+
+
+
+
+
+
+<script>window.__LF_BAKED_VALUES__ = {"scale":1,"speed":1,"stroke":1,"opacity":1,"saturation":0,"colorMode":"gradient","colorA":"#ffbb00","colorB":"#ff4d00","hue":44,"hueB":18,"invert":false,"glow":0,"angle":0,"motion":1,"phase":0,"density":1,"sun":1};
+// --- inlined: ../../shared/color.js ---
+// shared/color.js
+
+function hslToRgb(h, s, l) {
+  h = ((h % 360) + 360) % 360 / 360;
+  s = Math.min(1, Math.max(0, s));
+  l = Math.min(1, Math.max(0, l));
+
+  if (s === 0) {
+    const v = Math.round(l * 255);
+    return [v, v, v];
+  }
+
+  const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+  const p = 2 * l - q;
+
+  const hue2rgb = (p, q, t) => {
+    if (t < 0) t += 1;
+    if (t > 1) t -= 1;
+    if (t < 1 / 6) return p + (q - p) * 6 * t;
+    if (t < 1 / 2) return q;
+    if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+    return p;
+  };
+
+  const r = hue2rgb(p, q, h + 1 / 3);
+  const g = hue2rgb(p, q, h);
+  const b = hue2rgb(p, q, h - 1 / 3);
+
+  return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+}
+
+function hueShift(h, degrees) {
+  return ((h + degrees) % 360 + 360) % 360;
+}
+
+function invertRgb(r, g, b) {
+  return [255 - r, 255 - g, 255 - b];
+}
+
+// Extracts ONLY hue from a hex colour — the picker's own saturation/lightness
+// are discarded, because rendering always sources chroma from the piece's
+// shared `saturation` slider, never from the swatch a user happened to pick.
+// This is a one-way, lossy read (8-bit RGB quantizes hue), used exactly once
+// per user pick — never in a render loop, and never applied to a piece's own
+// seeded defaults, which keep their exact authored degree value untouched.
+// A grey/white/black pick (max === min) has no hue at all; callers must keep
+// the previous hue rather than let this return a meaningless 0 (red).
+function hexToHue(hex) {
+  const n = parseInt(hex.slice(1), 16);
+  const r = ((n >> 16) & 255) / 255;
+  const g = ((n >> 8) & 255) / 255;
+  const b = (n & 255) / 255;
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  if (max === min) return null; // achromatic — caller must preserve prior hue
+  const d = max - min;
+  let h;
+  if (max === r) h = ((g - b) / d) % 6;
+  else if (max === g) h = (b - r) / d + 2;
+  else h = (r - g) / d + 4;
+  h *= 60;
+  return h < 0 ? h + 360 : h;
+}
+
+// The shared 0-1 ramp position -> {h, s} for a piece's two-stop palette.
+// Solid mode ignores `f` and always returns stop A; gradient mode lerps hue
+// between the two stops exactly as every piece's own per-element interpolation
+// did before this control existed (`hue + (hueB - hue) * f`). `s` is always
+// the piece's single shared saturation control — colour stops never carry
+// their own saturation. `hue`/`hueB` are the exact, hidden numeric palette
+// values (see shared/controls.js); `colorA`/`colorB` are their hex *view*
+// only and are never read here.
+function paletteHsl(values, f) {
+  const s = values.saturation;
+  if (values.colorMode === 'solid') return { h: values.hue, s };
+  return { h: values.hue + (values.hueB - values.hue) * f, s };
+}
+
+
+// --- inlined: ../../shared/controls.js ---
+// shared/controls.js
+
+// `category` routes a control to one of the panel's tiers — 'interaction',
+// 'color', or the default 'visual' — and is presentation-only: it changes
+// which DOM section a row renders in, never __LF_SPECS__'s declaration
+// order, which every gate that isn't the panel itself still reads flat.
+const SHARED_CONTROLS = [
+  { name: 'scale', label: 'Scale', type: 'range', min: 0, max: 2, step: 0.01, default: 1 },
+  { name: 'speed', label: 'Speed', type: 'range', min: 0, max: 2, step: 0.01, default: 1 },
+  { name: 'stroke', label: 'Stroke', type: 'range', min: 0, max: 2, step: 0.01, default: 1 },
+  { name: 'opacity', label: 'Opacity', type: 'range', min: 0, max: 1, step: 0.01, default: 1, category: 'color' },
+  // House look default is 0 (docs/house-look.md #1 — monochrome first); a
+  // piece pins its own saturation in its `defaults` block regardless.
+  { name: 'saturation', label: 'Saturation', type: 'range', min: 0, max: 1, step: 0.01, default: 0, category: 'color' },
+  // Solid/gradient palette. `colorA`/`colorB` are the authored controls a
+  // user actually sees and drags; `hue`/`hueB` are hidden (no panel row) —
+  // the exact numeric degrees every piece's render math still reads. Picking
+  // a colour writes the hidden field via `linkedHue` (see setValue below);
+  // the reverse never happens, so a piece's own seeded default hue is never
+  // round-tripped through 8-bit hex and stays exactly what the piece declares.
+  { name: 'colorMode', label: 'Color Mode', type: 'select', options: ['solid', 'gradient'], default: 'gradient', category: 'color' },
+  { name: 'colorA', label: 'Color A', type: 'color', default: '#00aaff', linkedHue: 'hue', category: 'color' },
+  { name: 'colorB', label: 'Color B', type: 'color', default: '#aa00ff', linkedHue: 'hueB', category: 'color' },
+  { name: 'hue', label: 'Hue', type: 'hidden', default: 200 },
+  { name: 'hueB', label: 'Hue B', type: 'hidden', default: 280 },
+  { name: 'invert', label: 'Invert', type: 'checkbox', default: false, category: 'color' },
+  { name: 'glow', label: 'Glow', type: 'range', min: 0, max: 2, step: 0.01, default: 0 },
+  { name: 'angle', label: 'Angle', type: 'range', min: 0, max: 360, step: 1, default: 0 },
+  { name: 'motion', label: 'Motion', type: 'range', min: 0, max: 2, step: 0.01, default: 1 },
+  { name: 'phase', label: 'Phase', type: 'range', min: 0, max: 2, step: 0.01, default: 0 },
+  { name: 'density', label: 'Density', type: 'range', min: 0.1, max: 2, step: 0.01, default: 1 },
+];
+
+// The shared preset vocabulary. Every piece declares all five; the names mean
+// the same intent everywhere, the values differ per piece. Exported so a
+// future verifier (e.g. tools/build.mjs) can check a piece's presets against
+// this set instead of hardcoding it a second time.
+const PRESET_NAMES = ['whisper', 'ink', 'neon', 'drift', 'dense'];
+
+// Stage C: sectioned, styled panel. Structure is from mock 1 (Interactions /
+// divider / Color+Visual / divider / Reset); appearance is from mock 2 (dark
+// rounded card, mono accent headers, gradient-fill sliders). The
+// PREVIEW_PLANE + VISUAL telemetry boxes in mock 2 are deferred — no data
+// feed for them yet — everything else about its styling is applied.
+const PANEL_CSS = `
+/* Fix round 1: the panel is a flex column so the scrollable middle
+   (.lf-body) can't push the footer (.lf-reset) off screen, and section
+   headers are now toggle buttons so the panel fits at rest. */
+.lf-panel { position: fixed; bottom: 12px; right: 12px; width: 300px;
+  background: #0b0b0f; color: #e8e8e8; font: 12px/1.4 -apple-system,BlinkMacSystemFont,sans-serif;
+  border: 1px solid rgba(255,255,255,0.06); border-radius: 16px;
+  z-index: 9999; max-height: 80vh; overflow: hidden; box-sizing: border-box;
+  display: flex; flex-direction: column; }
+.lf-panel.collapsed .lf-body, .lf-panel.collapsed .lf-reset { display: none; }
+.lf-panel h3 { margin: 0; padding: 14px 18px 12px; font: 700 11px/1 ui-monospace,Menlo,monospace;
+  text-transform: uppercase; letter-spacing: .12em; color: #5fa07c; flex: none;
+  display: flex; align-items: center; justify-content: space-between; cursor: grab;
+  user-select: none; touch-action: none; }
+.lf-panel h3:active { cursor: grabbing; }
+.lf-panel h3 .lf-status { display: flex; align-items: center; gap: 5px; font: 500 10px/1 ui-monospace,Menlo,monospace;
+  letter-spacing: .05em; color: #8a8a9a; text-transform: none; }
+.lf-panel h3 .lf-dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e;
+  box-shadow: 0 0 6px rgba(34,197,94,0.8); flex: none; }
+/* .lf-body is the ONLY scrolling region — header, footer and the mobile
+   handle sit outside it so they never scroll out of view. min-height: 0 is
+   load-bearing: without it a flex child won't shrink below its content size
+   and this scroller simply never activates. */
+.lf-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 0 18px 14px; }
+.lf-section-head { all: revert; appearance: none; background: none; border: none; padding: 0;
+  margin: 0 0 10px; width: 100%; box-sizing: border-box; text-align: left; cursor: pointer;
+  font: 700 10px/1 ui-monospace,Menlo,monospace; text-transform: uppercase; letter-spacing: .12em;
+  color: #5fa07c; display: flex; align-items: center; justify-content: space-between; }
+.lf-section-head:focus-visible { outline: 2px solid #6fb4c9; outline-offset: 2px; }
+.lf-chevron { display: inline-block; font: 10px/1 ui-monospace,Menlo,monospace;
+  transition: transform .15s ease; }
+.lf-chevron::before { content: '\\25be'; }
+.lf-section.lf-section-collapsed .lf-chevron { transform: rotate(-90deg); }
+.lf-section.lf-section-collapsed .lf-section-body { display: none; }
+.lf-section + .lf-section { margin-top: 14px; }
+.lf-divider { border: none; border-top: 1px solid rgba(255,255,255,0.08); margin: 16px 0; }
+.lf-row { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+.lf-row:last-child { margin-bottom: 0; }
+.lf-row-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.lf-row label { font: 10px/1 ui-monospace,Menlo,monospace; letter-spacing: .08em; text-transform: uppercase; color: #8a8a9a; }
+.lf-readout { font: 600 11px/1 ui-monospace,Menlo,monospace; color: #79af91; }
+.lf-row-checkbox { flex-direction: row; align-items: center; justify-content: space-between; }
+.lf-row-checkbox label { order: -1; }
+
+.lf-row select { width: 100%; box-sizing: border-box; appearance: none; -webkit-appearance: none;
+  background: #141419 url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="6"><path d="M0 0l5 6 5-6z" fill="%238a8a9a"/></svg>') no-repeat right 10px center;
+  color: #e8e8e8; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px;
+  padding: 7px 28px 7px 10px; font: 12px -apple-system,sans-serif; }
+
+/* Ruler-style slider (own design, ROADMAP 3.3): a thin band of tick marks
+   — a repeating-gradient track, minor ticks every 6.25% and a brighter
+   major tick every 25% — with the FILLED portion washed in the accent via
+   a second gradient layer sized by --lf-pct (same custom property
+   setRangeFill already writes on every value change, human-dragged or
+   gate-driven). The thumb is a hairline: a slim bar, not a dot, so it
+   reads as a position marker on the ruler rather than a ball riding a
+   pill. Hit area stays a generous 20px tall — only the drawn band is
+   thin — so touch/pointer accuracy doesn't suffer for the thinner look. */
+.lf-row input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 20px;
+  background: transparent; cursor: pointer; }
+.lf-row input[type=range]::-webkit-slider-runnable-track {
+  height: 3px; margin-top: 8px; border-radius: 0;
+  background-color: #24242b;
+  background-image:
+    linear-gradient(90deg, #7fa88c 0 var(--lf-pct, 0%), transparent 0),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.4) 0 1px, transparent 1px 8.3333%),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.75) 0 1px, transparent 1px 25%);
+  background-size: 100% 100%, 100% 100%, 100% 100%;
+  background-repeat: no-repeat;
+}
+.lf-row input[type=range]::-moz-range-track { height: 3px; margin-top: 8px; border-radius: 0;
+  background-color: #24242b;
+  background-image:
+    linear-gradient(90deg, #7fa88c 0 var(--lf-pct, 0%), transparent 0),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.4) 0 1px, transparent 1px 8.3333%),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.75) 0 1px, transparent 1px 25%);
+}
+.lf-row input[type=range]::-webkit-slider-thumb { -webkit-appearance: none;
+  width: 2px; height: 18px; margin-top: -8.5px; border-radius: 0;
+  background: #fff; box-shadow: 0 0 0 1px rgba(10,10,13,.9), 0 0 6px rgba(255,255,255,.7);
+  cursor: pointer; }
+.lf-row input[type=range]::-moz-range-thumb { width: 2px; height: 18px; border: none; border-radius: 0;
+  background: #fff; box-shadow: 0 0 0 1px rgba(10,10,13,.9), 0 0 6px rgba(255,255,255,.7); cursor: pointer; }
+.lf-row input[type=range]:focus-visible { outline: none; }
+.lf-row input[type=range]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 1px rgba(10,10,13,.9), 0 0 0 4px rgba(111,180,201,.55); }
+.lf-row input[type=range]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 1px rgba(10,10,13,.9), 0 0 0 4px rgba(111,180,201,.55); }
+
+.lf-color-row { display: flex; align-items: center; gap: 8px; }
+.lf-color-row input[type=color] { width: 30px; height: 26px; padding: 0; border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 6px; background: none; cursor: pointer; flex: none; }
+.lf-hex { font: 12px ui-monospace,Menlo,monospace; color: #c9c9d4; text-transform: uppercase; }
+
+.lf-segmented { display: flex; gap: 6px; margin-bottom: 8px; }
+.lf-seg-btn { flex: 1; background: #141419; color: #8a8a9a; border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px; padding: 7px 8px; font: 11px -apple-system,sans-serif; cursor: pointer;
+  display: flex; align-items: center; gap: 6px; justify-content: center; }
+.lf-seg-btn::before { content: ''; width: 9px; height: 9px; border-radius: 50%; border: 1px solid #55556a; flex: none; }
+.lf-seg-btn.lf-seg-btn-active { color: #e8e8e8; border-color: #437057; }
+.lf-seg-btn.lf-seg-btn-active::before { border-color: #437057; background: #437057; }
+.lf-visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+/* Sticky footer (fix round 1, finding 1): a flex sibling of .lf-body, not a
+   child of it, so it never scrolls with the sections above it. Its own
+   background covers content scrolling underneath; its top border is the
+   hairline that reads it as a footer rather than a floating button. */
+.lf-reset { flex: none; width: 100%; box-sizing: border-box; margin: 0; background: #0b0b0f;
+  color: #e8e8e8; border: none; border-top: 1px solid rgba(255,255,255,0.08);
+  border-radius: 0 0 16px 16px; padding: 12px 18px; cursor: pointer;
+  font: 11px -apple-system,sans-serif; }
+.lf-reset:hover { background: #141419; }
+.lf-presets { display: flex; flex-wrap: wrap; gap: 4px; margin: 0 0 14px; }
+.lf-chip { flex: 1 1 auto; background: #141419; color: #c9c9d4; border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 6px; padding: 5px 6px; font: 500 10px/1 ui-monospace,Menlo,monospace;
+  letter-spacing: .05em; text-transform: uppercase; cursor: pointer; }
+.lf-chip:hover { color: #fff; border-color: #55556a; }
+.lf-chip[aria-pressed="true"] { background: #437057; color: #e8e8e8; border-color: #437057; }
+.lf-chip:focus-visible { outline: 2px solid #6fb4c9; outline-offset: 1px; }
+
+/* Below ~640px: full-width sheet docked to the bottom edge, collapsed to a
+   handle by default so the artwork stays unobstructed. This is scoped
+   entirely to the media query and a separate in-memory flag — never the
+   persisted desktop 'collapsed' state — so it can't leak into desktop. */
+.lf-handle { display: none; }
+@media (max-width: 640px) {
+  .lf-panel { left: 0; right: 0; bottom: 0; width: 100%; max-height: 70vh;
+    border-radius: 16px 16px 0 0; border-bottom: none; }
+  .lf-handle { display: flex; flex: none; justify-content: center; padding: 8px 0; cursor: pointer; }
+  .lf-handle::before { content: ''; width: 36px; height: 4px; border-radius: 999px; background: #3a3a46; }
+  .lf-reset { border-radius: 0; }
+  .lf-panel.mobile-collapsed .lf-body,
+  .lf-panel.mobile-collapsed .lf-reset { display: none; }
+}
+`;
+
+function kindOf(spec) {
+  if (spec.type === 'checkbox') return 'boolean';
+  if (spec.type === 'color') return 'color';
+  if (spec.type === 'select') return 'enum';
+  if (spec.type === 'hidden') return 'hidden';
+  return 'number';
+}
+
+function injectCss() {
+  if (document.getElementById('lf-panel-css')) return;
+  const style = document.createElement('style');
+  style.id = 'lf-panel-css';
+  style.textContent = PANEL_CSS;
+  document.head.appendChild(style);
+}
+
+function createControlPanel({ pieceId, onChange, extraControls = [], defaults: defaultOverrides = {}, presets = {} }) {
+  injectCss();
+
+  // Gallery preview iframes load pieces with ?preview=1: same-origin means
+  // they'd otherwise read (and, on interaction, overwrite) the viewer's own
+  // localStorage:<pieceId> — showing a hovered card's saved tuning instead
+  // of its defaults. Under this flag we neither read nor write it. A piece
+  // opened directly, with no query string, is completely unaffected.
+  const isPreview = new URLSearchParams(location.search).get('preview') === '1';
+
+  const storageKey = `linefield:${pieceId}`;
+  const allSpecs = [...SHARED_CONTROLS, ...extraControls];
+  const specByName = {};
+  // kind is the discriminant every gate must branch on, never `type`: a gate
+  // that switches on the type-name string would silently fall a new type
+  // into whichever branch it doesn't match. 'hidden' (hue/hueB) has no panel
+  // row at all and is excluded from control gates entirely — it is not a
+  // user-facing control, just the exact numeric value colorA/colorB drive.
+  for (const spec of allSpecs) {
+    spec.kind = kindOf(spec);
+    specByName[spec.name] = spec;
+  }
+  const defaults = {};
+  for (const spec of allSpecs) {
+    defaults[spec.name] = spec.name in defaultOverrides ? defaultOverrides[spec.name] : spec.default;
+  }
+
+  let saved = {};
+  if (!isPreview) {
+    try {
+      saved = JSON.parse(localStorage.getItem(storageKey) || '{}');
+    } catch {
+      saved = {};
+    }
+  }
+
+  const values = { ...defaults, ...saved.values };
+  // Saved values bypass setValue(), so validate enum membership on load.
+  // An option removed or renamed since the save falls back to the control's
+  // resolved default, keeping the rendered select and values in sync.
+  for (const spec of allSpecs) {
+    if (spec.kind === 'enum' && !spec.options.includes(values[spec.name])) {
+      values[spec.name] = defaults[spec.name];
+    }
+  }
+  let collapsed = saved.collapsed || false;
+  let panelPosition = saved.position && Number.isFinite(saved.position.left) && Number.isFinite(saved.position.top)
+    ? saved.position
+    : null;
+  // Mobile-sheet collapse is a separate, unpersisted flag: it starts
+  // collapsed every load (handle-only, per the brief) and is scoped to the
+  // <=640px media query in CSS, so toggling it can never affect (or be
+  // affected by) the desktop `collapsed` state above.
+  let mobileCollapsed = true;
+  // Fix round 1, finding 2: sections collapse independently, persisted
+  // alongside `collapsed`/`values`. Interactions starts open (the thing the
+  // separation was for); Color and Visual start closed, so the panel fits
+  // on screen at rest. `saved.sections ?? {}` is deliberately defensive — a
+  // blob written before this change has no `sections` key at all, and
+  // reading it without the fallback would throw on spread below.
+  const DEFAULT_SECTION_OPEN = { interaction: true, color: false, visual: false };
+  const sectionOpen = { ...DEFAULT_SECTION_OPEN, ...(saved.sections ?? {}) };
+
+  const panel = document.createElement('div');
+  panel.className = 'lf-panel mobile-collapsed' + (collapsed ? ' collapsed' : '');
+  panel.setAttribute('data-lf-panel', '');
+
+  // Mobile-only drag handle (CSS hides it above the breakpoint). Tapping it
+  // expands/collapses the bottom sheet without touching desktop's own
+  // click-to-collapse heading below.
+  const handle = document.createElement('div');
+  handle.className = 'lf-handle';
+  handle.addEventListener('click', () => {
+    mobileCollapsed = !mobileCollapsed;
+    panel.classList.toggle('mobile-collapsed', mobileCollapsed);
+  });
+  panel.appendChild(handle);
+
+  const heading = document.createElement('h3');
+  const headingLabel = document.createElement('span');
+  headingLabel.textContent = 'Controls';
+  const status = document.createElement('span');
+  status.className = 'lf-status';
+  status.innerHTML = '<span class="lf-dot"></span>live';
+  heading.append(headingLabel, status);
+  heading.title = 'Drag to move · click to collapse';
+  let dragState = null;
+  let suppressHeadingClick = false;
+  heading.addEventListener('pointerdown', (event) => {
+    if (event.button !== 0 || window.innerWidth <= 640) return;
+    const rect = panel.getBoundingClientRect();
+    dragState = { id: event.pointerId, startX: event.clientX, startY: event.clientY, left: rect.left, top: rect.top, moved: false };
+    heading.setPointerCapture(event.pointerId);
+  });
+  heading.addEventListener('pointermove', (event) => {
+    if (!dragState || event.pointerId !== dragState.id) return;
+    const dx = event.clientX - dragState.startX;
+    const dy = event.clientY - dragState.startY;
+    if (!dragState.moved && Math.hypot(dx, dy) < 4) return;
+    dragState.moved = true;
+    const maxLeft = Math.max(0, window.innerWidth - panel.offsetWidth);
+    const maxTop = Math.max(0, window.innerHeight - panel.offsetHeight);
+    panel.style.left = `${Math.min(maxLeft, Math.max(0, dragState.left + dx))}px`;
+    panel.style.top = `${Math.min(maxTop, Math.max(0, dragState.top + dy))}px`;
+    panel.style.right = 'auto';
+    panel.style.bottom = 'auto';
+  });
+  function finishPanelDrag(event) {
+    if (!dragState || event.pointerId !== dragState.id) return;
+    if (heading.hasPointerCapture(event.pointerId)) heading.releasePointerCapture(event.pointerId);
+    if (dragState.moved) {
+      panelPosition = { left: parseFloat(panel.style.left), top: parseFloat(panel.style.top) };
+      suppressHeadingClick = true;
+      persist();
+    }
+    dragState = null;
+  }
+  heading.addEventListener('pointerup', finishPanelDrag);
+  heading.addEventListener('pointercancel', finishPanelDrag);
+  heading.addEventListener('click', () => {
+    if (suppressHeadingClick) {
+      suppressHeadingClick = false;
+      return;
+    }
+    collapsed = !collapsed;
+    panel.classList.toggle('collapsed', collapsed);
+    persist();
+  });
+  panel.appendChild(heading);
+
+  const body = document.createElement('div');
+  body.className = 'lf-body';
+  panel.appendChild(body);
+
+  // The panel configures artwork visuals: camera angles in Interactions,
+  // palette in Color, and the remaining rendering parameters in Visual.
+  // Each section is a toggle-button header plus a body a category routes
+  // rows into — `sectionOf` below is the single place that mapping lives.
+  // Collapsing hides `.lf-section-body` via CSS only: rows stay in the DOM
+  // (never removed), so a gate that drives a control by name or by
+  // `row.querySelector` still finds it whether its section is open or not.
+  function makeSection(key, title) {
+    const section = document.createElement('div');
+    section.className = 'lf-section';
+
+    const headBtn = document.createElement('button');
+    headBtn.type = 'button';
+    headBtn.className = 'lf-section-head';
+    const headLabel = document.createElement('span');
+    headLabel.textContent = title;
+    const chevron = document.createElement('span');
+    chevron.className = 'lf-chevron';
+    headBtn.append(headLabel, chevron);
+
+    const sectionBody = document.createElement('div');
+    sectionBody.className = 'lf-section-body';
+    section.append(headBtn, sectionBody);
+
+    function applyOpenState() {
+      const open = sectionOpen[key];
+      headBtn.setAttribute('aria-expanded', String(open));
+      section.classList.toggle('lf-section-collapsed', !open);
+    }
+    applyOpenState();
+    headBtn.addEventListener('click', () => {
+      sectionOpen[key] = !sectionOpen[key];
+      applyOpenState();
+      persist();
+    });
+
+    return { el: section, body: sectionBody };
+  }
+  const secInteraction = makeSection('interaction', 'Interactions');
+  const secColor = makeSection('color', 'Color');
+  const secVisual = makeSection('visual', 'Visual');
+  body.appendChild(secInteraction.el);
+  body.appendChild(document.createElement('hr')).className = 'lf-divider';
+  body.appendChild(secColor.el);
+  body.appendChild(secVisual.el);
+
+  // category is optional and defaults to 'visual'. Only 'interaction' and
+  // 'color' route a control out of Visual — 'motion'/'form'/'ink' (the
+  // piece-extra sub-tags called out in the brief) are metadata for a future
+  // stage and land in Visual today, same as an uncategorised control.
+  function sectionOf(spec) {
+    if (spec.category === 'interaction') return secInteraction.body;
+    if (spec.category === 'color') return secColor.body;
+    return secVisual.body;
+  }
+
+  // Per-control render hook. Covers <input type=range|checkbox|color> and
+  // <select> uniformly; a future widget that isn't a bare input/select would
+  // register its own render(v) instead, so setValue below stays agnostic to
+  // what is actually on screen.
+  const controllers = {};
+
+  // Clamp to the spec's declared range where numeric, then snap to its step
+  // the same way <input type=range> snaps on a programmatic .value set. That
+  // browser-side snap is exactly what the old DOM round-trip captured (set
+  // .value, then read it back post-sanitization); setValue writes values[]
+  // directly and never reads the DOM back, so without this step a control's
+  // displayed slider position and its rendered value can disagree — the
+  // Pitch/Yaw divergence this stage exists to remove, reintroduced. Not
+  // applied to booleans (kind === 'boolean') or to a name with no known spec.
+  function clampValue(spec, v) {
+    // Enum membership is not optional: a value outside spec.options must be
+    // rejected rather than written, or __LF_VALUES__ and the rendered <select>
+    // diverge (the <select> silently ignores an out-of-range .value while
+    // the state object keeps whatever was passed in). Falls back to the
+    // control's current value, the same "previous value stands" rule a
+    // number's clamp already applies at its min/max.
+    if (spec?.kind === 'enum') {
+      return spec.options.includes(v) ? v : values[spec.name];
+    }
+    if (!spec || spec.kind !== 'number' || typeof spec.min !== 'number' || typeof spec.max !== 'number') {
+      return v;
+    }
+    const clamped = Math.min(spec.max, Math.max(spec.min, v));
+    const step = Number(spec.step);
+    if (!(step > 0)) return clamped;
+    const snapped = spec.min + Math.round((clamped - spec.min) / step) * step;
+    const decimals = (String(step).split('.')[1] || '').length;
+    return decimals ? Number(snapped.toFixed(decimals)) : snapped;
+  }
+
+  // THE write path. Every value change — a drag, a preset, Reset, or a gate
+  // script driving the panel with no DOM at all — goes through this and only
+  // this, so a value set by an audit renders identically to the same value
+  // set by a human: clamp -> write -> render -> clear active chip -> fire
+  // onChange exactly once -> persist if asked.
+  function setValue(name, value, { persist: shouldPersist = true } = {}) {
+    const spec = specByName[name];
+    const v = clampValue(spec, value);
+    values[name] = v;
+    // A colour control's spec names the hidden numeric field it drives
+    // (colorA -> hue, colorB -> hueB). This is the ONLY place that hex gets
+    // decoded — once per pick, never in a render loop — and it never runs
+    // for a programmatic write to the hidden field itself (see applyValues,
+    // which reasserts hue/hueB after this fires so a preset/reset always
+    // lands on the exact declared number, not a lossy decode of colorA/
+    // colorB). An achromatic pick (grey/white/black) has no hue to extract;
+    // hexToHue returns null and the previous hue is left untouched.
+    if (spec?.linkedHue) {
+      const decoded = hexToHue(v);
+      if (decoded !== null) values[spec.linkedHue] = decoded;
+    }
+    controllers[name]?.render(v);
+    if (name === 'colorMode') controllers.colorB?.setRowVisible?.(v === 'gradient');
+    setActiveChip(null);
+    onChange(name, v, values);
+    if (shouldPersist) persist();
+  }
+
+  // Same decimals rule clampValue's step-snap uses, so a slider's readout
+  // never shows more precision than the control itself actually holds.
+  function formatNumber(spec, v) {
+    const decimals = (String(spec.step).split('.')[1] || '').length;
+    return decimals ? Number(v).toFixed(decimals) : String(v);
+  }
+
+  // Mock 2's slider fill is a gradient over the FILLED portion only, unfilled
+  // remainder flat grey — not achievable in pure CSS for a native <input
+  // type=range> (no fill-percentage selector exists), so render() also
+  // writes this custom property every time a value changes, human-dragged or
+  // gate-driven, and the two-stop `background-size` trick in PANEL_CSS reads it.
+  function setRangeFill(input, spec, v) {
+    const pct = spec.max > spec.min ? ((v - spec.min) / (spec.max - spec.min)) * 100 : 0;
+    input.style.setProperty('--lf-pct', `${pct}%`);
+  }
+
+  // Mock 2's "(•) Solid ( ) Gradient" radio pair, without a second real
+  // <input> in colorMode's row: the row's one real control stays the
+  // <select> buildRow already built (kept in the DOM, driven exactly the way
+  // test-interactions.mjs dispatches a real DOM `input` event), visually
+  // hidden, with a composite pair of buttons layered in front of it that
+  // call setValue the same way any other control does. This is the
+  // registration hook, not a second write path: the buttons never touch
+  // `values` themselves.
+  function enhanceColorModeToggle(row, select, spec) {
+    select.classList.add('lf-visually-hidden');
+    const seg = document.createElement('div');
+    seg.className = 'lf-segmented';
+    const buttons = {};
+    for (const opt of spec.options) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'lf-seg-btn';
+      btn.textContent = opt.charAt(0).toUpperCase() + opt.slice(1);
+      btn.addEventListener('click', () => setValue(spec.name, opt));
+      buttons[opt] = btn;
+      seg.appendChild(btn);
+    }
+    row.insertBefore(seg, select);
+    const baseRender = controllers[spec.name].render;
+    controllers[spec.name].render = (v) => {
+      baseRender(v);
+      for (const [opt, btn] of Object.entries(buttons)) btn.classList.toggle('lf-seg-btn-active', opt === v);
+    };
+    controllers[spec.name].render(values[spec.name]);
+  }
+
+  function buildRow(spec) {
+    // 'hidden' (hue/hueB) is not a control — no row, no input, no DOM at all.
+    // It stays in allSpecs/defaults/values so the rest of the machinery
+    // (defaults composition, presets, persistence) treats it like any other
+    // value; it is simply never rendered or driven directly.
+    if (spec.type === 'hidden') return;
+
+    const row = document.createElement('div');
+    row.className = 'lf-row';
+    let input;
+    let readoutEl = null;
+    let hexEl = null;
+
+    if (spec.type === 'checkbox') {
+      // Compact single line — label and box side by side, matching mock 2's
+      // "Invert [ ]" — rather than the label-above-control layout every
+      // other control below uses.
+      row.classList.add('lf-row-checkbox');
+      const label = document.createElement('label');
+      label.textContent = spec.label;
+      input = document.createElement('input');
+      input.type = 'checkbox';
+      input.checked = !!values[spec.name];
+      row.append(label, input);
+    } else {
+      const head = document.createElement('div');
+      head.className = 'lf-row-head';
+      const label = document.createElement('label');
+      label.textContent = spec.label;
+      head.appendChild(label);
+
+      if (spec.type === 'color') {
+        input = document.createElement('input');
+        input.type = 'color';
+        input.value = values[spec.name];
+        row.appendChild(head);
+        const colorRow = document.createElement('div');
+        colorRow.className = 'lf-color-row';
+        hexEl = document.createElement('span');
+        hexEl.className = 'lf-hex';
+        hexEl.textContent = values[spec.name];
+        colorRow.append(input, hexEl);
+        row.appendChild(colorRow);
+      } else if (spec.type === 'select') {
+        input = document.createElement('select');
+        for (const opt of spec.options) {
+          const o = document.createElement('option');
+          o.value = opt;
+          o.textContent = opt;
+          input.appendChild(o);
+        }
+        input.value = values[spec.name];
+        row.append(head, input);
+      } else {
+        readoutEl = document.createElement('span');
+        readoutEl.className = 'lf-readout';
+        readoutEl.textContent = formatNumber(spec, values[spec.name]);
+        head.appendChild(readoutEl);
+        input = document.createElement('input');
+        input.type = 'range';
+        input.min = spec.min;
+        input.max = spec.max;
+        input.step = spec.step;
+        input.value = values[spec.name];
+        row.append(head, input);
+        setRangeFill(input, spec, values[spec.name]);
+      }
+    }
+
+    // Thin adapter: read the raw DOM value and hand it to setValue. It must
+    // not touch values/onChange/persistence itself — setValue is the only
+    // write path (see above).
+    input.addEventListener('input', () => {
+      const v = spec.type === 'checkbox' ? input.checked
+        : (spec.type === 'color' || spec.type === 'select') ? input.value
+        : parseFloat(input.value);
+      setValue(spec.name, v);
+    });
+
+    controllers[spec.name] = {
+      render(v) {
+        if (spec.type === 'checkbox') { input.checked = v; return; }
+        input.value = v;
+        if (readoutEl) readoutEl.textContent = formatNumber(spec, v);
+        if (hexEl) hexEl.textContent = v;
+        if (spec.type !== 'color' && spec.type !== 'select') setRangeFill(input, spec, v);
+      },
+      setRowVisible(visible) {
+        row.style.display = visible ? '' : 'none';
+      },
+    };
+
+    if (spec.name === 'colorMode') enhanceColorModeToggle(row, input, spec);
+
+    sectionOf(spec).appendChild(row);
+  }
+
+  // Presets are the same operation the reset button already performed: write
+  // every control, update its input, fire onChange, persist. The only
+  // difference is which map is written. Composing over `defaults` is what
+  // makes a partial preset safe — a control the preset omits lands on the
+  // piece's own default rather than keeping the previous preset's value.
+  function applyValues(map) {
+    const next = { ...defaults, ...map };
+    for (const spec of allSpecs) setValue(spec.name, next[spec.name], { persist: false });
+    // setValue(colorA/colorB, ...) above may have just overwritten hue/hueB
+    // with a lossy hex decode — order-dependent otherwise, since 'hidden'
+    // specs are plain entries in the same allSpecs array. The exact value
+    // `next` already carries always wins on a programmatic write (preset,
+    // Reset, ?preset= on load): reassert it directly, no side effects, so
+    // these paths render at exactly the declared number, never an
+    // approximation of it.
+    for (const spec of allSpecs) {
+      if (spec.kind === 'hidden') values[spec.name] = next[spec.name];
+    }
+    persist();
+  }
+
+  const presetNames = Object.keys(presets);
+  let chipRow = null;
+  const chips = {};
+
+  function setActiveChip(name) {
+    for (const [n, el] of Object.entries(chips)) {
+      el.setAttribute('aria-pressed', String(n === name));
+    }
+  }
+
+  if (presetNames.length) {
+    chipRow = document.createElement('div');
+    chipRow.className = 'lf-presets';
+    for (const name of presetNames) {
+      const chip = document.createElement('button');
+      chip.type = 'button';
+      chip.className = 'lf-chip';
+      chip.dataset.preset = name;
+      chip.textContent = name;
+      chip.setAttribute('aria-pressed', 'false');
+      chip.addEventListener('click', () => {
+        applyValues(presets[name]);
+        setActiveChip(name);
+      });
+      chips[name] = chip;
+      chipRow.appendChild(chip);
+    }
+    // Presets sit above every section, ahead of the two tiers built earlier
+    // in this function — insertBefore rather than appendChild, since the
+    // section containers are already in `body` by this point.
+    body.insertBefore(chipRow, secInteraction.el);
+  }
+
+  for (const spec of allSpecs) buildRow(spec);
+  // colorB's row only makes sense in gradient mode; setValue toggles it on
+  // every subsequent change, this sets the correct initial state.
+  controllers.colorB?.setRowVisible?.(values.colorMode === 'gradient');
+
+  // Reset is a sticky footer (fix round 1, finding 1): a sibling of `body`,
+  // not a child of it, so the flex layout in PANEL_CSS keeps it pinned to
+  // the panel's bottom edge regardless of how far `body` is scrolled. Still
+  // inside `panel`, which carries `data-lf-panel` — the hard constraint is
+  // about that attribute, not about which direct child holds a row.
+  const resetBtn = document.createElement('button');
+  resetBtn.className = 'lf-reset';
+  resetBtn.textContent = 'Reset to defaults';
+  resetBtn.addEventListener('click', () => {
+    applyValues(defaults);
+    setActiveChip(null);
+  });
+  panel.appendChild(resetBtn);
+
+  document.body.appendChild(panel);
+
+  function applyPanelPosition() {
+    if (window.innerWidth <= 640 || !panelPosition) {
+      panel.style.removeProperty('left');
+      panel.style.removeProperty('top');
+      panel.style.removeProperty('right');
+      panel.style.removeProperty('bottom');
+      return;
+    }
+    const maxLeft = Math.max(0, window.innerWidth - panel.offsetWidth);
+    const maxTop = Math.max(0, window.innerHeight - panel.offsetHeight);
+    panelPosition.left = Math.min(maxLeft, Math.max(0, panelPosition.left));
+    panelPosition.top = Math.min(maxTop, Math.max(0, panelPosition.top));
+    panel.style.left = `${panelPosition.left}px`;
+    panel.style.top = `${panelPosition.top}px`;
+    panel.style.right = 'auto';
+    panel.style.bottom = 'auto';
+  }
+  applyPanelPosition();
+  window.addEventListener('resize', applyPanelPosition);
+
+  function persist() {
+    if (isPreview) return;
+    localStorage.setItem(storageKey, JSON.stringify({ collapsed, values, sections: sectionOpen, position: panelPosition }));
+  }
+
+  // Declared, uncomposed. tools/build.mjs reads this off the loaded page
+  // instead of regex-parsing the HTML, so there is no second copy of the
+  // preset data to drift out of sync.
+  window.__LF_PRESETS__ = presets;
+  // The resolved control specs (name/type/min/max/step), for gate scripts that
+  // need to validate preset values against declared ranges without parsing HTML.
+  window.__LF_SPECS__ = allSpecs;
+  // The live value object, for gate scripts. Same reference the panel mutates.
+  window.__LF_VALUES__ = values;
+  // The write path itself, for gate scripts that need to drive controls with
+  // no DOM query at all — e.g. tools/audit-controls.mjs, which otherwise
+  // depends on positional row indices no future widget need honour.
+  window.__LF_PANEL__ = { setValue };
+
+  // Highest precedence on load: an explicit ?preset= beats saved localStorage,
+  // which beats the piece's defaults. Applied after every row exists so the
+  // inputs are there to update. An unknown name is ignored deliberately — a
+  // stale shared link should open the piece, not break it.
+  const requested = new URLSearchParams(location.search).get('preset');
+  if (requested && requested in presets) {
+    applyValues(presets[requested]);
+    setActiveChip(requested);
+  }
+
+  return {
+    values,
+    el: panel,
+    setValue,
+    addControl(spec) {
+      spec.kind = kindOf(spec);
+      specByName[spec.name] = spec;
+      allSpecs.push(spec);
+      defaults[spec.name] = spec.default;
+      // Route through setValue — THE write path (see above) — rather than
+      // writing `values` directly. setValue's own render() optional-chains
+      // through `controllers[name]` (undefined until buildRow below runs),
+      // so calling it first is a harmless no-op render and leaves `values`
+      // holding the exact number buildRow then reads for the row's initial
+      // DOM state. Same precedence `{ ...defaults, ...saved.values }` uses
+      // at panel construction: a value already in `values` (e.g. restored
+      // from localStorage before this control existed) wins over the spec's
+      // own default, never silently overwritten.
+      setValue(spec.name, spec.name in values ? values[spec.name] : spec.default);
+      buildRow(spec);
+    },
+  };
+}
+
+
+// --- inlined: ../../shared/anim.js ---
+// shared/anim.js
+
+// Max per-frame dt (seconds) after a tab-switch/GC stall, so a single huge
+// frame doesn't fling particles across the canvas. Ported from
+// cc-webgl/src/core/FrameScheduler.ts's DT_CLAMP_SECONDS.
+const ANIM_DT_CLAMP_SECONDS = 0.1;
+
+function createLoop({ onFrame, speed = 1 }) {
+  let running = false;
+  let paused = false;
+  let lastTime = 0;
+  let elapsed = 0;
+  let rafId = null;
+  let currentSpeed = speed;
+
+  function tick(now) {
+    if (!running || paused) return;
+    const rawDt = lastTime ? (now - lastTime) / 1000 : 0;
+    const clampedDt = Math.min(Math.max(rawDt, 0), ANIM_DT_CLAMP_SECONDS);
+    lastTime = now;
+    const scaledDt = clampedDt * currentSpeed;
+    elapsed += scaledDt;
+    onFrame(scaledDt, elapsed);
+    rafId = requestAnimationFrame(tick);
+  }
+
+  function handleVisibilityChange() {
+    if (typeof document === 'undefined') return;
+    if (document.hidden) {
+      paused = true;
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+    } else if (running && paused) {
+      paused = false;
+      // Reset the sentinel instead of computing a real dt, so resume doesn't
+      // produce a giant catch-up frame — same reasoning as start()'s reset.
+      lastTime = 0;
+      rafId = requestAnimationFrame(tick);
+    }
+  }
+
+  return {
+    start() {
+      if (running) return;
+      running = true;
+      paused = false;
+      lastTime = 0;
+      if (typeof document !== 'undefined') {
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+      }
+      rafId = requestAnimationFrame(tick);
+    },
+    stop() {
+      running = false;
+      paused = false;
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = null;
+      if (typeof document !== 'undefined') {
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+      }
+    },
+    setSpeed(n) {
+      currentSpeed = n;
+    },
+    get isRunning() {
+      return running;
+    },
+  };
+}
+
+
+// --- inlined: ../../shared/export.js ---
+// shared/export.js
+
+function download(filename, blobOrUrl, mime) {
+  const url = blobOrUrl instanceof Blob ? URL.createObjectURL(blobOrUrl) : blobOrUrl;
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  if (blobOrUrl instanceof Blob) URL.revokeObjectURL(url);
+}
+
+function exportPng(canvas, { multiplier = 1 } = {}) {
+  if (multiplier === 1) {
+    canvas.toBlob((blob) => download('linefield.png', blob), 'image/png');
+    return;
+  }
+  const scaled = document.createElement('canvas');
+  scaled.width = canvas.width * multiplier;
+  scaled.height = canvas.height * multiplier;
+  const ctx = scaled.getContext('2d');
+  ctx.imageSmoothingEnabled = true;
+  ctx.drawImage(canvas, 0, 0, scaled.width, scaled.height);
+  scaled.toBlob((blob) => download('linefield.png', blob), 'image/png');
+}
+
+// `texts` is optional and additive — glyph-mark pieces (matrix-code) pass
+// SVG native <text> elements instead of polylines, since a glyph has no
+// meaningful line-segment geometry to export. Stroke-path pieces never pass
+// it, so their output is byte-identical to before this option existed.
+function exportSvg(paths, { width = 800, height = 600, texts = [], polygons = [], circles = [] } = {}) {
+  const polylines = paths
+    .map((pts) => {
+      const pointsAttr = pts.map(([x, y]) => `${x.toFixed(2)},${y.toFixed(2)}`).join(' ');
+      return `<polyline points="${pointsAttr}" fill="none" stroke="black" stroke-width="1" />`;
+    })
+    .join('\n');
+
+  const textEls = texts
+    .map(({ x, y, ch, size, fontFamily, anchor, baseline, rotation, strokeWidth }) => {
+      const safeCh = String(ch).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      const safeFont = String(fontFamily || 'monospace').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      const placement = `${['start', 'middle', 'end'].includes(anchor) ? ` text-anchor="${anchor}"` : ''}${['central', 'middle', 'alphabetic', 'hanging'].includes(baseline) ? ` dominant-baseline="${baseline}"` : ''}${Number.isFinite(rotation) ? ` transform="rotate(${rotation} ${x} ${y})"` : ''}`;
+      const stroke = Number.isFinite(strokeWidth) && strokeWidth > 0 ? ` stroke="black" stroke-width="${strokeWidth}"` : '';
+      return `<text x="${x.toFixed(2)}" y="${y.toFixed(2)}" font-family="${safeFont}" font-size="${size.toFixed(2)}" fill="black"${placement}${stroke}>${safeCh}</text>`;
+    })
+    .join('\n');
+
+  // Filled-mark pieces supply already-transformed corners; existing path
+  // and text callers retain their exact serialization when this is empty.
+  const polygonEls = polygons.map(({ points, fill = 'black', opacity = 1 }) => {
+    const pointsAttr = points.map(([x, y]) => `${x.toFixed(2)},${y.toFixed(2)}`).join(' ');
+    const safeFill = String(fill).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const alpha = Number.isFinite(opacity) ? Math.max(0, Math.min(1, opacity)) : 1;
+    return `<polygon points="${pointsAttr}" fill="${safeFill}" opacity="${alpha.toFixed(4)}" />`;
+  }).join('\n');
+  // Halftone pieces pass filled dots as circles. Every other caller leaves
+  // this empty, so its serialization is byte-identical to before.
+  const circleEls = circles.map(({ cx, cy, r, fill = 'black', opacity = 1 }) => {
+    const safeFill = String(fill).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const alpha = Number.isFinite(opacity) ? Math.max(0, Math.min(1, opacity)) : 1;
+    return `<circle cx="${cx.toFixed(2)}" cy="${cy.toFixed(2)}" r="${r.toFixed(2)}" fill="${safeFill}" opacity="${alpha.toFixed(4)}" />`;
+  }).join('\n');
+  const marks = [polylines, textEls, polygonEls, circleEls].filter(Boolean).join('\n');
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">\n${marks}\n</svg>`;
+  const blob = new Blob([svg], { type: 'image/svg+xml' });
+  download('linefield.svg', blob);
+}
+
+async function exportSource({ filename = 'linefield-source.html' } = {}) {
+  const url = location.href.split(/[?#]/)[0];
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`exportSource: could not fetch source (${res.status})`);
+  const blob = await res.blob();
+  download(filename, blob);
+  return blob;
+}
+
+// The piece's own import statements are the registration. A hand-maintained
+// list is a silent-failure surface: omit an entry and the baked file is
+// valid, loads without error, and renders nothing. That shipped once.
+const SHARED_IMPORT_RE =
+  /^\s*import\s*\{[^}]*\}\s*from\s*['"](\.\.\/\.\.\/shared\/[^'"]+\.js)['"];?\s*$/gm;
+
+// A shared module importing ANOTHER shared module (e.g. controls.js reading
+// hexToHue from color.js) addresses it as './color.js' — same directory,
+// different relative base than the piece's '../../shared/color.js'. Matched
+// separately and normalised back to the piece-style path below so the same
+// `seen` dedupe applies to both forms of the same file.
+const INNER_SHARED_IMPORT_RE =
+  /^\s*import\s*\{[^}]*\}\s*from\s*['"]\.\/([^'"]+\.js)['"];?\s*$/gm;
+
+function stripExports(src) {
+  // `export function foo` / `export const foo` -> drop the `export ` keyword.
+  return src.replace(/^export\s+/gm, '');
+}
+
+function stripInnerImports(src) {
+  return src.replace(INNER_SHARED_IMPORT_RE, '');
+}
+
+// Topological sort (post-order DFS) over the shared-module import graph, not
+// just the piece's own top-level imports, and NOT discovery (BFS) order.
+// Scanning only the piece script is exactly the hand-maintained-list failure
+// this function's own comment already warns about, one level removed: a
+// shared module's OWN imports were invisible to it, so a new cross-shared-
+// module import survived verbatim into a classic (non-module) inline script.
+//
+// BFS discovery order is not enough once a shared module reads another
+// shared module's binding at TOP LEVEL (module-evaluation time), not just
+// inside a function body called later. controls.js is always a piece's
+// first import, so BFS always placed it first in the concatenated output —
+// fine for `hexToHue` (from color.js), which is only called inside
+// `setValue`, deferred to call time. A shared module that reads an imported
+// binding at top level instead must have that dependency emitted first.
+//
+// A post-order DFS guarantees every module's dependencies appear before it
+// in the emitted output, independent of whether the consumer reads the
+// dependency's binding at top level or lazily inside a function — the
+// general fix, not a per-call-site workaround. See
+// skills/building-generative-backgrounds/SKILL.md, "Inlining and bundling".
+async function inlineSharedModules(pieceScriptSrc) {
+  const strippedPieceSrc = pieceScriptSrc.replace(SHARED_IMPORT_RE, '');
+  const initial = [...pieceScriptSrc.matchAll(SHARED_IMPORT_RE)].map((m) => m[1]);
+  if (!initial.length) {
+    throw new Error('bakeHtml: the piece imports no shared modules — refusing to bake a file that would render blank');
+  }
+
+  const srcByPath = new Map();
+  const order = []; // post-order: a module's dependencies land before it
+  const done = new Set();
+  const visiting = new Set(); // cycle guard — a real cycle would recurse forever otherwise
+
+  async function visit(path) {
+    if (done.has(path)) return;
+    if (visiting.has(path)) {
+      throw new Error(`bakeHtml: circular shared-module import detected at ${path}`);
+    }
+    visiting.add(path);
+    const res = await fetch(path);
+    if (!res.ok) throw new Error(`bakeHtml: could not fetch ${path} (${res.status})`);
+    const src = await res.text();
+    srcByPath.set(path, src);
+    // Normalise './foo.js' found INSIDE a shared module to the same
+    // '../../shared/foo.js' form the piece-level regex produces, so a module
+    // reached both ways (e.g. color.js: directly by the piece, and via
+    // controls.js) is only ever inlined once.
+    const inner = [...src.matchAll(INNER_SHARED_IMPORT_RE)].map((m) => `../../shared/${m[1]}`);
+    for (const p of inner) await visit(p);
+    visiting.delete(path);
+    done.add(path);
+    order.push(path);
+  }
+
+  for (const path of initial) await visit(path);
+
+  const bodies = order.map((path) => {
+    const src = srcByPath.get(path);
+    return `// --- inlined: ${path} ---\n${stripInnerImports(stripExports(src))}`;
+  });
+
+  return `${bodies.join('\n\n')}\n\n// --- piece script ---\n${strippedPieceSrc}`;
+}
+
+async function bakeHtml({ sourceHtml, values }) {
+  const doc = new DOMParser().parseFromString(sourceHtml, 'text/html');
+  doc.querySelectorAll('[data-lf-panel]').forEach((el) => el.remove());
+
+  const pieceScript = doc.querySelector('script[type="module"]');
+  const pieceScriptSrc = pieceScript ? pieceScript.textContent : '';
+  if (pieceScript) pieceScript.remove();
+
+  const inlinedSrc = await inlineSharedModules(pieceScriptSrc);
+
+  const safeJson = JSON.stringify(values).replace(/</g, '\\u003c');
+  const inject = doc.createElement('script');
+  inject.textContent = `window.__LF_BAKED_VALUES__ = ${safeJson};\n${inlinedSrc}`;
+  doc.body.appendChild(inject);
+
+  const baked = `<!doctype html>\n${doc.documentElement.outerHTML}`;
+  const blob = new Blob([baked], { type: 'text/html' });
+  download('linefield-baked.html', blob);
+  return baked;
+}
+
+function describeForAI({ pieceName, values }) {
+  const parts = Object.entries(values)
+    .map(([k, v]) => `${k}=${typeof v === 'number' ? v.toFixed(2) : v}`)
+    .join(', ');
+  const text = `A generative line-art background piece called "${pieceName}", rendered on an HTML canvas with parameters: ${parts}.`;
+  if (navigator.clipboard) navigator.clipboard.writeText(text);
+  return text;
+}
+
+
+// --- piece script ---
+
+
+
+
+  const PIECE_ID = 'terminator';
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+
+  const PERIOD = 150; // seconds per seamless loop at speed 1
+
+  // Seeded generator: the terrain is the same on every load, whatever else
+  // the page has drawn.
+  function rng(seed) {
+    return () => {
+      seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+      let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
+  // 2D sum-of-sines noise, periodic in u with period U.
+  function makeNoise(r, octaves, lam, U, per = 4) {
+    const w = [];
+    for (let i = 0; i < octaves; i++) for (let k = 0; k < per; k++) {
+      const f = 2 * Math.PI / lam * Math.pow(1.9, i) * (0.75 + 0.5 * r()), a = r() * 6.283;
+      const ku = Math.round(f * Math.cos(a) * U / (2 * Math.PI)) * 2 * Math.PI / U;
+      w.push(ku, f * Math.sin(a), r() * 6.283, 1 / (i + 1));
+    }
+    let n = 0;
+    for (let i = 3; i < w.length; i += 4) n += w[i];
+    return (u, v) => {
+      let s = 0;
+      for (let i = 0; i < w.length; i += 4) s += w[i + 3] * Math.sin(w[i] * u + w[i + 1] * v + w[i + 2]);
+      return s / n * 1.6;
+    };
+  }
+  const gauss = (d, s) => Math.exp(-(d * d) / (2 * s * s));
+  const smooth = (a, b, x) => {
+    const t = Math.max(0, Math.min(1, (x - a) / (b - a)));
+    return t * t * (3 - 2 * t);
+  };
+
+  // ---- the planet, laid out in a 1280x800 design frame -----------------
+  // A big sphere whose centre sits far below the frame, so its limb is a
+  // shallow arc across the upper third. Each frame projects the design
+  // frame onto the canvas (cover fit, then Scale's zoom and Angle's turn).
+  const PW = 1280, PH = 800;
+  const R = 3 * PH, PCX = 0.45 * PW, PCY = 0.36 * PH + R, LZ = 0.2, KZ = Math.sqrt(1 - LZ * LZ);
+  let a0 = null, a1 = null;
+  for (let t = -1.5 * Math.PI; t < 0.5 * Math.PI; t += 0.0005) {
+    const x = PCX + R * Math.cos(t), y = PCY + R * Math.sin(t);
+    if (x >= 0 && x <= PW && y >= 0 && y <= PH) { if (a0 === null) a0 = t; a1 = t; }
+  }
+  // The terminator meets the limb 47% along the visible horizon; the light
+  // is perpendicular to the limb there, from the left.
+  const tm = a0 + 0.47 * (a1 - a0);
+  const E1 = [Math.cos(tm), Math.sin(tm), 0];
+  const L = [Math.sin(tm) * KZ, -Math.cos(tm) * KZ, LZ];
+  const A = [L[1] * E1[2] - L[2] * E1[1], L[2] * E1[0] - L[0] * E1[2], L[0] * E1[1] - L[1] * E1[0]]; // spin axis
+  // Planet frame: a point at (phi, h) is cos(phi)cos(h) L + cos(phi)sin(h) E1 + sin(phi) A.
+  let phiMin = 9, phiMax = -9, hMin = 9;
+  for (let y = 0; y <= PH; y += 4) for (let x = 0; x <= PW; x += 4) {
+    const px = (x - PCX) / R, py = (y - PCY) / R, rr = px * px + py * py;
+    if (rr >= 1) continue;
+    const pz = Math.sqrt(1 - rr);
+    const phi = Math.asin(px * A[0] + py * A[1] + pz * A[2]);
+    const h = Math.atan2(px * E1[0] + py * E1[1], px * L[0] + py * L[1] + pz * L[2]);
+    phiMin = Math.min(phiMin, phi); phiMax = Math.max(phiMax, phi); hMin = Math.min(hMin, h);
+  }
+  function termX(y) {
+    let prev = null;
+    for (let x = 0; x <= PW * 1.5; x++) {
+      const px = (x - PCX) / R, py = (y - PCY) / R, rr = px * px + py * py;
+      if (rr >= 1) { prev = null; continue; }
+      const se = px * L[0] + py * L[1] + Math.sqrt(1 - rr) * L[2];
+      if (prev !== null && (prev > 0) !== (se > 0)) return x;
+      prev = se;
+    }
+    return null;
+  }
+  const phiAt = (x, y) => {
+    const px = (x - PCX) / R, py = (y - PCY) / R;
+    return Math.asin(px * A[0] + py * A[1] + Math.sqrt(1 - px * px - py * py) * A[2]);
+  };
+
+  // The surface window: longitude from just past the design frame's day
+  // edge to past the last lit peak in the night, latitude from the limb to
+  // just below the frame. The extra margins are where the window's edges
+  // fade out, so a zoomed-out or turned view shows a soft edge, never a cut.
+  const S = 1.25; // texel size, surface px
+  const FADE_DAY = 0.05, FADE_NIGHT = 0.04, FADE_PHI = 0.05;
+  const HA = hMin - 0.03 - FADE_DAY;
+  const HN = Math.PI / 2 + 0.22;
+  const NU = Math.ceil((HN - HA) * R / S), LAM = NU * S / R; // one loop turns the planet by LAM
+  const V0 = (phiMin - 0.01) * R;
+  const PHI_FADE = phiMax + 0.01;
+  const NV = Math.ceil(((PHI_FADE + FADE_PHI) * R - V0) / S);
+  const SIN_PF0 = Math.sin(PHI_FADE), SIN_PF1 = Math.sin(PHI_FADE + FADE_PHI);
+
+  // ---- terrain heightfield (px), periodic in u -----------------------------
+  const r = rng(4021), U = NU * S;
+  const hgt = new Float32Array(NU * NV);
+  const mareN = makeNoise(r, 3, 900, U, 3);
+  const vMare = phiAt(termX(560), 560) * R - V0;
+  const mare = (u, v) => smooth(0.15, 0.55, gauss(v - vMare - 40 * mareN(u, v * 0.3), 150) + 0.25 * mareN(u * 0.7, v));
+  function splat(uc, vc, rad, prof) {
+    const cphi = Math.cos((V0 + vc) / R), ext = rad * 1.7;
+    const iu0 = Math.floor((uc - ext / cphi) / S), iu1 = Math.ceil((uc + ext / cphi) / S);
+    const iv0 = Math.max(0, Math.floor((vc - ext) / S)), iv1 = Math.min(NV - 1, Math.ceil((vc + ext) / S));
+    for (let iv = iv0; iv <= iv1; iv++) {
+      const dv = (iv * S - vc) / rad;
+      for (let iu = iu0; iu <= iu1; iu++) {
+        const du = (iu * S - uc) * cphi / rad, d2 = du * du + dv * dv;
+        if (d2 > 2.9) continue;
+        hgt[iv * NU + ((iu % NU) + NU) % NU] += prof(d2);
+      }
+    }
+  }
+  const crater = (rad, depth, rim, peak) => (d2) => {
+    const d = Math.sqrt(d2), q = (d - 1) / 0.24;
+    return (d < 1 ? depth * (d2 - 1) : 0) + rim * Math.exp(-q * q) + (peak ? peak * Math.exp(-d2 / 0.03) : 0);
+  };
+  const bump = (ht) => (d2) => ht * Math.exp(-d2 * 1.6);
+  const nCr = Math.round(U * NV * S * 0.00035);
+  for (let i = 0; i < nCr; i++) {
+    const u = r() * U, v = r() * NV * S;
+    const rad = 2 * Math.pow(60 / 2, Math.pow(r(), 4));
+    if (mare(u, v) * (rad > 20 ? 0.6 : 0.9) > r()) continue;
+    splat(u, v, rad, crater(rad, rad * (0.32 - 0.12 * Math.min(1, rad / 40)) * (0.7 + 0.6 * r()), rad * 0.14, rad > 21 ? rad * (0.3 + 0.35 * r()) : 0));
+  }
+  for (let i = 0; i < nCr * 12; i++) {
+    const u = r() * U, v = r() * NV * S, rad = 1.2 + 2 * r();
+    if (mare(u, v) * 0.7 > r()) continue;
+    splat(u, v, rad, crater(rad, rad * 0.3, rad * 0.12, 0));
+  }
+  // Mountain ranges spaced around the loop at different heights, and lone
+  // peaks: these are what catch light out in the night.
+  const vs = (dv) => (vMare + dv) / (NV * S);
+  const ranges = [[0.0, vs(-260), vs(-120)], [0.2, vs(140), vs(260)], [0.4, vs(-330), vs(-200)], [0.6, vs(90), vs(-60)], [0.8, vs(220), vs(330)]];
+  for (const [uf, vf0, vf1] of ranges) {
+    for (let i = 0; i < 100; i++) {
+      const t = r(), u = (uf + 0.15 * t) * U + (r() - 0.5) * 36;
+      const v = (vf0 + (vf1 - vf0) * t) * NV * S + (r() - 0.5) * 22 + 30 * Math.sin(t * 5 + uf * 9);
+      splat(u, v, 2 + 4 * r(), bump(5 + 26 * Math.pow(r(), 2.2)));
+    }
+  }
+  const nPeaks = Math.round(650 * (NU * NV) / (1303 * 1373));
+  for (let i = 0; i < nPeaks; i++) splat(r() * U, r() * NV * S, 2 + 3.5 * r(), bump(4 + 18 * Math.pow(r(), 2)));
+
+  // ---- dots: fixed to the surface, each with a fixed random threshold ------
+  // Generated once at Density 2 and dealt into NB random bins, each kept in
+  // scan order (coherent memory and branches). Any density, and Scale's zoom,
+  // which changes how many land per pixel, draws whole bins plus a hashed
+  // share of the next: an even thinning, never a spatial strip.
+  const GAIN = 1.6, C0 = 0.015, CAP = 7, D0 = 0.2, GMAX = 2, NB = 8;
+  const steps = [];
+  for (let d = 2; d < 700; d *= 1.22) steps.push(d);
+  const cosHA = Math.cos(HA);
+  const binOf = (g) => {
+    let x = Math.imul(g ^ 0x2c1b3c6d, 0x297a2d39);
+    x ^= x >>> 15; x = Math.imul(x, 0x5bd1e995); x ^= x >>> 13;
+    return x & (NB - 1);
+  };
+  const cnt = new Uint8Array(NU * NV);
+  const binStart = new Uint32Array(NB);
+  let N = 0;
+  for (let iv = 1; iv < NV - 1; iv++) {
+    const phi = (V0 + iv * S) / R, cphi = Math.cos(phi);
+    const muMax = cphi * cosHA * LZ + Math.sin(phi) * KZ;
+    if (muMax <= 0.002) continue;
+    const de = S * cphi;
+    for (let iu = 0; iu < NU; iu++) {
+      const gE = (hgt[iv * NU + (iu + 1) % NU] - hgt[iv * NU + (iu + NU - 1) % NU]) / (2 * de) * GAIN;
+      const gN = (hgt[(iv + 1) * NU + iu] - hgt[(iv - 1) * NU + iu]) / (2 * S) * GAIN;
+      const nE = -gE / Math.hypot(gE, gN, 1);
+      const bMax = Math.min(CAP, Math.max(1, -nE / C0));
+      const m = D0 * GMAX * bMax * S * S * cphi * muMax;
+      let n = Math.floor(m);
+      if (r() < m - n) n++;
+      cnt[iv * NU + iu] = n;
+      for (let c = 0; c < n; c++) binStart[binOf(N++)]++;
+    }
+  }
+  const binEnd = new Uint32Array(NB);
+  for (let b = 0, s = 0; b < NB; b++) { const c = binStart[b]; binStart[b] = s; s += c; binEnd[b] = s; }
+  const binFirst = Uint32Array.from(binStart);
+  const H0 = new Float32Array(N), C0H = new Float32Array(N), S0H = new Float32Array(N);
+  const CP = new Float32Array(N), SP = new Float32Array(N);
+  const CA = new Float32Array(N), CB = new Float32Array(N), HZ = new Float32Array(N), TH = new Float32Array(N);
+  {
+    let g = 0;
+    for (let iv = 1; iv < NV - 1; iv++) {
+      const phi = (V0 + iv * S) / R, cphi = Math.cos(phi), sphi = Math.sin(phi);
+      const muMax = cphi * cosHA * LZ + sphi * KZ;
+      if (muMax <= 0.002) continue;
+      const de = S * cphi;
+      for (let iu = 0; iu < NU; iu++) {
+        const k = iv * NU + iu, n = cnt[k];
+        if (!n) continue;
+        const h0 = hgt[k];
+        const gE = (hgt[iv * NU + (iu + 1) % NU] - hgt[iv * NU + (iu + NU - 1) % NU]) / (2 * de) * GAIN;
+        const gN = (hgt[k + NU] - hgt[k - NU]) / (2 * S) * GAIN;
+        const nl = Math.hypot(gE, gN, 1), nE = -gE / nl, nN = -gN / nl, nUp = 1 / nl;
+        // Horizon toward the sun (which lies toward -u near the line),
+        // with the planet's curvature.
+        let hz = -1;
+        for (const d of steps) {
+          const j = ((iu - Math.round(d / de)) % NU + NU) % NU;
+          const ang = (hgt[iv * NU + j] - h0) / d - d / (2 * R);
+          if (ang > hz) hz = ang;
+        }
+        const bMax = Math.min(CAP, Math.max(1, -nE / C0));
+        const cb = nUp * cphi - nN * sphi;
+        for (let c = 0; c < n; c++) {
+          const s = binStart[binOf(g++)]++;
+          const p = phi + (r() - 0.5) * S / R;
+          const hh = HA + (iu + r()) * S / R;
+          H0[s] = hh; C0H[s] = Math.cos(hh); S0H[s] = Math.sin(hh);
+          CP[s] = Math.cos(p); SP[s] = Math.sin(p);
+          CA[s] = -nE; CB[s] = cb; HZ[s] = hz;
+          TH[s] = r() * bMax * muMax;
+        }
+      }
+    }
+  }
+
+  // ---- atmosphere: a thin haze on the lit end of the limb -------------------
+  // Dealt in random order like the ground, so a prefix thins it evenly.
+  const atm = (() => {
+    const ra = rng(99), ll = Math.hypot(L[0], L[1]);
+    const t0 = a0 - 0.35, span = a1 - a0 + 0.7;
+    const tries = Math.round(2 * 90000 * span / (a1 - a0 + 0.1));
+    const xs = [], ys = [], as = [];
+    for (let i = 0; i < tries; i++) {
+      const t = t0 + ra() * span, ux = Math.cos(t), uy = Math.sin(t);
+      const h = Math.atan2(ux * E1[0] + uy * E1[1], ux * L[0] + uy * L[1]);
+      const w = smooth(-0.06, 0.7, (ux * L[0] + uy * L[1]) / ll) * smooth(HA, HA + FADE_DAY, h);
+      if (ra() > w) continue;
+      const dr = -3.5 * Math.log(1 - ra() * 0.999) - 1;
+      xs.push(PCX + ux * (R + dr)); ys.push(PCY + uy * (R + dr)); as.push(0.08 * Math.exp(-Math.max(0, dr) / 9));
+    }
+    return { x: Float32Array.from(xs), y: Float32Array.from(ys), a: Float32Array.from(as), n: xs.length };
+  })();
+
+  // cos/sin over every angle the frame needs (longitudes, with Sun and
+  // Motion applied), linearly interpolated: two loads instead of two calls.
+  const T_LO = -0.6, T_HI = 3.2, TN = 8192, T_INV = TN / (T_HI - T_LO);
+  const TCOS = new Float32Array(TN + 2), TSIN = new Float32Array(TN + 2);
+  for (let i = 0; i <= TN + 1; i++) {
+    const a = T_LO + i / T_INV;
+    TCOS[i] = Math.cos(a); TSIN[i] = Math.sin(a);
+  }
+
+  // ---- canvas buffers -------------------------------------------------------
+  let W = 0, H = 0, acc, image, pixels;
+  const glowCanvas = document.createElement('canvas');
+  const glowCtx = glowCanvas.getContext('2d');
+  let gw = 0, gh = 0, gbuf, gtmp, gimage, gpixels;
+  function resize() {
+    canvas.width = Math.max(1, window.innerWidth);
+    canvas.height = Math.max(1, window.innerHeight);
+    W = canvas.width; H = canvas.height;
+    acc = new Float32Array(W * H);
+    image = ctx.createImageData(W, H);
+    pixels = new Uint32Array(image.data.buffer);
+    gw = Math.ceil(W / 4); gh = Math.ceil(H / 4);
+    glowCanvas.width = gw; glowCanvas.height = gh;
+    gbuf = new Float32Array(gw * gh); gtmp = new Float32Array(gw * gh);
+    gimage = glowCtx.createImageData(gw, gh);
+    gpixels = new Uint32Array(gimage.data.buffer);
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  const PRESETS = {
+    whisper: { opacity: 0.6, stroke: 0.7, density: 0.6, sun: 1.3, glow: 0 },
+    ink:     { opacity: 1, stroke: 1.4, density: 1.15, sun: 0.75, saturation: 0, glow: 0 },
+    neon:    { opacity: 0.95, stroke: 1, density: 1.1, saturation: 0.9, glow: 1.1, sun: 0.9 },
+    drift:   { opacity: 0.85, density: 0.85, speed: 0.4, motion: 1.8, phase: 0.6, scale: 1.3, sun: 0.7 },
+    dense:   { opacity: 0.9, stroke: 0.9, density: 2, scale: 1.25, sun: 0.85, angle: 352 },
+  };
+
+  const baked = window.__LF_BAKED_VALUES__;
+  const panel = baked ? null : createControlPanel({
+    pieceId: PIECE_ID,
+    presets: PRESETS,
+    onChange: () => {},
+    extraControls: [
+      // The sun's elevation over the ground, as a multiple of the default:
+      // low rakes the plain and lights more peaks past the line, high
+      // flattens and brightens the lit side. The line itself stays put.
+      { name: 'sun', label: 'Sun', type: 'range', min: 0.5, max: 2, step: 0.01, default: 1, category: 'form' },
+    ],
+    defaults: { hue: 44, hueB: 18, saturation: 0, scale: 1, colorMode: 'gradient', colorA: '#ffbb00', colorB: '#ff4d00' },
+  });
+  const currentValues = baked || panel.values;
+
+  // Light level -> pixel. Bright marks take colour stop A, faint ones B.
+  // max(ground, grey + ink * t), not a blend over the ground, so faint dots
+  // stay neutral grey instead of inheriting its blue cast.
+  const LN = 256;
+  const lut = new Uint32Array(LN + 1);
+  let lutKey = '';
+  function buildLut(values) {
+    const key = `${values.hue},${values.hueB},${values.saturation},${values.colorMode},${values.invert}`;
+    if (key === lutKey) return;
+    lutKey = key;
+    const ground = values.invert ? [242, 242, 244] : [10, 10, 13];
+    for (let i = 0; i <= LN; i++) {
+      const t = i / LN;
+      const stop = paletteHsl(values, 1 - t);
+      const ink = hslToRgb(stop.h, stop.s, values.invert ? 0.12 : 0.88);
+      const c = [0, 1, 2].map((j) => Math.round(values.invert
+        ? ground[j] + (ink[j] - ground[j]) * t
+        : Math.min(255, Math.max(ground[j], 10 + ink[j] * t))));
+      lut[i] = (255 << 24) | (c[2] << 16) | (c[1] << 8) | c[0];
+    }
+  }
+
+  const SWAY = 0.012; // terminator rock per unit of Motion, radians of longitude
+  const LOOP_START = 1; // Phase 0 opens on a large crater wall crossing the line
+  const RELIEF = 0.7; // extra slope contrast on the far, higher-sun plain
+
+  // Shading factors over the flat ground's light `pos`: brightness is the
+  // slope's light normalised by the flat ground's, so slopes flare only near
+  // the line, with a little extra slope contrast where the sun is high.
+  // b = (lit * G1 - pos * G2) / (pos + C0)
+  const PT = 255;
+  const G1 = new Float32Array(PT + 1), G2 = new Float32Array(PT + 1);
+  for (let i = 0; i <= PT; i++) {
+    const pos = i / PT, rel = RELIEF * smooth(0.1, 0.4, pos), lift = 0.6 + 0.4 * smooth(0, 0.5, pos);
+    G1[i] = (1 + rel) * lift; G2[i] = rel * lift;
+  }
+
+  // Dot footprint: a box of side ds px, area-weighted onto the pixels
+  // (side 1 is a bilinear splat). Returns false off the canvas.
+  function splat2(buf, w, h, x, y, ds, a) {
+    const x0 = x - ds / 2, y0 = y - ds / 2, ix = Math.floor(x0), iy = Math.floor(y0);
+    if (ix < 0 || iy < 0 || ix + 1 >= w || iy + 1 >= h) return false;
+    const wx0 = Math.min(ix + 1 - x0, ds), wx1 = ds - wx0;
+    const wy0 = Math.min(iy + 1 - y0, ds) * a, wy1 = ds * a - wy0;
+    const k = iy * w + ix;
+    buf[k] += wx0 * wy0; buf[k + 1] += wx1 * wy0; buf[k + w] += wx0 * wy1; buf[k + w + 1] += wx1 * wy1;
+    return true;
+  }
+  function splat3(buf, w, h, x, y, ds, a) {
+    const x0 = x - ds / 2, y0 = y - ds / 2, ix = Math.floor(x0), iy = Math.floor(y0);
+    if (ix < 0 || iy < 0 || ix + 2 >= w || iy + 2 >= h) return false;
+    const wx0 = ix + 1 - x0, rx = ds - wx0, wx1 = Math.min(1, rx), wx2 = rx - wx1;
+    const wy0 = iy + 1 - y0, ry = ds - wy0, wy1 = Math.min(1, ry), wy2 = ry - wy1;
+    let k = iy * w + ix, c = wy0 * a;
+    buf[k] += wx0 * c; buf[k + 1] += wx1 * c; buf[k + 2] += wx2 * c;
+    k += w; c = wy1 * a;
+    buf[k] += wx0 * c; buf[k + 1] += wx1 * c; buf[k + 2] += wx2 * c;
+    k += w; c = wy2 * a;
+    buf[k] += wx0 * c; buf[k + 1] += wx1 * c; buf[k + 2] += wx2 * c;
+    return true;
+  }
+
+  // One frame of light at time `time` into acc. With `collect`, also lists
+  // every dot drawn (screen x, y, weight) for SVG export. The two dot loops
+  // live in their own functions so each is optimised on its own.
+  function render(time, values, collect) {
+    acc.fill(0);
+    // Design frame -> canvas: cover fit, Scale's zoom and Angle's turn,
+    // all about the frame's centre.
+    const z = (0.5 + 0.5 * values.scale) * Math.max(W / PW, H / PH);
+    const th = values.angle * Math.PI / 180;
+    const m00 = z * Math.cos(th), m01 = -z * Math.sin(th), m10 = z * Math.sin(th), m11 = z * Math.cos(th);
+    const ds = 0.55 + 0.45 * values.stroke; // dot side, px
+    const view = {
+      m00, m01, m10, m11,
+      ox: W / 2 - (m00 * PW / 2 + m01 * PH / 2), oy: H / 2 - (m10 * PW / 2 + m11 * PH / 2),
+      // Dots per screen pixel follow density / zoom^2; past what was
+      // generated, the weight per dot makes up the rest. A dot's light grows
+      // with its side, not its area, so fine dots don't vanish.
+      share: Math.min(1, values.density * z * z / GMAX),
+      comp: Math.max(1, values.density * z * z / GMAX) / ds,
+      ds,
+    };
+    drawAtmosphere(view, collect && collect.atm);
+    // The planet turns by D; Phase is an offset into the loop. Motion rocks
+    // the sun (and so the line) a little about its rest position, three
+    // times per loop. Sun scales every point's angle from the line.
+    const tt = time + (values.phase + LOOP_START) * PERIOD / 2;
+    const D = ((tt / PERIOD) % 1 + 1) % 1 * LAM;
+    const dl = values.motion * SWAY * Math.sin(2 * Math.PI * 3 * tt / PERIOD);
+    drawGround(view, D, dl, values.sun, collect && collect.ground);
+  }
+
+  // Atmosphere: already in random order, so a prefix thins it evenly.
+  function drawAtmosphere(view, out) {
+    const { m00, m01, m10, m11, ox, oy, ds, comp } = view;
+    const buf = acc, w = W, h = H, xs = atm.x, ys = atm.y, as = atm.a;
+    const na = Math.round(atm.n * view.share);
+    for (let i = 0; i < na; i++) {
+      const x = xs[i], y = ys[i];
+      const X = ox + m00 * x + m01 * y, Y = oy + m10 * x + m11 * y;
+      const a = as[i] * comp;
+      const ok = ds <= 1 ? splat2(buf, w, h, X, Y, ds, a) : splat3(buf, w, h, X, Y, ds, a);
+      if (ok && out) out.push(X, Y, a);
+    }
+  }
+
+  // Ground: one call per bin (the last one hashed down to its share), so the
+  // loop's function is called often enough to be optimised on entry rather
+  // than only mid-loop.
+  function drawGround(view, D, dl, k, out) {
+    const s = view.share * NB;
+    for (let b = 0; b < NB && b < s; b++) groundSpan(view, D, dl, k, out, binFirst[b], binEnd[b], Math.min(1, s - b));
+  }
+
+  function groundSpan(view, D, dl, k, out, from, to, keep) {
+    const { m00, m01, m10, m11, ox, oy, ds, comp } = view;
+    const buf = acc, w = W, h = H;
+    const partial = keep < 1, keepLim = keep * 4294967296;
+    // Rotations for the turn (and the turn less one period, for the dots
+    // that have wrapped), and for Motion's rock of the light.
+    const cD = Math.cos(D), sD = Math.sin(D), cDw = Math.cos(D - LAM), sDw = Math.sin(D - LAM);
+    const unit = k === 1, cdl = Math.cos(dl), sdl = Math.sin(dl);
+    const hl0 = Math.PI / 2 * (1 - k) - k * dl; // light angle = hl0 + k * longitude
+    const lift = 0.8 * Math.max(0, k - 1); // a higher sun also brightens the far plain
+    const Lx = L[0], Ly = L[1], Ex = E1[0], Ey = E1[1], Ax = A[0], Ay = A[1];
+    const HAF = HA + FADE_DAY, HNF = HN - FADE_NIGHT;
+    const h0s = H0, c0s = C0H, s0s = S0H, cps = CP, sps = SP, cas = CA, cbs = CB, hzs = HZ, ths = TH;
+    const tc = TCOS, ts = TSIN, g1 = G1, g2 = G2;
+    const ha = HA, lam = LAM, sinPf0 = SIN_PF0, big = ds > 1, xMax = w - 3, yMax = h - 3;
+
+    for (let i = from; i < to; i++) {
+      if (partial) {
+        let x = Math.imul(i ^ 0x5f3759df, 0x2c1b3c6d); x ^= x >>> 12; x = Math.imul(x, 0x297a2d39); x ^= x >>> 15;
+        if ((x >>> 0) >= keepLim) continue;
+      }
+      // Dawn: the ground moves from the night toward the day.
+      const c0 = c0s[i], s0 = s0s[i];
+      let lon = h0s[i] - D, ch, sh;
+      if (lon < ha) { lon += lam; ch = c0 * cDw + s0 * sDw; sh = s0 * cDw - c0 * sDw; }
+      else { ch = c0 * cD + s0 * sD; sh = s0 * cD - c0 * sD; }
+      let chl, shl;
+      if (unit) { chl = ch * cdl + sh * sdl; shl = sh * cdl - ch * sdl; }
+      else {
+        const ti = (hl0 + k * lon - T_LO) * T_INV, j = ti | 0, f = ti - j;
+        chl = tc[j] + (tc[j + 1] - tc[j]) * f; shl = ts[j] + (ts[j + 1] - ts[j]) * f;
+      }
+      const cp = cps[i], se = cp * chl;
+      if (se < hzs[i] || se < -0.22) continue; // in shadow or deep night
+      const lit = cas[i] * shl + cbs[i] * chl;
+      if (lit <= 0) continue;
+      const sp = sps[i];
+      let lim = cp * ch * LZ + sp * KZ; // foreshortening
+      if (lim <= 0) continue;
+      const x = PCX + R * (cp * (ch * Lx + sh * Ex) + sp * Ax), y = PCY + R * (cp * (ch * Ly + sh * Ey) + sp * Ay);
+      const X = ox + m00 * x + m01 * y, Y = oy + m10 * x + m11 * y;
+      if (X < 0 || Y < 0 || X >= xMax || Y >= yMax) continue;
+      let b;
+      if (se > 0) { const pi = se * PT | 0; b = (lit * g1[pi] - se * g2[pi]) / (se + C0); } else b = lit * 0.6 / C0;
+      if (b > CAP) b = CAP;
+      lim *= b;
+      if (lon < HAF) lim *= smooth(ha, HAF, lon);
+      else if (lon > HNF) lim *= 1 - smooth(HNF, HN, lon);
+      if (sp > sinPf0) lim *= 1 - smooth(SIN_PF0, SIN_PF1, sp);
+      if (ths[i] > lim) continue;
+      const a = (se < 0 ? 0.5 : (0.11 + 0.035 * b) * (1 + lift * smooth(0.1, 0.5, se))) * comp;
+      const ok = big ? splat3(buf, w, h, X, Y, ds, a) : splat2(buf, w, h, X, Y, ds, a);
+      if (ok && out) out.push(X, Y, a);
+    }
+  }
+
+  // Bloom: a quarter-resolution copy of the light, box-blurred twice, drawn
+  // back over the frame with drawImage under 'lighter'. Each loop is its own
+  // function so each is optimised on its own.
+  const GLOW_R = 3;
+  function downsample(src, dst, w, h, dw) {
+    dst.fill(0);
+    for (let y = 0; y < h; y++) {
+      const row = y * w, drow = (y >> 2) * dw;
+      for (let x = 0; x < w; x++) dst[drow + (x >> 2)] += src[row + x];
+    }
+  }
+  function boxBlur(buf, tmp, bw, bh, r) {
+    for (let y = 0; y < bh; y++) {
+      const row = y * bw;
+      let s = 0;
+      for (let x = -r; x < bw; x++) {
+        if (x + r < bw) s += buf[row + x + r];
+        if (x - r - 1 >= 0) s -= buf[row + x - r - 1];
+        if (x >= 0) tmp[row + x] = s;
+      }
+    }
+    for (let x = 0; x < bw; x++) {
+      let s = 0;
+      for (let y = -r; y < bh; y++) {
+        if (y + r < bh) s += tmp[(y + r) * bw + x];
+        if (y - r - 1 >= 0) s -= tmp[(y - r - 1) * bw + x];
+        if (y >= 0) buf[y * bw + x] = s;
+      }
+    }
+  }
+  function glowPixels(buf, out, norm, ir, ig, ib) {
+    for (let i = 0, n = buf.length; i < n; i++) {
+      const v = Math.min(1, buf[i] * norm);
+      out[i] = (255 << 24) | (Math.round(ib * v) << 16) | (Math.round(ig * v) << 8) | Math.round(ir * v);
+    }
+  }
+  function drawGlow(values) {
+    downsample(acc, gbuf, W, H, gw);
+    boxBlur(gbuf, gtmp, gw, gh, GLOW_R);
+    boxBlur(gbuf, gtmp, gw, gh, GLOW_R);
+    const stop = paletteHsl(values, 0);
+    const [ir, ig, ib] = hslToRgb(stop.h, stop.s, 0.6);
+    glowPixels(gbuf, gpixels, values.glow * values.opacity * 2.5 / (16 * (2 * GLOW_R + 1) ** 4), ir, ig, ib);
+    glowCtx.putImageData(gimage, 0, 0);
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.imageSmoothingEnabled = true;
+    ctx.drawImage(glowCanvas, 0, 0, gw * 4, gh * 4);
+    ctx.globalCompositeOperation = 'source-over';
+  }
+
+  // Light -> pixels through the LUT, in slices: a function called several
+  // times a frame is optimised on entry, not only mid-loop.
+  function toPixels(src, dst, table, gain) {
+    const n = src.length, step = Math.ceil(n / 8);
+    for (let a = 0; a < n; a += step) pixelSpan(src, dst, table, gain, a, Math.min(n, a + step));
+  }
+  function pixelSpan(src, dst, table, gain, from, to) {
+    const ground = table[0];
+    for (let i = from; i < to; i++) {
+      const v = src[i];
+      if (v <= 0) { dst[i] = ground; continue; }
+      const j = v * gain | 0;
+      dst[i] = table[j > LN ? LN : j];
+    }
+  }
+
+  let clock = 0;
+  function drawFrame(dt, elapsed, values) {
+    clock += dt * values.speed;
+    if (canvas.width !== W || canvas.height !== H) resize();
+    render(clock, values, null);
+    buildLut(values);
+    toPixels(acc, pixels, lut, values.opacity * LN * 1.06);
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.putImageData(image, 0, 0);
+    if (values.glow > 0 && !values.invert) drawGlow(values);
+  }
+
+  const loop = createLoop({
+    onFrame(dt, elapsed) {
+      drawFrame(dt, elapsed, currentValues);
+    },
+  });
+  loop.start();
+
+  function svgCircles(values) {
+    const got = { ground: [], atm: [] };
+    render(clock, values, got);
+    buildLut(values);
+    const ds = 0.55 + 0.45 * values.stroke;
+    const out = [];
+    const take = (list, cap) => {
+      const n = list.length / 3, stride = Math.max(1, Math.ceil(n / cap));
+      for (let i = 0; i < n; i += stride) {
+        const a = Math.min(1, list[i * 3 + 2] * values.opacity * 1.06);
+        const px = lut[Math.min(LN, Math.round(a * LN))];
+        const fill = `rgb(${px & 255},${(px >> 8) & 255},${(px >> 16) & 255})`;
+        out.push({ cx: list[i * 3], cy: list[i * 3 + 1], r: ds / 2, fill, opacity: 1 });
+      }
+    };
+    take(got.ground, 20000);
+    take(got.atm, 3000);
+    return out;
+  }
+
+  document.getElementById('btn-png-2x')?.addEventListener('click', () => exportPng(canvas, { multiplier: 2 }));
+  document.getElementById('btn-png-4x')?.addEventListener('click', () => exportPng(canvas, { multiplier: 4 }));
+  document.getElementById('btn-svg')?.addEventListener('click', () => exportSvg([], { width: canvas.width, height: canvas.height, circles: svgCircles(currentValues) }));
+  document.getElementById('btn-baked')?.addEventListener('click', () => {
+    bakeHtml({ sourceHtml: document.documentElement.outerHTML, values: panel.values }).catch((err) => console.error('bakeHtml failed', err));
+  });
+  document.getElementById('btn-source')?.addEventListener('click', () => {
+    exportSource().catch((err) => console.error('exportSource failed', err));
+  });
+  document.getElementById('btn-prompt')?.addEventListener('click', () => {
+    describeForAI({ pieceName: PIECE_ID, values: panel.values });
+  });
+</script></body></html>

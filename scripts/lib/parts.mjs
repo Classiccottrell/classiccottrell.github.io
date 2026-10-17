@@ -26,9 +26,17 @@ export const tblock = (rows, cls = '') => h`
 
 export const projectMeta = (p) => h`${esc(p.kind)} · ${p.year} · ${status(p.status)}`;
 
+// Where a project's picture goes: its first product link (anything that isn't
+// a code repository), else its case study.
+export const productOf = (p) => {
+  const l = p.links.find((x) => !/^https?:\/\/(www\.)?github\.com\//.test(x.url));
+  return l ? { href: l.url, ext: true } : { href: `/work/${p.slug}/`, ext: false };
+};
+
 // An index row linking to a case study. `pic` adds the data the cut preview needs.
 export const idxRow = (p, { pic = false, heading = 'h3' } = {}) => {
-  const data = pic && p.plate ? h` data-src="${esc(p.plate.src)}"` : '';
+  const to = productOf(p);
+  const data = pic && p.plate ? h` data-src="${esc(p.plate.src)}" data-href="${esc(to.href)}"${to.ext ? ' data-ext' : ''}` : '';
   return h`<li><a class="idx-row" href="/work/${esc(p.slug)}/"${data}><span class="n">${pad2(p.number)}</span><${heading} class="t">${inline(p.title)}</${heading}><span class="d">${inline(p.summary)}</span><span class="m">${projectMeta(p)}</span></a></li>`;
 };
 
@@ -50,9 +58,10 @@ export const plate = (pl, { label = 'Fig. 1', lazy = false } = {}) => {
 };
 
 // Pencils, then inks: the pencil layer sits under the ink, which a mask reveals.
-export const inking = ({ ink, pencil, width, height, alt, caption, dur = 2000, cls = '', lazy = false }) => h`
+// `signature` ({ d, viewBox }) is signed on once the ink is down, in the corner.
+export const inking = ({ ink, pencil, width, height, alt, caption, dur = 2000, cls = '', lazy = false, signature = null }) => h`
 <figure class="${cls}" data-inking data-dur="${dur}">
-  <div class="inking">${img({ src: pencil, width, height, alt: '', cls: 'pen', lazy })}${img({ src: ink, width, height, alt, cls: 'ink', lazy })}</div>
+  <div class="inking">${img({ src: pencil, width, height, alt: '', cls: 'pen', lazy })}${img({ src: ink, width, height, alt, cls: 'ink', lazy })}${signature ? h`<svg class="sig" viewBox="${esc(signature.viewBox)}" aria-hidden="true" focusable="false"><path d="${esc(signature.d)}" pathLength="1"/></svg>` : ''}</div>
   ${caption ? h`<figcaption class="note cap">${inline(caption)}</figcaption>` : ''}
 </figure>`;
 
@@ -137,5 +146,5 @@ export const exploded = (rules) => h`
 
 // A linefield piece running behind an ink band. Decorative: hidden from
 // assistive tech, never focusable, paused off screen by site.js.
-export const linefield = (piece, title) =>
-  h`<iframe class="band-art" src="/assets/linefield/${esc(piece)}.html" title="${esc(title)}" loading="lazy" tabindex="-1" aria-hidden="true"></iframe>`;
+export const linefield = (piece, title, cls = '') =>
+  h`<iframe class="band-art${cls ? ' ' + cls : ''}" data-piece="${esc(piece)}" src="/assets/linefield/${esc(piece)}.html" title="${esc(title)}" loading="lazy" tabindex="-1" aria-hidden="true"></iframe>`;

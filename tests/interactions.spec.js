@@ -1,6 +1,6 @@
 // The optional layer: each interactive piece does what it says.
 import { expect, test } from '@playwright/test';
-import { takes } from './helpers.js';
+import { takes, work } from './helpers.js';
 
 test('hot takes rotate on demand and pause', async ({ page }) => {
   await page.goto('/');
@@ -95,10 +95,10 @@ test('typing terry brings Terry', async ({ page }) => {
 test('linefield runs in its band and holds still off screen', async ({ page }) => {
   await page.goto('/');
   await page.locator('.stage').scrollIntoViewIfNeeded();
-  const frame = page.frameLocator('.stage .band-art');
+  const frame = page.frameLocator('.stage .band-art.on');
   await expect(frame.locator('canvas')).toBeAttached();
   await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
-  await expect.poll(() => page.locator('.stage .band-art').evaluate((f) => f.contentDocument.hidden)).toBe(true);
+  await expect.poll(() => page.locator('.stage .band-art.on').evaluate((f) => f.contentDocument.hidden)).toBe(true);
 });
 
 test('Terry Time’s footer runs live on its case study', async ({ page }) => {
@@ -127,4 +127,64 @@ test('only the Terry Time page loads the Terry script', async ({ page }) => {
   await page.goto('/work/linefield/');
   await expect(page.locator('script[src^="/assets/js/terry-symbols.js"]')).toHaveCount(0);
   await expect(page.locator('.live-band iframe.band-art')).toHaveCount(1);
+});
+
+test('the work picture opens the product, or the case study when there isn’t one', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto('/');
+  const link = page.locator('.sel-link');
+  const w = (slug) => work.find((p) => p.slug === slug);
+  await page.locator('[data-cut] .idx-row', { hasText: w('linefield').title }).hover();
+  await expect(link).toHaveAttribute('href', w('linefield').links[0].url);
+  await expect(link).toHaveAttribute('target', '_blank');
+  await expect(link).toHaveAttribute('rel', 'noopener');
+  await page.locator('[data-cut] .idx-row', { hasText: w('agent-bench').title }).hover();
+  await expect(link).toHaveAttribute('href', '/work/agent-bench/');
+  await expect(link).not.toHaveAttribute('target', /.*/);
+});
+
+test('the portrait is signed once the ink is down, and is already signed with reduced motion', async ({ page }) => {
+  await page.goto('/');
+  const fig = page.locator('.hero-fig');
+  await expect(fig).toHaveClass(/sig-wait/);
+  await expect(fig).not.toHaveClass(/sig-wait/, { timeout: 8000 });
+  await expect.poll(() => fig.locator('.sig path').evaluate((p) => getComputedStyle(p).strokeDashoffset), { timeout: 8000 }).toBe('0px');
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.reload();
+  await expect(page.locator('.hero-fig')).not.toHaveClass(/sig-wait/);
+  expect(await page.locator('.hero-fig .sig path').evaluate((p) => getComputedStyle(p).strokeDashoffset)).toBe('0px');
+});
+
+test('take it apart follows the page scroll, and the slider moves the page', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto('/');
+  const run = page.locator('[data-xv-run]');
+  const at = (frac) => run.evaluate((el, f) => {
+    const dock = el.querySelector('.xv-dock'), top = parseFloat(getComputedStyle(dock).top);
+    const span = el.offsetHeight - dock.offsetHeight;
+    window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - top + span * f);
+  }, frac);
+  await at(0.5);
+  await expect(page.locator('#explode')).toHaveValue('50');
+  await expect(page.locator('output[for="explode"]')).toHaveText('50%');
+  await at(0.9);
+  await expect(page.locator('#explode')).toHaveValue('90');
+  const y = await page.evaluate(() => window.scrollY);
+  await page.locator('#explode').fill('20');
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeLessThan(y);
+  await expect(page.locator('#explode')).toHaveValue('20');
+});
+
+test('each hot take brings its own linefield piece, one running at a time', async ({ page }) => {
+  await page.goto('/');
+  const stage = page.locator('[data-stage]');
+  await stage.scrollIntoViewIfNeeded();
+  const on = stage.locator('.stage-art .band-art.on');
+  await expect(on).toHaveAttribute('data-piece', 'grain-field');
+  await stage.locator('[data-stage-next]').click();
+  await expect(on).toHaveAttribute('data-piece', 'terminator');
+  await stage.locator('[data-stage-next]').click();
+  await expect(on).toHaveAttribute('data-piece', 'dark-nebula');
+  await expect(stage.locator('.stage-art .band-art.on')).toHaveCount(1);
+  await expect.poll(() => stage.locator('.stage-art .band-art:not(.on)').evaluateAll((fs) => fs.every((f) => f.contentDocument.hidden === true))).toBe(true);
 });

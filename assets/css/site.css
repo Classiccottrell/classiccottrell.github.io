@@ -163,6 +163,9 @@ a.avail:hover{background:var(--highlight)}
 .plate{display:grid;gap:22px var(--gap);margin-top:clamp(36px,5vw,64px)}
 @media (min-width:900px){.plate.has-legend{grid-template-columns:minmax(0,8fr) minmax(0,4fr)}.plate .cap{grid-column:1/-1;margin-top:0}}
 [data-inking]{--inked:107}
+.inking .sig{position:absolute;right:5%;bottom:4%;width:38%;height:auto;overflow:visible;fill:none;stroke:var(--proof);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+.sig path{stroke-dasharray:1 2;stroke-dashoffset:0;transition:stroke-dashoffset 2.2s cubic-bezier(.45,0,.3,1)}
+.sig-wait .sig path{stroke-dashoffset:1;transition:none}
 .inking{position:relative;background:var(--sheet)}
 .inking img{width:100%}
 .inking .ink{position:absolute;inset:0;-webkit-mask-image:linear-gradient(180deg,#000 calc(var(--inked) * 1% - 6%),transparent calc(var(--inked) * 1% + 6%));mask-image:linear-gradient(180deg,#000 calc(var(--inked) * 1% - 6%),transparent calc(var(--inked) * 1% + 6%))}
@@ -189,6 +192,10 @@ a.avail:hover{background:var(--highlight)}
 .sel{display:grid;gap:24px}
 .sel-pic{display:none}
 .sel-pic img{aspect-ratio:4/3;object-fit:cover;object-position:top;width:100%}
+.sel-link{display:block;position:relative;cursor:pointer}
+.sel-link::after{content:"Open \2197";position:absolute;right:0;bottom:0;padding:5px 9px;background:var(--fg);color:var(--ground);font:500 .7rem/1 var(--f-pencil);letter-spacing:.06em;text-transform:uppercase;opacity:0;transition:opacity .15s}
+.sel-link:hover::after,.sel-link:focus-visible::after{opacity:1}
+.sel-link:hover{outline:2px solid var(--proof);outline-offset:-2px}
 @media (min-width:900px){.sel{grid-template-columns:minmax(0,7fr) minmax(0,5fr);align-items:start}.sel-pic{display:block;position:sticky;top:calc(var(--mast) + 24px)}}
 .band{position:relative;background:var(--band);color:var(--band-fg);overflow:hidden}
 .band-art{position:absolute;inset:0;width:100%;height:100%;border:0;pointer-events:none;display:block}
@@ -200,7 +207,10 @@ a.avail:hover{background:var(--highlight)}
 .stage-t a:hover{text-decoration:underline;text-decoration-thickness:3px;text-decoration-color:var(--proof)}
 .stage-ctl{display:flex;gap:10px 24px;align-items:center;flex-wrap:wrap}
 .stage-btns{display:flex;gap:6px}
-@media (max-width:639px){.stage .band-art{top:auto;height:45%}.stage-in{min-height:600px}}
+.stage-art{position:absolute;top:0;right:0;bottom:0;width:60%;-webkit-mask-image:linear-gradient(90deg,transparent,#000 38%);mask-image:linear-gradient(90deg,transparent,#000 38%)}
+.stage-art .band-art{opacity:0;transition:opacity .9s ease}
+.stage-art .band-art.on{opacity:1}
+@media (max-width:639px){.stage-art{top:auto;width:100%;height:45%;-webkit-mask-image:linear-gradient(180deg,transparent,#000 40%);mask-image:linear-gradient(180deg,transparent,#000 40%)}.stage-in{min-height:600px}}
 .draw-band{margin-top:clamp(72px,9vw,128px)}
 .band-grid{display:grid;gap:var(--gap);align-items:center;padding-block:clamp(28px,4vw,56px)}
 .band-grid .h2{margin:12px 0 18px;max-width:18ch}
@@ -220,7 +230,18 @@ a.avail:hover{background:var(--highlight)}
 
 /* ---------- take it apart */
 .xv-wrap{display:grid;gap:clamp(20px,3vw,36px);align-items:center}
-@media (min-width:980px){.xv-wrap{grid-template-columns:minmax(0,4fr) minmax(0,8fr)}}
+@media (min-width:980px){.xv-wrap{grid-template-columns:minmax(0,4fr) minmax(0,8fr);align-items:start}}
+/* Scroll runs the slider: the dock (figure and controls) pins while the run's
+   extra height scrolls past. Without JS none of this applies and the layers sit apart. */
+.xv-dock .xv{width:min(100%,calc((100svh - var(--mast) - 130px) * 4 / 3));min-width:min(100%,300px);margin-inline:auto}
+.xv-dock .ink-ctl{margin-top:12px}
+.js .xv-run::after{content:"";display:block;height:var(--xv-run,80svh)}
+.js .xv-dock{position:sticky;top:var(--mast);z-index:2;background:var(--ground);margin-inline:calc(var(--gx) * -1);padding:8px var(--gx) 10px;border-bottom:1px solid var(--pencil)}
+@media (min-width:980px){
+  .js .xv-text{position:sticky;top:calc(var(--mast) + 20px)}
+  .js .xv-dock{top:calc(var(--mast) + 20px);margin:0;padding:0;border:0;background:none}
+}
+@media (max-height:520px){.js .xv-dock{position:static}.js .xv-run::after{display:none}}
 .xv-text .h2{margin:10px 0 14px}
 .ink-ctl{display:flex;align-items:center;gap:12px;margin-top:20px;flex-wrap:wrap}
 .ink-ctl input[type=range]{flex:1 1 140px;min-width:0;accent-color:var(--proof)}
@@ -401,7 +422,7 @@ a.avail:hover{background:var(--highlight)}
   .guide-step::before{left:-18px}
 }
 @media (prefers-reduced-motion:reduce){
-  .xv-lab .xv-layer,.xv-lab .xv-layer::before,.xv-lab .xv-tag,.lab-svg *,.guide-step::before{transition:none}
+  .xv-lab .xv-layer,.xv-lab .xv-layer::before,.xv-lab .xv-tag,.lab-svg *,.guide-step::before,.stage-art .band-art,.sig path{transition:none}
 }
 
 /* ---------- work and case studies */

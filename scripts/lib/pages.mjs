@@ -4,12 +4,16 @@ import { esc, h, inline, link, pad2, plain } from './html.mjs';
 import { page } from './layout.mjs';
 import {
   arrow, avail, btn, essay, exploded, heat, idxRow, img, inking, linefield, mark, pageHead, plate,
-  projectMeta, receipts, rule, status, takeItem, tblock,
+  productOf, projectMeta, receipts, rule, status, takeItem, tblock,
 } from './parts.mjs';
 
 const GROUPS = ['Products', 'Agents', 'Systems', 'Tools', 'Client work'];
 const takeOf = (ctx, id) => ctx.takes.find((t) => t.id === id);
 const live = (takes) => takes.filter((t) => !t.retired);
+// The hot takes band shows one linefield piece per take, in this order (take n gets piece n mod 5).
+const STAGE_ART = [
+  ['grain-field', 'Grain Field'], ['terminator', 'Terminator'], ['dark-nebula', 'Dark Nebula'], ['infall', 'Infall'], ['longwave', 'Longwave'],
+];
 const drawingSrcset = (d) => `${d.image.replace('.webp', '-700.webp')} 700w, ${d.image} 1100w`;
 
 // ---------------------------------------------------------------- home
@@ -19,7 +23,7 @@ export function home(ctx) {
   const takes = live(ctx.takes);
   const first = takes[0];
   const kurtz = drawings.drawings.find((d) => d.slug === 'kurtz');
-  const stageData = JSON.stringify(takes.map((t) => ({ id: t.id, heat: t.heat, text: plain(t.text), href: `/takes/${t.slug}/`, src: `Receipts · ${t.sources.map((s) => s.label).join(', ')}` })))
+  const stageData = JSON.stringify(takes.map((t, i) => ({ id: t.id, art: STAGE_ART[i % STAGE_ART.length][0], heat: t.heat, text: plain(t.text), href: `/takes/${t.slug}/`, src: `Receipts · ${t.sources.map((s) => s.label).join(', ')}` })))
     .replace(/</g, '\\u003c');
   const main = h`
 <section class="hero wrap" aria-labelledby="hero-h">
@@ -39,31 +43,35 @@ export function home(ctx) {
   <div class="sec-head"><h2 class="note" id="sel-h">Selected work</h2><a class="note" href="/work/">All ${work.length} projects ${arrow}</a></div>
   <div class="sel">
     <ol class="idx" data-cut="sel-pic">${featured.map((p) => idxRow(p, { pic: true }))}</ol>
-    <div class="sel-pic panel crop" aria-hidden="true">${img({ src: featured[0].plate.src, width: featured[0].plate.width, height: featured[0].plate.height, alt: '' })}</div>
+    <div class="sel-pic panel crop" aria-hidden="true"><a class="sel-link" href="${esc(productOf(featured[0]).href)}"${productOf(featured[0]).ext ? ' target="_blank" rel="noopener"' : ''} tabindex="-1">${img({ src: featured[0].plate.src, width: featured[0].plate.width, height: featured[0].plate.height, alt: '' })}</a></div>
   </div>
 </section>
 
-<section class="wrap sec" aria-labelledby="xv-h">
+<section class="wrap sec xv-sec" aria-labelledby="xv-h">
   <div class="xv-wrap">
     <div class="xv-text">
       <p class="note">The job</p>
       <h2 class="h2" id="xv-h">Take it apart.</h2>
       <p>Drag the slider. A sample service-desk screen comes apart into the five layers I design, from the words on top to the rules underneath. Most fixes live a layer or two below where the problem shows.</p>
-      <div class="ink-ctl" data-js>
-        <label class="note" for="explode">Apart</label>
-        <input type="range" id="explode" min="0" max="100" value="0">
-        <output for="explode">0%</output>
-        <button type="button" class="tool" id="explode-btn">Take it apart</button>
-      </div>
       <p class="note xv-legend">05 Content · 04 Components · 03 Layout · 02 Tokens · 01 Rules</p>
       <p class="note cap">A sample screen. On a real project, it’s yours.</p>
     </div>
-    ${exploded(['R-02', 'R-04', 'R-05', 'R-07', 'R-09'].map((id) => rules.find((r) => r.id === id)))}
+    <div class="xv-run" data-xv-run>
+      <div class="xv-dock">
+        ${exploded(['R-02', 'R-04', 'R-05', 'R-07', 'R-09'].map((id) => rules.find((r) => r.id === id)))}
+        <div class="ink-ctl" data-js>
+          <label class="note" for="explode">Apart</label>
+          <input type="range" id="explode" min="0" max="100" value="0">
+          <output for="explode">0%</output>
+          <button type="button" class="tool" id="explode-btn">Take it apart</button>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
 <section class="band stage" aria-labelledby="stage-h" data-stage>
-  ${linefield('grain-field', 'Grain Field, a linefield piece, drifting behind the take')}
+  <div class="stage-art" aria-hidden="true">${linefield(STAGE_ART[0][0], `${STAGE_ART[0][1]}, a linefield piece, drifting beside the take`, 'on')}</div>
   <div class="wrap stage-in">
     <div>
       <h2 class="note" id="stage-h">Hot takes</h2>
@@ -446,7 +454,7 @@ ${pageHead({ kicker: 'Colophon', title: 'Colophon', lede: 'How this site is made
 
 <section class="wrap sec" aria-labelledby="credits-h"><div class="prose">
   <h2 class="h2" id="credits-h">Credits</h2>
-  <p>Familjen Grotesk, Newsreader and Red Hat Mono are used under the SIL Open Font License and served from this site. Run the checks uses <a href="https://github.com/dequelabs/axe-core">axe-core</a> under the Mozilla Public License 2.0. The ink band runs Grain Field from ${link('/work/linefield/', 'linefield')}, which is MIT licensed. Terry drew himself, and he has ${link('/work/terry-time/', 'a shop')}.</p>
+  <p>Familjen Grotesk, Newsreader and Red Hat Mono are used under the SIL Open Font License and served from this site. Run the checks uses <a href="https://github.com/dequelabs/axe-core">axe-core</a> under the Mozilla Public License 2.0. The ink band runs Grain Field, Terminator, Dark Nebula, Infall and Longwave from ${link('/work/linefield/', 'linefield')}, which is MIT licensed. Terry drew himself, and he has ${link('/work/terry-time/', 'a shop')}.</p>
   <p>The source is on ${link('https://github.com/Classiccottrell/classiccottrell.github.io', 'GitHub')}. The previous version of the site is kept on the <code>v1-classic</code> branch.</p>
 </div></section>`;
   return page(ctx, { path: '/colophon/', title: 'Colophon', description: 'How this site is made, what it’s made of, and a button that checks it.', card: 'colophon', main });

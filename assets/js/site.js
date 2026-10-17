@@ -125,7 +125,7 @@
       if (t0 === null) t0 = t;
       var p = Math.min(1, (t - t0) / dur), e = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
       setInk(fig, e * 100);
-      if (p < 1) fig._raf = requestAnimationFrame(step);
+      if (p < 1) fig._raf = requestAnimationFrame(step); else fig.classList.remove('sig-wait');
     };
     setInk(fig, 0); fig._raf = requestAnimationFrame(step);
   }
@@ -133,16 +133,23 @@
     var inkIO = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) { if (en.isIntersecting) { inkIO.unobserve(en.target); runInk(en.target); } });
     }, { threshold: 0.35 });
-    $$('[data-inking]').forEach(function (fig) { inkIO.observe(fig); });
+    // The signature waits (CSS hides its stroke) until the ink is down, then draws itself.
+    $$('[data-inking]').forEach(function (fig) { if ($('.sig', fig)) fig.classList.add('sig-wait'); inkIO.observe(fig); });
   }
 
   // ------------------------------------------------------------ the cut: pictures change in the same frame
   $$('[data-cut]').forEach(function (list) {
     var pic = $('.' + list.getAttribute('data-cut') + ' img'); if (!pic) return;
-    var rows = $$('[data-src]', list);
+    var rows = $$('[data-src]', list), go = $('.' + list.getAttribute('data-cut') + ' a');
     rows.forEach(function (row, i) {
       new Image().src = row.getAttribute('data-src');
-      var show = function () { pic.src = row.getAttribute('data-src'); rows.forEach(function (x) { x.classList.toggle('on', x === row); }); };
+      var show = function () {
+        pic.src = row.getAttribute('data-src');
+        if (go && row.getAttribute('data-href')) {
+          go.href = row.getAttribute('data-href');
+          if (row.hasAttribute('data-ext')) { go.target = '_blank'; go.rel = 'noopener'; } else { go.removeAttribute('target'); go.removeAttribute('rel'); }
+        }
+        rows.forEach(function (x) { x.classList.toggle('on', x === row); }); };
       row.addEventListener('mouseenter', show); row.addEventListener('focus', show);
       if (i === 0) row.classList.add('on');
     });
@@ -152,8 +159,10 @@
   // One implementation for every exploded view on the site: the home page's
   // service-desk screen (#xv) and the Terry guide's seven layers (#lab-xv).
   // Needs .xv-layer (each with an .xv-pin), optional .xv-tag leaders, a range
-  // input, an <output for=range> and an optional button.
-  function explode(xv, xr, xb) {
+  // input, an <output for=range> and an optional button. With scrollRun
+  // ({ run, dock }) the page scroll drives the slider too: while the sticky dock
+  // is pinned inside the run, scroll position and slider are one value, both ways.
+  function explode(xv, xr, xb, scrollRun) {
     var xo = $('output[for="' + xr.id + '"]'), tags = $$('.xv-tag', xv), pins = {};
     $$('.xv-layer', xv).forEach(function (l) { pins[l.getAttribute('data-l')] = $('.xv-pin', l); });
     xr.setAttribute('aria-valuetext', Math.round(+xr.value) + ' percent apart');
@@ -186,10 +195,44 @@
       };
       xv._raf = requestAnimationFrame(st);
     };
-    xr.addEventListener('input', function () { if (xv._raf) cancelAnimationFrame(xv._raf); setX(+xr.value); });
-    if (xb) xb.addEventListener('click', function () { animX(+xr.value > 50 ? 0 : 100); });
+    // Where the pinned dock sits in its run: top is where it pins, span how far it can travel.
+    var lock = 0, sraf = 0;
+    var geo = function () {
+      if (!scrollRun) return null;
+      var cs = getComputedStyle(scrollRun.dock), top = parseFloat(cs.top), r = scrollRun.run.getBoundingClientRect();
+      var span = r.height - scrollRun.dock.offsetHeight;
+      if (cs.position !== 'sticky' || !(top >= 0) || span < 40) return null;
+      return { top: top, rel: r.top, span: span };
+    };
+    var jump = function (g, v) { window.scrollTo(0, window.scrollY + g.rel - g.top + g.span * v / 100); };
+    xr.addEventListener('input', function () {
+      if (xv._raf) cancelAnimationFrame(xv._raf);
+      var v = +xr.value, g = geo();
+      setX(v); lock = Date.now() + 300;
+      // Drag moves the page only while the dock is pinned, so the slider stays under the pointer.
+      if (g) { var p = (g.top - g.rel) / g.span; if (p > -0.01 && p < 1.01) jump(g, v); }
+    });
+    if (xb) xb.addEventListener('click', function () {
+      var to = +xr.value > 50 ? 0 : 100, g = geo();
+      if (!g) { animX(to); return; }
+      if (xv._raf) cancelAnimationFrame(xv._raf);
+      lock = 0;
+      var y = window.scrollY + g.rel - g.top + g.span * to / 100;
+      window.scrollTo({ top: y, behavior: reduce.matches ? 'auto' : 'smooth' });
+    });
+    var follow = function () {
+      sraf = 0;
+      var g = geo(); if (!g || Date.now() < lock) return;
+      setX(Math.min(1, Math.max(0, (g.top - g.rel) / g.span)) * 100);
+    };
+    if (scrollRun) {
+      var queue = function () { if (!sraf) sraf = requestAnimationFrame(follow); };
+      window.addEventListener('scroll', queue, { passive: true });
+      window.addEventListener('resize', queue);
+      queue();
+    }
     if (window.ResizeObserver) new ResizeObserver(placeTags).observe(xv);
-    if ('IntersectionObserver' in window) {
+    if (!scrollRun && 'IntersectionObserver' in window) {
       var xio = new IntersectionObserver(function (es) {
         es.forEach(function (en) { if (en.isIntersecting) { xio.disconnect(); setTimeout(function () { animX(100); }, 250); } });
       }, { threshold: 0.45 });
@@ -198,7 +241,7 @@
     return { setX: setX, animX: animX };
   }
   var xv = $('#xv'), xr = $('#explode');
-  if (xv && xr) explode(xv, xr, $('#explode-btn'));
+  if (xv && xr) explode(xv, xr, $('#explode-btn'), $('[data-xv-run]') ? { run: $('[data-xv-run]'), dock: $('.xv-dock') } : null);
 
   // ------------------------------------------------------------ the lab: the guide's layers follow the reader
   // As each step of the Terry guide crosses a line near the top of the page,
@@ -298,13 +341,52 @@
     });
   });
 
+  // ------------------------------------------------------------ linefield pieces: still off screen, under reduced motion and when not the one showing
+  function artFrame(frame) {
+    var visible = false, loaded = false, pool = frame.closest('.stage-art');
+    var desc = Object.getOwnPropertyDescriptor(Document.prototype, 'hidden');
+    var sync = frame._sync = function () {
+      var d; try { d = frame.contentDocument; } catch (e) { return; }
+      if (!d || !loaded) return;
+      var force = !visible || reduce.matches || (pool && !frame.classList.contains('on'));
+      try {
+        Object.defineProperty(d, 'hidden', { configurable: true, get: function () { return force || (desc ? desc.get.call(d) : false); } });
+        d.dispatchEvent(new Event('visibilitychange'));
+      } catch (e) {}
+    };
+    frame.addEventListener('load', function () { loaded = true; setTimeout(sync, reduce.matches ? 400 : 0); });
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { visible = es[0].isIntersecting; sync(); }).observe(frame);
+    else visible = true;
+  }
+  $$('.band-art').forEach(artFrame);
+
   // ------------------------------------------------------------ hot takes, one at a time
   var stage = $('[data-stage]'), data = $('#takes-data');
   if (stage && data) {
     var takes = JSON.parse(data.textContent), idx = 0, timer = 0, playing = !reduce.matches, hold = false;
     var sN = $('[data-stage-n]', stage), sText = $('[data-stage-text]', stage), sSrc = $('[data-stage-src]', stage), sHeat = $('[data-stage-heat]', stage), sPlay = $('[data-stage-play]', stage);
+    // One linefield piece per take, on the right: the one showing runs, the rest wait, and each loads only once the band has been seen.
+    var art = $('.stage-art', stage), seen = false;
+    var frameFor = function (name) {
+      var f = $('[data-piece="' + name + '"]', art);
+      if (!f) {
+        f = document.createElement('iframe'); f.className = 'band-art'; f.setAttribute('data-piece', name);
+        f.src = '/assets/linefield/' + name + '.html'; f.title = name + ', a linefield piece, drifting beside the take';
+        f.tabIndex = -1; f.setAttribute('aria-hidden', 'true'); art.appendChild(f); artFrame(f);
+      }
+      return f;
+    };
+    var paintArt = function () {
+      if (!art || !seen) return;
+      var on = frameFor(takes[idx].art); frameFor(takes[(idx + 1) % takes.length].art);
+      $$('.band-art', art).forEach(function (f) { f.classList.toggle('on', f === on); if (f._sync) f._sync(); });
+    };
+    if (art && 'IntersectionObserver' in window) {
+      new IntersectionObserver(function (es) { if (es[0].isIntersecting && !seen) { seen = true; paintArt(); } }).observe(stage);
+    }
     var show = function (i) {
       idx = (i + takes.length) % takes.length; var t = takes[idx];
+      paintArt();
       sN.textContent = t.id; sText.textContent = t.text; sText.href = t.href; sSrc.textContent = t.src;
       sHeat.innerHTML = '<span class="heat" role="img" aria-label="Heat ' + t.heat + ' of 3">' + [1, 2, 3].map(function (n) { return '<i' + (n <= t.heat ? ' class="f"' : '') + '></i>'; }).join('') + '</span>';
     };
@@ -319,24 +401,6 @@
     stage.addEventListener('focusout', function () { hold = false; schedule(); });
     paintPlay(); schedule();
   }
-
-  // ------------------------------------------------------------ linefield pieces: still off screen and under reduced motion
-  $$('.band-art').forEach(function (frame) {
-    var visible = false, loaded = false;
-    var desc = Object.getOwnPropertyDescriptor(Document.prototype, 'hidden');
-    var sync = function () {
-      var d; try { d = frame.contentDocument; } catch (e) { return; }
-      if (!d || !loaded) return;
-      var force = !visible || reduce.matches;
-      try {
-        Object.defineProperty(d, 'hidden', { configurable: true, get: function () { return force || (desc ? desc.get.call(d) : false); } });
-        d.dispatchEvent(new Event('visibilitychange'));
-      } catch (e) {}
-    };
-    frame.addEventListener('load', function () { loaded = true; setTimeout(sync, reduce.matches ? 400 : 0); });
-    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { visible = es[0].isIntersecting; sync(); }).observe(frame);
-    else visible = true;
-  });
 
   // ------------------------------------------------------------ the pencil cursor on the home title card
   var trail = $('.hero .trail');

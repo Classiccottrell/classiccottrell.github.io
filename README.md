@@ -11,8 +11,8 @@ Every page is generated from the JSON files in `data/` by a small Node build
 (`scripts/build.mjs`) and committed. GitHub Pages and Netlify serve the repo
 exactly as it is, with no build step on the host. There is no framework and no
 bundler, and every page reads with JavaScript turned off. `assets/js/site.js`
-only adds the optional layer: the pencil cursor, take it apart (on the home page and,
-with scroll sync, on the Terry guide), prompt copy buttons, hot takes,
+only adds the optional layer: the pencil cursor, the portrait's signature, take it apart (on the home page,
+where page scroll and the slider are one control, and on the Terry guide, whose layers follow the step being read), prompt copy buttons, hot takes,
 the brief's work order, Pencils (redline) mode and Run the checks.
 
 ```
@@ -32,7 +32,7 @@ assets/
   fonts/              Familjen Grotesk, Newsreader, Red Hat Mono (OFL)
   img/                images the site serves (made by npm run images)
   cards/              share cards, 1200 × 630 (made by npm run cards)
-  linefield/          the baked linefield piece in the ink band (made by the build)
+  linefield/          the baked linefield pieces in the ink band, one per hot take (made by the build)
   vendor/axe.min.js   axe-core for Run the checks (copied by the build)
 source/               originals: drawings, screenshots, covers, the portrait, Terry, linefield
 scripts/              build, images, cards, contact sheet, contrast check, local server
@@ -84,6 +84,12 @@ already installed, set `PW_CHROMIUM=/path/to/chrome`.
   list of `scripts/build.mjs` (nested under its case study, so no `guide.html` can hide it).
   Add the path to `GUIDE`/`PAGES`/`CARDS` in `tests/helpers.js`, the contact sheet and
   `scripts/cards.mjs`. Outside links (the Substack post) live in the data file's `sources`.
+- **The signature:** `portrait.signature` in `data/site.json` (`d` is one SVG path, `viewBox` its box).
+  The path there is a hand-drawn placeholder; trace the real signature and paste its path in. It draws
+  itself in the portrait's corner once the ink is down, and sits fully drawn with no JS or reduced motion.
+- **Hot-take pieces:** `STAGE_ART` in `scripts/lib/pages.mjs` lists the linefield pieces in the order the
+  takes use them (take n gets piece n mod 5). A new piece is a baked export from linefield's `downloads/`
+  copied into `source/linefield/` (the build bakes the reduced-motion hold in), then added to that list.
 - **The Terry exploded view:** the seven sheets are inline SVG in `scripts/lib/lab.mjs`;
   `assets/js/site.js` ("the lab") lifts the sheet for the step being read. The plate for
   its case study is a screenshot composed into `source/work/terry-home-lab.png`; redo it
@@ -117,5 +123,5 @@ already installed, set `PW_CHROMIUM=/path/to/chrome`.
 ## Credits
 
 Fonts under the SIL Open Font License (`assets/fonts/OFL-*.txt`). axe-core
-under the Mozilla Public License 2.0. Grain Field is from
+under the Mozilla Public License 2.0. Grain Field, Terminator, Dark Nebula, Infall and Longwave are from
 [linefield](https://github.com/Classiccottrell/linefield) (MIT). Terry drew himself.

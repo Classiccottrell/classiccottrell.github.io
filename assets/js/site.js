@@ -137,24 +137,6 @@
     $$('[data-inking]').forEach(function (fig) { if ($('.sig', fig)) fig.classList.add('sig-wait'); inkIO.observe(fig); });
   }
 
-  // ------------------------------------------------------------ the cut: pictures change in the same frame
-  $$('[data-cut]').forEach(function (list) {
-    var pic = $('.' + list.getAttribute('data-cut') + ' img'); if (!pic) return;
-    var rows = $$('[data-src]', list), go = $('.' + list.getAttribute('data-cut') + ' a');
-    rows.forEach(function (row, i) {
-      new Image().src = row.getAttribute('data-src');
-      var show = function () {
-        pic.src = row.getAttribute('data-src');
-        if (go && row.getAttribute('data-href')) {
-          go.href = row.getAttribute('data-href');
-          if (row.hasAttribute('data-ext')) { go.target = '_blank'; go.rel = 'noopener'; } else { go.removeAttribute('target'); go.removeAttribute('rel'); }
-        }
-        rows.forEach(function (x) { x.classList.toggle('on', x === row); }); };
-      row.addEventListener('mouseenter', show); row.addEventListener('focus', show);
-      if (i === 0) row.classList.add('on');
-    });
-  });
-
   // ------------------------------------------------------------ take it apart
   // One implementation for every exploded view on the site: the home page's
   // service-desk screen (#xv) and the Terry guide's seven layers (#lab-xv).
@@ -162,6 +144,8 @@
   // input, an <output for=range> and an optional button. With scrollRun
   // ({ run, dock }) the page scroll drives the slider too: while the sticky dock
   // is pinned inside the run, scroll position and slider are one value, both ways.
+  // With scrollRun the slider rests at START (a screen already coming apart, never an empty one) and scroll covers START to 100.
+  var START = 35;
   function explode(xv, xr, xb, scrollRun) {
     var xo = $('output[for="' + xr.id + '"]'), tags = $$('.xv-tag', xv), pins = {};
     $$('.xv-layer', xv).forEach(function (l) { pins[l.getAttribute('data-l')] = $('.xv-pin', l); });
@@ -204,7 +188,8 @@
       if (cs.position !== 'sticky' || !(top >= 0) || span < 40) return null;
       return { top: top, rel: r.top, span: span };
     };
-    var jump = function (g, v) { window.scrollTo(0, window.scrollY + g.rel - g.top + g.span * v / 100); };
+    var frac = function (v) { return Math.min(1, Math.max(0, (v - START) / (100 - START))); };
+    var jump = function (g, v) { window.scrollTo(0, window.scrollY + g.rel - g.top + g.span * frac(v)); };
     xr.addEventListener('input', function () {
       if (xv._raf) cancelAnimationFrame(xv._raf);
       var v = +xr.value, g = geo();
@@ -213,23 +198,25 @@
       if (g) { var p = (g.top - g.rel) / g.span; if (p > -0.01 && p < 1.01) jump(g, v); }
     });
     if (xb) xb.addEventListener('click', function () {
-      var to = +xr.value > 50 ? 0 : 100, g = geo();
+      var to = +xr.value > 50 ? (scrollRun ? START : 0) : 100, g = geo();
       if (!g) { animX(to); return; }
       if (xv._raf) cancelAnimationFrame(xv._raf);
       lock = 0;
-      var y = window.scrollY + g.rel - g.top + g.span * to / 100;
+      var y = window.scrollY + g.rel - g.top + g.span * frac(to);
       window.scrollTo({ top: y, behavior: reduce.matches ? 'auto' : 'smooth' });
+      // The dock can change height as the label changes, so the scroll geometry may land a hair short: settle on the value asked for.
+      setTimeout(function () { if (!xv._raf) { setX(to); lock = Date.now() + 200; } }, reduce.matches ? 80 : 1300);
     });
     var follow = function () {
       sraf = 0;
       var g = geo(); if (!g || Date.now() < lock) return;
-      setX(Math.min(1, Math.max(0, (g.top - g.rel) / g.span)) * 100);
+      setX(START + (100 - START) * Math.min(1, Math.max(0, (g.top - g.rel) / g.span)));
     };
     if (scrollRun) {
       var queue = function () { if (!sraf) sraf = requestAnimationFrame(follow); };
       window.addEventListener('scroll', queue, { passive: true });
       window.addEventListener('resize', queue);
-      queue();
+      setX(START); queue();
     }
     if (window.ResizeObserver) new ResizeObserver(placeTags).observe(xv);
     if (!scrollRun && 'IntersectionObserver' in window) {
@@ -364,7 +351,7 @@
   var stage = $('[data-stage]'), data = $('#takes-data');
   if (stage && data) {
     var takes = JSON.parse(data.textContent), idx = 0, timer = 0, playing = !reduce.matches, hold = false;
-    var sN = $('[data-stage-n]', stage), sText = $('[data-stage-text]', stage), sSrc = $('[data-stage-src]', stage), sHeat = $('[data-stage-heat]', stage), sPlay = $('[data-stage-play]', stage);
+    var sN = $('[data-stage-n]', stage), sText = $('[data-stage-text]', stage), sSrc = $('[data-stage-src]', stage), sHeat = $('[data-stage-heat]', stage), sPlay = $('[data-stage-play]', stage), sCap = $('[data-stage-cap]', stage);
     // One linefield piece per take, on the right: the one showing runs, the rest wait, and each loads only once the band has been seen.
     var art = $('.stage-art', stage), seen = false;
     var frameFor = function (name) {
@@ -387,7 +374,7 @@
     var show = function (i) {
       idx = (i + takes.length) % takes.length; var t = takes[idx];
       paintArt();
-      sN.textContent = t.id; sText.textContent = t.text; sText.href = t.href; sSrc.textContent = t.src;
+      sN.textContent = t.id; if (sCap) sCap.textContent = 'Behind it: ' + t.piece + ', from linefield'; sText.textContent = t.text; sText.href = t.href; sSrc.textContent = t.src;
       sHeat.innerHTML = '<span class="heat" role="img" aria-label="Heat ' + t.heat + ' of 3">' + [1, 2, 3].map(function (n) { return '<i' + (n <= t.heat ? ' class="f"' : '') + '></i>'; }).join('') + '</span>';
     };
     var schedule = function () { clearTimeout(timer); if (playing && !hold) timer = setTimeout(function () { show(idx + 1); schedule(); }, 7000); };
@@ -400,37 +387,6 @@
     stage.addEventListener('focusin', function () { hold = true; clearTimeout(timer); });
     stage.addEventListener('focusout', function () { hold = false; schedule(); });
     paintPlay(); schedule();
-  }
-
-  // ------------------------------------------------------------ the pencil cursor on the home title card
-  var trail = $('.hero .trail');
-  if (trail && trail.getContext) {
-    var tctx = trail.getContext('2d'), pts = [], traf = 0, W = 0, H = 0, LIFE = 1400;
-    var size = function () {
-      var dpr = Math.min(2, window.devicePixelRatio || 1), r = trail.getBoundingClientRect();
-      W = r.width; H = r.height; trail.width = Math.max(1, Math.round(W * dpr)); trail.height = Math.max(1, Math.round(H * dpr)); tctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    };
-    size(); if (window.ResizeObserver) new ResizeObserver(size).observe(trail);
-    var draw = function (now) {
-      traf = 0; tctx.clearRect(0, 0, W, H);
-      while (pts.length && now - pts[0].t > LIFE) pts.shift();
-      if (pts.length < 2) return;
-      tctx.strokeStyle = cssVar('--pencil') || '#A4DDED'; tctx.lineCap = 'round'; tctx.lineJoin = 'round';
-      for (var pass = 0; pass < 2; pass++) {
-        for (var i = 1; i < pts.length; i++) {
-          var a = pts[i - 1], b = pts[i], age = (now - b.t) / LIFE;
-          tctx.globalAlpha = Math.max(0, 1 - age) * (pass ? 0.45 : 0.95); tctx.lineWidth = pass ? 1 : 1.7;
-          tctx.beginPath(); tctx.moveTo(a.x + pass * 3, a.y + pass * 2); tctx.lineTo(b.x + pass * 3, b.y + pass * 2); tctx.stroke();
-        }
-      }
-      tctx.globalAlpha = 1; traf = requestAnimationFrame(draw);
-    };
-    trail.parentElement.addEventListener('pointermove', function (e) {
-      if (e.pointerType !== 'mouse' || reduce.matches) return;
-      var r = trail.getBoundingClientRect(); pts.push({ x: e.clientX - r.left, y: e.clientY - r.top, t: performance.now() });
-      if (pts.length > 180) pts.shift();
-      if (!traf) traf = requestAnimationFrame(draw);
-    });
   }
 
   // ------------------------------------------------------------ the brief: a work order that writes itself
@@ -452,6 +408,7 @@
       field('team').textContent = val('team') || 'Not chosen yet';
       field('broken').textContent = val('broken') || 'Tell me what’s broken. One sentence is enough.';
       var no = number(); $('[data-wo-no]', wo).textContent = no; orderField.value = no;
+      $$('[data-wo-s]').forEach(function (el) { var k = el.getAttribute('data-wo-s'); el.textContent = k === 'no' ? no : k === 'from' ? field('from').textContent : field(k).textContent; });
     };
     var orderText = function () {
       return ['WORK ORDER ' + orderField.value, 'From: ' + [val('name'), val('company')].filter(Boolean).join(', '), 'Email: ' + val('email'),
@@ -459,6 +416,8 @@
     };
     var pick = function (kind) { $$('input[name="kind"]', form).forEach(function (r) { r.checked = r.value === kind; }); update(); };
     form.addEventListener('input', update); form.addEventListener('change', update);
+    // The open work-order strip is tall: close it when a field takes focus so it never covers what is being typed.
+    form.addEventListener('focusin', function () { var st = $('.wo-strip'); if (st && st.open) st.open = false; });
     $$('[data-kind]').forEach(function (b) {
       b.addEventListener('click', function (e) {
         e.preventDefault(); pick(b.getAttribute('data-kind'));

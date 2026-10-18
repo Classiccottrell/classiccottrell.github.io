@@ -39,7 +39,7 @@ const block = (css, start) => {
 };
 const vars = (text) => Object.fromEntries([...text.matchAll(/--([\w-]+):\s*(#[0-9a-fA-F]{6})/g)].map((m) => [m[1], m[2].toUpperCase()]));
 
-// Text pairs: [label, foreground token, background token].
+// Pairs: [label, foreground token, background token, minimum ratio (default 4.5), polarity (default both)].
 const PAIRS = [
   ['Body text', 'fg', 'ground'],
   ['Secondary text', 'muted', 'ground'],
@@ -57,20 +57,26 @@ const PAIRS = [
   ['Notes on highlight', 'proof', 'highlight'],
   ['Dimmed layer text', 'dim', 'ground'],
   ['Dimmed text on highlight', 'dim', 'highlight'],
+  // Signal is a field, never text: only ink sits on it. The home masthead and signature stay ink in both schemes.
+  ['Ink on signal', 'slab-ink', 'signal'],
+  ['Text on mat', 'fg', 'mat'],
+  ['Secondary on mat', 'muted', 'mat'],
+  ['Notes on mat', 'proof', 'mat'],
+  ['Focus ring on signal', 'proof', 'signal', 3, 'light'],
 ];
 
 export function checkContrast() {
   const css = readFileSync(path.join(ROOT, 'assets/css/site.css'), 'utf8');
   const light = vars(block(css, ':root{'));
   const dark = { ...light, ...vars(block(css, '@media (prefers-color-scheme:dark){')) };
-  const run = (tokens) => PAIRS.map(([name, fg, bg]) => {
+  const run = (tokens, mode) => PAIRS.filter((p) => !p[4] || p[4] === mode).map(([name, fg, bg, min = 4.5]) => {
     if (!tokens[fg] || !tokens[bg]) throw new Error(`check-contrast: missing token --${tokens[fg] ? bg : fg}`);
-    return { name, fg: tokens[fg], bg: tokens[bg], ratio: ratio(tokens[fg], tokens[bg]) };
+    return { name, fg: tokens[fg], bg: tokens[bg], min, ratio: ratio(tokens[fg], tokens[bg]) };
   });
-  const result = { light: run(light), dark: run(dark) };
+  const result = { light: run(light, 'light'), dark: run(dark, 'dark') };
   result.all = [...result.light, ...result.dark];
-  result.min = Math.min(...result.all.map((p) => p.ratio));
-  result.failures = result.all.filter((p) => p.ratio < 4.5);
+  result.min = Math.min(...result.all.filter((p) => p.min === 4.5).map((p) => p.ratio));
+  result.failures = result.all.filter((p) => p.ratio < p.min);
   return result;
 }
 
@@ -78,10 +84,10 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
   const r = checkContrast();
   for (const [mode, list] of [['Bristol (light)', r.light], ['Ink (dark)', r.dark]]) {
     console.log(mode);
-    for (const p of list) console.log(`  ${p.ratio >= 4.5 ? '✓' : '✗'} ${p.name.padEnd(18)} ${p.fg} on ${p.bg}  ${p.ratio.toFixed(2)}:1`);
+    for (const p of list) console.log(`  ${p.ratio >= p.min ? '✓' : '✗'} ${p.name.padEnd(18)} ${p.fg} on ${p.bg}  ${p.ratio.toFixed(2)}:1`);
   }
   if (r.failures.length) {
-    console.error(`check-contrast: ${r.failures.length} pair(s) below 4.5:1`);
+    console.error(`check-contrast: ${r.failures.length} pair(s) below their minimum`);
     process.exit(1);
   }
   console.log(`check-contrast: ${r.all.length} pairs pass, lowest ${r.min.toFixed(2)}:1`);

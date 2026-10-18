@@ -23,46 +23,43 @@ export function home(ctx) {
   const takes = live(ctx.takes);
   const first = takes[0];
   const kurtz = drawings.drawings.find((d) => d.slug === 'kurtz');
-  const stageData = JSON.stringify(takes.map((t, i) => ({ id: t.id, art: STAGE_ART[i % STAGE_ART.length][0], heat: t.heat, text: plain(t.text), href: `/takes/${t.slug}/`, src: `Receipts · ${t.sources.map((s) => s.label).join(', ')}` })))
+  const stageData = JSON.stringify(takes.map((t, i) => ({ id: t.id, art: STAGE_ART[i % STAGE_ART.length][0], piece: STAGE_ART[i % STAGE_ART.length][1], heat: t.heat, text: plain(t.text), href: `/takes/${t.slug}/`, src: `Receipts · ${t.sources.map((s) => s.label).join(', ')}` })))
     .replace(/</g, '\\u003c');
+  const pick = featured.slice(0, 3);
   const main = h`
-<section class="hero wrap" aria-labelledby="hero-h">
-  <canvas class="trail" aria-hidden="true"></canvas>
-  <div class="g12 hero-in">
-    <div class="hero-text">
-      <p class="note">${esc(site.kicker)}</p>
-      <h1 class="hero-h" id="hero-h">${esc(site.headline)}</h1>
-      <p class="lede">${esc(site.standfirst)}</p>
-      <p class="ctas">${btn('/work-with-me/', 'Work with me')}<a class="lnk" href="/work/">See the work</a></p>
-    </div>
-    ${inking({ ...site.portrait, cls: 'hero-fig', caption: site.portrait.caption, dur: 2200 })}
+<section class="hero" aria-labelledby="hero-h">
+  <div class="hero-copy">
+    <h1 class="hero-h" id="hero-h">${inline(site.headline)}</h1>
+    <a class="go" href="#selected">Selected work <span aria-hidden="true">↓</span></a>
   </div>
+  ${inking({ ...site.portrait, cls: 'hero-fig', caption: null, dur: 2200, solo: true })}
 </section>
 
-<section class="wrap sec" aria-labelledby="sel-h">
-  <div class="sec-head"><h2 class="note" id="sel-h">Selected work</h2><a class="note" href="/work/">All ${work.length} projects ${arrow}</a></div>
-  <div class="sel">
-    <ol class="idx" data-cut="sel-pic">${featured.map((p) => idxRow(p, { pic: true }))}</ol>
-    <div class="sel-pic panel crop" aria-hidden="true"><a class="sel-link" href="${esc(productOf(featured[0]).href)}"${productOf(featured[0]).ext ? ' target="_blank" rel="noopener"' : ''} tabindex="-1">${img({ src: featured[0].plate.src, width: featured[0].plate.width, height: featured[0].plate.height, alt: '' })}</a></div>
-  </div>
+<section class="wrap sel" id="selected" aria-labelledby="sel-h">
+  <div class="sel-head"><h2 class="note" id="sel-h">Selected work</h2><a class="note" href="/work/">All ${work.length} projects ${arrow}</a></div>
+  <ol class="sel-list">${pick.map((p) => {
+    const to = productOf(p);
+    return h`<li><a class="item" href="${esc(to.href)}"${to.ext ? ' target="_blank" rel="noopener"' : ''}>
+      <div class="pic">${img({ src: p.plate.src, width: p.plate.width, height: p.plate.height, alt: '' })}</div>
+      <div class="cap"><h3>${inline(p.title)}</h3><p>${inline(p.summary)}</p><span class="arr" aria-hidden="true">${to.ext ? '↗' : '→'}</span></div>
+    </a></li>`;
+  })}</ol>
 </section>
 
 <section class="wrap sec xv-sec" aria-labelledby="xv-h">
   <div class="xv-wrap">
     <div class="xv-text">
-      <p class="note">The job</p>
       <h2 class="h2" id="xv-h">Take it apart.</h2>
-      <p>Drag the slider. A sample service-desk screen comes apart into the five layers I design, from the words on top to the rules underneath. Most fixes live a layer or two below where the problem shows.</p>
-      <p class="note xv-legend">05 Content · 04 Components · 03 Layout · 02 Tokens · 01 Rules</p>
-      <p class="note cap">A sample screen. On a real project, it’s yours.</p>
+      <p>A sample service-desk screen, in the five layers I design.<span data-js> Scroll, or drag the slider.</span></p>
     </div>
     <div class="xv-run" data-xv-run>
       <div class="xv-dock">
         ${exploded(['R-02', 'R-04', 'R-05', 'R-07', 'R-09'].map((id) => rules.find((r) => r.id === id)))}
+        <p class="note xv-legend">05 Content · 04 Components · 03 Layout · 02 Tokens · 01 Rules</p>
         <div class="ink-ctl" data-js>
           <label class="note" for="explode">Apart</label>
-          <input type="range" id="explode" min="0" max="100" value="0">
-          <output for="explode">0%</output>
+          <input type="range" id="explode" min="0" max="100" value="35">
+          <output for="explode">35%</output>
           <button type="button" class="tool" id="explode-btn">Take it apart</button>
         </div>
       </div>
@@ -70,18 +67,18 @@ export function home(ctx) {
   </div>
 </section>
 
-<section class="band stage" aria-labelledby="stage-h" data-stage>
+<section class="band stage" aria-label="Hot takes" data-stage>
   <div class="stage-art" aria-hidden="true">${linefield(STAGE_ART[0][0], `${STAGE_ART[0][1]}, a linefield piece, drifting beside the take`, 'on')}</div>
   <div class="wrap stage-in">
     <div>
-      <h2 class="note" id="stage-h">Hot takes</h2>
-      <p class="stage-n note"><span data-stage-n>${esc(first.id)}</span><span data-stage-heat>${heat(first.heat)}</span></p>
-      <p class="stage-t"><a href="/takes/${esc(first.slug)}/" data-stage-text>${inline(first.text)}</a></p>
+      <p class="stage-n note"><span>Hot takes</span><span data-stage-n>${esc(first.id)}</span><span data-stage-heat>${heat(first.heat)}</span></p>
+      <h2 class="stage-t"><a href="/takes/${esc(first.slug)}/" data-stage-text>${inline(first.text)}</a></h2>
       <p class="note" data-stage-src>Receipts · ${esc(first.sources.map((s) => s.label).join(', '))}</p>
     </div>
     <div class="stage-ctl">
       <span class="stage-btns" data-js><button type="button" class="tool" data-stage-prev>← Prev</button><button type="button" class="tool" data-stage-play>Pause</button><button type="button" class="tool" data-stage-next>Next →</button></span>
       <a class="lnk" href="/takes/">All ${takes.length} takes</a>
+      <span class="note stage-cap" data-stage-cap>Behind it: ${esc(STAGE_ART[0][1])}, from linefield</span>
     </div>
   </div>
   <script type="application/json" id="takes-data">${stageData}</script>
@@ -89,7 +86,7 @@ export function home(ctx) {
 
 <section class="wrap sec" aria-labelledby="rules-h">
   <div class="sec-head"><h2 class="note" id="rules-h">How I work</h2><a class="note" href="/about/#rules">All ${rules.length} rules ${arrow}</a></div>
-  <ol class="rules">${['R-02', 'R-03', 'R-05'].map((id) => rule(rules.find((r) => r.id === id)))}</ol>
+  <ol class="rules short">${['R-02', 'R-03', 'R-05'].map((id) => rule(rules.find((r) => r.id === id)))}</ol>
 </section>
 
 <section class="band draw-band" aria-labelledby="draw-h">
@@ -97,8 +94,6 @@ export function home(ctx) {
     <div>
       <h2 class="note" id="draw-h">Drawings</h2>
       <p class="h2">${esc(drawings.intro.split('.')[0])}.</p>
-      <blockquote class="quote"><p>“${esc(kurtz.quote.split('. But')[0])}.”</p></blockquote>
-      <p class="note">${esc(kurtz.character)} · ${esc(kurtz.film)} · ${kurtz.year}</p>
       <p class="band-link"><a class="lnk" href="/drawings/">See the drawings</a></p>
     </div>
     ${img({ src: kurtz.image, srcset: drawingSrcset(kurtz), sizes: '(min-width: 760px) 40vw, 100vw', width: kurtz.width, height: kurtz.height, alt: kurtz.alt, cls: 'screen' })}
@@ -110,8 +105,8 @@ export function home(ctx) {
   <ol class="essays">${writing.essays.map((e) => essay(e))}</ol>
 </section>`;
   return page(ctx, {
-    path: '/', card: 'home', main,
-    head: h`<script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@type': 'Person', name: site.name, jobTitle: 'Product designer', url: site.url, sameAs: site.social.map((s) => s.url) })}</script>`,
+    path: '/', card: 'home', bodyClass: 'home', main,
+    head: h`<script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@type': 'Person', name: site.name, jobTitle: 'Product designer', description: plain(site.description), url: site.url, sameAs: site.social.map((s) => s.url) })}</script>`,
   });
 }
 
@@ -270,6 +265,10 @@ ${pageHead({ kicker: 'Work with me', title: esc(H.headline), lede: esc(H.standfi
 </section>
 
 <section class="wrap sec" id="brief" aria-labelledby="brief-h">
+  <details class="wo-strip" data-js>
+    <summary><span class="note">Work order</span><span class="wo-line"><b data-wo-s="no">CC-2026-100</b> · <span data-wo-s="kind">${esc(H.brief.kinds[0])}</span> · <span data-wo-s="when">${esc(H.brief.when[1])}</span></span></summary>
+    <dl class="wo-more"><div><dt>From</dt><dd data-wo-s="from">Your name, your company</dd></div><div><dt>Team</dt><dd data-wo-s="team">${esc(H.brief.team[1])}</dd></div><div><dt>What’s broken</dt><dd data-wo-s="broken">Tell me what’s broken. One sentence is enough.</dd></div></dl>
+  </details>
   <div class="g12 brief">
     <div class="s6">
       <h2 class="h2" id="brief-h">The brief</h2>
@@ -312,7 +311,7 @@ ${pageHead({ kicker: 'Work with me', title: esc(H.headline), lede: esc(H.standfi
   <ol class="steps">${H.steps.map((s) => h`<li>${inline(s)}</li>`)}</ol>
   <p class="sub-intro">Rather talk first? ${link(site.contact.url, `Message me on ${site.contact.label}`)}.</p>
 </section>`;
-  return page(ctx, { path: '/work-with-me/', title: 'Work with me', description: `${H.headline} ${H.standfirst}`, card: 'work-with-me', main });
+  return page(ctx, { path: '/work-with-me/', title: 'Work with me', description: `${H.headline} ${H.standfirst}`, card: 'work-with-me', bodyClass: 'hire', main });
 }
 
 export function thanks(ctx) {
@@ -341,7 +340,7 @@ export function drawingsPage(ctx) {
 ${pageHead({ kicker: `Drawings · ${drawings.drawings.length} portraits in ink`, title: 'Drawings', lede: esc(drawings.intro) })}
 ${drawings.drawings.map((d, i) => h`
 <section class="wrap dw dw-${d.ground}" aria-labelledby="dw-${d.slug}">
-  <figure class="dw-fig${d.ground === 'black' ? ' screen-fig' : ' sheet'}">${img({ src: d.image, srcset: drawingSrcset(d), sizes: '(min-width: 1320px) 700px, (min-width: 860px) 52vw, 100vw', width: d.width, height: d.height, alt: d.alt, cls: d.ground === 'black' ? 'screen' : '', lazy: i > 0 })}</figure>
+  <figure class="dw-fig">${img({ src: d.image, srcset: drawingSrcset(d), sizes: '(min-width: 1320px) 700px, (min-width: 860px) 52vw, 100vw', width: d.width, height: d.height, alt: d.alt, cls: d.ground === 'black' ? 'screen' : 'screen flip', lazy: i > 0 })}</figure>
   <div class="dw-text">
     <p class="note">${pad2(i + 1)}</p>
     <h2 class="h2" id="dw-${d.slug}">${esc(d.character)}</h2>
@@ -356,9 +355,9 @@ ${drawings.drawings.map((d, i) => h`
 export function about(ctx) {
   const { site, rules, hire: H } = ctx;
   const main = h`
-${pageHead({ kicker: 'About', title: esc(site.name), lede: esc(site.headline) })}
+${pageHead({ kicker: 'About', title: esc(site.name), lede: inline(site.headline) })}
 <div class="wrap g12 about">
-  ${inking({ ...site.portrait, cls: 'about-fig', caption: site.portrait.caption, dur: 1800 })}
+  ${inking({ ...site.portrait, cls: 'about-fig', caption: site.portrait.caption, dur: 1800, solo: true })}
   <div class="about-text prose">${site.bio.map((p) => h`<p>${inline(p)}</p>`)}
     <p class="ctas">${btn('/work-with-me/', 'Work with me')}${link(site.contact.url, site.contact.label)}</p>
   </div>
@@ -385,6 +384,7 @@ export function colophon(ctx) {
     ['Graphite', '#55585C', 'Secondary text only.'],
     ['Non-photo blue', '#A4DDED', 'Construction only: grid, guides, crop marks, highlights. Never text.'],
     ['Blueline', '#1B62A0', 'Notes, captions, links, focus rings and callout numbers.'],
+    ['Signal', '#EDB02A', 'One flat field per screen: the portrait’s slab (1.94:1 on white, so it never carries information). Never text, a line, a focus ring or a status dot. Deeper amber (#C98F12) in the dark scheme.'],
   ];
   const ratioOf = (hex) => contrast.light.find((c) => c.fg === hex && c.bg === '#FFFFFF');
   const main = h`

@@ -1,13 +1,13 @@
-// Turns a potrace trace of the signature (source/signature-<take>.svg) into the
-// one filled path and tight viewBox the portrait needs. Potrace traced the
+// Turns the two potrace traces of the signature (source/signature-a.svg, -b.svg: the two marks he
+// signs side by side, a then b) into filled paths and one shared viewBox the portrait needs. Potrace traced the
 // paper, so the mark is the hole in a full-frame rectangle: drop that rectangle
 // and fill what is left with evenodd (specks inside the mark stay holes).
 // Coordinates stay in the trace's own space (780x760 for a, 700x780 for b), flipped upright, so the
 // hand-placed centerlines in data/site.json share it.
 import { readFileSync } from 'node:fs';
 
-export function resolveSignature(root, sig) {
-  const svg = readFileSync(`${root}/source/signature-${sig.take}.svg`, 'utf8');
+function resolveMark(root, take) {
+  const svg = readFileSync(`${root}/source/signature-${take}.svg`, 'utf8');
   const [, ty] = /translate\(\s*[\d.]+[ ,]+([\d.]+)\s*\)/.exec(svg);
   const [, k] = /scale\(\s*([\d.]+)/.exec(svg);
   const scale = +k, flipY = +ty;
@@ -56,6 +56,21 @@ export function resolveSignature(root, sig) {
   }
   const f = (p) => `${p[0]} ${p[1]}`;
   const d = keep.map((s) => `M${f(s.start)}${s.segs.map((g) => g[0] + g.slice(1).map(f).join(' ')).join('')}Z`).join('');
-  const r = (n) => Math.floor(n);
-  return { d, viewBox: `${r(x0) - 2} ${r(y0) - 2} ${Math.ceil(x1 - x0) + 4} ${Math.ceil(y1 - y0) + 4}`, ...sig.takes[sig.take] };
+  const x = Math.floor(x0) - 2, y = Math.floor(y0) - 2;
+  return { d, x, y, w: Math.ceil(x1 - x0) + 4, h: Math.ceil(y1 - y0) + 4 };
+}
+
+// Marks sit left to right in key order of `takes`, tops aligned, `gap` x a mark's width apart. Each is
+// translated into the shared space; the stem/bar centerlines stay in the trace's own coordinates (the
+// mask is evaluated inside the same transform).
+export function resolveSignature(root, sig) {
+  let cx = 0, H = 0;
+  const marks = Object.entries(sig.takes).map(([take, c], i) => {
+    const m = resolveMark(root, take);
+    if (i) cx += sig.gap * m.w;
+    const out = { d: m.d, stem: c.stem, bar: c.bar, tx: +(cx - m.x).toFixed(1), ty: -m.y };
+    cx += m.w; H = Math.max(H, m.h);
+    return out;
+  });
+  return { viewBox: `0 0 ${Math.ceil(cx)} ${H}`, marks };
 }

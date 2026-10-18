@@ -58,11 +58,11 @@ export const plate = (pl, { label = 'Fig. 1', lazy = false } = {}) => {
 };
 
 // Pencils, then inks: the pencil layer sits under the ink, which a mask reveals.
-// `signature` ({ d, viewBox, stem, bar }) is signed on once the ink is down, in the corner:
-// the filled pencil mark is revealed by two thick centerline strokes, stem first, then the bar.
+// `signature` ({ viewBox, marks: [{ d, stem, bar, tx, ty }] }) is signed on once the ink is down, in the corner:
+// both filled pencil marks (a then b) are each revealed by two thick centerline strokes, stem first, then the bar.
 export const inking = ({ ink, pencil, width, height, alt, caption, dur = 2000, cls = '', lazy = false, signature = null }) => h`
 <figure class="${cls}" data-inking data-dur="${dur}">
-  <div class="inking">${img({ src: pencil, width, height, alt: '', cls: 'pen', lazy })}${img({ src: ink, width, height, alt, cls: 'ink', lazy })}${signature ? h`<svg class="sig" viewBox="${esc(signature.viewBox)}" aria-hidden="true" focusable="false"><mask id="sig-${esc(cls)}" maskUnits="userSpaceOnUse" x="-2000" y="-2000" width="5000" height="5000"><path class="m1" d="${esc(signature.stem)}" pathLength="1"/><path class="m2" d="${esc(signature.bar)}" pathLength="1"/></mask><path class="mk" d="${esc(signature.d)}" mask="url(#sig-${esc(cls)})"/></svg>` : ''}</div>
+  <div class="inking">${img({ src: pencil, width, height, alt: '', cls: 'pen', lazy })}${img({ src: ink, width, height, alt, cls: 'ink', lazy })}${signature ? h`<svg class="sig" viewBox="${esc(signature.viewBox)}" aria-hidden="true" focusable="false">${signature.marks.map((m, i) => h`<mask id="sig-${esc(cls)}-${i}" maskUnits="userSpaceOnUse" x="-2000" y="-2000" width="5000" height="5000"><path class="m${2 * i + 1}" d="${esc(m.stem)}" pathLength="1"/><path class="m${2 * i + 2}" d="${esc(m.bar)}" pathLength="1"/></mask><g transform="translate(${m.tx} ${m.ty})"><path class="mk" d="${esc(m.d)}" mask="url(#sig-${esc(cls)}-${i})"/></g>`).join('')}</svg>` : ''}</div>
   ${caption ? h`<figcaption class="note cap">${inline(caption)}</figcaption>` : ''}
 </figure>`;
 

@@ -84,12 +84,14 @@ already installed, set `PW_CHROMIUM=/path/to/chrome`.
   list of `scripts/build.mjs` (nested under its case study, so no `guide.html` can hide it).
   Add the path to `GUIDE`/`PAGES`/`CARDS` in `tests/helpers.js`, the contact sheet and
   `scripts/cards.mjs`. Outside links (the Substack post) live in the data file's `sources`.
-- **The signature:** the real pencil signature, traced with potrace into `source/signature-a.svg` and
-  `source/signature-b.svg`. `portrait.signature.take` in `data/site.json` picks one (`a` or `b`); flip it and
-  rebuild. The build (`scripts/lib/signature.mjs`) drops the trace's background rectangle, keeps the mark as one
-  filled path and trims the viewBox to it. `takes.<x>.stem` and `.bar` are the hand-placed centerlines (in the
-  trace's own coordinates) that reveal it like a pen: stem first, then bar, ~1.4s once the ink is down. A new
-  trace needs its own centerlines. It sits fully drawn with no JS or reduced motion.
+- **The signature:** his real pencil signature is two marks side by side, `a` then `b` (left to right, as on
+  the paper), traced with potrace into `source/signature-a.svg` and `source/signature-b.svg`. The build
+  (`scripts/lib/signature.mjs`) drops each trace's background rectangle, keeps each mark as one filled path and
+  lays them in one shared viewBox, tops aligned, `portrait.signature.gap` (x a mark's width) apart. In
+  `data/site.json`, `takes.<x>.stem` and `.bar` are the hand-placed centerlines (in that trace's own
+  coordinates) that reveal each mark like a pen; marks draw in `takes` key order: a stem, a bar, b stem, b bar,
+  ~2s once the ink is down (timings in `site.css`, `.sig .m1`-`.m4`). It sits fully drawn with no JS or
+  reduced motion.
 - **Hot-take pieces:** `STAGE_ART` in `scripts/lib/pages.mjs` lists the linefield pieces in the order the
   takes use them (take n gets piece n mod 5). A new piece is a baked export from linefield's `downloads/`
   copied into `source/linefield/` (the build bakes the reduced-motion hold in), then added to that list.

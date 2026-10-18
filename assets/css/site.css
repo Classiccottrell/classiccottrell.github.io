@@ -163,11 +163,12 @@ a.avail:hover{background:var(--highlight)}
 .plate{display:grid;gap:22px var(--gap);margin-top:clamp(36px,5vw,64px)}
 @media (min-width:900px){.plate.has-legend{grid-template-columns:minmax(0,8fr) minmax(0,4fr)}.plate .cap{grid-column:1/-1;margin-top:0}}
 [data-inking]{--inked:107}
-.inking .sig{position:absolute;right:5%;bottom:4%;width:clamp(44px,15%,70px);height:auto;overflow:visible;pointer-events:none}
+.inking .sig{position:absolute;right:0;bottom:1%;width:clamp(84px,24%,110px);height:auto;overflow:visible;pointer-events:none}
 .sig .mk{fill:var(--proof);fill-rule:evenodd}
 .sig mask path{fill:none;stroke:#fff;stroke-width:90;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1 2;stroke-dashoffset:0}
-.sig .m1{transition:stroke-dashoffset .8s cubic-bezier(.45,0,.35,1)}
-.sig .m2{transition:stroke-dashoffset .6s cubic-bezier(.3,0,.4,1) .8s}
+.sig .m1,.sig .m3{transition:stroke-dashoffset .6s cubic-bezier(.45,0,.35,1)}
+.sig .m2,.sig .m4{transition:stroke-dashoffset .4s cubic-bezier(.3,0,.4,1)}
+.sig .m2{transition-delay:.6s}.sig .m3{transition-delay:1s}.sig .m4{transition-delay:1.6s}
 .sig-wait .sig mask path{stroke-dashoffset:1;transition:none}
 .inking{position:relative;background:var(--sheet)}
 .inking img{width:100%}

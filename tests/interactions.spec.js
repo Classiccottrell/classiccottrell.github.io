@@ -148,11 +148,11 @@ test('the portrait is signed once the ink is down, and is already signed with re
   const fig = page.locator('.hero-fig');
   await expect(fig).toHaveClass(/sig-wait/);
   await expect(fig).not.toHaveClass(/sig-wait/, { timeout: 8000 });
-  await expect.poll(() => fig.locator('.sig .m2').evaluate((p) => getComputedStyle(p).strokeDashoffset), { timeout: 8000 }).toBe('0px');
+  await expect.poll(() => fig.locator('.sig .m4').evaluate((p) => getComputedStyle(p).strokeDashoffset), { timeout: 8000 }).toBe('0px');
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.reload();
   await expect(page.locator('.hero-fig')).not.toHaveClass(/sig-wait/);
-  expect(await page.locator('.hero-fig .sig .m2').evaluate((p) => getComputedStyle(p).strokeDashoffset)).toBe('0px');
+  expect(await page.locator('.hero-fig .sig .m4').evaluate((p) => getComputedStyle(p).strokeDashoffset)).toBe('0px');
 });
 
 test('take it apart follows the page scroll, and the slider moves the page', async ({ page }) => {

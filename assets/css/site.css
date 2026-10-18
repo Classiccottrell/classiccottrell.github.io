@@ -129,6 +129,7 @@ a.avail:hover{background:var(--highlight)}
 .ph .splash,.ph .h1{margin:14px 0 22px}
 .ph .splash{padding-bottom:.2em;margin-bottom:12px}
 .ph .note{padding-block:6px}
+.ph .lede:last-child{margin-bottom:20px}
 .ph .tblock{margin-top:32px}
 .sec{padding-top:clamp(72px,9vw,128px)}
 .sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-top:1px solid var(--hair);padding-top:12px;margin-bottom:12px}
@@ -240,7 +241,7 @@ a.avail:hover{background:var(--highlight)}
 @media (min-width:860px){
   .home .menu summary{color:var(--slab-ink);border-color:var(--slab-ink);background:var(--signal)}
   .home .menu summary:focus-visible{outline-color:var(--slab-ink)}
-  .home .menu[open] summary{background:var(--slab-ink);color:var(--signal)}
+  .home .menu[open] summary{background:var(--slab-ink);color:#fff}
 }
 @media (min-width:1100px){
   .home .mast-nav{--proof:var(--slab-ink);color:var(--slab-ink);background:var(--signal);padding:0 4px}
@@ -604,7 +605,7 @@ a.avail:hover{background:var(--highlight)}
 .wo-more dd{font:500 .95rem/1.35 var(--f-ink);overflow-wrap:anywhere}
 @media (min-width:860px){.wo-strip{display:none}}
 /* Focus Not Obscured: a focused field scrolls clear of the masthead and this strip. */
-@media (max-width:859px){.bf :is(input,textarea),.bf .opt{scroll-margin-top:130px}}
+@media (max-width:859px){.bf :is(input,textarea),.bf .opt,.bf .btn{scroll-margin-top:130px}}
 .wo{--fg:#0A0A0A;--ground:#FFFFFF;--muted:#55585C;--pencil:#A4DDED;--proof:#1B62A0;--proof-on:#FFFFFF;--highlight:#D8F0F7;
   position:relative;background:var(--ground);color:var(--fg);border:3px solid var(--fg);padding:clamp(14px,2vw,22px)}
 .wo-head{margin-bottom:16px;min-height:64px}

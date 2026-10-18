@@ -129,18 +129,88 @@ test('only the Terry Time page loads the Terry script', async ({ page }) => {
   await expect(page.locator('.live-band iframe.band-art')).toHaveCount(1);
 });
 
-test('the work picture opens the product, or the case study when there isn’t one', async ({ page }) => {
+test('selected work: three large pictures, each opening the product, or the case study when there isn’t one', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 800 });
   await page.goto('/');
-  const link = page.locator('.sel-link');
-  const w = (slug) => work.find((p) => p.slug === slug);
-  await page.locator('[data-cut] .idx-row', { hasText: w('linefield').title }).hover();
-  await expect(link).toHaveAttribute('href', w('linefield').links[0].url);
-  await expect(link).toHaveAttribute('target', '_blank');
-  await expect(link).toHaveAttribute('rel', 'noopener');
-  await page.locator('[data-cut] .idx-row', { hasText: w('agent-bench').title }).hover();
-  await expect(link).toHaveAttribute('href', '/work/agent-bench/');
-  await expect(link).not.toHaveAttribute('target', /.*/);
+  const items = page.locator('.sel-list .item');
+  const featured = work.filter((p) => p.featured).slice(0, 3);
+  await expect(items).toHaveCount(3);
+  for (const [i, p] of featured.entries()) {
+    const productLink = p.links.find((l) => !/^https?:\/\/(www\.)?github\.com\//.test(l.url));
+    const item = items.nth(i);
+    await expect(item.locator('h3')).toHaveText(p.title);
+    await expect(item.locator('p')).toHaveText(p.summary);
+    await expect(item).toHaveAttribute('href', productLink ? productLink.url : `/work/${p.slug}/`);
+    if (productLink) { await expect(item).toHaveAttribute('target', '_blank'); await expect(item).toHaveAttribute('rel', 'noopener'); } else await expect(item).not.toHaveAttribute('target', /.*/);
+  }
+  await expect(page.locator('.sel-head a')).toHaveText(new RegExp(`All ${work.length} projects`));
+});
+
+test('the headline, in Newsreader italic on the last word, and Takes in the nav', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('h1')).toHaveText('I take complicated software apart, then put it back simpler.');
+  await expect(page.locator('h1 em')).toHaveText('simpler.');
+  expect(await page.locator('h1 em').evaluate((e) => getComputedStyle(e).fontStyle)).toBe('italic');
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /then put it back simpler/);
+  await expect(page.locator('.mast-nav a')).toHaveText(['Work', 'Takes', 'Writing', 'Drawings', 'About', 'Work with me']);
+  await page.goto('/about/');
+  await expect(page.locator('.lede')).toHaveText('I take complicated software apart, then put it back simpler.');
+});
+
+test('the first fold holds five things: wordmark, nav, headline, portrait and one link', async ({ page }) => {
+  for (const vp of [{ width: 1440, height: 900 }, { width: 390, height: 844 }]) {
+    await page.setViewportSize(vp);
+    await page.goto('/');
+    const fold = await page.evaluate(() => {
+      const vh = innerHeight;
+      const seen = (el) => { const r = el.getBoundingClientRect(); const cs = getComputedStyle(el); return cs.display !== 'none' && cs.visibility !== 'hidden' && r.width > 0 && r.top < vh && r.bottom > 0; };
+      const interesting = [...document.querySelectorAll('header.mast a, header.mast summary, main h1, main figure, main a, main h2, main p, main figcaption, main li')].filter(seen);
+      return interesting.filter((el) => !el.closest('.menu-panel') && !(el.closest('.mast-nav') && el.tagName === 'A') && !(el.closest('.sel') && el.getBoundingClientRect().top >= vh)).map((el) => el.className || el.tagName.toLowerCase());
+    });
+    // wordmark, the nav (links or the Menu button), h1, figure, one go link
+    expect(fold.filter((c) => !/^(mast-name|go|hero-h|hero-fig.*|summary)$/.test(c)), `${vp.width}`).toEqual([]);
+    await expect(page.locator('.hero p, .hero .lede, .hero .note, .hero .avail, .hero .btn, .hero figcaption')).toHaveCount(0);
+    await expect(page.locator('.hero a')).toHaveCount(1);
+    await expect(page.locator('.hero a')).toHaveText(/Selected work/);
+    await expect(page.locator('.hero img')).toHaveCount(1);
+    await expect(page.locator('.hero .pen')).toHaveCount(0);
+  }
+});
+
+test('the masthead nav sits fully on the slab on wide screens, in both schemes', async ({ page }) => {
+  for (const scheme of ['light', 'dark']) {
+    await page.emulateMedia({ colorScheme: scheme });
+    for (const width of [1100, 1280, 1440, 1920]) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto('/');
+      const nav = await page.locator('.mast-nav').boundingBox();
+      const slab = await page.locator('.hero').evaluate((el) => el.getBoundingClientRect().width / 2);
+      expect(nav.x, `${scheme} ${width}`).toBeGreaterThanOrEqual(slab);
+      expect(await page.locator('.mast-nav a').first().evaluate((a) => getComputedStyle(a).color)).toBe('rgb(17, 17, 17)');
+    }
+  }
+});
+
+test('phone: Menu is a disclosure that keeps every link reachable', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  await expect(page.locator('.mast-nav')).toBeHidden();
+  await page.locator('.menu summary').click();
+  await expect(page.locator('.menu-panel a')).toHaveText(['Work', 'Takes', 'Writing', 'Drawings', 'About', 'Work with me']);
+  for (const a of await page.locator('.menu-panel a').all()) await expect(a).toBeVisible();
+});
+
+test('work with me on a phone keeps a one-line work order in view while typing', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/work-with-me/');
+  await page.locator('#bf-name').scrollIntoViewIfNeeded();
+  await page.locator('#bf-name').fill('Dana Example');
+  const strip = page.locator('.wo-strip');
+  await expect(strip).toBeVisible();
+  expect((await strip.boundingBox()).y).toBeLessThan(120);
+  await expect(strip.locator('[data-wo-s="kind"]')).toHaveText('A complicated workflow');
+  await strip.locator('summary').click();
+  await expect(strip.locator('[data-wo-s="from"]')).toHaveText('Dana Example');
 });
 
 test('the portrait is signed once the ink is down, and is already signed with reduced motion', async ({ page }) => {
@@ -165,10 +235,11 @@ test('take it apart follows the page scroll, and the slider moves the page', asy
     window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - top + span * f);
   }, frac);
   await at(0.5);
-  await expect(page.locator('#explode')).toHaveValue('50');
-  await expect(page.locator('output[for="explode"]')).toHaveText('50%');
+  // Scroll covers 35% (the rest state) to 100%.
+  await expect(page.locator('#explode')).toHaveValue('68');
+  await expect(page.locator('output[for="explode"]')).toHaveText('68%');
   await at(0.9);
-  await expect(page.locator('#explode')).toHaveValue('90');
+  await expect(page.locator('#explode')).toHaveValue('94');
   const y = await page.evaluate(() => window.scrollY);
   await page.locator('#explode').fill('20');
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBeLessThan(y);
@@ -187,4 +258,17 @@ test('each hot take brings its own linefield piece, one running at a time', asyn
   await expect(on).toHaveAttribute('data-piece', 'dark-nebula');
   await expect(stage.locator('.stage-art .band-art.on')).toHaveCount(1);
   await expect.poll(() => stage.locator('.stage-art .band-art:not(.on)').evaluateAll((fs) => fs.every((f) => f.contentDocument.hidden === true))).toBe(true);
+});
+
+test('take it apart: the button reaches 100% on a phone with reduced motion, and back to the start', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/');
+  await page.locator('#xv').scrollIntoViewIfNeeded();
+  await expect(page.locator('#explode')).toHaveValue(/^(3[5-9]|[4-9]\d)$/);
+  await page.locator('#explode-btn').click();
+  await expect(page.locator('#explode')).toHaveValue('100');
+  await expect(page.locator('#explode-btn')).toHaveText('Put it back');
+  await page.locator('#explode-btn').click();
+  await expect(page.locator('#explode')).toHaveValue('35');
 });

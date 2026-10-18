@@ -1,7 +1,7 @@
 # classiccottrell.github.io
 
 The portfolio of Matthew A. Cottrell, product designer. Version 2, art
-direction “Ink & Rule”: Bristol board, India ink and two blue pencils.
+direction “Ink & Rule”: Bristol board, India ink, two blue pencils and one signal-yellow field.
 
 The previous site is kept intact on the [`v1-classic`](https://github.com/Classiccottrell/classiccottrell.github.io/tree/v1-classic) branch.
 
@@ -11,13 +11,13 @@ Every page is generated from the JSON files in `data/` by a small Node build
 (`scripts/build.mjs`) and committed. GitHub Pages and Netlify serve the repo
 exactly as it is, with no build step on the host. There is no framework and no
 bundler, and every page reads with JavaScript turned off. `assets/js/site.js`
-only adds the optional layer: the pencil cursor, the portrait's signature, take it apart (on the home page,
+only adds the optional layer: the portrait's ink and signature, take it apart (on the home page,
 where page scroll and the slider are one control, and on the Terry guide, whose layers follow the step being read), prompt copy buttons, hot takes,
 the brief's work order, Pencils (redline) mode and Run the checks.
 
 ```
 data/                 the content: edit these, then npm run build
-  site.json           name, headline, availability, navigation, links, bio, url
+  site.json           name, headline, description, availability, navigation, links, bio, url
   work.json           case studies: title block fields, plate, callouts, sections
   guide.json          the Terry build-your-own guide: steps, prompts, known mistakes, Substack sources
   takes.json          hot takes with receipts (set "retired" to retire one in public)
@@ -57,7 +57,7 @@ on GitHub Pages, and the build fails if a collision like that comes back.
 npm install
 npm run build            # write every page from data/
 npm run build:check      # fail if anything committed is out of date
-npm run check:contrast   # every text colour pair in both polarities, at least 4.5:1
+npm run check:contrast   # every colour pair in both polarities (4.5:1; the focus ring on signal 3:1)
 npm run images           # re-make assets/img from source/ (after adding a drawing, say)
 npm run cards            # re-make the share cards (after changing titles or takes)
 npm run contact-sheet    # every page at 390, 768 and 1440 px, light and dark, into contact-sheet/
@@ -71,8 +71,20 @@ already installed, set `PW_CHROMIUM=/path/to/chrome`.
 
 ## Common edits
 
+- **The headline:** `data/site.json` → `headline`. `*simpler.*` is the inline-emphasis mark the build already
+  supports: the home h1 sets it in Newsreader italic, `plain()` strips it for meta, og/twitter and the share cards
+  (the card prints it italic), and the About lede reuses it. `description` carries the same sentence for meta and schema.
+- **Home structure:** the first fold is exactly five things: wordmark, nav, headline, portrait with its signature,
+  and one `Selected work ↓` link. Below it: Selected work (the first three `featured` projects in `data/work.json`,
+  large 16:9 pictures, one line each, each opening its product, or the case study when there isn't one), Take it apart,
+  the hot takes band, How I work (three rules), Drawings, Writing. The standfirst lives in About's bio.
+- **Colour:** tokens are at the top of `assets/css/site.css`. `--signal` (#EDB02A; #C98F12 in the dark scheme) is a flat
+  *field* only: the portrait's slab on the home and About pages, at most one per screen. Never text, an underline, a
+  focus ring or a status dot (1.94:1 on white). Ink on it is `--slab-ink` (#111111) in both schemes, which is also what
+  the home masthead and the signature use over the slab. `--mat` and `--hair` are the neutral picture mat and hairline.
+  Add a token, then add its pairs to `PAIRS` in `scripts/check-contrast.mjs`.
 - **Availability:** `data/site.json` → `availability` (`mark` is `live`, `prog`,
-  `priv` or `ship`). It's stamped into the masthead, the footer and Work with me.
+  `priv` or `ship`). It's stamped into the footer and Work with me (the masthead keeps only the nav and `Work with me`).
 - **A new case study:** add an entry to `data/work.json`, put its screenshot in
   `source/work/`, add it to `scripts/images.mjs`, then `npm run images && npm run build && npm run cards`.
   A plate much wider than it is tall crops badly into the share card; give the
@@ -92,6 +104,9 @@ already installed, set `PW_CHROMIUM=/path/to/chrome`.
   coordinates) that reveal each mark like a pen; marks draw in `takes` key order: a stem, a bar, b stem, b bar,
   ~2s once the ink is down (timings in `site.css`, `.sig .m1`-`.m4`). It sits fully drawn with no JS or
   reduced motion.
+- **Navigation:** `nav` in `data/site.json` (Work, Takes, Writing, Drawings, About) plus `Work with me` at the right.
+  Below 860px it collapses to a Menu disclosure holding the same links; on the home page the full nav only shows from 1100px
+  so it always sits on the slab, and the Menu button is used between.
 - **Hot-take pieces:** `STAGE_ART` in `scripts/lib/pages.mjs` lists the linefield pieces in the order the
   takes use them (take n gets piece n mod 5). A new piece is a baked export from linefield's `downloads/`
   copied into `source/linefield/` (the build bakes the reduced-motion hold in), then added to that list.
@@ -105,8 +120,8 @@ already installed, set `PW_CHROMIUM=/path/to/chrome`.
 - **Retire a take:** set `"retired": { "date": "2027-01-15", "reason": "…" }` in
   `data/takes.json`. It moves to a Retired list on /takes/ and its page goes away.
 - **The inked self-portrait:** replace `source/self/ink.png` (black ink on a
-  transparent background, 900 × 1075), run `npm run images`; the pencil layer is
-  generated from it. Then update `portrait` in `data/site.json`.
+  transparent background, 900 × 1075), run `npm run images`. It sits on the signal slab and is revealed by the
+  inking animation; the pencil layer (also made by `npm run images`) is no longer shown. Then update `portrait` in `data/site.json`.
 - **A drawing's year or medium:** `drawn` and `medium` in `data/drawings.json`
   appear in its credits as soon as they're set.
 

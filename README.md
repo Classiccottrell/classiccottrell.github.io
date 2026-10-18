@@ -84,9 +84,12 @@ already installed, set `PW_CHROMIUM=/path/to/chrome`.
   list of `scripts/build.mjs` (nested under its case study, so no `guide.html` can hide it).
   Add the path to `GUIDE`/`PAGES`/`CARDS` in `tests/helpers.js`, the contact sheet and
   `scripts/cards.mjs`. Outside links (the Substack post) live in the data file's `sources`.
-- **The signature:** `portrait.signature` in `data/site.json` (`d` is one SVG path, `viewBox` its box).
-  The path there is a hand-drawn placeholder; trace the real signature and paste its path in. It draws
-  itself in the portrait's corner once the ink is down, and sits fully drawn with no JS or reduced motion.
+- **The signature:** the real pencil signature, traced with potrace into `source/signature-a.svg` and
+  `source/signature-b.svg`. `portrait.signature.take` in `data/site.json` picks one (`a` or `b`); flip it and
+  rebuild. The build (`scripts/lib/signature.mjs`) drops the trace's background rectangle, keeps the mark as one
+  filled path and trims the viewBox to it. `takes.<x>.stem` and `.bar` are the hand-placed centerlines (in the
+  trace's own coordinates) that reveal it like a pen: stem first, then bar, ~1.4s once the ink is down. A new
+  trace needs its own centerlines. It sits fully drawn with no JS or reduced motion.
 - **Hot-take pieces:** `STAGE_ART` in `scripts/lib/pages.mjs` lists the linefield pieces in the order the
   takes use them (take n gets piece n mod 5). A new piece is a baked export from linefield's `downloads/`
   copied into `source/linefield/` (the build bakes the reduced-motion hold in), then added to that list.

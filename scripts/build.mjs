@@ -13,6 +13,7 @@ import { gzipSync } from 'node:zlib';
 import { checkContrast, ratio } from './check-contrast.mjs';
 import * as P from './lib/pages.mjs';
 import { guidePage } from './lib/guide.mjs';
+import { resolveSignature } from './lib/signature.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const CHECK = process.argv.includes('--check');
@@ -37,6 +38,7 @@ const ctx = {
   year: 2026,
 };
 ctx.ratio = ratio;
+ctx.site.portrait.signature = resolveSignature(ROOT, ctx.site.portrait.signature);
 
 // Data sanity: every reference has to land somewhere.
 const slugs = new Set(ctx.work.map((p) => p.slug));

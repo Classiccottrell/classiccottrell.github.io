@@ -163,9 +163,12 @@ a.avail:hover{background:var(--highlight)}
 .plate{display:grid;gap:22px var(--gap);margin-top:clamp(36px,5vw,64px)}
 @media (min-width:900px){.plate.has-legend{grid-template-columns:minmax(0,8fr) minmax(0,4fr)}.plate .cap{grid-column:1/-1;margin-top:0}}
 [data-inking]{--inked:107}
-.inking .sig{position:absolute;right:5%;bottom:4%;width:38%;height:auto;overflow:visible;fill:none;stroke:var(--proof);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
-.sig path{stroke-dasharray:1 2;stroke-dashoffset:0;transition:stroke-dashoffset 2.2s cubic-bezier(.45,0,.3,1)}
-.sig-wait .sig path{stroke-dashoffset:1;transition:none}
+.inking .sig{position:absolute;right:5%;bottom:4%;width:clamp(44px,15%,70px);height:auto;overflow:visible;pointer-events:none}
+.sig .mk{fill:var(--proof);fill-rule:evenodd}
+.sig mask path{fill:none;stroke:#fff;stroke-width:90;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1 2;stroke-dashoffset:0}
+.sig .m1{transition:stroke-dashoffset .8s cubic-bezier(.45,0,.35,1)}
+.sig .m2{transition:stroke-dashoffset .6s cubic-bezier(.3,0,.4,1) .8s}
+.sig-wait .sig mask path{stroke-dashoffset:1;transition:none}
 .inking{position:relative;background:var(--sheet)}
 .inking img{width:100%}
 .inking .ink{position:absolute;inset:0;-webkit-mask-image:linear-gradient(180deg,#000 calc(var(--inked) * 1% - 6%),transparent calc(var(--inked) * 1% + 6%));mask-image:linear-gradient(180deg,#000 calc(var(--inked) * 1% - 6%),transparent calc(var(--inked) * 1% + 6%))}
@@ -422,7 +425,7 @@ a.avail:hover{background:var(--highlight)}
   .guide-step::before{left:-18px}
 }
 @media (prefers-reduced-motion:reduce){
-  .xv-lab .xv-layer,.xv-lab .xv-layer::before,.xv-lab .xv-tag,.lab-svg *,.guide-step::before,.stage-art .band-art,.sig path{transition:none}
+  .xv-lab .xv-layer,.xv-lab .xv-layer::before,.xv-lab .xv-tag,.lab-svg *,.guide-step::before,.stage-art .band-art,.sig mask path{transition:none}
 }
 
 /* ---------- work and case studies */

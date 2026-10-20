@@ -114,6 +114,9 @@ already installed, set `PW_CHROMIUM=/path/to/chrome`.
   `assets/js/site.js` ("the lab") lifts the sheet for the step being read. The plate for
   its case study is a screenshot composed into `source/work/terry-home-lab.png`; redo it
   if the drawings change.
+- **The drawings page:** a split page, half white and half black (stacked bands on a phone). Every drawing keeps its original
+  colours: `ground` in `data/drawings.json` picks the half (`black` = white ink knocked out with `screen`, `white` = black ink on
+  paper with `multiply`). The white half is real paper in both colour schemes.
 - **Inline marks:** text in `data/` can use `` `code` ``, `*emphasis*` and
   `[a link](/work/forma/)` to another page on this site. The build fails if a
   link doesn't land on a page it writes.

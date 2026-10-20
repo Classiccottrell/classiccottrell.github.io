@@ -334,21 +334,31 @@ ${pageHead({ kicker: `Writing · ${writing.essays.length} essays on Substack`, t
 }
 
 // ---------------------------------------------------------------- drawings
+// A split page: half white, half black. Each drawing sits on the ground it was drawn for,
+// in its original colours (black ink on white, white ink knocked out of black).
 export function drawingsPage(ctx) {
   const { drawings } = ctx;
   const main = h`
-${pageHead({ kicker: `Drawings · ${drawings.drawings.length} portraits in ink`, title: 'Drawings', lede: esc(drawings.intro) })}
+<div class="dw-split">
+<header class="ph dw-head dw-white">
+  <p class="note">Drawings · ${drawings.drawings.length} portraits in ink</p>
+  <h1 class="splash">Drawings</h1>
+  <p class="lede">${esc(drawings.intro)}</p>
+</header>
 ${drawings.drawings.map((d, i) => h`
-<section class="wrap dw dw-${d.ground}" aria-labelledby="dw-${d.slug}">
-  <figure class="dw-fig">${img({ src: d.image, srcset: drawingSrcset(d), sizes: '(min-width: 1320px) 700px, (min-width: 860px) 52vw, 100vw', width: d.width, height: d.height, alt: d.alt, cls: d.ground === 'black' ? 'screen' : 'screen flip', lazy: i > 0 })}</figure>
+<section class="dw dw-${d.ground}" aria-labelledby="dw-${d.slug}">
+  <div class="dw-in">
+  <figure class="dw-fig">${img({ src: d.image, srcset: drawingSrcset(d), sizes: '(min-width: 860px) 46vw, 100vw', width: d.width, height: d.height, alt: d.alt, cls: d.ground === 'black' ? 'screen' : 'ink-on-white', lazy: i > 0 })}</figure>
   <div class="dw-text">
     <p class="note">${pad2(i + 1)}</p>
     <h2 class="h2" id="dw-${d.slug}">${esc(d.character)}</h2>
     <blockquote class="quote"><p>“${esc(d.quote)}”</p></blockquote>
     <p class="note credits">${esc(d.film)} · ${d.year}<br>Dir. ${esc(d.director)} · ${esc(d.actor)}${d.medium ? h`<br>${esc(d.medium)}${d.drawn ? ` · drawn ${d.drawn}` : ''}` : ''}</p>
   </div>
-</section>`)}`;
-  return page(ctx, { path: '/drawings/', title: 'Drawings', description: drawings.intro, card: 'drawings', bodyClass: 'ink-page', main });
+  </div>
+</section>`)}
+</div>`;
+  return page(ctx, { path: '/drawings/', title: 'Drawings', description: drawings.intro, card: 'drawings', main });
 }
 
 // ---------------------------------------------------------------- about

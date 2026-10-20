@@ -2,6 +2,22 @@
   "intro": "Ink portraits of characters who stuck with me. One film, one face, one line of dialogue.",
   "drawings": [
     {
+      "slug": "travis",
+      "character": "Travis Bickle",
+      "film": "Taxi Driver",
+      "year": 1976,
+      "director": "Martin Scorsese",
+      "actor": "Robert De Niro",
+      "quote": "You talkin’ to me?",
+      "ground": "white",
+      "image": "/assets/img/drawings/travis.webp",
+      "width": 1100,
+      "height": 1206,
+      "alt": "Ink drawing of Travis Bickle from Taxi Driver in profile, with a mohawk and an army jacket, in solid black on white.",
+      "drawn": null,
+      "medium": null
+    },
+    {
       "slug": "kurtz",
       "character": "Colonel Kurtz",
       "film": "Apocalypse Now",
@@ -14,22 +30,6 @@
       "width": 1100,
       "height": 1040,
       "alt": "Ink drawing of Colonel Kurtz from Apocalypse Now, white on black: a shaved head with the eyes lost in shadow, and dog tags on a chain at his collar.",
-      "drawn": null,
-      "medium": null
-    },
-    {
-      "slug": "travis",
-      "character": "Travis Bickle",
-      "film": "Taxi Driver",
-      "year": 1976,
-      "director": "Martin Scorsese",
-      "actor": "Robert De Niro",
-      "quote": "You talkin’ to me?",
-      "ground": "white",
-      "image": "/assets/img/drawings/travis.webp",
-      "width": 1100,
-      "height": 1206,
-      "alt": "Ink drawing of Travis Bickle from Taxi Driver in profile, with a mohawk and an army jacket, white on black.",
       "drawn": null,
       "medium": null
     },

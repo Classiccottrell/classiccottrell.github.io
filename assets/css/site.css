@@ -8,6 +8,8 @@
   --tt-ink:#1233C7; --tt-paper:#F7F6F1;
   /* Signal: one flat field per screen, never text, a line, a focus ring or a status dot (1.94:1 on white). */
   --signal:#EDB02A; --slab-ink:#111111; --mat:#F3F3F1; --hair:#E4E4E0;
+  /* The white half of /drawings/ is real paper in both schemes: black ink drawings must stay black on white. */
+  --dw-paper:#FFFFFF; --dw-ink:#0A0A0A; --dw-muted:#55585C; --dw-proof:#1B62A0;
   --f-ink:"Familjen Grotesk","Helvetica Neue",Arial,sans-serif;
   --f-voice:"Newsreader",Georgia,"Times New Roman",serif;
   --f-pencil:"Red Hat Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
@@ -181,7 +183,7 @@ a.avail:hover{background:var(--highlight)}
 .inking .ink{position:absolute;inset:0;-webkit-mask-image:linear-gradient(180deg,#000 calc(var(--inked) * 1% - 6%),transparent calc(var(--inked) * 1% + 6%));mask-image:linear-gradient(180deg,#000 calc(var(--inked) * 1% - 6%),transparent calc(var(--inked) * 1% + 6%))}
 .inking.solo .ink{position:static}
 .screen{mix-blend-mode:screen}
-.flip{filter:invert(1)}
+.ink-on-white{mix-blend-mode:multiply}
 .pq{font:italic 400 clamp(1.45rem,1.1rem + 1.3vw,2.2rem)/1.18 var(--f-voice);max-width:26ch}
 .pq p::before{content:"\201C";display:block;font:700 3.2em/.62 var(--f-ink);color:var(--proof);margin-bottom:6px}
 .pq-fig{margin-block:clamp(40px,5vw,64px);border-top:1px dashed var(--proof);padding-top:18px}
@@ -621,11 +623,21 @@ a.avail:hover{background:var(--highlight)}
 .steps li::before{content:counter(s,decimal-leading-zero);font:500 .75rem/2 var(--f-pencil);color:var(--proof)}
 
 /* ---------- drawings */
-.dw{display:grid;gap:clamp(20px,3vw,40px);align-items:center;padding-top:clamp(64px,8vw,120px)}
-@media (min-width:860px){.dw{grid-template-columns:minmax(0,7fr) minmax(0,5fr)}.dw:nth-of-type(even){grid-template-columns:minmax(0,5fr) minmax(0,7fr)}.dw:nth-of-type(even) .dw-fig{order:2}}
-.dw-fig{max-width:760px;width:100%;justify-self:center}
+.dw-split{display:grid;grid-template-columns:minmax(0,1fr)}
+.dw-white{--ground:var(--dw-paper);--fg:var(--dw-ink);--muted:var(--dw-muted);--proof:var(--dw-proof);--highlight:#D8F0F7;--pencil:#A4DDED;background:var(--dw-paper);color:var(--dw-ink)}
+.dw-black{--fg:var(--band-fg);--muted:var(--band-muted);--pencil:var(--band-pencil);--proof:var(--band-proof);--highlight:var(--band-highlight);--ground:var(--band);background:var(--band);color:var(--band-fg)}
+.dw-head{padding:clamp(48px,6vw,88px) var(--gx) 0}
+.dw-in{background:var(--ground);display:grid;gap:clamp(20px,3vw,40px);padding:clamp(40px,6vw,96px) var(--gx);max-width:760px;margin:0 auto}
 .dw-fig img{width:100%}
 .dw-text .h2{margin:8px 0 18px}
+@media (min-width:860px){
+  .dw-split{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .dw-head,.dw-white{grid-column:1}
+  .dw-black{grid-column:2;grid-row:1 / span 3}
+  .dw-black .dw-in{position:sticky;top:var(--mast);min-height:calc(100vh - var(--mast));align-content:center}
+  .dw-head{padding-top:clamp(56px,6vw,96px)}
+  .dw-head .lede{max-width:34ch}
+}
 .credits{margin-top:18px}
 
 /* ---------- about and colophon */

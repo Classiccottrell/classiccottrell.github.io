@@ -6,8 +6,8 @@
     "kind": "Product",
     "group": "Products",
     "featured": true,
-    "summary": "Accessibility evidence in, a VPAT 2.5 draft out.",
-    "standfirst": "A nine-prompt Claude toolkit and local Chrome scanner for turning accessibility evidence into VPAT 2.5 drafts.",
+    "summary": "Accessibility evidence in, a VPAT 2.5 draft out, a person signing every row.",
+    "standfirst": "Nine Claude prompts and a free Chrome scanner are live. A command-line scanner that turns a site into a bug sheet and a VPAT draft is in early build.",
     "take": "T-04",
     "year": 2026,
     "role": "Design and build",
@@ -15,11 +15,12 @@
       "mark": "live",
       "label": "Live"
     },
-    "stack": "Claude prompts · Chrome extension (Manifest V3) · axe-core",
+    "stack": "Claude prompts · Chrome extension (Manifest V3) · axe-core · command-line scanner",
     "numbers": [
       "9 prompts",
       "50-record reference dataset",
-      "VPAT 2.5"
+      "VPAT 2.5",
+      "Command-line scanner at v0.1"
     ],
     "links": [
       {
@@ -30,9 +31,9 @@
     "plate": {
       "src": "/assets/img/work/vpat-vault.webp",
       "width": 1600,
-      "height": 872,
-      "alt": "Product box for VPAT Vault: a white box with a black spine, a green leaf logo, a large orange 2.1 with an Accessible badge, and the line VPAT, Voluntary Product Accessibility Template, WCAG 2.1 Conformance Report.",
-      "caption": "The VPAT Vault box: nine prompts, a validator, a dataset, a report template and a Chrome scanner.",
+      "height": 900,
+      "alt": "Illustration in red and green on cream paper: a woman holds an open laptop that shows a conformance checklist table.",
+      "caption": "Evidence, scan, bug sheet, draft, then a person signs every row.",
       "callouts": []
     },
     "pullQuote": null,
@@ -43,7 +44,7 @@
     "sections": [
       {
         "paragraphs": [
-          "I built VPAT Vault to make creating a VPAT simple enough that more websites can publish one. It combines a local Chrome scanner with a prompt toolkit and HTML template, so evidence moves into the report instead of ending up in a separate silo."
+          "I built VPAT Vault to make a VPAT simple enough that more websites can publish one. The prompt toolkit and a free Chrome scanner are live and for sale. The command-line scanner I'm building now is early and not released, and it takes the same idea from one page to a whole site."
         ]
       },
       {
@@ -55,37 +56,40 @@
           "alt": "Illustration: two hands hold a magnifying glass over a bug on a web page covered in accessibility checks."
         },
         "paragraphs": [
-          "I wanted a scanning tool I would actually use alongside VPAT creation. The extension captures automated evidence where the work starts, while the prompts and template turn that evidence into a reviewable report. I ran the whole workflow through my own test setup, so the pieces stay connected from scan to draft."
+          "A VPAT is a table of claims, and every row needs evidence behind it. I wanted the scan, the bug list and the draft to sit in one chain, so the evidence follows the work instead of ending up in a separate folder. The last link is always a person: ITI labels only, Supports only when there are no known defects, and every defect remark says what fails, who is affected and where."
         ]
       },
       {
         "paragraphs": [
-          "The current release includes nine prompts, a dependency-free validator, a 50-record reference dataset, a report template, and a free Manifest V3 Chrome extension that runs axe locally and exports scan evidence. The roadmap is to connect multi-page scan sessions, evidence review, and report generation into one publishable workflow."
+          "What is live: nine prompts with explicit output contracts, a validator with no dependencies, a 50-record reference dataset, a fixed HTML report template that checks its fields and ITI labels before it renders, and a deterministic ZIP for the buyer. The free Chrome extension, VPAT Vault Scanner, runs axe-core on the active tab, on your machine, and exports normalized findings plus manual-review items as JSON. You can install it locally today; a Chrome Web Store listing comes later.",
+          "What I'm building is wcag-toolkit, a command-line scanner at v0.1 that is not released. It scans one page, a whole site, or pages behind a sign-in using a browser session you save yourself. The site scan follows links from a start page, opens addresses only, never clicks, skips risky links and reads a sitemap. A static scan of a codebase or a git diff looks for what axe can't see: missing alt text, non-native interactive elements, ARIA misuse, contrast tricks.",
+          "Results go into a bug sheet in Markdown, CSV or JSON, one row per defect with its WCAG criterion, severity, confidence and a default disposition. From that sheet the tool scaffolds a VPAT draft, and the draft is capped at Partially Supports, because scan data alone can't say Supports or Does Not Support. A settle delay, redirect and CSP guards and checkpointing mean a page that failed to load never gets reported as zero violations. Type wcag for a guided terminal menu; there is also a thin Claude Code skill and a short how-to micro site.",
+          "The limits, plainly: I've tested signed-in scanning only on a practice page, a scan finds some problems and a person tests the rest, and I haven't measured the false-positive rate of the code scan yet."
         ]
       },
       {
         "heading": "Roadmap",
-        "intro": "A practical path from a working evidence capture tool to a complete VPAT workflow.",
+        "intro": "What is shipped, what is being built, and what doesn't exist yet.",
         "roadmap": [
           {
             "label": "Foundation",
             "status": "Shipped",
-            "detail": "Nine prompts, validator, 50-record dataset, and HTML report template."
+            "detail": "Nine prompts, validator, 50-record dataset, HTML report template and buyer ZIP."
           },
           {
-            "label": "Local scanner",
+            "label": "Local scanner extension",
             "status": "Shipped",
-            "detail": "Free Chrome extension runs axe on the active tab and exports canonical scan JSON."
+            "detail": "Free Chrome extension runs axe on the active tab and exports findings and manual-review items as JSON."
           },
           {
-            "label": "Scan sessions",
-            "status": "Next",
-            "detail": "Capture evidence across multiple pages while keeping findings connected to the report."
+            "label": "Command-line scanner (site, sign-in, code to bug sheet to draft)",
+            "status": "In progress",
+            "detail": "wcag-toolkit v0.1: page, site and signed-in scans, a code scan, a bug sheet and a capped VPAT draft. Not released."
           },
           {
-            "label": "Launch workflow",
+            "label": "Guided VPAT workflow and Word export",
             "status": "Planned",
-            "detail": "Review evidence, draft rows, run QA, and publish a VPAT from one guided flow."
+            "detail": "One step from scan to draft, report front matter saying what was scanned and how, reviewed flow files so a scan can click and type safely, AI-proposed ratings a person reviews and signs off row by row, and .docx export in the VPAT 2.5 layout."
           }
         ]
       }

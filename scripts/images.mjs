@@ -113,7 +113,7 @@ await drawing('coach', '#FFFFFF');
 await plate('linefield', 'webp');
 await plate('forma', 'webp');
 await plate('agentic-light', 'webp');
-await plate('vpat-vault', 'jpg', { grey: true });
+await plate('vpat-vault', 'png', { quality: 72 });
 await plate('photo-curator-cli', 'jpg', { grey: true });
 await plate('vpat-vault-evidence', 'webp', { grey: true, width: 1100, quality: 62 });
 await plate('terry-time', 'webp');

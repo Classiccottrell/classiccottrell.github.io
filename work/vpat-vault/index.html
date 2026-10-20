@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VPAT Vault · Matthew A. Cottrell</title>
-<meta name="description" content="A nine-prompt Claude toolkit and local Chrome scanner for turning accessibility evidence into VPAT 2.5 drafts.">
+<meta name="description" content="Nine Claude prompts and a free Chrome scanner are live. A command-line scanner that turns a site into a bug sheet and a VPAT draft is in early build.">
 <link rel="canonical" href="https://classiccottrell.ca/work/vpat-vault/">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Matthew A. Cottrell">
 <meta property="og:title" content="VPAT Vault">
-<meta property="og:description" content="A nine-prompt Claude toolkit and local Chrome scanner for turning accessibility evidence into VPAT 2.5 drafts.">
+<meta property="og:description" content="Nine Claude prompts and a free Chrome scanner are live. A command-line scanner that turns a site into a bug sheet and a VPAT draft is in early build.">
 <meta property="og:url" content="https://classiccottrell.ca/work/vpat-vault/">
-<meta property="og:image" content="https://classiccottrell.ca/assets/cards/work-vpat-vault.png?v=e00de7f581">
+<meta property="og:image" content="https://classiccottrell.ca/assets/cards/work-vpat-vault.png?v=26b4fb467a">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -48,22 +48,22 @@
 <header class="wrap ph">
   <p class="note"><a href="/work/">Work</a> / 01 · Product</p>
   <h1 class="splash">VPAT Vault</h1>
-  <p class="lede">A nine-prompt Claude toolkit and local Chrome scanner for turning accessibility evidence into VPAT 2.5 drafts.</p>
+  <p class="lede">Nine Claude prompts and a free Chrome scanner are live. A command-line scanner that turns a site into a bug sheet and a VPAT draft is in early build.</p>
   
-<dl class="tblock cs-tb"><div><dt>Role</dt><dd>Design and build</dd></div><div><dt>Year</dt><dd>2026</dd></div><div><dt>Status</dt><dd><i class="sm sm-live" aria-hidden="true"></i>Live</dd></div><div><dt>Stack</dt><dd>Claude prompts · Chrome extension (Manifest V3) · axe-core</dd></div><div><dt>Numbers</dt><dd>9 prompts · 50-record reference dataset · VPAT 2.5</dd></div><div><dt>Links</dt><dd><a class="lnk" href="https://vpat.classiccottrell.ca/">vpat.classiccottrell.ca<span class="ext" aria-hidden="true"> ↗</span></a></dd></div><div class="wide"><dt>Take · T-04</dt><dd><a class="tb-take" href="/takes/liability-with-a-cover-page/">An accessibility report nobody can find is a liability with a cover page.</a></dd></div></dl>
+<dl class="tblock cs-tb"><div><dt>Role</dt><dd>Design and build</dd></div><div><dt>Year</dt><dd>2026</dd></div><div><dt>Status</dt><dd><i class="sm sm-live" aria-hidden="true"></i>Live</dd></div><div><dt>Stack</dt><dd>Claude prompts · Chrome extension (Manifest V3) · axe-core · command-line scanner</dd></div><div><dt>Numbers</dt><dd>9 prompts · 50-record reference dataset · VPAT 2.5 · Command-line scanner at v0.1</dd></div><div><dt>Links</dt><dd><a class="lnk" href="https://vpat.classiccottrell.ca/">vpat.classiccottrell.ca<span class="ext" aria-hidden="true"> ↗</span></a></dd></div><div class="wide"><dt>Take · T-04</dt><dd><a class="tb-take" href="/takes/liability-with-a-cover-page/">An accessibility report nobody can find is a liability with a cover page.</a></dd></div></dl>
 </header>
   <div class="wrap">
 <figure class="plate">
-  <div class="panel crop callouts"><img src="/assets/img/work/vpat-vault.webp?v=5341a32cc8" width="1600" height="872" alt="Product box for VPAT Vault: a white box with a black spine, a green leaf logo, a large orange 2.1 with an Accessible badge, and the line VPAT, Voluntary Product Accessibility Template, WCAG 2.1 Conformance Report."></div>
+  <div class="panel crop callouts"><img src="/assets/img/work/vpat-vault.webp?v=a3b407e810" width="1600" height="900" alt="Illustration in red and green on cream paper: a woman holds an open laptop that shows a conformance checklist table."></div>
   
-  <figcaption class="note cap">Fig. 1 · The VPAT Vault box: nine prompts, a validator, a dataset, a report template and a Chrome scanner.</figcaption>
+  <figcaption class="note cap">Fig. 1 · Evidence, scan, bug sheet, draft, then a person signs every row.</figcaption>
 </figure></div>
   
   <div class="wrap cs-body">
 <section class="cs-sec cs-print">
   
   
-  <p>I built VPAT Vault to make creating a VPAT simple enough that more websites can publish one. It combines a local Chrome scanner with a prompt toolkit and HTML template, so evidence moves into the report instead of ending up in a separate silo.</p>
+  <p>I built VPAT Vault to make a VPAT simple enough that more websites can publish one. The prompt toolkit and a free Chrome scanner are live and for sale. The command-line scanner I'm building now is early and not released, and it takes the same idea from one page to a whole site.</p>
   
   
   
@@ -73,7 +73,7 @@
 <section class="cs-sec cs-print">
   <h2 class="cs-h">Why I made it</h2>
   
-  <p>I wanted a scanning tool I would actually use alongside VPAT creation. The extension captures automated evidence where the work starts, while the prompts and template turn that evidence into a reviewable report. I ran the whole workflow through my own test setup, so the pieces stay connected from scan to draft.</p>
+  <p>A VPAT is a table of claims, and every row needs evidence behind it. I wanted the scan, the bug list and the draft to sit in one chain, so the evidence follows the work instead of ending up in a separate folder. The last link is always a person: ITI labels only, Supports only when there are no known defects, and every defect remark says what fails, who is affected and where.</p>
   
   
   
@@ -83,7 +83,7 @@
 <section class="cs-sec cs-print">
   
   
-  <p>The current release includes nine prompts, a dependency-free validator, a 50-record reference dataset, a report template, and a free Manifest V3 Chrome extension that runs axe locally and exports scan evidence. The roadmap is to connect multi-page scan sessions, evidence review, and report generation into one publishable workflow.</p>
+  <p>What is live: nine prompts with explicit output contracts, a validator with no dependencies, a 50-record reference dataset, a fixed HTML report template that checks its fields and ITI labels before it renders, and a deterministic ZIP for the buyer. The free Chrome extension, VPAT Vault Scanner, runs axe-core on the active tab, on your machine, and exports normalized findings plus manual-review items as JSON. You can install it locally today; a Chrome Web Store listing comes later.</p><p>What I'm building is wcag-toolkit, a command-line scanner at v0.1 that is not released. It scans one page, a whole site, or pages behind a sign-in using a browser session you save yourself. The site scan follows links from a start page, opens addresses only, never clicks, skips risky links and reads a sitemap. A static scan of a codebase or a git diff looks for what axe can't see: missing alt text, non-native interactive elements, ARIA misuse, contrast tricks.</p><p>Results go into a bug sheet in Markdown, CSV or JSON, one row per defect with its WCAG criterion, severity, confidence and a default disposition. From that sheet the tool scaffolds a VPAT draft, and the draft is capped at Partially Supports, because scan data alone can't say Supports or Does Not Support. A settle delay, redirect and CSP guards and checkpointing mean a page that failed to load never gets reported as zero violations. Type wcag for a guided terminal menu; there is also a thin Claude Code skill and a short how-to micro site.</p><p>The limits, plainly: I've tested signed-in scanning only on a practice page, a scan finds some problems and a person tests the rest, and I haven't measured the false-positive rate of the code scan yet.</p>
   
   
   
@@ -92,12 +92,12 @@
 
 <section class="cs-sec cs-print">
   <h2 class="cs-h">Roadmap</h2>
-  <p class="cs-intro">A practical path from a working evidence capture tool to a complete VPAT workflow.</p>
+  <p class="cs-intro">What is shipped, what is being built, and what doesn't exist yet.</p>
   
   
   
   
-<ol class="roadmap"><li><p class="note"><i class="sm sm-ship" aria-hidden="true"></i>Shipped</p><p class="rm-l">Foundation</p><p>Nine prompts, validator, 50-record dataset, and HTML report template.</p></li><li><p class="note"><i class="sm sm-ship" aria-hidden="true"></i>Shipped</p><p class="rm-l">Local scanner</p><p>Free Chrome extension runs axe on the active tab and exports canonical scan JSON.</p></li><li><p class="note"><i class="sm sm-prog" aria-hidden="true"></i>Next</p><p class="rm-l">Scan sessions</p><p>Capture evidence across multiple pages while keeping findings connected to the report.</p></li><li><p class="note"><i class="sm sm-priv" aria-hidden="true"></i>Planned</p><p class="rm-l">Launch workflow</p><p>Review evidence, draft rows, run QA, and publish a VPAT from one guided flow.</p></li></ol>
+<ol class="roadmap"><li><p class="note"><i class="sm sm-ship" aria-hidden="true"></i>Shipped</p><p class="rm-l">Foundation</p><p>Nine prompts, validator, 50-record dataset, HTML report template and buyer ZIP.</p></li><li><p class="note"><i class="sm sm-ship" aria-hidden="true"></i>Shipped</p><p class="rm-l">Local scanner extension</p><p>Free Chrome extension runs axe on the active tab and exports findings and manual-review items as JSON.</p></li><li><p class="note"><i class="sm sm-prog" aria-hidden="true"></i>In progress</p><p class="rm-l">Command-line scanner (site, sign-in, code to bug sheet to draft)</p><p>wcag-toolkit v0.1: page, site and signed-in scans, a code scan, a bug sheet and a capped VPAT draft. Not released.</p></li><li><p class="note"><i class="sm sm-priv" aria-hidden="true"></i>Planned</p><p class="rm-l">Guided VPAT workflow and Word export</p><p>One step from scan to draft, report front matter saying what was scanned and how, reviewed flow files so a scan can click and type safely, AI-proposed ratings a person reviews and signs off row by row, and .docx export in the VPAT 2.5 layout.</p></li></ol>
 <p><a class="lnk" href="https://vpat.classiccottrell.ca/">vpat.classiccottrell.ca<span class="ext" aria-hidden="true"> ↗</span></a></p>
   
 </section>

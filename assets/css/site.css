@@ -8,7 +8,7 @@
   --tt-ink:#1233C7; --tt-paper:#F7F6F1;
   /* Signal: one flat field per screen, never text, a line, a focus ring or a status dot (1.94:1 on white). */
   --signal:#EDB02A; --slab-ink:#111111; --mat:#F3F3F1; --hair:#E4E4E0;
-  /* The white half of /drawings/ is real paper in both schemes: black ink drawings must stay black on white. */
+  /* The white bands of /drawings/ are real paper in both schemes: black ink drawings must stay black on white. */
   --dw-paper:#FFFFFF; --dw-ink:#0A0A0A; --dw-muted:#55585C; --dw-proof:#1B62A0;
   --f-ink:"Familjen Grotesk","Helvetica Neue",Arial,sans-serif;
   --f-voice:"Newsreader",Georgia,"Times New Roman",serif;
@@ -624,20 +624,22 @@ a.avail:hover{background:var(--highlight)}
 .steps li::before{content:counter(s,decimal-leading-zero);font:500 .75rem/2 var(--f-pencil);color:var(--proof)}
 
 /* ---------- drawings */
-.dw-split{display:grid;grid-template-columns:minmax(0,1fr)}
 .dw-white{--ground:var(--dw-paper);--fg:var(--dw-ink);--muted:var(--dw-muted);--proof:var(--dw-proof);--highlight:#D8F0F7;--pencil:#A4DDED;background:var(--dw-paper);color:var(--dw-ink)}
 .dw-black{--fg:var(--band-fg);--muted:var(--band-muted);--pencil:var(--band-pencil);--proof:var(--band-proof);--highlight:var(--band-highlight);--ground:var(--band);background:var(--band);color:var(--band-fg)}
-.dw-head{padding:clamp(48px,6vw,88px) var(--gx) 0}
-.dw-in{background:var(--ground);display:grid;gap:clamp(20px,3vw,40px);padding:clamp(40px,6vw,96px) var(--gx);max-width:760px;margin:0 auto}
+.dw-head{display:flow-root}
+.dw-head .ph .lede{max-width:44ch;margin-bottom:0}
+/* The bands carry their own whitespace, so the footer sits straight under the last one. */
+.dw-body .foot{margin-top:0}
+.dw-in{display:grid;gap:clamp(24px,4vw,40px);padding-block:clamp(56px,11vw,152px)}
 .dw-fig img{width:100%}
+.dw-text{max-width:36rem}
 .dw-text .h2{margin:8px 0 18px}
 @media (min-width:860px){
-  .dw-split{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .dw-head,.dw-white{grid-column:1}
-  .dw-black{grid-column:2;grid-row:1 / span 3}
-  .dw-black .dw-in{position:sticky;top:var(--mast);min-height:calc(100vh - var(--mast));align-content:center}
-  .dw-head{padding-top:clamp(56px,6vw,96px)}
-  .dw-head .lede{max-width:34ch}
+  .dw-in{grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--gap);align-items:center}
+  .dw-fig{grid-column:1 / span 7;grid-row:1}
+  .dw-text{grid-column:9 / span 4;grid-row:1}
+  .dw-flip .dw-fig{grid-column:6 / span 7}
+  .dw-flip .dw-text{grid-column:1 / span 4}
 }
 .credits{margin-top:18px}
 

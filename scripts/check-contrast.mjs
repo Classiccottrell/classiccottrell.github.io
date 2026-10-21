@@ -58,10 +58,10 @@ const PAIRS = [
   ['Dimmed layer text', 'dim', 'ground'],
   ['Dimmed text on highlight', 'dim', 'highlight'],
   // Signal is a field, never text: only ink sits on it. The home masthead and signature stay ink in both schemes.
-  // /drawings/: the white half stays paper in both schemes; the black half reuses the band tokens above.
-  ['Drawings white half text', 'dw-ink', 'dw-paper'],
-  ['Drawings white half secondary', 'dw-muted', 'dw-paper'],
-  ['Drawings white half notes', 'dw-proof', 'dw-paper'],
+  // /drawings/: the white bands stay paper in both schemes; the black band reuses the band tokens above.
+  ['Drawings white band text', 'dw-ink', 'dw-paper'],
+  ['Drawings white band secondary', 'dw-muted', 'dw-paper'],
+  ['Drawings white band notes', 'dw-proof', 'dw-paper'],
   ['Ink on signal', 'slab-ink', 'signal'],
   ['Text on mat', 'fg', 'mat'],
   ['Secondary on mat', 'muted', 'mat'],

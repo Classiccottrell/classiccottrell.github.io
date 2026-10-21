@@ -127,6 +127,6 @@ await plate('creative-services-flow', 'jpg', { width: 1100 });
 await plate('creative-services-print', 'webp', { width: 1100, quality: 70 });
 await plate('creative-services-sketches', 'jpg', { width: 1100, quality: 70 });
 await plate('creative-services-segments', 'webp', { width: 1100, quality: 80 });
-for (const name of ['the-last-20', 'built-to-break-a-lifelong-education', 'the-disposable-architecture-of-tomorrow']) await cover(name);
+for (const name of ['self-hosting-and-homelab-field-notes', 'the-last-20', 'a-final-love-letter-to-my-dying-ai', 'built-to-break-a-lifelong-education', 'the-disposable-architecture-of-tomorrow']) await cover(name);
 await self();
 await terry();

@@ -133,6 +133,7 @@ a.avail:hover{background:var(--highlight)}
 .ph .note{padding-block:6px}
 .ph .lede:last-child{margin-bottom:20px}
 .ph .tblock{margin-top:32px}
+.cs-note{max-width:60ch;margin-top:8px;padding:10px 0 10px 14px;border-left:3px solid var(--pencil)}
 .sec{padding-top:clamp(72px,9vw,128px)}
 .sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-top:1px solid var(--hair);padding-top:12px;margin-bottom:12px}
 .sec-head .note{padding-block:6px}

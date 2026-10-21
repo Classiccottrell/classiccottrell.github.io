@@ -187,7 +187,7 @@ export function caseStudy(ctx, p) {
   if (take) rows.push({ dt: `Take · ${take.id}`, dd: h`<a class="tb-take" href="/takes/${esc(take.slug)}/">${inline(take.text)}</a>`, wide: true });
   const main = h`
 <article class="cs">
-  ${pageHead({ kicker: h`<a href="/work/">Work</a> / ${pad2(p.number)} · ${esc(p.kind)}`, title: inline(p.title), lede: inline(p.standfirst), extra: tblock(rows, 'cs-tb') })}
+  ${pageHead({ kicker: h`<a href="/work/">Work</a> / ${pad2(p.number)} · ${esc(p.kind)}`, title: inline(p.title), lede: inline(p.standfirst), extra: h`${p.note ? h`<p class="cs-note">${mark(p.status.mark)}${inline(p.note)}</p>` : ''}${tblock(rows, 'cs-tb')}` })}
   ${p.plate ? h`<div class="wrap">${plate(p.plate, { label: 'Fig. 1' })}</div>` : ''}
   ${p.live ? liveBand(p.live) : ''}
   <div class="wrap cs-body">${p.sections.map((s) => section(s, p, !took || s === took))}</div>

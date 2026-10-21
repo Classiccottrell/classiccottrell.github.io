@@ -12,9 +12,10 @@
     "year": 2026,
     "role": "Design and build",
     "status": {
-      "mark": "live",
-      "label": "Live"
+      "mark": "prog",
+      "label": "In production"
     },
+    "note": "VPAT Vault is in production and changing week to week, so this page is a snapshot from October 2026.",
     "stack": "Claude prompts · Chrome extension (Manifest V3) · axe-core · command-line scanner",
     "numbers": [
       "9 prompts",

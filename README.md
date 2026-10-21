@@ -91,6 +91,8 @@ already installed, set `PW_CHROMIUM=/path/to/chrome`.
   entry a `cardImage` (Terry Time's is in `source/work/`) and the card uses that.
   With no public `links`, the title block says "Private repository" unless
   `linksNote` says something truer (Creative services: the sites retired).
+  An optional `note` prints one line under the standfirst, behind the status mark
+  (VPAT Vault: in production, so the page is a snapshot).
 - **A new guide page:** the Terry guide is the pattern. Content goes in a data file
   (`data/guide.json`), the page in a `scripts/lib/` module, and one entry in the `pages`
   list of `scripts/build.mjs` (nested under its case study, so no `guide.html` can hide it).

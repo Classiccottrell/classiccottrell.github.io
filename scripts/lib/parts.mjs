@@ -26,19 +26,9 @@ export const tblock = (rows, cls = '') => h`
 
 export const projectMeta = (p) => h`${esc(p.kind)} · ${p.year} · ${status(p.status)}`;
 
-// Where a project's picture goes: its first product link (anything that isn't
-// a code repository), else its case study.
-export const productOf = (p) => {
-  const l = p.links.find((x) => !/^https?:\/\/(www\.)?github\.com\//.test(x.url));
-  return l ? { href: l.url, ext: true } : { href: `/work/${p.slug}/`, ext: false };
-};
-
-// An index row linking to a case study. `pic` adds the data the cut preview needs.
-export const idxRow = (p, { pic = false, heading = 'h3' } = {}) => {
-  const to = productOf(p);
-  const data = pic && p.plate ? h` data-src="${esc(p.plate.src)}" data-href="${esc(to.href)}"${to.ext ? ' data-ext' : ''}` : '';
-  return h`<li><a class="idx-row" href="/work/${esc(p.slug)}/"${data}><span class="n">${pad2(p.number)}</span><${heading} class="t">${inline(p.title)}</${heading}><span class="d">${inline(p.summary)}</span><span class="m">${projectMeta(p)}</span></a></li>`;
-};
+// An index row linking to a case study.
+export const idxRow = (p, { heading = 'h3' } = {}) =>
+  h`<li><a class="idx-row" href="/work/${esc(p.slug)}/"><span class="n">${pad2(p.number)}</span><${heading} class="t">${inline(p.title)}</${heading}><span class="d">${inline(p.summary)}</span><span class="m">${projectMeta(p)}</span></a></li>`;
 
 export const img = ({ src, width, height, alt = '', cls = '', lazy = true, srcset = '', sizes = '' }) =>
   h`<img${cls ? h` class="${cls}"` : ''} src="${esc(src)}"${srcset ? h` srcset="${esc(srcset)}" sizes="${esc(sizes)}"` : ''} width="${width}" height="${height}" alt="${esc(alt)}"${lazy ? ' loading="lazy" decoding="async"' : ''}>`;

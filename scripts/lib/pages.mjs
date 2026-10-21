@@ -4,7 +4,7 @@ import { esc, h, inline, link, pad2, plain } from './html.mjs';
 import { page } from './layout.mjs';
 import {
   arrow, avail, btn, essay, exploded, heat, idxRow, img, inking, linefield, mark, pageHead, plate,
-  productOf, projectMeta, receipts, rule, status, takeItem, tblock,
+  projectMeta, receipts, rule, status, takeItem, tblock,
 } from './parts.mjs';
 
 const GROUPS = ['Products', 'Agents', 'Systems', 'Tools', 'Client work'];
@@ -38,10 +38,9 @@ export function home(ctx) {
 <section class="wrap sel" id="selected" aria-labelledby="sel-h">
   <div class="sel-head"><h2 class="note" id="sel-h">Selected work</h2><a class="note" href="/work/">All ${work.length} projects ${arrow}</a></div>
   <ol class="sel-list">${pick.map((p) => {
-    const to = productOf(p);
-    return h`<li><a class="item" href="${esc(to.href)}"${to.ext ? ' target="_blank" rel="noopener"' : ''}>
+    return h`<li><a class="item" href="/work/${esc(p.slug)}/">
       <div class="pic">${img({ src: p.plate.src, width: p.plate.width, height: p.plate.height, alt: '' })}</div>
-      <div class="cap"><h3>${inline(p.title)}</h3><p>${inline(p.summary)}</p><span class="arr" aria-hidden="true">${to.ext ? '↗' : '→'}</span></div>
+      <div class="cap"><h3>${inline(p.title)}</h3><p>${inline(p.summary)}</p><span class="arr" aria-hidden="true">→</span></div>
     </a></li>`;
   })}</ol>
 </section>

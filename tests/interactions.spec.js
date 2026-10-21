@@ -129,19 +129,19 @@ test('only the Terry Time page loads the Terry script', async ({ page }) => {
   await expect(page.locator('.live-band iframe.band-art')).toHaveCount(1);
 });
 
-test('selected work: three large pictures, each opening the product, or the case study when there isn’t one', async ({ page }) => {
+test('selected work: three large pictures, each opening its case study in the same tab', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 800 });
   await page.goto('/');
   const items = page.locator('.sel-list .item');
   const featured = work.filter((p) => p.featured).slice(0, 3);
   await expect(items).toHaveCount(3);
   for (const [i, p] of featured.entries()) {
-    const productLink = p.links.find((l) => !/^https?:\/\/(www\.)?github\.com\//.test(l.url));
     const item = items.nth(i);
     await expect(item.locator('h3')).toHaveText(p.title);
     await expect(item.locator('p')).toHaveText(p.summary);
-    await expect(item).toHaveAttribute('href', productLink ? productLink.url : `/work/${p.slug}/`);
-    if (productLink) { await expect(item).toHaveAttribute('target', '_blank'); await expect(item).toHaveAttribute('rel', 'noopener'); } else await expect(item).not.toHaveAttribute('target', /.*/);
+    await expect(item).toHaveAttribute('href', `/work/${p.slug}/`);
+    await expect(item).not.toHaveAttribute('target', /.*/);
+    await expect(item).not.toHaveAttribute('rel', /.*/);
   }
   await expect(page.locator('.sel-head a')).toHaveText(new RegExp(`All ${work.length} projects`));
 });

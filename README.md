@@ -76,7 +76,7 @@ already installed, set `PW_CHROMIUM=/path/to/chrome`.
   (the card prints it italic), and the About lede reuses it. `description` carries the same sentence for meta and schema.
 - **Home structure:** the first fold is exactly five things: wordmark, nav, headline, portrait with its signature,
   and one `Selected work ↓` link. Below it: Selected work (the first three `featured` projects in `data/work.json`,
-  large 16:9 pictures, one line each, each opening its product, or the case study when there isn't one), Take it apart,
+  large 16:9 pictures, one line each, each opening its case study at `/work/<slug>/`), Take it apart,
   the hot takes band, How I work (three rules), Drawings, Writing. The standfirst lives in About's bio.
 - **Colour:** tokens are at the top of `assets/css/site.css`. `--signal` (#EDB02A; #C98F12 in the dark scheme) is a flat
   *field* only: the portrait's slab on the home and About pages, at most one per screen. Never text, an underline, a

@@ -617,6 +617,14 @@ a.avail:hover{background:var(--highlight)}
   .dw-flip .dw-text{grid-column:1 / span 4}
 }
 .credits{margin-top:18px}
+/* The sketchbook: a calm white band after the portraits. A hairline parts it from the white band above;
+   the ink stays black on paper in both schemes, so the dark-scheme stencil invert is switched off here. */
+.dw-sb-in{background:linear-gradient(var(--pencil),var(--pencil)) var(--gx) 0/calc(100% - 2 * var(--gx)) 1px no-repeat;padding-block:clamp(48px,7vw,96px) clamp(64px,10vw,136px)}
+.dw-sb .sub-intro{max-width:44ch}
+.sb-row{display:grid;gap:clamp(36px,5vw,64px);justify-items:start;margin-top:clamp(28px,4vw,48px)}
+.sb-fig{width:100%;max-width:280px}
+.dw-white .stencil:not(.on-slab) img{filter:none}
+@media (min-width:700px){.sb-row{grid-template-columns:repeat(2,minmax(0,340px));column-gap:clamp(48px,8vw,128px);align-items:end}.sb-fig{max-width:none}}
 
 /* ---------- about and about this site */
 .about{margin-top:clamp(36px,5vw,64px);align-items:start}
@@ -626,9 +634,6 @@ a.avail:hover{background:var(--highlight)}
 .what{display:grid;border-top:1.5px solid var(--fg);max-width:72ch;margin-top:18px}
 .what li{padding:12px 0;border-bottom:1px solid var(--pencil)}
 .what b{font-family:var(--f-ink)}
-.sb-row{display:grid;gap:clamp(28px,4vw,48px);justify-items:start}
-.sb-fig{width:100%;max-width:280px}
-@media (min-width:700px){.sb-row{grid-template-columns:repeat(2,minmax(0,340px));align-items:end}.sb-fig{max-width:none}}
 .what-row{display:grid;gap:clamp(28px,4vw,40px)}
 .desk-fig{max-width:260px}
 @media (min-width:860px){.what-row{grid-template-columns:minmax(0,8fr) minmax(0,4fr);column-gap:var(--gap);align-items:start}.desk-fig{justify-self:end;width:100%;margin-top:18px}}

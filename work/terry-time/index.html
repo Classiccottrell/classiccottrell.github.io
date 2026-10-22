@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Terry Time · Matthew A. Cottrell</title>
-<meta name="description" content="A shop for Terry, the face that keeps turning up on East Van walls. I designed seven storefronts, put two of them in a 50/50 split, and wrote down how the winner gets picked before the first visitor arrives.">
+<meta name="description" content="Terry Terry Larry Berry is an art project. Terry Time is its online store, and I designed it and built it.">
 <link rel="canonical" href="https://classiccottrell.ca/work/terry-time/">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Matthew A. Cottrell">
 <meta property="og:title" content="Terry Time">
-<meta property="og:description" content="A shop for Terry, the face that keeps turning up on East Van walls. I designed seven storefronts, put two of them in a 50/50 split, and wrote down how the winner gets picked before the first visitor arrives.">
+<meta property="og:description" content="Terry Terry Larry Berry is an art project. Terry Time is its online store, and I designed it and built it.">
 <meta property="og:url" content="https://classiccottrell.ca/work/terry-time/">
-<meta property="og:image" content="https://classiccottrell.ca/assets/cards/work-terry-time.png?v=f8b7aa45ef">
+<meta property="og:image" content="https://classiccottrell.ca/assets/cards/work-terry-time.png?v=7b53f46d5a">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -48,9 +48,9 @@
 <header class="wrap ph">
   <p class="note"><a href="/work/">Work</a> / 04 · Brand and shop</p>
   <h1 class="splash">Terry Time</h1>
-  <p class="lede">A shop for Terry, the face that keeps turning up on East Van walls. I designed seven storefronts, put two of them in a 50/50 split, and wrote down how the winner gets picked before the first visitor arrives.</p>
+  <p class="lede">Terry Terry Larry Berry is an art project. Terry Time is its online store, and I designed it and built it.</p>
   
-<dl class="tblock cs-tb"><div><dt>Role</dt><dd>Design and build</dd></div><div><dt>Year</dt><dd>2026</dd></div><div><dt>Status</dt><dd><i class="sm sm-prog" aria-hidden="true"></i>Pre-launch</dd></div><div><dt>Stack</dt><dd>Next.js 15 · Stripe Checkout · Printful</dd></div><div><dt>Numbers</dt><dd>7 storefronts · 2 in the test · 3 products</dd></div><div><dt>Links</dt><dd><a class="lnk" href="https://www.terryterrylarryberry.com/">www.terryterry​larryberry.com<span class="ext" aria-hidden="true"> ↗</span></a> · <a class="lnk" href="https://github.com/Classiccottrell/TerryTime">Source<span class="ext" aria-hidden="true"> ↗</span></a></dd></div><div class="wide"><dt>Take · T-08</dt><dd><a class="tb-take" href="/takes/cite-a-number/">A design review that can’t cite a number is an opinion with a calendar invite.</a></dd></div></dl>
+<dl class="tblock cs-tb"><div><dt>Role</dt><dd>Design and build</dd></div><div><dt>Year</dt><dd>2026</dd></div><div><dt>Status</dt><dd><i class="sm sm-prog" aria-hidden="true"></i>Pre-launch</dd></div><div><dt>Stack</dt><dd>Next.js 15 · Stripe Checkout · Printful</dd></div><div><dt>Numbers</dt><dd>3 products · Made to order · Stripe + Printful</dd></div><div><dt>Links</dt><dd><a class="lnk" href="https://www.terryterrylarryberry.com/">www.terryterry​larryberry.com<span class="ext" aria-hidden="true"> ↗</span></a> · <a class="lnk" href="https://github.com/Classiccottrell/TerryTime">Source<span class="ext" aria-hidden="true"> ↗</span></a></dd></div><div class="wide"><dt>Take · T-08</dt><dd><a class="tb-take" href="/takes/cite-a-number/">A design review that can’t cite a number is an opinion with a calendar invite.</a></dd></div></dl>
 </header>
   <div class="wrap">
 <figure class="plate has-legend">
@@ -75,7 +75,7 @@
 <section class="cs-sec">
   
   
-  <p>Terry is a face that keeps turning up on East Van walls. Terry Time is his shop: a polo, a hoodie and a dad hat, each with the face embroidered on it and made to order.</p><p>I designed seven storefronts for it, and every one of them sold the same three things. Picking one on taste would have been a guess, so two of them go live side by side and paid orders decide.</p><p>The rule for calling it was written before the first visitor: once each store has had at least 300 visitors, the one with more paid orders per visitor wins. Until then, neither store changes.</p>
+  <p>Terry Terry Larry Berry is an art project. Terry is the face that keeps turning up on East Van walls.</p><p>Terry Time is the project’s online store. It sells three pieces, a polo, a hoodie and a dad hat, each with Terry’s face embroidered on it and made to order. Checkout runs on Stripe, and a paid order goes to Printful as a draft to be made.</p>
   
   
   
@@ -95,8 +95,8 @@
 <section class="cs-sec">
   <h2 class="cs-h">The UX thinking</h2>
   
-  
-  <ul class="items"><li><strong>Seven storefronts is a decision you haven’t made yet.</strong> A UX audit in September caught it: the home page was a chooser between five shops, so a visitor would land on a design review instead of a store. Five directions went to a branch, and two went into the test.</li><li><strong>A visitor only ever sees one store.</strong> Middleware splits <code>/</code> and <code>/shop</code> 50/50 and pins each visitor to their store with a cookie for 30 days. <code>?v=a</code> or <code>?v=b</code> forces one, so a post can promise a specific shop, and every Stripe checkout records which store it started in.</li><li><strong>The rule came before the data.</strong> Each store needs at least 300 visitors, and the launch promotion has to be over. Then the store with more paid orders per visitor wins. If that’s within noise, the higher average order wins, then the one I’d rather maintain.</li><li><strong>Honest while it’s off.</strong> The site builds and runs with no keys at all. Until checkout is switched on, the buttons say it isn’t live yet instead of failing.</li></ul>
+  <p>I designed seven storefronts and kept two. Each visitor sees only one of them, and once both have had 300 visitors, the one with more paid orders per visitor becomes the shop.</p>
+  <ul class="items"><li><strong>Honest while it’s off.</strong> The site builds and runs with no keys at all. Until checkout is switched on, the buttons say it isn’t live yet instead of failing.</li></ul>
   
   
   
@@ -134,12 +134,12 @@
 
 <section class="cs-sec">
   <h2 class="cs-h">Roadmap</h2>
-  <p class="cs-intro">What’s left between two working storefronts and one winner.</p>
+  <p class="cs-intro">What’s left before the store takes real orders.</p>
   
   
   
   
-<ol class="roadmap"><li><p class="note"><i class="sm sm-ship" aria-hidden="true"></i>Shipped</p><p class="rm-l">The build</p><p>Both stores, the lookbook, sizes, shipping and checkout, with all nine sizes linked to Printful.</p></li><li><p class="note"><i class="sm sm-prog" aria-hidden="true"></i>Next</p><p class="rm-l">Real-money test</p><p>Live keys, three real orders landing as Printful drafts, and one shipped to a friend to time the delivery.</p></li><li><p class="note"><i class="sm sm-priv" aria-hidden="true"></i>Planned</p><p class="rm-l">Launch</p><p>Checkout goes live and the split starts counting.</p></li><li><p class="note"><i class="sm sm-priv" aria-hidden="true"></i>Planned</p><p class="rm-l">Call it</p><p>At 300 visitors per store, with the launch promotion over, the winner becomes the shop and the other goes to a branch.</p></li></ol>
+<ol class="roadmap"><li><p class="note"><i class="sm sm-ship" aria-hidden="true"></i>Shipped</p><p class="rm-l">The build</p><p>Both stores, the lookbook, sizes, shipping and checkout, with all nine sizes linked to Printful.</p></li><li><p class="note"><i class="sm sm-prog" aria-hidden="true"></i>Next</p><p class="rm-l">Real-money test</p><p>Live keys, three real orders landing as Printful drafts, and one shipped to a friend to time the delivery.</p></li><li><p class="note"><i class="sm sm-priv" aria-hidden="true"></i>Planned</p><p class="rm-l">Launch</p><p>Checkout goes live.</p></li></ol>
 
   
 </section>

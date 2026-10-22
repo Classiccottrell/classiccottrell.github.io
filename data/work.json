@@ -331,8 +331,8 @@
     "kind": "Brand and shop",
     "group": "Products",
     "featured": true,
-    "summary": "One merch shop, two storefronts, and paid orders pick the winner.",
-    "standfirst": "A shop for Terry, the face that keeps turning up on East Van walls. I designed seven storefronts, put two of them in a 50/50 split, and wrote down how the winner gets picked before the first visitor arrives.",
+    "summary": "The online store for Terry Terry Larry Berry, an art project. Embroidered pieces, made to order.",
+    "standfirst": "Terry Terry Larry Berry is an art project. Terry Time is its online store, and I designed it and built it.",
     "take": "T-08",
     "year": 2026,
     "role": "Design and build",
@@ -342,9 +342,9 @@
     },
     "stack": "Next.js 15 · Stripe Checkout · Printful",
     "numbers": [
-      "7 storefronts",
-      "2 in the test",
-      "3 products"
+      "3 products",
+      "Made to order",
+      "Stripe + Printful"
     ],
     "links": [
       {
@@ -400,9 +400,8 @@
     "sections": [
       {
         "paragraphs": [
-          "Terry is a face that keeps turning up on East Van walls. Terry Time is his shop: a polo, a hoodie and a dad hat, each with the face embroidered on it and made to order.",
-          "I designed seven storefronts for it, and every one of them sold the same three things. Picking one on taste would have been a guess, so two of them go live side by side and paid orders decide.",
-          "The rule for calling it was written before the first visitor: once each store has had at least 300 visitors, the one with more paid orders per visitor wins. Until then, neither store changes."
+          "Terry Terry Larry Berry is an art project. Terry is the face that keeps turning up on East Van walls.",
+          "Terry Time is the project’s online store. It sells three pieces, a polo, a hoodie and a dad hat, each with Terry’s face embroidered on it and made to order. Checkout runs on Stripe, and a paid order goes to Printful as a draft to be made."
         ]
       },
       {
@@ -432,19 +431,10 @@
       },
       {
         "heading": "The UX thinking",
+        "paragraphs": [
+          "I designed seven storefronts and kept two. Each visitor sees only one of them, and once both have had 300 visitors, the one with more paid orders per visitor becomes the shop."
+        ],
         "items": [
-          {
-            "lead": "Seven storefronts is a decision you haven’t made yet.",
-            "text": "A UX audit in September caught it: the home page was a chooser between five shops, so a visitor would land on a design review instead of a store. Five directions went to a branch, and two went into the test."
-          },
-          {
-            "lead": "A visitor only ever sees one store.",
-            "text": "Middleware splits `/` and `/shop` 50/50 and pins each visitor to their store with a cookie for 30 days. `?v=a` or `?v=b` forces one, so a post can promise a specific shop, and every Stripe checkout records which store it started in."
-          },
-          {
-            "lead": "The rule came before the data.",
-            "text": "Each store needs at least 300 visitors, and the launch promotion has to be over. Then the store with more paid orders per visitor wins. If that’s within noise, the higher average order wins, then the one I’d rather maintain."
-          },
           {
             "lead": "Honest while it’s off.",
             "text": "The site builds and runs with no keys at all. Until checkout is switched on, the buttons say it isn’t live yet instead of failing."
@@ -489,7 +479,7 @@
       },
       {
         "heading": "Roadmap",
-        "intro": "What’s left between two working storefronts and one winner.",
+        "intro": "What’s left before the store takes real orders.",
         "roadmap": [
           {
             "label": "The build",
@@ -504,12 +494,7 @@
           {
             "label": "Launch",
             "status": "Planned",
-            "detail": "Checkout goes live and the split starts counting."
-          },
-          {
-            "label": "Call it",
-            "status": "Planned",
-            "detail": "At 300 visitors per store, with the launch promotion over, the winner becomes the shop and the other goes to a branch."
+            "detail": "Checkout goes live."
           }
         ]
       }

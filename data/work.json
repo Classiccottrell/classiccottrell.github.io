@@ -680,8 +680,13 @@
       "4 services",
       "7-step guide"
     ],
-    "links": [],
-    "linksNote": "A private home network, so there’s no repository to link. The [build-your-own guide](/work/terry-home-lab/guide/) is public.",
+    "links": [
+      {
+        "label": "Build-your-own guide",
+        "url": "/work/terry-home-lab/guide/"
+      }
+    ],
+    "linksNote": "A private home network, so there’s no repository to link.",
     "plate": {
       "src": "/assets/img/work/terry-home-lab.webp",
       "width": 1360,

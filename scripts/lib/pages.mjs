@@ -112,6 +112,7 @@ export function home(ctx) {
 // ---------------------------------------------------------------- work
 export function workIndex(ctx) {
   const { work } = ctx;
+  // The guide hangs off its case study's row, so it can be found from here.
   const legacy = Object.fromEntries(work.flatMap((p) => p.legacyIds.map((id) => [id, p.slug])));
   const main = h`
 ${pageHead({ kicker: `Work · ${work.length} projects`, title: 'Work', lede: 'Products, systems, agents and tools, and the client work before them. Each case study opens with a title block and the take it proves, and ends with what it actually took.' })}
@@ -121,7 +122,7 @@ ${pageHead({ kicker: `Work · ${work.length} projects`, title: 'Work', lede: 'Pr
     return items.length ? h`
   <section class="group" aria-labelledby="${id}">
     <h2 class="note" id="${id}">${esc(g)}</h2>
-    <ol class="idx">${items.map((p) => idxRow(p))}</ol>
+    <ol class="idx">${items.map((p) => idxRow(p, { extra: p.slug === ctx.guide.slug ? { href: `/work/${p.slug}/guide/`, label: 'Build-your-own guide' } : null }))}</ol>
   </section>` : '';
   })}
 </div>`;
@@ -182,7 +183,7 @@ export function caseStudy(ctx, p) {
     { dt: 'Status', dd: status(p.status) },
     { dt: 'Stack', dd: esc(p.stack) },
     { dt: 'Numbers', dd: esc(p.numbers.join(' · ')) },
-    { dt: 'Links', dd: p.links.length ? p.links.map((l, j) => h`${j ? ' · ' : ''}${link(l.url, l.label)}`).join('') : (p.linksNote ? inline(p.linksNote) : 'Private repository') },
+    { dt: 'Links', dd: p.links.length ? p.links.map((l, j) => h`${j ? ' · ' : ''}${link(l.url, l.label)}`).join('') + (p.linksNote ? h`<span class="tb-sub">${inline(p.linksNote)}</span>` : '') : (p.linksNote ? inline(p.linksNote) : 'Private repository') },
   ];
   if (take) rows.push({ dt: `Take · ${take.id}`, dd: h`<a class="tb-take" href="/takes/${esc(take.slug)}/">${inline(take.text)}</a>`, wide: true });
   const main = h`

@@ -143,6 +143,7 @@ a.avail:hover{background:var(--highlight)}
 .tblock>.wide{grid-column:1/-1}
 .tblock dt{font:500 .66rem/1.4 var(--f-pencil);letter-spacing:.08em;text-transform:uppercase;color:var(--proof)}
 .tblock dd{font:500 .98rem/1.3 var(--f-ink);margin-top:3px;overflow-wrap:anywhere}
+.tb-sub{display:block;font-weight:400;color:var(--muted);margin-top:4px}
 .tb-take{display:block;font:700 var(--t-h3)/1.12 var(--f-ink);letter-spacing:-.015em;text-decoration:none;margin-top:4px}
 .tb-take:hover{color:var(--proof)}
 
@@ -155,6 +156,10 @@ a.avail:hover{background:var(--highlight)}
 .idx-row .m{font:500 .7rem/1.4 var(--f-pencil);letter-spacing:.06em;text-transform:uppercase;color:var(--proof)}
 .idx-row:hover,.idx-row.on{background:var(--highlight)}
 .idx-row:focus-visible{outline-offset:-2px;background:var(--highlight)}
+/* One small link under a row (the Terry guide), sharing the row's hairline. */
+.has-x .idx-row{border-bottom:0;padding-bottom:4px}
+.idx-x{padding:0 0 12px calc(clamp(1.3rem,1rem + 1.4cqi,2.3rem) * 1.15 + 16px);border-bottom:1px solid var(--pencil);font-size:.95rem}
+@container (min-width:700px){.idx-x{padding-left:calc(3.6rem + 16px)}}
 @container (min-width:700px){.idx-row{grid-template-columns:3.6rem minmax(0,1fr) minmax(0,1.25fr)}.idx-row .n{grid-row:span 2}.idx-row .m{grid-column:3}}
 
 /* ---------- panels, callouts, pictures */
@@ -280,6 +285,9 @@ a.avail:hover{background:var(--highlight)}
 .essay .t{font-size:var(--t-h3);line-height:1.1;letter-spacing:-.02em}
 .essay .s{font-style:italic;font-size:1rem;line-height:1.4}
 .essays.big .n{font:700 var(--t-h3)/1 var(--f-ink);color:var(--fg);letter-spacing:-.02em;padding-top:0;min-width:3.4em}
+.has-rel .essay-a{border-bottom:0}
+.essay-rel{padding:0 0 14px calc(var(--t-h3) * 3.4 + 16px);border-bottom:1px solid var(--hair)}
+@media (min-width:700px){.essay-rel{padding-left:calc(5.5rem + 16px)}}
 .essays.big img{width:180px;max-width:100%;border:1.5px solid var(--fg);grid-column:2;margin-top:10px}
 @media (min-width:700px){.essays.big .essay-a{grid-template-columns:5.5rem minmax(0,1fr) 180px}.essays.big img{grid-column:3;grid-row:1/4;margin-top:0}}
 .sub-box{display:flex;justify-content:space-between;align-items:center;gap:14px 24px;flex-wrap:wrap;border:1.5px solid var(--fg);padding:18px;margin-top:32px}

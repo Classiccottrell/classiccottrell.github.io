@@ -27,8 +27,9 @@ export const tblock = (rows, cls = '') => h`
 export const projectMeta = (p) => h`${esc(p.kind)} · ${p.year} · ${status(p.status)}`;
 
 // An index row linking to a case study.
-export const idxRow = (p, { heading = 'h3' } = {}) =>
-  h`<li><a class="idx-row" href="/work/${esc(p.slug)}/"><span class="n">${pad2(p.number)}</span><${heading} class="t">${inline(p.title)}</${heading}><span class="d">${inline(p.summary)}</span><span class="m">${projectMeta(p)}</span></a></li>`;
+// `extra` ({ href, label }) adds one small link under the row, outside its anchor.
+export const idxRow = (p, { heading = 'h3', extra = null } = {}) =>
+  h`<li${extra ? ' class="has-x"' : ''}><a class="idx-row" href="/work/${esc(p.slug)}/"><span class="n">${pad2(p.number)}</span><${heading} class="t">${inline(p.title)}</${heading}><span class="d">${inline(p.summary)}</span><span class="m">${projectMeta(p)}</span></a>${extra ? h`<p class="idx-x">${link(extra.href, extra.label)}</p>` : ''}</li>`;
 
 export const img = ({ src, width, height, alt = '', cls = '', lazy = true, srcset = '', sizes = '' }) =>
   h`<img${cls ? h` class="${cls}"` : ''} src="${esc(src)}"${srcset ? h` srcset="${esc(srcset)}" sizes="${esc(sizes)}"` : ''} width="${width}" height="${height}" alt="${esc(alt)}"${lazy ? ' loading="lazy" decoding="async"' : ''}>`;
@@ -74,14 +75,14 @@ export const rule = (r, { withSource = true } = {}) => h`
 <li class="rule" id="${esc(r.id.toLowerCase())}"><p class="note">${esc(r.id)}</p><q>${inline(r.text)}</q>${withSource ? h`<p class="src"><a href="${esc(r.href)}">${esc(r.source)}</a></p>` : ''}</li>`;
 
 export const essay = (e, { big = false, heading = 'h3' } = {}) => h`
-<li class="essay">
+<li class="essay${big && e.related ? ' has-rel' : ''}">
   <a class="essay-a" href="${esc(e.url)}">
     <span class="n">No. ${pad2(e.number)}</span>
     <${heading} class="t">${inline(e.title)}</${heading}>
     <span class="s">${inline(e.subtitle)}</span>
     <span class="m note"><time datetime="${e.date}">${longDate(e.date)}</time> · Substack <span aria-hidden="true">↗</span></span>
     ${big ? img({ src: e.image, width: 640, height: 480, alt: '' }) : ''}
-  </a>
+  </a>${big && e.related ? h`<p class="essay-rel note">${link(e.related.href, e.related.label)}</p>` : ''}
 </li>`;
 
 // Take it apart: a sample screen in five layers that separate on a slider.

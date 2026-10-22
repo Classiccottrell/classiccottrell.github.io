@@ -370,6 +370,19 @@ test('the case study says what is true about its links, and carries the roadmap 
   await expect(page.locator('#g-agents ~ .idx a[href="/work/terry-home-lab/"], #g-agents + .idx a[href="/work/terry-home-lab/"]')).toHaveCount(1);
 });
 
+test('the guide is findable: title block, work index and writing', async ({ page }) => {
+  await page.goto(CASE);
+  const tb = page.locator('.cs-tb a[href="/work/terry-home-lab/guide/"]');
+  await expect(tb).toHaveText('Build-your-own guide');
+  await expect(tb.locator('.ext')).toHaveCount(0);
+  expect(await tb.getAttribute('target')).toBeNull();
+  await page.goto('/work/');
+  await expect(page.locator('.idx-x a[href="/work/terry-home-lab/guide/"]')).toHaveText('Build-your-own guide');
+  await page.goto('/writing/');
+  await expect(page.locator('.essay-rel a[href="/work/terry-home-lab/guide/"]')).toHaveText('The guide on this site');
+  await expect(page.locator('.essay-rel')).toHaveCount(1);
+});
+
 test('the old projects.html address for the card still lands on the case study', async ({ page }) => {
   await page.goto('/projects.html#terry-home-ai-lab');
   await expect(page).toHaveURL(/\/work\/terry-home-lab\/$/);

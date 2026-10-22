@@ -3,7 +3,8 @@
   "subscribe": "https://classiccottrell.substack.com/subscribe",
   "essays": [
     { "number": 5, "title": "Self-Hosting & Homelab Field Notes", "subtitle": "Notes from turning retired computers into a home AI lab.", "date": "2026-10-11",
-      "url": "https://classiccottrell.substack.com/p/self-hosting-and-homelab-field-notes", "image": "/assets/img/writing/self-hosting-and-homelab-field-notes.webp" },
+      "url": "https://classiccottrell.substack.com/p/self-hosting-and-homelab-field-notes", "image": "/assets/img/writing/self-hosting-and-homelab-field-notes.webp",
+      "related": { "label": "The guide on this site", "href": "/work/terry-home-lab/guide/" } },
     { "number": 4, "title": "The Last 20%", "subtitle": "Where AI prototyping stops saving time.", "date": "2026-09-24",
       "url": "https://classiccottrell.substack.com/p/the-last-20", "image": "/assets/img/writing/the-last-20.webp" },
     { "number": 3, "title": "A Final Love Letter to My Dying AI", "subtitle": "Inspiring GPT with a Mark Twain quote", "date": "2026-08-18",

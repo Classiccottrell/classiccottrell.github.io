@@ -23,7 +23,7 @@ data/                 the content: edit these, then npm run build
   guide.json          the Terry build-your-own guide: steps, prompts, known mistakes, Substack sources
   takes.json          hot takes with receipts (set "retired" to retire one in public)
   rules.json          the rules, R-01 onward
-  writing.json        essays (they live on Substack)
+  writing.json        essays (they live on Substack; optional `related` {label, href} adds a small link to a page here)
   drawings.json       drawings, with credits and alt text
   hire.json           Work with me: standfirst, what I help with, how it works
 assets/
@@ -91,7 +91,8 @@ already installed, set `PW_CHROMIUM=/path/to/chrome`.
   A plate much wider than it is tall crops badly into the share card; give the
   entry a `cardImage` (Terry Time's is in `source/work/`) and the card uses that.
   With no public `links`, the title block says "Private repository" unless
-  `linksNote` says something truer (Creative services: the sites retired).
+  `linksNote` says something truer (Creative services: the sites retired). With both,
+  the note prints under the links (Terry Home Lab: the guide, and why there's no repo).
   An optional `note` prints one line under the standfirst, behind the status mark
   (VPAT Vault: in production, so the page is a snapshot).
 - **A new guide page:** the Terry guide is the pattern. Content goes in a data file

@@ -37,6 +37,7 @@ body{width:1200px;height:630px;overflow:hidden;background:#fff;color:#0A0A0A;fon
 .ink .k{color:#A4DDED}
 h1{font:700 104px/.9 F;letter-spacing:-.045em;margin:22px 0 22px}
 h1.m{font-size:76px;letter-spacing:-.035em}
+h1 em{font:italic 400 1em/1 N;letter-spacing:-.03em}
 h1.s{font-size:60px;line-height:.98;letter-spacing:-.03em}
 p.s{font-size:30px;line-height:1.3;max-width:24ch}
 .f{margin-top:auto;display:flex;justify-content:space-between;align-items:center;border-top:3px solid currentColor;padding-top:16px;font:600 22px F}
@@ -51,22 +52,23 @@ p.s{font-size:30px;line-height:1.3;max-width:24ch}
  linear-gradient(#A4DDED,#A4DDED) 0 100%/12px 2px no-repeat,linear-gradient(#A4DDED,#A4DDED) 0 100%/2px 12px no-repeat,
  linear-gradient(#A4DDED,#A4DDED) 100% 100%/12px 2px no-repeat,linear-gradient(#A4DDED,#A4DDED) 100% 100%/2px 12px no-repeat}
 .pic.drawing::after{display:none}
+.pic.slab{background:#EDB02A;align-self:stretch;margin:-56px -64px -56px 0;width:470px}.pic.slab img{height:100%;object-position:bottom}
 .ink .pic.drawing img{mix-blend-mode:screen}
 .heat{display:inline-flex;gap:5px;margin-left:16px;vertical-align:-2px}.heat i{width:16px;height:16px;border:2px solid currentColor}.heat i.f{background:currentColor}
 .terry{position:absolute;right:64px;top:48px;width:92px;height:92px;background:currentColor;-webkit-mask:url(/assets/img/terry.svg) center/contain no-repeat}
 `;
 
 const foot = (right) => `<div class="f">${esc(site.name)}<span>${esc(right)}</span></div>`;
-const card = ({ kicker, title, sub, size = '', img, drawing = false, ink = false, right = 'Product designer', terry = false }) => `<!doctype html>
+const card = ({ kicker, title, sub, size = '', img, drawing = false, slab = false, ink = false, right = 'Product designer', terry = false }) => `<!doctype html>
 <html><head><meta charset="utf-8"><style>${CSS}</style></head><body>
 <div class="c${ink ? ' ink' : ''}">
   <div class="t">
     <p class="k">${kicker}</p>
-    <h1 class="${size}">${esc(title)}</h1>
+    <h1 class="${size}">${esc(title).replace(/\*([^*]+)\*/g, '<em>$1</em>')}</h1>
     ${sub ? `<p class="s">${esc(sub)}</p>` : ''}
     ${foot(right)}
   </div>
-  ${img ? `<div class="pic${drawing ? ' drawing' : ''}"><img src="${esc(img)}" alt=""></div>` : ''}
+  ${img ? `<div class="pic${drawing ? ' drawing' : ''}${slab ? ' slab' : ''}"><img src="${esc(img)}" alt=""></div>` : ''}
   ${terry ? '<span class="terry"></span>' : ''}
 </div></body></html>`;
 
@@ -74,7 +76,7 @@ const heat = (n) => `<span class="heat">${[1, 2, 3].map((i) => `<i${i <= n ? ' c
 const kurtz = drawings.drawings.find((d) => d.slug === 'kurtz');
 
 const cards = [
-  ['home', card({ kicker: 'Product designer · Enterprise IT · Design systems', title: site.headline, size: 'm', img: site.portrait.ink, drawing: true })],
+  ['home', card({ kicker: 'Product designer · Enterprise IT · Design systems', title: site.headline, size: 'm', img: site.portrait.ink, drawing: true, slab: true })],
   ['work', card({ kicker: `Work · ${work.length} projects`, title: 'Work', sub: 'Products, systems, agents and tools, each with a title block and the take it proves.', terry: true })],
   ...work.map((p) => [`work-${p.slug}`, card({
     kicker: `Work / ${pad2(p.number)} · ${esc(p.kind)}`, title: plain(p.title), size: p.title.length > 14 ? 's' : 'm', sub: plain(p.summary),
@@ -83,11 +85,11 @@ const cards = [
   ['guide-terry-home-lab', card({ kicker: 'Work / Terry: Home AI Lab · Guide', title: 'Build a home AI lab from a retired computer', size: 's', sub: 'A step-by-step guide, with the prompts to give your AI assistant.', img: json('data/work.json').find((p) => p.slug === 'terry-home-lab').cardImage, right: 'Guide', ink: false })],
   ['takes', card({ kicker: `Takes · ${takes.length}, with receipts`, title: 'Takes', sub: 'Opinions I’ll defend in a meeting, each backed by work you can check.', ink: true, terry: true })],
   ...takes.map((t) => [`take-${t.slug}`, card({ kicker: `${esc(t.id)}${heat(t.heat)}`, title: plain(t.text), size: 's', ink: true, right: 'Takes, with receipts' })]),
-  ['work-with-me', card({ kicker: 'Work with me', title: 'Bring me a problem.', size: 'm', sub: `${site.availability.label}. Four ways in, and a brief that writes itself.`, terry: true })],
+  ['work-with-me', card({ kicker: 'Work with me', title: 'Bring me a problem.', size: 'm', sub: `${site.availability.label}. Tell me what’s broken, and I’ll read it myself.`, terry: true })],
   ['writing', card({ kicker: 'Writing · on Substack', title: 'Writing', sub: 'Essays on design, AI, and the occasional roll of packing tape.', terry: true })],
   ['drawings', card({ kicker: `Drawings · ${drawings.drawings.length} portraits in ink`, title: 'Drawings', sub: 'One film, one face, one line of dialogue.', img: kurtz.image, drawing: true, ink: true })],
-  ['about', card({ kicker: 'About', title: site.name, size: 'm', sub: site.headline, img: site.portrait.ink, drawing: true })],
-  ['colophon', card({ kicker: 'Colophon', title: 'Colophon', sub: 'How this site is made, and a button that checks it.', terry: true })],
+  ['about', card({ kicker: 'About', title: site.name, size: 'm', sub: plain(site.headline), img: site.portrait.ink, drawing: true, slab: true })],
+  ['about-this-site', card({ kicker: 'About this site', title: 'About this site', size: 'm', sub: 'How this site is made, and a button that checks it.', terry: true })],
 ];
 
 const browser = await chromium.launch({ executablePath: process.env.PW_CHROMIUM || undefined });

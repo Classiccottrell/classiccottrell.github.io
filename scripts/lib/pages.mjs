@@ -4,12 +4,16 @@ import { esc, h, inline, link, pad2, plain } from './html.mjs';
 import { page } from './layout.mjs';
 import {
   arrow, avail, btn, essay, exploded, heat, idxRow, img, inking, linefield, mark, pageHead, plate,
-  projectMeta, receipts, rule, status, takeItem, tblock,
+  projectMeta, receipts, rule, status, stencil, takeItem, tblock,
 } from './parts.mjs';
 
 const GROUPS = ['Products', 'Agents', 'Systems', 'Tools', 'Client work'];
 const takeOf = (ctx, id) => ctx.takes.find((t) => t.id === id);
 const live = (takes) => takes.filter((t) => !t.retired);
+// The hot takes band shows one linefield piece per take, in this order (take n gets piece n mod 5).
+const STAGE_ART = [
+  ['grain-field', 'Grain Field'], ['terminator', 'Terminator'], ['dark-nebula', 'Dark Nebula'], ['infall', 'Infall'], ['longwave', 'Longwave'],
+];
 const drawingSrcset = (d) => `${d.image.replace('.webp', '-700.webp')} 700w, ${d.image} 1100w`;
 
 // ---------------------------------------------------------------- home
@@ -19,61 +23,61 @@ export function home(ctx) {
   const takes = live(ctx.takes);
   const first = takes[0];
   const kurtz = drawings.drawings.find((d) => d.slug === 'kurtz');
-  const stageData = JSON.stringify(takes.map((t) => ({ id: t.id, heat: t.heat, text: plain(t.text), href: `/takes/${t.slug}/`, src: `Receipts · ${t.sources.map((s) => s.label).join(', ')}` })))
+  const stageData = JSON.stringify(takes.map((t, i) => ({ id: t.id, art: STAGE_ART[i % STAGE_ART.length][0], piece: STAGE_ART[i % STAGE_ART.length][1], heat: t.heat, text: plain(t.text), href: `/takes/${t.slug}/`, src: `Receipts · ${t.sources.map((s) => s.label).join(', ')}` })))
     .replace(/</g, '\\u003c');
+  const pick = featured.slice(0, 3);
   const main = h`
-<section class="hero wrap" aria-labelledby="hero-h">
-  <canvas class="trail" aria-hidden="true"></canvas>
-  <div class="g12 hero-in">
-    <div class="hero-text">
-      <p class="note">${esc(site.kicker)}</p>
-      <h1 class="hero-h" id="hero-h">${esc(site.headline)}</h1>
-      <p class="lede">${esc(site.standfirst)}</p>
-      <p class="ctas">${btn('/work-with-me/', 'Work with me')}<a class="lnk" href="/work/">See the work</a></p>
-    </div>
-    ${inking({ ...site.portrait, cls: 'hero-fig', caption: site.portrait.caption, dur: 2200 })}
+<section class="hero" aria-labelledby="hero-h">
+  <div class="hero-copy">
+    <h1 class="hero-h" id="hero-h">${inline(site.headline)}</h1>
+    <a class="go" href="#selected">Selected work <span aria-hidden="true">↓</span></a>
   </div>
+  ${inking({ ...site.portrait, cls: 'hero-fig', caption: null, dur: 2200, solo: true })}
 </section>
 
-<section class="wrap sec" aria-labelledby="sel-h">
-  <div class="sec-head"><h2 class="note" id="sel-h">Selected work</h2><a class="note" href="/work/">All ${work.length} projects ${arrow}</a></div>
-  <div class="sel">
-    <ol class="idx" data-cut="sel-pic">${featured.map((p) => idxRow(p, { pic: true }))}</ol>
-    <div class="sel-pic panel crop" aria-hidden="true">${img({ src: featured[0].plate.src, width: featured[0].plate.width, height: featured[0].plate.height, alt: '' })}</div>
-  </div>
+<section class="wrap sel" id="selected" aria-labelledby="sel-h">
+  <div class="sel-head"><h2 class="note" id="sel-h">Selected work</h2><a class="note" href="/work/">All ${work.length} projects ${arrow}</a></div>
+  <ol class="sel-list">${pick.map((p) => {
+    return h`<li><a class="item" href="/work/${esc(p.slug)}/">
+      <div class="pic">${img({ src: p.plate.src, width: p.plate.width, height: p.plate.height, alt: '' })}</div>
+      <div class="cap"><h3>${inline(p.title)}</h3><p>${inline(p.summary)}</p><span class="arr" aria-hidden="true">→</span></div>
+    </a></li>`;
+  })}</ol>
 </section>
 
-<section class="wrap sec" aria-labelledby="xv-h">
+<section class="wrap sec xv-sec" aria-labelledby="xv-h">
   <div class="xv-wrap">
     <div class="xv-text">
-      <p class="note">The job</p>
       <h2 class="h2" id="xv-h">Take it apart.</h2>
-      <p>Drag the slider. A sample service-desk screen comes apart into the five layers I design, from the words on top to the rules underneath. Most fixes live a layer or two below where the problem shows.</p>
-      <div class="ink-ctl" data-js>
-        <label class="note" for="explode">Apart</label>
-        <input type="range" id="explode" min="0" max="100" value="0">
-        <output for="explode">0%</output>
-        <button type="button" class="tool" id="explode-btn">Take it apart</button>
-      </div>
-      <p class="note xv-legend">05 Content · 04 Components · 03 Layout · 02 Tokens · 01 Rules</p>
-      <p class="note cap">A sample screen. On a real project, it’s yours.</p>
+      <p>A sample service-desk screen, in the five layers I design.<span data-js> Scroll, or drag the slider.</span></p>
     </div>
-    ${exploded(['R-02', 'R-04', 'R-05', 'R-07', 'R-09'].map((id) => rules.find((r) => r.id === id)))}
+    <div class="xv-run" data-xv-run>
+      <div class="xv-dock">
+        ${exploded(['R-02', 'R-04', 'R-05', 'R-07', 'R-09'].map((id) => rules.find((r) => r.id === id)))}
+        <p class="note xv-legend">05 Content · 04 Components · 03 Layout · 02 Tokens · 01 Rules</p>
+        <div class="ink-ctl" data-js>
+          <label class="note" for="explode">Apart</label>
+          <input type="range" id="explode" min="0" max="100" value="35">
+          <output for="explode">35%</output>
+          <button type="button" class="tool" id="explode-btn">Take it apart</button>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
-<section class="band stage" aria-labelledby="stage-h" data-stage>
-  ${linefield('grain-field', 'Grain Field, a linefield piece, drifting behind the take')}
+<section class="band stage" aria-label="Hot takes" data-stage>
+  <div class="stage-art" aria-hidden="true">${linefield(STAGE_ART[0][0], `${STAGE_ART[0][1]}, a linefield piece, drifting beside the take`, 'on')}</div>
   <div class="wrap stage-in">
     <div>
-      <h2 class="note" id="stage-h">Hot takes</h2>
-      <p class="stage-n note"><span data-stage-n>${esc(first.id)}</span><span data-stage-heat>${heat(first.heat)}</span></p>
-      <p class="stage-t"><a href="/takes/${esc(first.slug)}/" data-stage-text>${inline(first.text)}</a></p>
+      <p class="stage-n note"><span>Hot takes</span><span data-stage-n>${esc(first.id)}</span><span data-stage-heat>${heat(first.heat)}</span></p>
+      <h2 class="stage-t"><a href="/takes/${esc(first.slug)}/" data-stage-text>${inline(first.text)}</a></h2>
       <p class="note" data-stage-src>Receipts · ${esc(first.sources.map((s) => s.label).join(', '))}</p>
     </div>
     <div class="stage-ctl">
       <span class="stage-btns" data-js><button type="button" class="tool" data-stage-prev>← Prev</button><button type="button" class="tool" data-stage-play>Pause</button><button type="button" class="tool" data-stage-next>Next →</button></span>
       <a class="lnk" href="/takes/">All ${takes.length} takes</a>
+      <span class="note stage-cap" data-stage-cap>Behind it: ${esc(STAGE_ART[0][1])}, from linefield</span>
     </div>
   </div>
   <script type="application/json" id="takes-data">${stageData}</script>
@@ -81,7 +85,7 @@ export function home(ctx) {
 
 <section class="wrap sec" aria-labelledby="rules-h">
   <div class="sec-head"><h2 class="note" id="rules-h">How I work</h2><a class="note" href="/about/#rules">All ${rules.length} rules ${arrow}</a></div>
-  <ol class="rules">${['R-02', 'R-03', 'R-05'].map((id) => rule(rules.find((r) => r.id === id)))}</ol>
+  <ol class="rules short">${['R-02', 'R-03', 'R-05'].map((id) => rule(rules.find((r) => r.id === id)))}</ol>
 </section>
 
 <section class="band draw-band" aria-labelledby="draw-h">
@@ -89,8 +93,6 @@ export function home(ctx) {
     <div>
       <h2 class="note" id="draw-h">Drawings</h2>
       <p class="h2">${esc(drawings.intro.split('.')[0])}.</p>
-      <blockquote class="quote"><p>“${esc(kurtz.quote.split('. But')[0])}.”</p></blockquote>
-      <p class="note">${esc(kurtz.character)} · ${esc(kurtz.film)} · ${kurtz.year}</p>
       <p class="band-link"><a class="lnk" href="/drawings/">See the drawings</a></p>
     </div>
     ${img({ src: kurtz.image, srcset: drawingSrcset(kurtz), sizes: '(min-width: 760px) 40vw, 100vw', width: kurtz.width, height: kurtz.height, alt: kurtz.alt, cls: 'screen' })}
@@ -102,14 +104,15 @@ export function home(ctx) {
   <ol class="essays">${writing.essays.map((e) => essay(e))}</ol>
 </section>`;
   return page(ctx, {
-    path: '/', card: 'home', main,
-    head: h`<script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@type': 'Person', name: site.name, jobTitle: 'Product designer', url: site.url, sameAs: site.social.map((s) => s.url) })}</script>`,
+    path: '/', card: 'home', bodyClass: 'home', main,
+    head: h`<script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@type': 'Person', name: site.name, jobTitle: 'Product designer', description: plain(site.description), url: site.url, sameAs: site.social.map((s) => s.url) })}</script>`,
   });
 }
 
 // ---------------------------------------------------------------- work
 export function workIndex(ctx) {
   const { work } = ctx;
+  // The guide hangs off its case study's row, so it can be found from here.
   const legacy = Object.fromEntries(work.flatMap((p) => p.legacyIds.map((id) => [id, p.slug])));
   const main = h`
 ${pageHead({ kicker: `Work · ${work.length} projects`, title: 'Work', lede: 'Products, systems, agents and tools, and the client work before them. Each case study opens with a title block and the take it proves, and ends with what it actually took.' })}
@@ -119,7 +122,7 @@ ${pageHead({ kicker: `Work · ${work.length} projects`, title: 'Work', lede: 'Pr
     return items.length ? h`
   <section class="group" aria-labelledby="${id}">
     <h2 class="note" id="${id}">${esc(g)}</h2>
-    <ol class="idx">${items.map((p) => idxRow(p))}</ol>
+    <ol class="idx">${items.map((p) => idxRow(p, { extra: p.slug === ctx.guide.slug ? { href: `/work/${p.slug}/guide/`, label: 'Build-your-own guide' } : null }))}</ol>
   </section>` : '';
   })}
 </div>`;
@@ -180,12 +183,12 @@ export function caseStudy(ctx, p) {
     { dt: 'Status', dd: status(p.status) },
     { dt: 'Stack', dd: esc(p.stack) },
     { dt: 'Numbers', dd: esc(p.numbers.join(' · ')) },
-    { dt: 'Links', dd: p.links.length ? p.links.map((l, j) => h`${j ? ' · ' : ''}${link(l.url, l.label)}`).join('') : (p.linksNote ? inline(p.linksNote) : 'Private repository') },
+    { dt: 'Links', dd: p.links.length ? p.links.map((l, j) => h`${j ? ' · ' : ''}${link(l.url, l.label)}`).join('') + (p.linksNote ? h`<span class="tb-sub">${inline(p.linksNote)}</span>` : '') : (p.linksNote ? inline(p.linksNote) : 'Private repository') },
   ];
   if (take) rows.push({ dt: `Take · ${take.id}`, dd: h`<a class="tb-take" href="/takes/${esc(take.slug)}/">${inline(take.text)}</a>`, wide: true });
   const main = h`
 <article class="cs">
-  ${pageHead({ kicker: h`<a href="/work/">Work</a> / ${pad2(p.number)} · ${esc(p.kind)}`, title: inline(p.title), lede: inline(p.standfirst), extra: tblock(rows, 'cs-tb') })}
+  ${pageHead({ kicker: h`<a href="/work/">Work</a> / ${pad2(p.number)} · ${esc(p.kind)}`, title: inline(p.title), lede: inline(p.standfirst), extra: h`${p.note ? h`<p class="cs-note">${mark(p.status.mark)}${inline(p.note)}</p>` : ''}${tblock(rows, 'cs-tb')}` })}
   ${p.plate ? h`<div class="wrap">${plate(p.plate, { label: 'Fig. 1' })}</div>` : ''}
   ${p.live ? liveBand(p.live) : ''}
   <div class="wrap cs-body">${p.sections.map((s) => section(s, p, !took || s === took))}</div>
@@ -237,80 +240,40 @@ export function takePage(ctx, t) {
 }
 
 // ---------------------------------------------------------------- work with me
-const radios = (name, values, checked) => values.map((v, i) => h`<label class="opt"><input type="radio" name="${name}" value="${esc(v)}"${i === checked ? ' checked' : ''}><span>${esc(v)}</span></label>`);
-
 export function hire(ctx) {
   const { site, hire: H } = ctx;
   const main = h`
-${pageHead({ kicker: 'Work with me', title: esc(H.headline), lede: esc(H.standfirst) })}
-<section class="wrap sec avail-sec" id="availability" aria-labelledby="avail-h">
-  <h2 class="note" id="avail-h">Availability</h2>
-  <p class="avail-big">${status(site.availability)}</p>
-</section>
-
-<section class="wrap sec" aria-labelledby="offers-h">
-  <h2 class="h2" id="offers-h">Four ways in</h2>
-  <ol class="offers">${H.offers.map((o, i) => h`
-    <li class="offer" id="offer-${esc(o.id)}">
-      <p class="note">Offer ${pad2(i + 1)}</p>
-      <h3 class="h3">${esc(o.title)}</h3>
-      <p>${inline(o.text)}</p>
-      <dl><div><dt>Time</dt><dd>${esc(o.time)}</dd></div><div><dt>Proof</dt><dd>${o.proof.map((pr, j) => h`${j ? ', ' : ''}<a href="${esc(pr.href)}">${esc(pr.label)}</a>`)}</dd></div></dl>
-      <a class="btn" href="#brief" data-kind="${esc(o.kind)}" aria-label="Bring me this: ${esc(o.title)}">Bring me this ${arrow}</a>
-    </li>`)}
-  </ol>
-</section>
-
-<section class="wrap sec" id="brief" aria-labelledby="brief-h">
-  <div class="g12 brief">
-    <div class="s6">
-      <h2 class="h2" id="brief-h">The brief</h2>
-      <p class="sub-intro">Tell me what’s broken. While you type, the page writes it up as a work order.</p>
-      <form class="bf" name="brief" method="POST" action="/work-with-me/thanks/" data-netlify="true" netlify-honeypot="website">
-        <input type="hidden" name="form-name" value="brief">
-        <input type="hidden" name="order" value="">
-        <p hidden><label>Leave this empty <input name="website" tabindex="-1" autocomplete="off"></label></p>
-        <fieldset><legend>What are you bringing?</legend><div class="opts">${radios('kind', H.brief.kinds, 0)}</div></fieldset>
-        <div class="fld"><label for="bf-what">What’s broken?</label><textarea id="bf-what" name="broken" rows="4" required placeholder="One sentence is enough. “Our change-approval flow takes nine screens.”"></textarea></div>
-        <fieldset><legend>When does it need to work?</legend><div class="opts">${radios('when', H.brief.when, 1)}</div></fieldset>
-        <fieldset><legend>Who’s on your side?</legend><div class="opts">${radios('team', H.brief.team, 1)}</div></fieldset>
-        <div class="pair">
-          <div class="fld"><label for="bf-name">Your name</label><input type="text" id="bf-name" name="name" autocomplete="name" required></div>
-          <div class="fld"><label for="bf-co">Company <span class="opt-l">(optional)</span></label><input type="text" id="bf-co" name="company" autocomplete="organization"></div>
-        </div>
-        <div class="fld"><label for="bf-email">Email for my reply</label><input type="email" id="bf-email" name="email" autocomplete="email" required></div>
-        <p class="bf-send"><button type="submit" class="btn">Send the brief ${arrow}</button></p>
-        <p class="note bf-status" role="status" data-bf-status></p>
-      </form>
-    </div>
-    <div class="s6 wo-col" data-js>
-      <div class="wo" data-wo aria-hidden="true">
-        <div class="wo-head"><div><p class="note">Work order</p><p class="wo-no" data-wo-no>CC-2026-100</p></div><div class="stamp" data-wo-stamp>Received<br>Classic Cottrell</div></div>
-        <dl class="tblock">
-          <div><dt>From</dt><dd data-wo="from">Your name, your company</dd></div>
-          <div><dt>Bringing</dt><dd data-wo="kind">${esc(H.brief.kinds[0])}</dd></div>
-          <div><dt>Needed</dt><dd data-wo="when">${esc(H.brief.when[1])}</dd></div>
-          <div class="wide"><dt>What’s broken</dt><dd class="wo-what" data-wo="broken">Tell me what’s broken. One sentence is enough.</dd></div>
-          <div><dt>Team</dt><dd data-wo="team">${esc(H.brief.team[1])}</dd></div>
-          <div class="wide2"><dt>First step</dt><dd>A 30-minute teardown call. I bring three questions and one sketch.</dd></div>
-        </dl>
-      </div>
-    </div>
-  </div>
+${pageHead({ kicker: 'Work with me', title: esc(H.headline), lede: esc(H.standfirst), extra: h`<p class="note hire-avail" id="availability">${status(site.availability)}</p>`, aside: stencil(H.figure, { cls: 'hire-fig', slab: true, lazy: false }) })}
+<section class="wrap sec" aria-labelledby="help-h">
+  <h2 class="h2" id="help-h">What I help with</h2>
+  <ul class="help">${H.help.map((t) => h`<li>${inline(t)}</li>`)}</ul>
 </section>
 
 <section class="wrap sec" aria-labelledby="next-h">
-  <h2 class="h2" id="next-h">What happens next</h2>
+  <h2 class="h2" id="next-h">How it works</h2>
   <ol class="steps">${H.steps.map((s) => h`<li>${inline(s)}</li>`)}</ol>
+</section>
+
+<section class="wrap sec" id="brief" aria-labelledby="brief-h">
+  <h2 class="h2" id="brief-h">Tell me about it</h2>
+  <form class="bf" name="brief" method="POST" action="/work-with-me/thanks/" data-netlify="true" netlify-honeypot="website">
+    <input type="hidden" name="form-name" value="brief">
+    <p hidden><label>Leave this empty <input name="website" tabindex="-1" autocomplete="off"></label></p>
+    <div class="fld"><label for="bf-name">Name</label><input type="text" id="bf-name" name="name" autocomplete="name" required></div>
+    <div class="fld"><label for="bf-email">Email</label><input type="email" id="bf-email" name="email" autocomplete="email" required></div>
+    <div class="fld"><label for="bf-what">What’s broken?</label><textarea id="bf-what" name="broken" rows="5" required></textarea></div>
+    <p class="bf-send"><button type="submit" class="btn">Send ${arrow}</button></p>
+    <p class="note bf-status" role="status" data-bf-status></p>
+  </form>
   <p class="sub-intro">Rather talk first? ${link(site.contact.url, `Message me on ${site.contact.label}`)}.</p>
 </section>`;
-  return page(ctx, { path: '/work-with-me/', title: 'Work with me', description: `${H.headline} ${H.standfirst}`, card: 'work-with-me', main });
+  return page(ctx, { path: '/work-with-me/', title: 'Work with me', description: `${H.headline} ${H.standfirst}`, card: 'work-with-me', bodyClass: 'hire', main });
 }
 
 export function thanks(ctx) {
   const { hire: H } = ctx;
   const main = h`
-${pageHead({ kicker: 'Work with me · received', title: 'Received.', lede: 'Your brief is in. Here’s what happens next.' })}
+${pageHead({ kicker: 'Work with me · received', title: 'Received.', lede: 'Your message is in. Here’s what happens next.' })}
 <div class="wrap"><ol class="steps">${H.steps.map((s) => h`<li>${inline(s)}</li>`)}</ol>
 <p class="sub-intro"><a class="lnk" href="/work/">Back to the work</a></p></div>`;
   return page(ctx, { path: '/work-with-me/thanks/', title: 'Received', card: 'work-with-me', main, noindex: true });
@@ -327,34 +290,48 @@ ${pageHead({ kicker: `Writing · ${writing.essays.length} essays on Substack`, t
 }
 
 // ---------------------------------------------------------------- drawings
+// One full-width band per drawing, on the ground it was drawn for, in its original colours
+// (black ink on white, white ink knocked out of black). The caption alternates sides; nothing moves.
 export function drawingsPage(ctx) {
   const { drawings } = ctx;
   const main = h`
-${pageHead({ kicker: `Drawings · ${drawings.drawings.length} portraits in ink`, title: 'Drawings', lede: esc(drawings.intro) })}
+<header class="dw-head dw-white"><div class="wrap ph">
+  <p class="note">Drawings · ${drawings.drawings.length} portraits in ink</p>
+  <h1 class="splash">Drawings</h1>
+  <p class="lede">${esc(drawings.intro)}</p>
+</div></header>
 ${drawings.drawings.map((d, i) => h`
-<section class="wrap dw dw-${d.ground}" aria-labelledby="dw-${d.slug}">
-  <figure class="dw-fig${d.ground === 'black' ? ' screen-fig' : ' sheet'}">${img({ src: d.image, srcset: drawingSrcset(d), sizes: '(min-width: 1320px) 700px, (min-width: 860px) 52vw, 100vw', width: d.width, height: d.height, alt: d.alt, cls: d.ground === 'black' ? 'screen' : '', lazy: i > 0 })}</figure>
+<section class="dw dw-${d.ground}${i % 2 ? ' dw-flip' : ''}" aria-labelledby="dw-${d.slug}">
+  <div class="wrap dw-in">
+  <figure class="dw-fig">${img({ src: d.image, srcset: drawingSrcset(d), sizes: '(min-width: 1320px) 700px, (min-width: 860px) 54vw, 100vw', width: d.width, height: d.height, alt: d.alt, cls: d.ground === 'black' ? 'screen' : 'ink-on-white', lazy: i > 0 })}</figure>
   <div class="dw-text">
     <p class="note">${pad2(i + 1)}</p>
     <h2 class="h2" id="dw-${d.slug}">${esc(d.character)}</h2>
     <blockquote class="quote"><p>“${esc(d.quote)}”</p></blockquote>
     <p class="note credits">${esc(d.film)} · ${d.year}<br>Dir. ${esc(d.director)} · ${esc(d.actor)}${d.medium ? h`<br>${esc(d.medium)}${d.drawn ? ` · drawn ${d.drawn}` : ''}` : ''}</p>
   </div>
+  </div>
 </section>`)}`;
-  return page(ctx, { path: '/drawings/', title: 'Drawings', description: drawings.intro, card: 'drawings', bodyClass: 'ink-page', main });
+  return page(ctx, { path: '/drawings/', title: 'Drawings', description: drawings.intro, card: 'drawings', bodyClass: 'dw-body', main });
 }
 
 // ---------------------------------------------------------------- about
 export function about(ctx) {
-  const { site, rules, hire: H } = ctx;
+  const { site, rules, drawings, hire: H } = ctx;
+  const sb = drawings.sketchbook;
   const main = h`
-${pageHead({ kicker: 'About', title: esc(site.name), lede: esc(site.headline) })}
+${pageHead({ kicker: 'About', title: esc(site.name), lede: inline(site.headline) })}
 <div class="wrap g12 about">
-  ${inking({ ...site.portrait, cls: 'about-fig', caption: site.portrait.caption, dur: 1800 })}
+  ${inking({ ...site.portrait, cls: 'about-fig', caption: site.portrait.caption, dur: 1800, solo: true })}
   <div class="about-text prose">${site.bio.map((p) => h`<p>${inline(p)}</p>`)}
     <p class="ctas">${btn('/work-with-me/', 'Work with me')}${link(site.contact.url, site.contact.label)}</p>
   </div>
 </div>
+<section class="wrap sec" aria-labelledby="sb-h">
+  <h2 class="h2" id="sb-h">${esc(sb.heading)}</h2>
+  <p class="sub-intro">${inline(sb.intro)}</p>
+  <div class="sb-row">${sb.sketches.map((s) => stencil(s, { cls: 'sb-fig' }))}</div>
+</section>
 <section class="wrap sec" id="rules" aria-labelledby="rules-h">
   <h2 class="h2" id="rules-h">How I work</h2>
   <p class="sub-intro">${rules.length} rules, each pulled from a project where I learned it the hard way.</p>
@@ -362,13 +339,13 @@ ${pageHead({ kicker: 'About', title: esc(site.name), lede: esc(site.headline) })
 </section>
 <section class="wrap sec" aria-labelledby="what-h">
   <h2 class="h2" id="what-h">What I work on</h2>
-  <ul class="what">${H.offers.map((o) => h`<li><a href="/work-with-me/#offer-${esc(o.id)}"><b>${esc(o.title)}</b></a> ${inline(o.text)}</li>`)}</ul>
+  <div class="what-row"><ul class="what">${H.help.map((t) => h`<li>${inline(t)}</li>`)}</ul>${stencil(site.desk, { cls: 'desk-fig' })}</div>
 </section>`;
   return page(ctx, { path: '/about/', title: 'About', description: plain(site.bio[0]), card: 'about', main });
 }
 
-// ---------------------------------------------------------------- colophon
-export function colophon(ctx) {
+// ---------------------------------------------------------------- about this site
+export function aboutSite(ctx) {
   const { stats, contrast, site } = ctx;
   const kb = (n) => `${(n / 1024).toFixed(1)} KB`;
   const swatches = [
@@ -377,10 +354,11 @@ export function colophon(ctx) {
     ['Graphite', '#55585C', 'Secondary text only.'],
     ['Non-photo blue', '#A4DDED', 'Construction only: grid, guides, crop marks, highlights. Never text.'],
     ['Blueline', '#1B62A0', 'Notes, captions, links, focus rings and callout numbers.'],
+    ['Signal', '#EDB02A', 'One flat field per screen: the slab behind the portrait and the studio stencil (1.94:1 on white, so it never carries information). Never text, a line, a focus ring or a status dot. Deeper amber (#C98F12) in the dark scheme.'],
   ];
   const ratioOf = (hex) => contrast.light.find((c) => c.fg === hex && c.bg === '#FFFFFF');
   const main = h`
-${pageHead({ kicker: 'Colophon', title: 'Colophon', lede: 'How this site is made, what it’s made of, and a button that checks it.' })}
+${pageHead({ kicker: 'About this site', title: 'About this site', lede: 'How this site is made, what it’s made of, and a button that checks it.' })}
 
 <section class="wrap sec" aria-labelledby="checks-h">
   <div class="g12">
@@ -441,15 +419,15 @@ ${pageHead({ kicker: 'Colophon', title: 'Colophon', lede: 'How this site is made
   <h2 class="h2" id="a11y-h">Accessibility</h2>
   <p>This site aims to meet WCAG 2.2 at level AA. Every page is checked with axe-core in the test suite, every text colour pair is checked by a script at build time, and every page works with a keyboard and with JavaScript turned off.</p>
   <p>Motion is optional. With reduced motion turned on in your system settings, drawings arrive inked, the hot takes stop rotating, and the linefield piece holds still. The take-it-apart figure on the home page is an illustration; its text description says what it shows.</p>
-  <p>If something doesn’t work for you, tell me through ${link(site.contact.url, site.contact.label)} or <a href="/work-with-me/#brief">the brief</a>, and I’ll fix it.</p>
+  <p>If something doesn’t work for you, tell me through ${link(site.contact.url, site.contact.label)} or the form on <a href="/work-with-me/#brief">Work with me</a>, and I’ll fix it.</p>
 </div></section>
 
 <section class="wrap sec" aria-labelledby="credits-h"><div class="prose">
   <h2 class="h2" id="credits-h">Credits</h2>
-  <p>Familjen Grotesk, Newsreader and Red Hat Mono are used under the SIL Open Font License and served from this site. Run the checks uses <a href="https://github.com/dequelabs/axe-core">axe-core</a> under the Mozilla Public License 2.0. The ink band runs Grain Field from ${link('/work/linefield/', 'linefield')}, which is MIT licensed. Terry drew himself, and he has ${link('/work/terry-time/', 'a shop')}.</p>
+  <p>Familjen Grotesk, Newsreader and Red Hat Mono are used under the SIL Open Font License and served from this site. Run the checks uses <a href="https://github.com/dequelabs/axe-core">axe-core</a> under the Mozilla Public License 2.0. The ink band runs Grain Field, Terminator, Dark Nebula, Infall and Longwave from ${link('/work/linefield/', 'linefield')}, which is MIT licensed. Terry drew himself, and he has ${link('/work/terry-time/', 'a shop')}.</p>
   <p>The source is on ${link('https://github.com/Classiccottrell/classiccottrell.github.io', 'GitHub')}. The previous version of the site is kept on the <code>v1-classic</code> branch.</p>
 </div></section>`;
-  return page(ctx, { path: '/colophon/', title: 'Colophon', description: 'How this site is made, what it’s made of, and a button that checks it.', card: 'colophon', main });
+  return page(ctx, { path: '/about-this-site/', title: 'About this site', description: 'How this site is made, what it’s made of, and a button that checks it.', card: 'about-this-site', main });
 }
 
 // ---------------------------------------------------------------- 404 and moved pages

@@ -2,22 +2,6 @@
   "intro": "Ink portraits of characters who stuck with me. One film, one face, one line of dialogue.",
   "drawings": [
     {
-      "slug": "kurtz",
-      "character": "Colonel Kurtz",
-      "film": "Apocalypse Now",
-      "year": 1979,
-      "director": "Francis Ford Coppola",
-      "actor": "Marlon Brando",
-      "quote": "I’ve seen horrors. Horrors that you have seen. But you have no right to call me a murderer, you have a right to kill me.",
-      "ground": "black",
-      "image": "/assets/img/drawings/kurtz.webp",
-      "width": 1100,
-      "height": 1040,
-      "alt": "Ink drawing of Colonel Kurtz from Apocalypse Now, white on black: a shaved head with the eyes lost in shadow, and dog tags on a chain at his collar.",
-      "drawn": null,
-      "medium": null
-    },
-    {
       "slug": "travis",
       "character": "Travis Bickle",
       "film": "Taxi Driver",
@@ -30,6 +14,22 @@
       "width": 1100,
       "height": 1206,
       "alt": "Ink drawing of Travis Bickle from Taxi Driver in profile, with a mohawk and an army jacket, in solid black on white.",
+      "drawn": null,
+      "medium": null
+    },
+    {
+      "slug": "kurtz",
+      "character": "Colonel Kurtz",
+      "film": "Apocalypse Now",
+      "year": 1979,
+      "director": "Francis Ford Coppola",
+      "actor": "Marlon Brando",
+      "quote": "I’ve seen horrors. Horrors that you have seen. But you have no right to call me a murderer, you have a right to kill me.",
+      "ground": "black",
+      "image": "/assets/img/drawings/kurtz.webp",
+      "width": 1100,
+      "height": 1040,
+      "alt": "Ink drawing of Colonel Kurtz from Apocalypse Now, white on black: a shaved head with the eyes lost in shadow, and dog tags on a chain at his collar.",
       "drawn": null,
       "medium": null
     },
@@ -49,5 +49,25 @@
       "drawn": null,
       "medium": null
     }
-  ]
+  ],
+  "sketchbook": {
+    "heading": "From the sketchbook",
+    "intro": "Quicker drawings than the [portraits](/drawings/). Just whoever showed up on the page.",
+    "sketches": [
+      {
+        "src": "/assets/img/sketchbook/face.webp",
+        "width": 680,
+        "height": 802,
+        "alt": "Ink sketch of a man's head and shoulders: tall swept-up hair, a long plain face with dot eyes, and a dark open collar.",
+        "caption": "A face, mostly hair."
+      },
+      {
+        "src": "/assets/img/sketchbook/figure.webp",
+        "width": 680,
+        "height": 793,
+        "alt": "Ink sketch of a long-haired person hunched in an office chair, typing on a laptop at a desk.",
+        "caption": "Hunched over a laptop."
+      }
+    ]
+  }
 }

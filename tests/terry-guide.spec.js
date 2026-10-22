@@ -370,13 +370,26 @@ test('the case study says what is true about its links, and carries the roadmap 
   await expect(page.locator('#g-agents ~ .idx a[href="/work/terry-home-lab/"], #g-agents + .idx a[href="/work/terry-home-lab/"]')).toHaveCount(1);
 });
 
+test('the guide is findable: title block, work index and writing', async ({ page }) => {
+  await page.goto(CASE);
+  const tb = page.locator('.cs-tb a[href="/work/terry-home-lab/guide/"]');
+  await expect(tb).toHaveText('Build-your-own guide');
+  await expect(tb.locator('.ext')).toHaveCount(0);
+  expect(await tb.getAttribute('target')).toBeNull();
+  await page.goto('/work/');
+  await expect(page.locator('.idx-x a[href="/work/terry-home-lab/guide/"]')).toHaveText('Build-your-own guide');
+  await page.goto('/writing/');
+  await expect(page.locator('.essay-rel a[href="/work/terry-home-lab/guide/"]')).toHaveText('The guide on this site');
+  await expect(page.locator('.essay-rel')).toHaveCount(1);
+});
+
 test('the old projects.html address for the card still lands on the case study', async ({ page }) => {
   await page.goto('/projects.html#terry-home-ai-lab');
   await expect(page).toHaveURL(/\/work\/terry-home-lab\/$/);
 });
 
 // ---- the guide's dock offsets must not leak onto any other page
-const OTHER = ['/', '/work/', '/work/terry-time/', '/takes/', '/about/', '/work-with-me/', '/writing/', '/drawings/', '/colophon/'];
+const OTHER = ['/', '/work/', '/work/terry-time/', '/takes/', '/about/', '/work-with-me/', '/writing/', '/drawings/', '/about-this-site/'];
 
 for (const [width, height] of [[390, 800], [768, 1024]]) {
   test(`other pages keep scroll-padding-top auto and land anchors near the top at ${width}x${height}`, async ({ page }) => {
@@ -386,7 +399,7 @@ for (const [width, height] of [[390, 800], [768, 1024]]) {
       await page.goto(path);
       expect(await page.evaluate(() => getComputedStyle(document.documentElement).scrollPaddingTop), path).toBe('auto');
     }
-    for (const [path, id] of [['/work-with-me/', 'offers-h'], ['/work-with-me/', 'offer-teardown'], ['/about/', 'rules']]) {
+    for (const [path, id] of [['/work-with-me/', 'help-h'], ['/work-with-me/', 'brief'], ['/about/', 'rules']]) {
       await page.goto(`${path}#${id}`);
       await page.waitForTimeout(150);
       const top = await page.evaluate((i) => document.getElementById(i).getBoundingClientRect().top, id);

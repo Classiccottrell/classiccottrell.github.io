@@ -6,20 +6,22 @@
     "kind": "Product",
     "group": "Products",
     "featured": true,
-    "summary": "Accessibility evidence in, a VPAT 2.5 draft out.",
-    "standfirst": "A nine-prompt Claude toolkit and local Chrome scanner for turning accessibility evidence into VPAT 2.5 drafts.",
+    "summary": "Accessibility evidence in, a VPAT 2.5 draft out, a person signing every row.",
+    "standfirst": "Nine Claude prompts and a free Chrome scanner are live. A command-line scanner that turns a site into a bug sheet and a VPAT draft is in early build.",
     "take": "T-04",
     "year": 2026,
     "role": "Design and build",
     "status": {
-      "mark": "live",
-      "label": "Live"
+      "mark": "prog",
+      "label": "In production"
     },
-    "stack": "Claude prompts · Chrome extension (Manifest V3) · axe-core",
+    "note": "VPAT Vault is in production and changing week to week, so this page is a snapshot from October 2026.",
+    "stack": "Claude prompts · Chrome extension (Manifest V3) · axe-core · command-line scanner",
     "numbers": [
       "9 prompts",
       "50-record reference dataset",
-      "VPAT 2.5"
+      "VPAT 2.5",
+      "Command-line scanner at v0.1"
     ],
     "links": [
       {
@@ -30,9 +32,9 @@
     "plate": {
       "src": "/assets/img/work/vpat-vault.webp",
       "width": 1600,
-      "height": 872,
-      "alt": "Product box for VPAT Vault: a white box with a black spine, a green leaf logo, a large orange 2.1 with an Accessible badge, and the line VPAT, Voluntary Product Accessibility Template, WCAG 2.1 Conformance Report.",
-      "caption": "The VPAT Vault box: nine prompts, a validator, a dataset, a report template and a Chrome scanner.",
+      "height": 900,
+      "alt": "Illustration in red and green on cream paper: a woman holds an open laptop that shows a conformance checklist table.",
+      "caption": "Evidence, scan, bug sheet, draft, then a person signs every row.",
       "callouts": []
     },
     "pullQuote": null,
@@ -43,7 +45,7 @@
     "sections": [
       {
         "paragraphs": [
-          "I built VPAT Vault to make creating a VPAT simple enough that more websites can publish one. It combines a local Chrome scanner with a prompt toolkit and HTML template, so evidence moves into the report instead of ending up in a separate silo."
+          "I built VPAT Vault to make a VPAT simple enough that more websites can publish one. The prompt toolkit and a free Chrome scanner are live and for sale. The command-line scanner I'm building now is early and not released, and it takes the same idea from one page to a whole site."
         ]
       },
       {
@@ -55,37 +57,50 @@
           "alt": "Illustration: two hands hold a magnifying glass over a bug on a web page covered in accessibility checks."
         },
         "paragraphs": [
-          "I wanted a scanning tool I would actually use alongside VPAT creation. The extension captures automated evidence where the work starts, while the prompts and template turn that evidence into a reviewable report. I exercised the workflow with my harness so the pieces stay connected from scan to draft."
+          "A VPAT is a table of claims, and every row needs evidence behind it. I wanted the scan, the bug list and the draft to sit in one chain, so the evidence follows the work instead of ending up in a separate folder. The last link is always a person: ITI labels only, Supports only when there are no known defects, and every defect remark says what fails, who is affected and where."
         ]
       },
       {
         "paragraphs": [
-          "The current release includes nine prompts, a dependency-free validator, a 50-record reference dataset, a report template, and a free Manifest V3 Chrome extension that runs axe locally and exports scan evidence. The roadmap is to connect multi-page scan sessions, evidence review, and report generation into one publishable workflow."
+          "What is live: nine prompts with explicit output contracts, a validator with no dependencies, a 50-record reference dataset, a fixed HTML report template that checks its fields and ITI labels before it renders, and a deterministic ZIP for the buyer. The free Chrome extension, VPAT Vault Scanner, runs axe-core on the active tab, on your machine, and exports normalized findings plus manual-review items as JSON. You can install it locally today; a Chrome Web Store listing comes later.",
+          "What I'm building is wcag-toolkit, a command-line scanner at v0.1 that is not released. It scans one page, a whole site, or pages behind a sign-in using a browser session you save yourself. The site scan follows links from a start page, opens addresses only, never clicks, skips risky links and reads a sitemap. A static scan of a codebase or a git diff looks for what axe can't see: missing alt text, non-native interactive elements, ARIA misuse, contrast tricks.",
+          "Results go into a bug sheet in Markdown, CSV or JSON, one row per defect with its WCAG criterion, severity, confidence and a default disposition. From that sheet the tool writes a VPAT draft, or one command does the scan, the sheet and the draft together. The draft is capped at Partially Supports, because scan data alone can't say Supports or Does Not Support. A settle delay, redirect and CSP guards and checkpointing mean a page that failed to load never gets reported as zero violations. Type wcag for a guided terminal menu; there is also a thin Claude Code skill and a short how-to micro site.",
+          "The limits, plainly: I've tested signed-in scanning only on a practice page, a scan finds some problems and a person tests the rest, and I haven't measured the false-positive rate of the code scan yet."
         ]
       },
       {
         "heading": "Roadmap",
-        "intro": "A practical path from a working evidence capture tool to a complete VPAT workflow.",
+        "intro": "What is shipped, what is being built, and what doesn't exist yet.",
         "roadmap": [
           {
             "label": "Foundation",
             "status": "Shipped",
-            "detail": "Nine prompts, validator, 50-record dataset, and HTML report template."
+            "detail": "Nine prompts, validator, 50-record dataset, HTML report template and buyer ZIP."
           },
           {
-            "label": "Local scanner",
+            "label": "Local scanner extension",
             "status": "Shipped",
-            "detail": "Free Chrome extension runs axe on the active tab and exports canonical scan JSON."
+            "detail": "Free Chrome extension runs axe on the active tab and exports findings and manual-review items as JSON."
           },
           {
-            "label": "Scan sessions",
+            "label": "Command-line scanner: scan to bug sheet to VPAT draft",
+            "status": "Done",
+            "detail": "Scans a page, a whole site, pages behind a sign-in, or code into a bug sheet, and turns a bug sheet into a VPAT draft. Now one command does both. Still early and not released."
+          },
+          {
+            "label": "VPAT report V1",
+            "status": "In progress",
+            "detail": "The draft becomes a real standalone document: a cover, a summary at a glance, a criteria table, remarks you can read, and a print layout that saves cleanly as a PDF."
+          },
+          {
+            "label": "Hardening on real sites",
             "status": "Next",
-            "detail": "Capture evidence across multiple pages while keeping findings connected to the report."
+            "detail": "A first real run on Windows, the false-positive rate of the code scan, and a real signed-in scan on a real site."
           },
           {
-            "label": "Launch workflow",
+            "label": "Reviewed reports and hand-offs",
             "status": "Planned",
-            "detail": "Review evidence, draft rows, run QA, and publish a VPAT from one guided flow."
+            "detail": "Front matter that says what was scanned, opt-in reviewed flows so a scan can click, type and scroll, AI-proposed ratings a person signs off row by row, Word export in the VPAT 2.5 layout, handing a bug to an AI agent to fix and verify, and sending a bug sheet to a ticket tracker."
           }
         ]
       }
@@ -101,7 +116,7 @@
     "title": "linefield",
     "kind": "Generative art",
     "group": "Products",
-    "featured": true,
+    "featured": false,
     "summary": "Thirty-two generative backgrounds you own outright.",
     "standfirst": "Thirty-two generative line-art backgrounds you own outright.",
     "take": "T-02",
@@ -326,8 +341,8 @@
     "kind": "Brand and shop",
     "group": "Products",
     "featured": true,
-    "summary": "One merch shop, two storefronts, and paid orders pick the winner.",
-    "standfirst": "A shop for Terry, the face that keeps turning up on East Van walls. I designed seven storefronts, put two of them in a 50/50 split, and wrote down how the winner gets picked before the first visitor arrives.",
+    "summary": "The online store for Terry Terry Larry Berry, an art project. Embroidered pieces, made to order.",
+    "standfirst": "Terry Terry Larry Berry is an art project. Terry Time is its online store, and I designed it and built it.",
     "take": "T-08",
     "year": 2026,
     "role": "Design and build",
@@ -337,9 +352,9 @@
     },
     "stack": "Next.js 15 · Stripe Checkout · Printful",
     "numbers": [
-      "7 storefronts",
-      "2 in the test",
-      "3 products"
+      "3 products",
+      "Made to order",
+      "Stripe + Printful"
     ],
     "links": [
       {
@@ -395,9 +410,8 @@
     "sections": [
       {
         "paragraphs": [
-          "Terry is a face that keeps turning up on East Van walls. Terry Time is his shop: a polo, a hoodie and a dad hat, each with the face embroidered on it and made to order.",
-          "I designed seven storefronts for it, and every one of them sold the same three things. Picking one on taste would have been a guess, so two of them go live side by side and paid orders decide.",
-          "The rule for calling it was written before the first visitor: once each store has had at least 300 visitors, the one with more paid orders per visitor wins. Until then, neither store changes."
+          "Terry Terry Larry Berry is an art project. Terry is the face that keeps turning up on East Van walls.",
+          "Terry Time is the project’s online store. It sells three pieces, a polo, a hoodie and a dad hat, each with Terry’s face embroidered on it and made to order. Checkout runs on Stripe, and a paid order goes to Printful as a draft to be made."
         ]
       },
       {
@@ -427,19 +441,10 @@
       },
       {
         "heading": "The UX thinking",
+        "paragraphs": [
+          "I designed seven storefronts and kept two. Each visitor sees only one of them, and once both have had 300 visitors, the one with more paid orders per visitor becomes the shop."
+        ],
         "items": [
-          {
-            "lead": "Seven storefronts is a decision you haven’t made yet.",
-            "text": "A UX audit in September caught it: the home page was a chooser between five shops, so a visitor would land on a design review instead of a store. Five directions went to a branch, and two went into the test."
-          },
-          {
-            "lead": "A visitor only ever sees one store.",
-            "text": "Middleware splits `/` and `/shop` 50/50 and pins each visitor to their store with a cookie for 30 days. `?v=a` or `?v=b` forces one, so a post can promise a specific shop, and every Stripe checkout records which store it started in."
-          },
-          {
-            "lead": "The rule came before the data.",
-            "text": "Each store needs at least 300 visitors, and the launch promotion has to be over. Then the store with more paid orders per visitor wins. If that’s within noise, the higher average order wins, then the one I’d rather maintain."
-          },
           {
             "lead": "Honest while it’s off.",
             "text": "The site builds and runs with no keys at all. Until checkout is switched on, the buttons say it isn’t live yet instead of failing."
@@ -484,7 +489,7 @@
       },
       {
         "heading": "Roadmap",
-        "intro": "What’s left between two working storefronts and one winner.",
+        "intro": "What’s left before the store takes real orders.",
         "roadmap": [
           {
             "label": "The build",
@@ -499,12 +504,7 @@
           {
             "label": "Launch",
             "status": "Planned",
-            "detail": "Checkout goes live and the split starts counting."
-          },
-          {
-            "label": "Call it",
-            "status": "Planned",
-            "detail": "At 300 visitors per store, with the launch promotion over, the winner becomes the shop and the other goes to a branch."
+            "detail": "Checkout goes live."
           }
         ]
       }
@@ -516,7 +516,7 @@
     "title": "The Agent Bench",
     "kind": "Agent system",
     "group": "Agents",
-    "featured": true,
+    "featured": false,
     "summary": "A folder that turns an AI chat tool into an operating environment.",
     "standfirst": "Agent Workspace Template and Agentic Light: a folder that turns an AI chat tool into an operating environment, and the same bench with the night shift removed.",
     "take": "T-09",
@@ -690,8 +690,13 @@
       "4 services",
       "7-step guide"
     ],
-    "links": [],
-    "linksNote": "A private home network, so there’s no repository to link. The [build-your-own guide](/work/terry-home-lab/guide/) is public.",
+    "links": [
+      {
+        "label": "Build-your-own guide",
+        "url": "/work/terry-home-lab/guide/"
+      }
+    ],
+    "linksNote": "A private home network, so there’s no repository to link.",
     "plate": {
       "src": "/assets/img/work/terry-home-lab.webp",
       "width": 1360,
@@ -1014,7 +1019,7 @@
       {
         "paragraphs": [
           "Every new interface started as a fresh set of decisions: which green, which radius, which type pairing, made again from scratch each time and drifting a little further from the last one. Re-theming meant hunting down hardcoded values across a dozen components.",
-          "The Classic Cottrell Design System is the fix: one set of CSS custom properties for color, type, and spacing, and a library of primitives built on top of them, so re-theming is a values-only edit instead of a rewrite."
+          "The Classic Cottrell Design System replaces that with one set of CSS custom properties for color, type, and spacing, and a library of primitives built on top of them, so re-theming is a values-only edit instead of a rewrite."
         ]
       },
       {
@@ -1027,7 +1032,7 @@
           },
           {
             "lead": "Primitives, not one-off pages.",
-            "text": "Button, Card, Input, Badge, and the rest live in components/ui/, built with React 19 and Base UI primitives, so every demo page — landing, form, about, gallery — assembles entirely from the same reusable set."
+            "text": "Button, Card, Input, Badge, and the rest live in components/ui/, built with React 19 and Base UI primitives, so every demo page (landing, form, about, gallery) assembles entirely from the same reusable set."
           },
           {
             "lead": "The showcase is the documentation.",
@@ -1093,7 +1098,7 @@
           },
           {
             "lead": "Three bundled apps prove the framework holds up.",
-            "text": "ccasset (responsive image variants and blurhash), ccsync (frontmatter validation and content indexing), and cctokens (CSS custom-property extraction) each ship in roughly 80 to 145 lines because the framework does the heavy lifting, not the app."
+            "text": "ccasset (responsive image variants and blurhash), ccsync (frontmatter validation and content indexing), and cctokens (CSS custom-property extraction) each ship in roughly 80 to 145 lines because the framework carries the shared parts."
           }
         ]
       },
@@ -1116,11 +1121,11 @@
       },
       {
         "heading": "Photo Curator CLI: a real product on the framework",
-        "intro": "The framework needed proof it could carry a shipped product, not just internal tools. Photo Curator CLI is that proof:",
+        "intro": "The framework needed proof it could carry a shipped product as well as internal tools. Photo Curator CLI is that proof:",
         "items": [
           {
             "lead": "Automated shortlisting, not manual triage.",
-            "text": "Point it at a shoot folder and it scores every frame, then ranks a keep/reject shortlist automatically — the first pass done for you, fast, instead of scrubbing hundreds of near-duplicates by eye."
+            "text": "Point it at a shoot folder and it scores every frame, then ranks a keep/reject shortlist automatically, so the first pass is done before you'd have finished scrubbing through the near-duplicates by eye."
           },
           {
             "lead": "Thresholds you set, not a black box.",
@@ -1134,7 +1139,7 @@
       },
       {
         "paragraphs": [
-          "The measure of a framework isn't the first tool built on it, it's the fifth. Three internal apps and one shipped product in, the pattern's held: brand a class, register a command, ship."
+          "The first tool built on a framework proves little; the fifth is the real test. Three internal apps and one shipped product in, the pattern's held: brand a class, register a command, ship."
         ]
       }
     ]

@@ -12,13 +12,28 @@ export const avail = (site) =>
 export const btn = (href, label, cls = 'btn') => h`<a class="${cls}" href="${esc(href)}">${esc(label)} ${arrow}</a>`;
 
 // Page header: kicker note, splash title, standfirst.
-export const pageHead = ({ kicker, title, lede, splash = true, extra = '' }) => h`
-<header class="wrap ph">
+// `aside` (a figure) sits beside the text on a desktop and under it on a phone.
+export const pageHead = ({ kicker, title, lede, splash = true, extra = '', aside = '' }) => {
+  const text = h`
   <p class="note">${kicker}</p>
   <h1 class="${splash ? 'splash' : 'h1'}">${title}</h1>
   ${lede ? h`<p class="lede">${lede}</p>` : ''}
-  ${extra}
+  ${extra}`;
+  return aside
+    ? h`
+<header class="wrap ph has-aside"><div class="ph-t">${text}</div>${aside}</header>`
+    : h`
+<header class="wrap ph">${text}
 </header>`;
+};
+
+// A stencil from a photo: ink on transparent. `slab` puts it on the signal field (the ink never
+// changes there); otherwise it sits on the page and turns light in the dark scheme.
+export const stencil = ({ src, width, height, alt, caption }, { cls = '', slab = false, lazy = true } = {}) => h`
+<figure class="stencil${slab ? ' on-slab' : ''}${cls ? ` ${cls}` : ''}">
+  <div class="st-pic">${img({ src, width, height, alt, lazy })}</div>
+  ${caption ? h`<figcaption class="note cap">${inline(caption)}</figcaption>` : ''}
+</figure>`;
 
 // The technical-drawing title block. rows: [{ dt, dd (html), wide }]
 export const tblock = (rows, cls = '') => h`
@@ -26,11 +41,10 @@ export const tblock = (rows, cls = '') => h`
 
 export const projectMeta = (p) => h`${esc(p.kind)} · ${p.year} · ${status(p.status)}`;
 
-// An index row linking to a case study. `pic` adds the data the cut preview needs.
-export const idxRow = (p, { pic = false, heading = 'h3' } = {}) => {
-  const data = pic && p.plate ? h` data-src="${esc(p.plate.src)}"` : '';
-  return h`<li><a class="idx-row" href="/work/${esc(p.slug)}/"${data}><span class="n">${pad2(p.number)}</span><${heading} class="t">${inline(p.title)}</${heading}><span class="d">${inline(p.summary)}</span><span class="m">${projectMeta(p)}</span></a></li>`;
-};
+// An index row linking to a case study.
+// `extra` ({ href, label }) adds one small link under the row, outside its anchor.
+export const idxRow = (p, { heading = 'h3', extra = null } = {}) =>
+  h`<li${extra ? ' class="has-x"' : ''}><a class="idx-row" href="/work/${esc(p.slug)}/"><span class="n">${pad2(p.number)}</span><${heading} class="t">${inline(p.title)}</${heading}><span class="d">${inline(p.summary)}</span><span class="m">${projectMeta(p)}</span></a>${extra ? h`<p class="idx-x">${link(extra.href, extra.label)}</p>` : ''}</li>`;
 
 export const img = ({ src, width, height, alt = '', cls = '', lazy = true, srcset = '', sizes = '' }) =>
   h`<img${cls ? h` class="${cls}"` : ''} src="${esc(src)}"${srcset ? h` srcset="${esc(srcset)}" sizes="${esc(sizes)}"` : ''} width="${width}" height="${height}" alt="${esc(alt)}"${lazy ? ' loading="lazy" decoding="async"' : ''}>`;
@@ -49,10 +63,13 @@ export const plate = (pl, { label = 'Fig. 1', lazy = false } = {}) => {
 </figure>`;
 };
 
-// Pencils, then inks: the pencil layer sits under the ink, which a mask reveals.
-export const inking = ({ ink, pencil, width, height, alt, caption, dur = 2000, cls = '', lazy = false }) => h`
+// Pencils, then inks: the pencil layer sits under the ink, which a mask reveals. `solo` drops the pencil layer
+// (the ink is then the only picture, on a signal field).
+// `signature` ({ viewBox, marks: [{ d, stem, bar, tx, ty }] }) is signed on once the ink is down, in the corner:
+// both filled pencil marks (a then b) are each revealed by two thick centerline strokes, stem first, then the bar.
+export const inking = ({ ink, pencil, width, height, alt, caption, dur = 2000, cls = '', lazy = false, signature = null, solo = false }) => h`
 <figure class="${cls}" data-inking data-dur="${dur}">
-  <div class="inking">${img({ src: pencil, width, height, alt: '', cls: 'pen', lazy })}${img({ src: ink, width, height, alt, cls: 'ink', lazy })}</div>
+  <div class="inking${solo ? ' solo' : ''}">${solo ? '' : img({ src: pencil, width, height, alt: '', cls: 'pen', lazy })}${img({ src: ink, width, height, alt, cls: 'ink', lazy })}${signature ? h`<svg class="sig" viewBox="${esc(signature.viewBox)}" aria-hidden="true" focusable="false">${signature.marks.map((m, i) => h`<mask id="sig-${esc(cls)}-${i}" maskUnits="userSpaceOnUse" x="-2000" y="-2000" width="5000" height="5000"><path class="m${2 * i + 1}" d="${esc(m.stem)}" pathLength="1"/><path class="m${2 * i + 2}" d="${esc(m.bar)}" pathLength="1"/></mask><g transform="translate(${m.tx} ${m.ty})"><path class="mk" d="${esc(m.d)}" mask="url(#sig-${esc(cls)}-${i})"/></g>`).join('')}</svg>` : ''}</div>
   ${caption ? h`<figcaption class="note cap">${inline(caption)}</figcaption>` : ''}
 </figure>`;
 
@@ -73,14 +90,14 @@ export const rule = (r, { withSource = true } = {}) => h`
 <li class="rule" id="${esc(r.id.toLowerCase())}"><p class="note">${esc(r.id)}</p><q>${inline(r.text)}</q>${withSource ? h`<p class="src"><a href="${esc(r.href)}">${esc(r.source)}</a></p>` : ''}</li>`;
 
 export const essay = (e, { big = false, heading = 'h3' } = {}) => h`
-<li class="essay">
+<li class="essay${big && e.related ? ' has-rel' : ''}">
   <a class="essay-a" href="${esc(e.url)}">
     <span class="n">No. ${pad2(e.number)}</span>
     <${heading} class="t">${inline(e.title)}</${heading}>
     <span class="s">${inline(e.subtitle)}</span>
     <span class="m note"><time datetime="${e.date}">${longDate(e.date)}</time> · Substack <span aria-hidden="true">↗</span></span>
     ${big ? img({ src: e.image, width: 640, height: 480, alt: '' }) : ''}
-  </a>
+  </a>${big && e.related ? h`<p class="essay-rel note">${link(e.related.href, e.related.label)}</p>` : ''}
 </li>`;
 
 // Take it apart: a sample screen in five layers that separate on a slider.
@@ -137,5 +154,5 @@ export const exploded = (rules) => h`
 
 // A linefield piece running behind an ink band. Decorative: hidden from
 // assistive tech, never focusable, paused off screen by site.js.
-export const linefield = (piece, title) =>
-  h`<iframe class="band-art" src="/assets/linefield/${esc(piece)}.html" title="${esc(title)}" loading="lazy" tabindex="-1" aria-hidden="true"></iframe>`;
+export const linefield = (piece, title, cls = '') =>
+  h`<iframe class="band-art${cls ? ' ' + cls : ''}" data-piece="${esc(piece)}" src="/assets/linefield/${esc(piece)}.html" title="${esc(title)}" loading="lazy" tabindex="-1" aria-hidden="true"></iframe>`;

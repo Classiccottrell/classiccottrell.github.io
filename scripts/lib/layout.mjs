@@ -12,17 +12,16 @@ const current = (href, path) => {
 const masthead = (ctx, path) => {
   const { site } = ctx;
   const items = site.nav.map((n) => h`<li><a href="${esc(n.href)}"${current(n.href, path)}>${esc(n.label)}</a></li>`);
-  const cta = h`<a class="lnk mast-cta" href="/work-with-me/"${current('/work-with-me/', path)}>Work with me</a>`;
+  const cta = h`<li class="mast-cta"><a href="/work-with-me/"${current('/work-with-me/', path)}>Work with me</a></li>`;
   return h`
 <a class="skip" href="#main">Skip to content</a>
 <header class="mast">
   <div class="wrap mast-in">
     <a class="mast-name" href="/"${path === '/' ? ' aria-current="page"' : ''}>${esc(site.name)}</a>
-    <nav class="mast-nav" aria-label="Main"><ul>${items}</ul></nav>
-    <div class="mast-end">${avail(site)}${cta}</div>
+    <nav class="mast-nav" aria-label="Main"><ul>${items}${cta}</ul></nav>
     <details class="menu">
       <summary>Menu</summary>
-      <nav class="menu-panel" aria-label="Menu"><ul>${items}<li>${cta}</li></ul>${avail(site)}</nav>
+      <nav class="menu-panel" aria-label="Menu"><ul>${items}${cta}</ul></nav>
     </details>
   </div>
 </header>`;
@@ -35,7 +34,7 @@ const footer = (ctx, path) => {
       <p class="foot-h">Bring me a problem.</p>
       <p class="foot-row"><a class="btn" href="/work-with-me/">Work with me ${arrow}</a>${avail(site)}</p>
     </div>`;
-  const pages = [...site.nav, { label: 'Takes', href: '/takes/' }, { label: 'Work with me', href: '/work-with-me/' }, { label: 'Colophon', href: '/colophon/' }];
+  const pages = [...site.nav, { label: 'Work with me', href: '/work-with-me/' }, { label: 'About this site', href: '/about-this-site/' }];
   return h`
 <footer class="foot">
   <div class="wrap">${cta}

@@ -125,7 +125,7 @@
       if (t0 === null) t0 = t;
       var p = Math.min(1, (t - t0) / dur), e = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
       setInk(fig, e * 100);
-      if (p < 1) fig._raf = requestAnimationFrame(step);
+      if (p < 1) fig._raf = requestAnimationFrame(step); else fig.classList.remove('sig-wait');
     };
     setInk(fig, 0); fig._raf = requestAnimationFrame(step);
   }
@@ -133,27 +133,20 @@
     var inkIO = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) { if (en.isIntersecting) { inkIO.unobserve(en.target); runInk(en.target); } });
     }, { threshold: 0.35 });
-    $$('[data-inking]').forEach(function (fig) { inkIO.observe(fig); });
+    // The signature waits (CSS hides its stroke) until the ink is down, then draws itself.
+    $$('[data-inking]').forEach(function (fig) { if ($('.sig', fig)) fig.classList.add('sig-wait'); inkIO.observe(fig); });
   }
-
-  // ------------------------------------------------------------ the cut: pictures change in the same frame
-  $$('[data-cut]').forEach(function (list) {
-    var pic = $('.' + list.getAttribute('data-cut') + ' img'); if (!pic) return;
-    var rows = $$('[data-src]', list);
-    rows.forEach(function (row, i) {
-      new Image().src = row.getAttribute('data-src');
-      var show = function () { pic.src = row.getAttribute('data-src'); rows.forEach(function (x) { x.classList.toggle('on', x === row); }); };
-      row.addEventListener('mouseenter', show); row.addEventListener('focus', show);
-      if (i === 0) row.classList.add('on');
-    });
-  });
 
   // ------------------------------------------------------------ take it apart
   // One implementation for every exploded view on the site: the home page's
   // service-desk screen (#xv) and the Terry guide's seven layers (#lab-xv).
   // Needs .xv-layer (each with an .xv-pin), optional .xv-tag leaders, a range
-  // input, an <output for=range> and an optional button.
-  function explode(xv, xr, xb) {
+  // input, an <output for=range> and an optional button. With scrollRun
+  // ({ run, dock }) the page scroll drives the slider too: while the sticky dock
+  // is pinned inside the run, scroll position and slider are one value, both ways.
+  // With scrollRun the slider rests at START (a screen already coming apart, never an empty one) and scroll covers START to 100.
+  var START = 35;
+  function explode(xv, xr, xb, scrollRun) {
     var xo = $('output[for="' + xr.id + '"]'), tags = $$('.xv-tag', xv), pins = {};
     $$('.xv-layer', xv).forEach(function (l) { pins[l.getAttribute('data-l')] = $('.xv-pin', l); });
     xr.setAttribute('aria-valuetext', Math.round(+xr.value) + ' percent apart');
@@ -186,10 +179,47 @@
       };
       xv._raf = requestAnimationFrame(st);
     };
-    xr.addEventListener('input', function () { if (xv._raf) cancelAnimationFrame(xv._raf); setX(+xr.value); });
-    if (xb) xb.addEventListener('click', function () { animX(+xr.value > 50 ? 0 : 100); });
+    // Where the pinned dock sits in its run: top is where it pins, span how far it can travel.
+    var lock = 0, sraf = 0;
+    var geo = function () {
+      if (!scrollRun) return null;
+      var cs = getComputedStyle(scrollRun.dock), top = parseFloat(cs.top), r = scrollRun.run.getBoundingClientRect();
+      var span = r.height - scrollRun.dock.offsetHeight;
+      if (cs.position !== 'sticky' || !(top >= 0) || span < 40) return null;
+      return { top: top, rel: r.top, span: span };
+    };
+    var frac = function (v) { return Math.min(1, Math.max(0, (v - START) / (100 - START))); };
+    var jump = function (g, v) { window.scrollTo(0, window.scrollY + g.rel - g.top + g.span * frac(v)); };
+    xr.addEventListener('input', function () {
+      if (xv._raf) cancelAnimationFrame(xv._raf);
+      var v = +xr.value, g = geo();
+      setX(v); lock = Date.now() + 300;
+      // Drag moves the page only while the dock is pinned, so the slider stays under the pointer.
+      if (g) { var p = (g.top - g.rel) / g.span; if (p > -0.01 && p < 1.01) jump(g, v); }
+    });
+    if (xb) xb.addEventListener('click', function () {
+      var to = +xr.value > 50 ? (scrollRun ? START : 0) : 100, g = geo();
+      if (!g) { animX(to); return; }
+      if (xv._raf) cancelAnimationFrame(xv._raf);
+      lock = 0;
+      var y = window.scrollY + g.rel - g.top + g.span * frac(to);
+      window.scrollTo({ top: y, behavior: reduce.matches ? 'auto' : 'smooth' });
+      // The dock can change height as the label changes, so the scroll geometry may land a hair short: settle on the value asked for.
+      setTimeout(function () { if (!xv._raf) { setX(to); lock = Date.now() + 200; } }, reduce.matches ? 80 : 1300);
+    });
+    var follow = function () {
+      sraf = 0;
+      var g = geo(); if (!g || Date.now() < lock) return;
+      setX(START + (100 - START) * Math.min(1, Math.max(0, (g.top - g.rel) / g.span)));
+    };
+    if (scrollRun) {
+      var queue = function () { if (!sraf) sraf = requestAnimationFrame(follow); };
+      window.addEventListener('scroll', queue, { passive: true });
+      window.addEventListener('resize', queue);
+      setX(START); queue();
+    }
     if (window.ResizeObserver) new ResizeObserver(placeTags).observe(xv);
-    if ('IntersectionObserver' in window) {
+    if (!scrollRun && 'IntersectionObserver' in window) {
       var xio = new IntersectionObserver(function (es) {
         es.forEach(function (en) { if (en.isIntersecting) { xio.disconnect(); setTimeout(function () { animX(100); }, 250); } });
       }, { threshold: 0.45 });
@@ -198,7 +228,7 @@
     return { setX: setX, animX: animX };
   }
   var xv = $('#xv'), xr = $('#explode');
-  if (xv && xr) explode(xv, xr, $('#explode-btn'));
+  if (xv && xr) explode(xv, xr, $('#explode-btn'), $('[data-xv-run]') ? { run: $('[data-xv-run]'), dock: $('.xv-dock') } : null);
 
   // ------------------------------------------------------------ the lab: the guide's layers follow the reader
   // As each step of the Terry guide crosses a line near the top of the page,
@@ -298,14 +328,53 @@
     });
   });
 
+  // ------------------------------------------------------------ linefield pieces: still off screen, under reduced motion and when not the one showing
+  function artFrame(frame) {
+    var visible = false, loaded = false, pool = frame.closest('.stage-art');
+    var desc = Object.getOwnPropertyDescriptor(Document.prototype, 'hidden');
+    var sync = frame._sync = function () {
+      var d; try { d = frame.contentDocument; } catch (e) { return; }
+      if (!d || !loaded) return;
+      var force = !visible || reduce.matches || (pool && !frame.classList.contains('on'));
+      try {
+        Object.defineProperty(d, 'hidden', { configurable: true, get: function () { return force || (desc ? desc.get.call(d) : false); } });
+        d.dispatchEvent(new Event('visibilitychange'));
+      } catch (e) {}
+    };
+    frame.addEventListener('load', function () { loaded = true; setTimeout(sync, reduce.matches ? 400 : 0); });
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { visible = es[0].isIntersecting; sync(); }).observe(frame);
+    else visible = true;
+  }
+  $$('.band-art').forEach(artFrame);
+
   // ------------------------------------------------------------ hot takes, one at a time
   var stage = $('[data-stage]'), data = $('#takes-data');
   if (stage && data) {
     var takes = JSON.parse(data.textContent), idx = 0, timer = 0, playing = !reduce.matches, hold = false;
-    var sN = $('[data-stage-n]', stage), sText = $('[data-stage-text]', stage), sSrc = $('[data-stage-src]', stage), sHeat = $('[data-stage-heat]', stage), sPlay = $('[data-stage-play]', stage);
+    var sN = $('[data-stage-n]', stage), sText = $('[data-stage-text]', stage), sSrc = $('[data-stage-src]', stage), sHeat = $('[data-stage-heat]', stage), sPlay = $('[data-stage-play]', stage), sCap = $('[data-stage-cap]', stage);
+    // One linefield piece per take, on the right: the one showing runs, the rest wait, and each loads only once the band has been seen.
+    var art = $('.stage-art', stage), seen = false;
+    var frameFor = function (name) {
+      var f = $('[data-piece="' + name + '"]', art);
+      if (!f) {
+        f = document.createElement('iframe'); f.className = 'band-art'; f.setAttribute('data-piece', name);
+        f.src = '/assets/linefield/' + name + '.html'; f.title = name + ', a linefield piece, drifting beside the take';
+        f.tabIndex = -1; f.setAttribute('aria-hidden', 'true'); art.appendChild(f); artFrame(f);
+      }
+      return f;
+    };
+    var paintArt = function () {
+      if (!art || !seen) return;
+      var on = frameFor(takes[idx].art); frameFor(takes[(idx + 1) % takes.length].art);
+      $$('.band-art', art).forEach(function (f) { f.classList.toggle('on', f === on); if (f._sync) f._sync(); });
+    };
+    if (art && 'IntersectionObserver' in window) {
+      new IntersectionObserver(function (es) { if (es[0].isIntersecting && !seen) { seen = true; paintArt(); } }).observe(stage);
+    }
     var show = function (i) {
       idx = (i + takes.length) % takes.length; var t = takes[idx];
-      sN.textContent = t.id; sText.textContent = t.text; sText.href = t.href; sSrc.textContent = t.src;
+      paintArt();
+      sN.textContent = t.id; if (sCap) sCap.textContent = 'Behind it: ' + t.piece + ', from linefield'; sText.textContent = t.text; sText.href = t.href; sSrc.textContent = t.src;
       sHeat.innerHTML = '<span class="heat" role="img" aria-label="Heat ' + t.heat + ' of 3">' + [1, 2, 3].map(function (n) { return '<i' + (n <= t.heat ? ' class="f"' : '') + '></i>'; }).join('') + '</span>';
     };
     var schedule = function () { clearTimeout(timer); if (playing && !hold) timer = setTimeout(function () { show(idx + 1); schedule(); }, 7000); };
@@ -317,114 +386,47 @@
     stage.addEventListener('mouseleave', function () { hold = false; schedule(); });
     stage.addEventListener('focusin', function () { hold = true; clearTimeout(timer); });
     stage.addEventListener('focusout', function () { hold = false; schedule(); });
+    // A finger or pen swipes between takes: left for the next, right for the one before. Only a mostly
+    // sideways drag counts, so the page still scrolls (touch-action: pan-y), and a mouse still selects text.
+    var sx = null, sy = 0;
+    stage.addEventListener('pointerdown', function (e) { if (e.pointerType === 'mouse' || !e.isPrimary) return; sx = e.clientX; sy = e.clientY; });
+    stage.addEventListener('pointerup', function (e) {
+      if (sx === null) return;
+      var dx = e.clientX - sx, dy = e.clientY - sy; sx = null;
+      if (Math.abs(dx) >= 40 && Math.abs(dx) > Math.abs(dy)) { show(idx + (dx < 0 ? 1 : -1)); schedule(); }
+    });
+    stage.addEventListener('pointercancel', function () { sx = null; });
     paintPlay(); schedule();
   }
 
-  // ------------------------------------------------------------ linefield pieces: still off screen and under reduced motion
-  $$('.band-art').forEach(function (frame) {
-    var visible = false, loaded = false;
-    var desc = Object.getOwnPropertyDescriptor(Document.prototype, 'hidden');
-    var sync = function () {
-      var d; try { d = frame.contentDocument; } catch (e) { return; }
-      if (!d || !loaded) return;
-      var force = !visible || reduce.matches;
-      try {
-        Object.defineProperty(d, 'hidden', { configurable: true, get: function () { return force || (desc ? desc.get.call(d) : false); } });
-        d.dispatchEvent(new Event('visibilitychange'));
-      } catch (e) {}
-    };
-    frame.addEventListener('load', function () { loaded = true; setTimeout(sync, reduce.matches ? 400 : 0); });
-    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { visible = es[0].isIntersecting; sync(); }).observe(frame);
-    else visible = true;
-  });
-
-  // ------------------------------------------------------------ the pencil cursor on the home title card
-  var trail = $('.hero .trail');
-  if (trail && trail.getContext) {
-    var tctx = trail.getContext('2d'), pts = [], traf = 0, W = 0, H = 0, LIFE = 1400;
-    var size = function () {
-      var dpr = Math.min(2, window.devicePixelRatio || 1), r = trail.getBoundingClientRect();
-      W = r.width; H = r.height; trail.width = Math.max(1, Math.round(W * dpr)); trail.height = Math.max(1, Math.round(H * dpr)); tctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    };
-    size(); if (window.ResizeObserver) new ResizeObserver(size).observe(trail);
-    var draw = function (now) {
-      traf = 0; tctx.clearRect(0, 0, W, H);
-      while (pts.length && now - pts[0].t > LIFE) pts.shift();
-      if (pts.length < 2) return;
-      tctx.strokeStyle = cssVar('--pencil') || '#A4DDED'; tctx.lineCap = 'round'; tctx.lineJoin = 'round';
-      for (var pass = 0; pass < 2; pass++) {
-        for (var i = 1; i < pts.length; i++) {
-          var a = pts[i - 1], b = pts[i], age = (now - b.t) / LIFE;
-          tctx.globalAlpha = Math.max(0, 1 - age) * (pass ? 0.45 : 0.95); tctx.lineWidth = pass ? 1 : 1.7;
-          tctx.beginPath(); tctx.moveTo(a.x + pass * 3, a.y + pass * 2); tctx.lineTo(b.x + pass * 3, b.y + pass * 2); tctx.stroke();
-        }
-      }
-      tctx.globalAlpha = 1; traf = requestAnimationFrame(draw);
-    };
-    trail.parentElement.addEventListener('pointermove', function (e) {
-      if (e.pointerType !== 'mouse' || reduce.matches) return;
-      var r = trail.getBoundingClientRect(); pts.push({ x: e.clientX - r.left, y: e.clientY - r.top, t: performance.now() });
-      if (pts.length > 180) pts.shift();
-      if (!traf) traf = requestAnimationFrame(draw);
-    });
-  }
-
-  // ------------------------------------------------------------ the brief: a work order that writes itself
+  // ------------------------------------------------------------ the form on Work with me
+  // Netlify takes the POST. A static copy of the site (GitHub Pages) can't, so it offers the message to copy instead.
   var form = $('form.bf');
   if (form) {
-    var wo = $('[data-wo]'), status = $('[data-bf-status]'), orderField = form.elements.order;
-    var field = function (key) { return $('[data-wo="' + key + '"]', wo); };
-    var val = function (name) { var el = form.elements[name]; return el ? String(el.value || '').trim() : ''; };
-    var number = function () {
-      var seed = ['name', 'company', 'broken', 'kind', 'when', 'team'].map(val).join('|'), h = 7;
-      for (var i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
-      return 'CC-' + new Date().getFullYear() + '-' + String(100 + h % 900);
-    };
-    var update = function () {
-      if (!wo) return;
-      field('from').textContent = [val('name'), val('company')].filter(Boolean).join(', ') || 'Your name, your company';
-      field('kind').textContent = val('kind') || 'Not chosen yet';
-      field('when').textContent = val('when') || 'Not chosen yet';
-      field('team').textContent = val('team') || 'Not chosen yet';
-      field('broken').textContent = val('broken') || 'Tell me what’s broken. One sentence is enough.';
-      var no = number(); $('[data-wo-no]', wo).textContent = no; orderField.value = no;
-    };
-    var orderText = function () {
-      return ['WORK ORDER ' + orderField.value, 'From: ' + [val('name'), val('company')].filter(Boolean).join(', '), 'Email: ' + val('email'),
-        'Bringing: ' + val('kind'), 'Needed: ' + val('when'), 'Team: ' + val('team'), 'What is broken: ' + val('broken')].join('\n');
-    };
-    var pick = function (kind) { $$('input[name="kind"]', form).forEach(function (r) { r.checked = r.value === kind; }); update(); };
-    form.addEventListener('input', update); form.addEventListener('change', update);
-    $$('[data-kind]').forEach(function (b) {
-      b.addEventListener('click', function (e) {
-        e.preventDefault(); pick(b.getAttribute('data-kind'));
-        $('#brief').scrollIntoView({ behavior: reduce.matches ? 'auto' : 'smooth', block: 'start' });
-        setTimeout(function () { form.elements.broken.focus({ preventScroll: true }); }, reduce.matches ? 0 : 450);
-      });
-    });
+    var status = $('[data-bf-status]');
+    var val = function (name) { return String(form.elements[name].value || '').trim(); };
     form.addEventListener('submit', function (e) {
-      e.preventDefault(); update();
+      e.preventDefault();
       var send = $('button[type="submit"]', form); send.disabled = true; status.textContent = 'Sending…';
       fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(new FormData(form)).toString() })
         .then(function (res) {
           if (!res.ok) throw new Error(res.status);
-          $('[data-wo-stamp]').classList.add('on');
-          status.textContent = 'Received. Work order ' + orderField.value + ' is in, and I’ll reply to ' + val('email') + '.';
+          status.textContent = 'Sent. I’ll reply to ' + val('email') + '.';
         })
         .catch(function () {
           var linkedIn = $('.foot-grid a[href*="linkedin"]');
           status.innerHTML = '';
-          status.appendChild(document.createTextNode('This copy of the site can’t send the brief. Copy the work order and send it to me on '));
+          status.appendChild(document.createTextNode('This copy of the site can’t send messages. Copy yours and send it to me on '));
           var a = document.createElement('a'); a.href = linkedIn ? linkedIn.href : 'https://www.linkedin.com/'; a.textContent = 'LinkedIn'; status.appendChild(a);
           status.appendChild(document.createTextNode('. '));
-          var copy = document.createElement('button'); copy.type = 'button'; copy.className = 'tool'; copy.textContent = 'Copy work order';
-          copy.addEventListener('click', function () { copyText(orderText(), status, 'Copied. Paste it into a message to me on LinkedIn.', wo); });
+          var copy = document.createElement('button'); copy.type = 'button'; copy.className = 'tool'; copy.textContent = 'Copy message';
+          copy.addEventListener('click', function () {
+            copyText([val('name') + ' (' + val('email') + ')', val('broken')].join('\n\n'), status, 'Copied. Paste it into a message to me on LinkedIn.');
+          });
           status.appendChild(copy);
         })
         .then(function () { send.disabled = false; });
     });
-    var preset = new URLSearchParams(location.search).get('kind');
-    if (preset) pick(preset); else update();
   }
 
   // ------------------------------------------------------------ copy a link

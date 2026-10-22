@@ -13,6 +13,7 @@ import { gzipSync } from 'node:zlib';
 import { checkContrast, ratio } from './check-contrast.mjs';
 import * as P from './lib/pages.mjs';
 import { guidePage } from './lib/guide.mjs';
+import { resolveSignature } from './lib/signature.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const CHECK = process.argv.includes('--check');
@@ -37,6 +38,7 @@ const ctx = {
   year: 2026,
 };
 ctx.ratio = ratio;
+ctx.site.portrait.signature = resolveSignature(ROOT, ctx.site.portrait.signature);
 
 // Data sanity: every reference has to land somewhere.
 const slugs = new Set(ctx.work.map((p) => p.slug));
@@ -91,7 +93,7 @@ const pages = [
   ['writing/index.html', () => P.writingPage(ctx)],
   ['drawings/index.html', () => P.drawingsPage(ctx)],
   ['about/index.html', () => P.about(ctx)],
-  ['colophon/index.html', () => P.colophon(ctx)],
+  ['about-this-site/index.html', () => P.aboutSite(ctx)],
   ['404.html', () => P.notFound(ctx)],
 ];
 // Inline links in the data, [label](/path/), have to land on a page this build writes.
@@ -118,6 +120,8 @@ for (const [file, render] of pages) outputs.set(file, render());
 const legacy = Object.fromEntries(ctx.work.flatMap((p) => p.legacyIds.map((id) => [id, `/work/${p.slug}/`])));
 outputs.set('projects.html', P.moved(ctx, '/work/', legacy));
 outputs.set('art.html', P.moved(ctx, '/drawings/'));
+// The colophon became About this site. A folder stub, not colophon.html, so nothing hides a folder.
+outputs.set('colophon/index.html', P.moved(ctx, '/about-this-site/'));
 // No writing.html stub: it would hide writing/ (see below). Netlify 301s the
 // old address, and the 404 page forwards it on GitHub Pages.
 

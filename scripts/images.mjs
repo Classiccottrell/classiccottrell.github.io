@@ -87,6 +87,18 @@ async function self() {
   await pencils(src('self', 'ink.png'), out('assets/img/self/pencil.webp'));
 }
 
+// Photo stencils (the studio, the desk): ink on transparent, made from source/self/<name>.jpg
+// by the recipe in the README. Sketchbook pages: cleaned the same way, black ink on transparent.
+async function stencil(name) {
+  const file = out('assets/img/self', `${name}.webp`);
+  log(file, await sharp(src('self', `${name}-ink.png`)).webp({ lossless: true, effort: 6 }).toFile(file));
+}
+
+async function sketch(name) {
+  const file = out('assets/img/sketchbook', `${name}.webp`);
+  log(file, await sharp(src('sketchbook', `${name}.png`)).resize({ width: 680 }).webp({ quality: 70, alphaQuality: 70, effort: 6 }).toFile(file));
+}
+
 // Terry: a clean mask for CSS, and a favicon that is ink by day and Bristol by night.
 async function terry() {
   const raw = readFileSync(src('terry.svg'), 'utf8');
@@ -113,7 +125,7 @@ await drawing('coach', '#FFFFFF');
 await plate('linefield', 'webp');
 await plate('forma', 'webp');
 await plate('agentic-light', 'webp');
-await plate('vpat-vault', 'jpg', { grey: true });
+await plate('vpat-vault', 'png', { quality: 72 });
 await plate('photo-curator-cli', 'jpg', { grey: true });
 await plate('vpat-vault-evidence', 'webp', { grey: true, width: 1100, quality: 62 });
 await plate('terry-time', 'webp');
@@ -127,6 +139,8 @@ await plate('creative-services-flow', 'jpg', { width: 1100 });
 await plate('creative-services-print', 'webp', { width: 1100, quality: 70 });
 await plate('creative-services-sketches', 'jpg', { width: 1100, quality: 70 });
 await plate('creative-services-segments', 'webp', { width: 1100, quality: 80 });
-for (const name of ['the-last-20', 'built-to-break-a-lifelong-education', 'the-disposable-architecture-of-tomorrow']) await cover(name);
+for (const name of ['self-hosting-and-homelab-field-notes', 'the-last-20', 'a-final-love-letter-to-my-dying-ai', 'built-to-break-a-lifelong-education', 'the-disposable-architecture-of-tomorrow']) await cover(name);
 await self();
+for (const name of ['studio', 'desk']) await stencil(name);
+for (const name of ['face', 'figure']) await sketch(name);
 await terry();

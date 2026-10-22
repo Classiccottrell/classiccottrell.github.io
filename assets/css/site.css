@@ -287,6 +287,7 @@ a.avail:hover{background:var(--highlight)}
 .essays.big .n{font:700 var(--t-h3)/1 var(--f-ink);color:var(--fg);letter-spacing:-.02em;padding-top:0;min-width:3.4em}
 .has-rel .essay-a{border-bottom:0}
 .essay-rel{padding:0 0 14px calc(var(--t-h3) * 3.4 + 16px);border-bottom:1px solid var(--hair)}
+.essay-rel a{display:inline-block;padding-block:5px}
 @media (min-width:700px){.essay-rel{padding-left:calc(5.5rem + 16px)}}
 .essays.big img{width:180px;max-width:100%;border:1.5px solid var(--fg);grid-column:2;margin-top:10px}
 @media (min-width:700px){.essays.big .essay-a{grid-template-columns:5.5rem minmax(0,1fr) 180px}.essays.big img{grid-column:3;grid-row:1/4;margin-top:0}}

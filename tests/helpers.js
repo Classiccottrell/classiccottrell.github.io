@@ -11,10 +11,10 @@ export const GUIDE = '/work/terry-home-lab/guide/';
 export const PAGES = [
   '/', '/work/', ...work.map((p) => `/work/${p.slug}/`), GUIDE,
   '/takes/', ...takes.map((t) => `/takes/${t.slug}/`),
-  '/work-with-me/', '/work-with-me/thanks/', '/writing/', '/drawings/', '/about/', '/colophon/', '/404.html',
+  '/work-with-me/', '/work-with-me/thanks/', '/writing/', '/drawings/', '/about/', '/about-this-site/', '/404.html',
 ];
 
-export const CARDS = ['home', 'work', ...work.map((p) => `work-${p.slug}`), 'guide-terry-home-lab', 'takes', ...takes.map((t) => `take-${t.slug}`), 'work-with-me', 'writing', 'drawings', 'about', 'colophon'];
+export const CARDS = ['home', 'work', ...work.map((p) => `work-${p.slug}`), 'guide-terry-home-lab', 'takes', ...takes.map((t) => `take-${t.slug}`), 'work-with-me', 'writing', 'drawings', 'about', 'about-this-site'];
 
 export async function axeViolations(page) {
   await page.addScriptTag({ content: AXE });

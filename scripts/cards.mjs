@@ -89,7 +89,7 @@ const cards = [
   ['writing', card({ kicker: 'Writing · on Substack', title: 'Writing', sub: 'Essays on design, AI, and the occasional roll of packing tape.', terry: true })],
   ['drawings', card({ kicker: `Drawings · ${drawings.drawings.length} portraits in ink`, title: 'Drawings', sub: 'One film, one face, one line of dialogue.', img: kurtz.image, drawing: true, ink: true })],
   ['about', card({ kicker: 'About', title: site.name, size: 'm', sub: plain(site.headline), img: site.portrait.ink, drawing: true, slab: true })],
-  ['colophon', card({ kicker: 'Colophon', title: 'Colophon', sub: 'How this site is made, and a button that checks it.', terry: true })],
+  ['about-this-site', card({ kicker: 'About this site', title: 'About this site', size: 'm', sub: 'How this site is made, and a button that checks it.', terry: true })],
 ];
 
 const browser = await chromium.launch({ executablePath: process.env.PW_CHROMIUM || undefined });

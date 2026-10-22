@@ -10,6 +10,8 @@ const CASES = [
   ['/art.html', '/drawings/'],
   ['/writing.html', '/writing/'],
   ['/writing', '/writing/'],
+  ['/colophon/', '/about-this-site/'],
+  ['/colophon', '/about-this-site/'],
 ];
 
 for (const [from, to] of CASES) {

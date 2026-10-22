@@ -37,6 +37,18 @@
   force = true
 
 [[redirects]]
+  from = "/colophon/"
+  to = "/about-this-site/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/colophon"
+  to = "/about-this-site/"
+  status = 301
+  force = true
+
+[[redirects]]
   from = "/writing.html"
   to = "/writing/"
   status = 301

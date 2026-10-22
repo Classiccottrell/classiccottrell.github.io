@@ -34,7 +34,7 @@ const footer = (ctx, path) => {
       <p class="foot-h">Bring me a problem.</p>
       <p class="foot-row"><a class="btn" href="/work-with-me/">Work with me ${arrow}</a>${avail(site)}</p>
     </div>`;
-  const pages = [...site.nav, { label: 'Work with me', href: '/work-with-me/' }, { label: 'Colophon', href: '/colophon/' }];
+  const pages = [...site.nav, { label: 'Work with me', href: '/work-with-me/' }, { label: 'About this site', href: '/about-this-site/' }];
   return h`
 <footer class="foot">
   <div class="wrap">${cta}

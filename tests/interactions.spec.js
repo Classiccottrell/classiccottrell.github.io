@@ -104,9 +104,9 @@ test('the form is ready for Netlify Forms', async ({ page }) => {
   for (const name of ['name', 'email', 'broken', 'website']) await expect(form.locator(`[name="${name}"]`)).toHaveCount(1);
 });
 
-test('the colophon runs axe against itself', async ({ page }) => {
+test('About this site runs axe against itself', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.goto('/colophon/');
+  await page.goto('/about-this-site/');
   await page.locator('[data-audit]').click();
   await expect(page.locator('[data-audit]')).toHaveText('Run the checks again', { timeout: 30_000 });
   await expect(page.locator('[data-audit-out]')).toContainText('0 violations');

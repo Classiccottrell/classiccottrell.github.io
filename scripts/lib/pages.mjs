@@ -338,8 +338,8 @@ ${pageHead({ kicker: 'About', title: esc(site.name), lede: inline(site.headline)
   return page(ctx, { path: '/about/', title: 'About', description: plain(site.bio[0]), card: 'about', main });
 }
 
-// ---------------------------------------------------------------- colophon
-export function colophon(ctx) {
+// ---------------------------------------------------------------- about this site
+export function aboutSite(ctx) {
   const { stats, contrast, site } = ctx;
   const kb = (n) => `${(n / 1024).toFixed(1)} KB`;
   const swatches = [
@@ -352,7 +352,7 @@ export function colophon(ctx) {
   ];
   const ratioOf = (hex) => contrast.light.find((c) => c.fg === hex && c.bg === '#FFFFFF');
   const main = h`
-${pageHead({ kicker: 'Colophon', title: 'Colophon', lede: 'How this site is made, what it’s made of, and a button that checks it.' })}
+${pageHead({ kicker: 'About this site', title: 'About this site', lede: 'How this site is made, what it’s made of, and a button that checks it.' })}
 
 <section class="wrap sec" aria-labelledby="checks-h">
   <div class="g12">
@@ -421,7 +421,7 @@ ${pageHead({ kicker: 'Colophon', title: 'Colophon', lede: 'How this site is made
   <p>Familjen Grotesk, Newsreader and Red Hat Mono are used under the SIL Open Font License and served from this site. Run the checks uses <a href="https://github.com/dequelabs/axe-core">axe-core</a> under the Mozilla Public License 2.0. The ink band runs Grain Field, Terminator, Dark Nebula, Infall and Longwave from ${link('/work/linefield/', 'linefield')}, which is MIT licensed. Terry drew himself, and he has ${link('/work/terry-time/', 'a shop')}.</p>
   <p>The source is on ${link('https://github.com/Classiccottrell/classiccottrell.github.io', 'GitHub')}. The previous version of the site is kept on the <code>v1-classic</code> branch.</p>
 </div></section>`;
-  return page(ctx, { path: '/colophon/', title: 'Colophon', description: 'How this site is made, what it’s made of, and a button that checks it.', card: 'colophon', main });
+  return page(ctx, { path: '/about-this-site/', title: 'About this site', description: 'How this site is made, what it’s made of, and a button that checks it.', card: 'about-this-site', main });
 }
 
 // ---------------------------------------------------------------- 404 and moved pages

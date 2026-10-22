@@ -93,7 +93,7 @@ const pages = [
   ['writing/index.html', () => P.writingPage(ctx)],
   ['drawings/index.html', () => P.drawingsPage(ctx)],
   ['about/index.html', () => P.about(ctx)],
-  ['colophon/index.html', () => P.colophon(ctx)],
+  ['about-this-site/index.html', () => P.aboutSite(ctx)],
   ['404.html', () => P.notFound(ctx)],
 ];
 // Inline links in the data, [label](/path/), have to land on a page this build writes.
@@ -120,6 +120,8 @@ for (const [file, render] of pages) outputs.set(file, render());
 const legacy = Object.fromEntries(ctx.work.flatMap((p) => p.legacyIds.map((id) => [id, `/work/${p.slug}/`])));
 outputs.set('projects.html', P.moved(ctx, '/work/', legacy));
 outputs.set('art.html', P.moved(ctx, '/drawings/'));
+// The colophon became About this site. A folder stub, not colophon.html, so nothing hides a folder.
+outputs.set('colophon/index.html', P.moved(ctx, '/about-this-site/'));
 // No writing.html stub: it would hide writing/ (see below). Netlify 301s the
 // old address, and the 404 page forwards it on GitHub Pages.
 

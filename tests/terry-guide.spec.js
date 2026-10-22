@@ -389,7 +389,7 @@ test('the old projects.html address for the card still lands on the case study',
 });
 
 // ---- the guide's dock offsets must not leak onto any other page
-const OTHER = ['/', '/work/', '/work/terry-time/', '/takes/', '/about/', '/work-with-me/', '/writing/', '/drawings/', '/colophon/'];
+const OTHER = ['/', '/work/', '/work/terry-time/', '/takes/', '/about/', '/work-with-me/', '/writing/', '/drawings/', '/about-this-site/'];
 
 for (const [width, height] of [[390, 800], [768, 1024]]) {
   test(`other pages keep scroll-padding-top auto and land anchors near the top at ${width}x${height}`, async ({ page }) => {

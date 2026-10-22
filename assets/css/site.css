@@ -606,7 +606,7 @@ a.avail:hover{background:var(--highlight)}
 }
 .credits{margin-top:18px}
 
-/* ---------- about and colophon */
+/* ---------- about and about this site */
 .about{margin-top:clamp(36px,5vw,64px);align-items:start}
 .about-fig{max-width:420px;width:100%}
 @media (min-width:860px){.about-fig{grid-column:1/6}.about-text{grid-column:7/13}}

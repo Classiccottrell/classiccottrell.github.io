@@ -35,7 +35,7 @@ assets/
   cards/              share cards, 1200 × 630 (made by npm run cards)
   linefield/          the baked linefield pieces in the ink band, one per hot take (made by the build)
   vendor/axe.min.js   axe-core for Run the checks (copied by the build)
-source/               originals: drawings, screenshots, covers, the portrait, Terry, linefield
+source/               originals: drawings, sketchbook, screenshots, covers, the portrait and photo stencils, Terry, linefield
 scripts/              build, images, cards, contact sheet, contrast check, local server
 tests/                Playwright: axe on every page, no-JS, redirects, interactions, budgets
 ```
@@ -82,7 +82,7 @@ already installed, set `PW_CHROMIUM=/path/to/chrome`.
   large 16:9 pictures, one line each, each opening its case study at `/work/<slug>/`), Take it apart,
   the hot takes band, How I work (three rules), Drawings, Writing. The standfirst lives in About's bio.
 - **Colour:** tokens are at the top of `assets/css/site.css`. `--signal` (#EDB02A; #C98F12 in the dark scheme) is a flat
-  *field* only: the portrait's slab on the home and About pages, at most one per screen. Never text, an underline, a
+  *field* only: the portrait's slab on the home and About pages and the studio stencil's slab on Work with me, at most one per screen. Never text, an underline, a
   focus ring or a status dot (1.94:1 on white). Ink on it is `--slab-ink` (#111111) in both schemes, which is also what
   the home masthead and the signature use over the slab. `--mat` and `--hair` are the neutral picture mat and hairline.
   Add a token, then add its pairs to `PAIRS` in `scripts/check-contrast.mjs`.
@@ -133,6 +133,18 @@ already installed, set `PW_CHROMIUM=/path/to/chrome`.
 - **The inked self-portrait:** replace `source/self/ink.png` (black ink on a
   transparent background, 900 × 1075), run `npm run images`. It sits on the signal slab and is revealed by the
   inking animation; the pencil layer (also made by `npm run images`) is no longer shown. Then update `portrait` in `data/site.json`.
+- **The stencils from photos:** the studio (Work with me, on the slab) and the desk (About, light ink in the dark
+  scheme) are `source/self/<name>-ink.png`, black ink on transparent, made from the stripped photo beside it
+  (`<name>.jpg`) with ImageMagick: `magick <name>.jpg -colorspace Gray -auto-level -clahe 12x12%+128+2 -blur 0x2.2
+  -threshold 42% -statistic median 7 -negate -alpha copy -fill '#111111' -colorize 100 <name>-ink.png` (the desk
+  uses `-blur 0x2 -threshold 40%` and is turned 90°). Try two or three thresholds and pick by eye, then
+  `npm run images`. The text is in `hire.json` → `figure` and `site.json` → `desk`.
+- **The sketchbook:** the pair under the bio on About is `drawings.json` → `sketchbook` (it sits on About, not
+  /drawings/, because the drawings page has a 400 KB budget). Originals are `source/sketchbook/<name>.jpg`; the
+  cleaned page (`<name>.png`, black ink on transparent, cropped to the drawing, light ink in the dark scheme like
+  the desk) is `-colorspace Gray -auto-level -clahe 20x20%+128+1.5 -blur 0x1 -threshold 26-30% -statistic median 3
+  -trim`, then the same `-negate -alpha copy …` tail as the stencils.
+  Strip photo metadata (`-strip`) before anything goes in `source/`.
 - **A drawing's year or medium:** `drawn` and `medium` in `data/drawings.json`
   appear in its credits as soon as they're set.
 

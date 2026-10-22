@@ -4,7 +4,7 @@ import { esc, h, inline, link, pad2, plain } from './html.mjs';
 import { page } from './layout.mjs';
 import {
   arrow, avail, btn, essay, exploded, heat, idxRow, img, inking, linefield, mark, pageHead, plate,
-  projectMeta, receipts, rule, status, takeItem, tblock,
+  projectMeta, receipts, rule, status, stencil, takeItem, tblock,
 } from './parts.mjs';
 
 const GROUPS = ['Products', 'Agents', 'Systems', 'Tools', 'Client work'];
@@ -243,7 +243,7 @@ export function takePage(ctx, t) {
 export function hire(ctx) {
   const { site, hire: H } = ctx;
   const main = h`
-${pageHead({ kicker: 'Work with me', title: esc(H.headline), lede: esc(H.standfirst), extra: h`<p class="note hire-avail" id="availability">${status(site.availability)}</p>` })}
+${pageHead({ kicker: 'Work with me', title: esc(H.headline), lede: esc(H.standfirst), extra: h`<p class="note hire-avail" id="availability">${status(site.availability)}</p>`, aside: stencil(H.figure, { cls: 'hire-fig', slab: true, lazy: false }) })}
 <section class="wrap sec" aria-labelledby="help-h">
   <h2 class="h2" id="help-h">What I help with</h2>
   <ul class="help">${H.help.map((t) => h`<li>${inline(t)}</li>`)}</ul>
@@ -317,7 +317,8 @@ ${drawings.drawings.map((d, i) => h`
 
 // ---------------------------------------------------------------- about
 export function about(ctx) {
-  const { site, rules, hire: H } = ctx;
+  const { site, rules, drawings, hire: H } = ctx;
+  const sb = drawings.sketchbook;
   const main = h`
 ${pageHead({ kicker: 'About', title: esc(site.name), lede: inline(site.headline) })}
 <div class="wrap g12 about">
@@ -326,6 +327,11 @@ ${pageHead({ kicker: 'About', title: esc(site.name), lede: inline(site.headline)
     <p class="ctas">${btn('/work-with-me/', 'Work with me')}${link(site.contact.url, site.contact.label)}</p>
   </div>
 </div>
+<section class="wrap sec" aria-labelledby="sb-h">
+  <h2 class="h2" id="sb-h">${esc(sb.heading)}</h2>
+  <p class="sub-intro">${inline(sb.intro)}</p>
+  <div class="sb-row">${sb.sketches.map((s) => stencil(s, { cls: 'sb-fig' }))}</div>
+</section>
 <section class="wrap sec" id="rules" aria-labelledby="rules-h">
   <h2 class="h2" id="rules-h">How I work</h2>
   <p class="sub-intro">${rules.length} rules, each pulled from a project where I learned it the hard way.</p>
@@ -333,7 +339,7 @@ ${pageHead({ kicker: 'About', title: esc(site.name), lede: inline(site.headline)
 </section>
 <section class="wrap sec" aria-labelledby="what-h">
   <h2 class="h2" id="what-h">What I work on</h2>
-  <ul class="what">${H.help.map((t) => h`<li>${inline(t)}</li>`)}</ul>
+  <div class="what-row"><ul class="what">${H.help.map((t) => h`<li>${inline(t)}</li>`)}</ul>${stencil(site.desk, { cls: 'desk-fig' })}</div>
 </section>`;
   return page(ctx, { path: '/about/', title: 'About', description: plain(site.bio[0]), card: 'about', main });
 }
@@ -348,7 +354,7 @@ export function aboutSite(ctx) {
     ['Graphite', '#55585C', 'Secondary text only.'],
     ['Non-photo blue', '#A4DDED', 'Construction only: grid, guides, crop marks, highlights. Never text.'],
     ['Blueline', '#1B62A0', 'Notes, captions, links, focus rings and callout numbers.'],
-    ['Signal', '#EDB02A', 'One flat field per screen: the portrait’s slab (1.94:1 on white, so it never carries information). Never text, a line, a focus ring or a status dot. Deeper amber (#C98F12) in the dark scheme.'],
+    ['Signal', '#EDB02A', 'One flat field per screen: the slab behind the portrait and the studio stencil (1.94:1 on white, so it never carries information). Never text, a line, a focus ring or a status dot. Deeper amber (#C98F12) in the dark scheme.'],
   ];
   const ratioOf = (hex) => contrast.light.find((c) => c.fg === hex && c.bg === '#FFFFFF');
   const main = h`

@@ -190,6 +190,11 @@ a.avail:hover{background:var(--highlight)}
 .inking.solo .ink{position:static}
 .screen{mix-blend-mode:screen}
 .ink-on-white{mix-blend-mode:multiply}
+/* A stencil from a photo: ink on transparent. On the signal slab the ink stays #111 in both schemes;
+   on the page it turns light in the dark scheme, so it never sits in a white box. */
+.st-pic img{display:block;width:100%}
+.on-slab .st-pic{background:var(--signal)}
+@media (prefers-color-scheme:dark){.stencil:not(.on-slab) img{filter:invert(1)}}
 .pq{font:italic 400 clamp(1.45rem,1.1rem + 1.3vw,2.2rem)/1.18 var(--f-voice);max-width:26ch}
 .pq p::before{content:"\201C";display:block;font:700 3.2em/.62 var(--f-ink);color:var(--proof);margin-bottom:6px}
 .pq-fig{margin-block:clamp(40px,5vw,64px);border-top:1px dashed var(--proof);padding-top:18px}
@@ -574,6 +579,12 @@ a.avail:hover{background:var(--highlight)}
 
 /* ---------- work with me */
 .hire-avail{margin-top:6px}
+.hire-fig{margin-top:28px;max-width:420px}
+@media (min-width:860px){
+  .ph.has-aside{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--gap);align-items:end}
+  .ph-t{grid-column:1/8}
+  .hire-fig{grid-column:8/13;justify-self:end;width:100%;margin-top:0}
+}
 .help{display:grid;border-top:1.5px solid var(--fg);max-width:62ch;margin-top:20px}
 .help li{padding:12px 0;border-bottom:1px solid var(--pencil)}
 .bf{max-width:40rem;margin-top:20px}
@@ -615,6 +626,12 @@ a.avail:hover{background:var(--highlight)}
 .what{display:grid;border-top:1.5px solid var(--fg);max-width:72ch;margin-top:18px}
 .what li{padding:12px 0;border-bottom:1px solid var(--pencil)}
 .what b{font-family:var(--f-ink)}
+.sb-row{display:grid;gap:clamp(28px,4vw,48px);justify-items:start}
+.sb-fig{width:100%;max-width:280px}
+@media (min-width:700px){.sb-row{grid-template-columns:repeat(2,minmax(0,340px));align-items:end}.sb-fig{max-width:none}}
+.what-row{display:grid;gap:clamp(28px,4vw,40px)}
+.desk-fig{max-width:260px}
+@media (min-width:860px){.what-row{grid-template-columns:minmax(0,8fr) minmax(0,4fr);column-gap:var(--gap);align-items:start}.desk-fig{justify-self:end;width:100%;margin-top:18px}}
 .term{font:.8rem/1.65 var(--f-pencil);background:var(--band);color:var(--band-fg);padding:16px 18px;min-height:300px;max-height:520px;overflow:auto;white-space:pre-wrap;border:1px solid var(--band-pencil);margin:0}
 .term .ok{color:var(--band-proof)}
 .term .dim{color:var(--band-muted)}

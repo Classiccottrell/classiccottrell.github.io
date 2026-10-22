@@ -49,5 +49,25 @@
       "drawn": null,
       "medium": null
     }
-  ]
+  ],
+  "sketchbook": {
+    "heading": "From the sketchbook",
+    "intro": "Quicker drawings than the [portraits](/drawings/). Just whoever showed up on the page.",
+    "sketches": [
+      {
+        "src": "/assets/img/sketchbook/face.webp",
+        "width": 680,
+        "height": 802,
+        "alt": "Ink sketch of a man's head and shoulders: tall swept-up hair, a long plain face with dot eyes, and a dark open collar.",
+        "caption": "A face, mostly hair."
+      },
+      {
+        "src": "/assets/img/sketchbook/figure.webp",
+        "width": 680,
+        "height": 793,
+        "alt": "Ink sketch of a long-haired person hunched in an office chair, typing on a laptop at a desk.",
+        "caption": "Hunched over a laptop."
+      }
+    ]
+  }
 }

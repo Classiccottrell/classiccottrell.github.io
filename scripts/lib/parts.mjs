@@ -12,13 +12,28 @@ export const avail = (site) =>
 export const btn = (href, label, cls = 'btn') => h`<a class="${cls}" href="${esc(href)}">${esc(label)} ${arrow}</a>`;
 
 // Page header: kicker note, splash title, standfirst.
-export const pageHead = ({ kicker, title, lede, splash = true, extra = '' }) => h`
-<header class="wrap ph">
+// `aside` (a figure) sits beside the text on a desktop and under it on a phone.
+export const pageHead = ({ kicker, title, lede, splash = true, extra = '', aside = '' }) => {
+  const text = h`
   <p class="note">${kicker}</p>
   <h1 class="${splash ? 'splash' : 'h1'}">${title}</h1>
   ${lede ? h`<p class="lede">${lede}</p>` : ''}
-  ${extra}
+  ${extra}`;
+  return aside
+    ? h`
+<header class="wrap ph has-aside"><div class="ph-t">${text}</div>${aside}</header>`
+    : h`
+<header class="wrap ph">${text}
 </header>`;
+};
+
+// A stencil from a photo: ink on transparent. `slab` puts it on the signal field (the ink never
+// changes there); otherwise it sits on the page and turns light in the dark scheme.
+export const stencil = ({ src, width, height, alt, caption }, { cls = '', slab = false, lazy = true } = {}) => h`
+<figure class="stencil${slab ? ' on-slab' : ''}${cls ? ` ${cls}` : ''}">
+  <div class="st-pic">${img({ src, width, height, alt, lazy })}</div>
+  ${caption ? h`<figcaption class="note cap">${inline(caption)}</figcaption>` : ''}
+</figure>`;
 
 // The technical-drawing title block. rows: [{ dt, dd (html), wide }]
 export const tblock = (rows, cls = '') => h`

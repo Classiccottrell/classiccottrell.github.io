@@ -11,5 +11,12 @@
     "I read every message myself.",
     "If it’s a fit, we book a 30-minute teardown call. I bring three questions and one sketch.",
     "You get a short written plan: scope, timeline and price."
-  ]
+  ],
+  "figure": {
+    "src": "/assets/img/self/studio.webp",
+    "width": 900,
+    "height": 840,
+    "alt": "A stencil from a photo of my art corner, in black on yellow: an easel on the right, a shelf of paints and jars, a toolbox, and the cat asleep on a drop cloth.",
+    "caption": "The corner where the drawings happen."
+  }
 }

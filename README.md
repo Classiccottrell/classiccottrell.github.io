@@ -12,7 +12,8 @@ Every page is generated from the JSON files in `data/` by a small Node build
 exactly as it is, with no build step on the host. There is no framework and no
 bundler, and every page reads with JavaScript turned off. `assets/js/site.js`
 only adds the optional layer: the portrait's ink and signature, take it apart (on the home page,
-where page scroll and the slider are one control, and on the Terry guide, whose layers follow the step being read), prompt copy buttons, hot takes,
+where page scroll and the slider are one control, and on the Terry guide, whose layers follow the step being read), prompt copy buttons, hot takes
+(which also swipe on a touch screen),
 sending the Work with me form, Pencils (redline) mode and Run the checks.
 
 ```

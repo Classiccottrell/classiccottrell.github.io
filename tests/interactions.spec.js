@@ -18,6 +18,33 @@ test('hot takes rotate on demand and pause', async ({ page }) => {
   await expect(play).not.toHaveText(before);
 });
 
+test.describe('on a touch screen', () => {
+  test.use({ hasTouch: true, isMobile: true, viewport: { width: 390, height: 844 } });
+
+  test('hot takes swipe sideways, and a vertical drag leaves them alone', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto('/');
+    const stage = page.locator('[data-stage]');
+    await page.locator('.stage-t').scrollIntoViewIfNeeded();
+    const box = await page.locator('.stage-t').boundingBox();
+    const cdp = await page.context().newCDPSession(page);
+    const drag = async (dx, dy) => {
+      const x = box.x + box.width / 2, y = box.y + box.height / 2;
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y }] });
+      for (let i = 1; i <= 6; i++) await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: x + (dx * i) / 6, y: y + (dy * i) / 6 }] });
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+    };
+    const n = stage.locator('[data-stage-n]');
+    await expect(n).toHaveText(takes[0].id);
+    await drag(-120, 10);
+    await expect(n).toHaveText(takes[1].id);
+    await drag(120, -10);
+    await expect(n).toHaveText(takes[0].id);
+    await drag(10, 20);
+    await expect(n).toHaveText(takes[0].id);
+  });
+});
+
 test('take it apart follows the slider and the button', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/');

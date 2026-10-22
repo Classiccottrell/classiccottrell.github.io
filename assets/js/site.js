@@ -386,6 +386,16 @@
     stage.addEventListener('mouseleave', function () { hold = false; schedule(); });
     stage.addEventListener('focusin', function () { hold = true; clearTimeout(timer); });
     stage.addEventListener('focusout', function () { hold = false; schedule(); });
+    // A finger or pen swipes between takes: left for the next, right for the one before. Only a mostly
+    // sideways drag counts, so the page still scrolls (touch-action: pan-y), and a mouse still selects text.
+    var sx = null, sy = 0;
+    stage.addEventListener('pointerdown', function (e) { if (e.pointerType === 'mouse' || !e.isPrimary) return; sx = e.clientX; sy = e.clientY; });
+    stage.addEventListener('pointerup', function (e) {
+      if (sx === null) return;
+      var dx = e.clientX - sx, dy = e.clientY - sy; sx = null;
+      if (Math.abs(dx) >= 40 && Math.abs(dx) > Math.abs(dy)) { show(idx + (dx < 0 ? 1 : -1)); schedule(); }
+    });
+    stage.addEventListener('pointercancel', function () { sx = null; });
     paintPlay(); schedule();
   }
 

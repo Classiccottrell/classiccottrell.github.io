@@ -26,10 +26,10 @@
 /* An ink band, or a whole ink page: the polarity flips, the tokens follow. */
 .band,.ink-page{--fg:var(--band-fg);--muted:var(--band-muted);--pencil:var(--band-pencil);--proof:var(--band-proof);--proof-on:var(--band-proof-on);--highlight:var(--band-highlight);--ground:var(--band);--pencil-wash:rgba(80,160,190,.14)}
 
-@font-face{font-family:"Familjen Grotesk";src:url(/assets/fonts/familjen-grotesk.woff2) format("woff2");font-weight:400 700;font-display:swap}
-@font-face{font-family:"Newsreader";src:url(/assets/fonts/newsreader.woff2) format("woff2");font-weight:200 800;font-display:swap}
-@font-face{font-family:"Newsreader";src:url(/assets/fonts/newsreader-italic.woff2) format("woff2");font-weight:200 800;font-style:italic;font-display:swap}
-@font-face{font-family:"Red Hat Mono";src:url(/assets/fonts/red-hat-mono.woff2) format("woff2");font-weight:300 700;font-display:swap}
+@font-face{font-family:"Familjen Grotesk";src:url(/assets/fonts/familjen-grotesk.woff2?v=414d5dfe5f) format("woff2");font-weight:400 700;font-display:swap}
+@font-face{font-family:"Newsreader";src:url(/assets/fonts/newsreader.woff2?v=62981321d9) format("woff2");font-weight:200 800;font-display:swap}
+@font-face{font-family:"Newsreader";src:url(/assets/fonts/newsreader-italic.woff2?v=48bc8861b9) format("woff2");font-weight:200 800;font-style:italic;font-display:swap}
+@font-face{font-family:"Red Hat Mono";src:url(/assets/fonts/red-hat-mono.woff2?v=f4bef0a36d) format("woff2");font-weight:300 700;font-display:swap}
 
 /* ---------- base */
 *,*::before,*::after{box-sizing:border-box}
@@ -121,7 +121,7 @@ a.avail:hover{background:var(--highlight)}
 .foot-base{display:flex;gap:12px 22px;align-items:center;flex-wrap:wrap;margin-top:36px;font-size:.98rem}
 .foot-base .note{margin-left:auto}
 @media (max-width:599px){.foot-base .note{margin-left:0}}
-.terry{display:inline-block;width:52px;height:52px;flex:none;background:var(--fg);-webkit-mask:url(/assets/img/terry.svg) center/contain no-repeat;mask:url(/assets/img/terry.svg) center/contain no-repeat}
+.terry{display:inline-block;width:52px;height:52px;flex:none;background:var(--fg);-webkit-mask:url(/assets/img/terry.svg?v=722efe6195) center/contain no-repeat;mask:url(/assets/img/terry.svg?v=722efe6195) center/contain no-repeat}
 .terry-a{display:inline-flex;flex:none}
 .terry-a .terry{transition:transform .18s cubic-bezier(.2,.9,.3,1.25),background-color .18s}
 .terry-a:hover .terry,.terry-a:focus-visible .terry{background:var(--proof);transform:rotate(-8deg)}

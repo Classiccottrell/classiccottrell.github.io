@@ -27,7 +27,7 @@ data/                 the content: edit these, then npm run build
   drawings.json       drawings, with credits and alt text
   hire.json           Work with me: standfirst, what I help with, how it works
 assets/
-  css/site.css        the whole stylesheet, tokens first
+  css/site.css        the whole stylesheet, tokens first (the build stamps its url(/assets/…) ?v= hashes)
   js/site.js          the optional layer
   js/terry-symbols.js Terry Time's footer, running live on its case study (only that page loads it)
   fonts/              Familjen Grotesk, Newsreader, Red Hat Mono (OFL)
@@ -152,7 +152,8 @@ already installed, set `PW_CHROMIUM=/path/to/chrome`.
 
 - **Netlify** (`netlify.toml`): publishes the folder as-is, 301s the old
   `.html` addresses, and caches `assets/` for a year (every asset URL carries a
-  content hash). The form on /work-with-me/ is a Netlify form (name, email,
+  content hash; the build stamps the same `?v=` into `url()`s in `site.css`, in
+  place, so a page's font preloads and its `@font-face` rules fetch one file). The form on /work-with-me/ is a Netlify form (name, email,
   what's broken): in the Netlify
   dashboard, turn on **Forms → form detection**, then add an email notification
   for the `brief` form.

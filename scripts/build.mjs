@@ -69,7 +69,29 @@ for (const name of readdirSync(path.join(ROOT, 'source/linefield')).filter((f) =
   outputs.set(`assets/linefield/${name}`, raw.slice(0, end) + shim + raw.slice(end));
 }
 
-const css = read('assets/css/site.css');
+// Every /assets/ reference in a page carries a ?v= content hash, as
+// netlify.toml promises: /assets/* is served immutable for a year, so an image
+// or baked piece replaced under the same name would otherwise stay stale in
+// every cache that already has it (the linefield plate did, for days).
+const assetHashes = new Map();
+const assetHash = (rel) => {
+  if (!assetHashes.has(rel)) {
+    const out = outputs.get(rel);
+    const buf = out !== undefined ? (Buffer.isBuffer(out) ? out : Buffer.from(out))
+      : existsSync(path.join(ROOT, rel)) ? readFileSync(path.join(ROOT, rel)) : null;
+    assetHashes.set(rel, buf ? hash(buf) : null);
+  }
+  return assetHashes.get(rel);
+};
+
+// site.css is stamped in place the same way: its url(/assets/...) references
+// carry the same ?v= as the pages' preload links, so each font downloads once,
+// and a changed font changes the stylesheet's own hash. Any old stamp is replaced.
+const css = read('assets/css/site.css').replace(/url\(\/(assets\/[\w./-]+?)(?:\?v=[0-9a-f]+)?\)/g, (m, rel) => {
+  const h = assetHash(rel);
+  return h ? `url(/${rel}?v=${h})` : `url(/${rel})`;
+});
+outputs.set('assets/css/site.css', css);
 const js = read('assets/js/site.js');
 ctx.assets = { css: hash(css), js: hash(js), terry: hash(read('assets/js/terry-symbols.js')) };
 
@@ -133,21 +155,8 @@ ${indexable.map((f) => `  <url><loc>${ctx.site.url}/${f.replace(/index\.html$/, 
 `);
 outputs.set('robots.txt', `User-agent: *\nAllow: /\n\nSitemap: ${ctx.site.url}/sitemap.xml\n`);
 
-// Every /assets/ reference in a page carries a ?v= content hash, as
-// netlify.toml promises: /assets/* is served immutable for a year, so an image
-// or baked piece replaced under the same name would otherwise stay stale in
-// every cache that already has it (the linefield plate did, for days). Only
-// attribute values are rewritten, and only for files that exist.
-const assetHashes = new Map();
-const assetHash = (rel) => {
-  if (!assetHashes.has(rel)) {
-    const out = outputs.get(rel);
-    const buf = out !== undefined ? (Buffer.isBuffer(out) ? out : Buffer.from(out))
-      : existsSync(path.join(ROOT, rel)) ? readFileSync(path.join(ROOT, rel)) : null;
-    assetHashes.set(rel, buf ? hash(buf) : null);
-  }
-  return assetHashes.get(rel);
-};
+// Pages get the hashes (assetHash, above) in attribute values only, and only
+// for files that exist.
 const fingerprint = (html) => html.replace(/(\s(?:src|href|content|srcset|data-src|poster)=")([^"]*)"/g, (m, pre, value) =>
   pre + value.replace(/\/(assets\/[\w./-]+)(?![\w./-]|\?)/g, (url, rel) => {
     const h = assetHash(rel);

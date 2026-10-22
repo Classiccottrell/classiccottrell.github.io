@@ -25,6 +25,19 @@ test('the drawings page transfers under 400 KB, with no layout shift', async ({ 
   expect(await page.evaluate(() => window.__cls)).toBeLessThan(0.02);
 });
 
+test('each font file downloads once on the home page: preload and @font-face ask for the same URL', async ({ page }) => {
+  const seen = {};
+  page.on('request', (req) => {
+    const { pathname } = new URL(req.url());
+    if (pathname.endsWith('.woff2')) seen[pathname] = (seen[pathname] || 0) + 1;
+  });
+  await page.goto('/', { waitUntil: 'networkidle' });
+  await page.evaluate(() => document.fonts.ready);
+  expect(await page.evaluate(() => document.fonts.check('16px "Familjen Grotesk"') && document.fonts.check('16px Newsreader'))).toBe(true);
+  expect(Object.keys(seen)).toEqual(expect.arrayContaining(['/assets/fonts/familjen-grotesk.woff2', '/assets/fonts/newsreader.woff2']));
+  for (const [file, n] of Object.entries(seen)) expect(n, file).toBe(1);
+});
+
 test('every image is described or marked decorative', async ({ page }) => {
   for (const path of ['/', '/drawings/', '/writing/', '/work/linefield/', '/about/']) {
     await page.goto(path);

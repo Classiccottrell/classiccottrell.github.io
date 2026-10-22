@@ -294,6 +294,7 @@ ${pageHead({ kicker: `Writing · ${writing.essays.length} essays on Substack`, t
 // (black ink on white, white ink knocked out of black). The caption alternates sides; nothing moves.
 export function drawingsPage(ctx) {
   const { drawings } = ctx;
+  const sb = drawings.sketchbook;
   const main = h`
 <header class="dw-head dw-white"><div class="wrap ph">
   <p class="note">Drawings · ${drawings.drawings.length} portraits in ink</p>
@@ -311,14 +312,20 @@ ${drawings.drawings.map((d, i) => h`
     <p class="note credits">${esc(d.film)} · ${d.year}<br>Dir. ${esc(d.director)} · ${esc(d.actor)}${d.medium ? h`<br>${esc(d.medium)}${d.drawn ? ` · drawn ${d.drawn}` : ''}` : ''}</p>
   </div>
   </div>
-</section>`)}`;
+</section>`)}
+<section class="dw-white dw-sb" aria-labelledby="dw-sketchbook">
+  <div class="wrap dw-sb-in">
+  <h2 class="h2" id="dw-sketchbook">${esc(sb.heading)}</h2>
+  <p class="sub-intro">${inline(sb.intro)}</p>
+  <div class="sb-row">${sb.sketches.map((s) => stencil(s, { cls: 'sb-fig' }))}</div>
+  </div>
+</section>`;
   return page(ctx, { path: '/drawings/', title: 'Drawings', description: drawings.intro, card: 'drawings', bodyClass: 'dw-body', main });
 }
 
 // ---------------------------------------------------------------- about
 export function about(ctx) {
-  const { site, rules, drawings, hire: H } = ctx;
-  const sb = drawings.sketchbook;
+  const { site, rules, hire: H } = ctx;
   const main = h`
 ${pageHead({ kicker: 'About', title: esc(site.name), lede: inline(site.headline) })}
 <div class="wrap g12 about">
@@ -327,11 +334,6 @@ ${pageHead({ kicker: 'About', title: esc(site.name), lede: inline(site.headline)
     <p class="ctas">${btn('/work-with-me/', 'Work with me')}${link(site.contact.url, site.contact.label)}</p>
   </div>
 </div>
-<section class="wrap sec" aria-labelledby="sb-h">
-  <h2 class="h2" id="sb-h">${esc(sb.heading)}</h2>
-  <p class="sub-intro">${inline(sb.intro)}</p>
-  <div class="sb-row">${sb.sketches.map((s) => stencil(s, { cls: 'sb-fig' }))}</div>
-</section>
 <section class="wrap sec" id="rules" aria-labelledby="rules-h">
   <h2 class="h2" id="rules-h">How I work</h2>
   <p class="sub-intro">${rules.length} rules, each pulled from a project where I learned it the hard way.</p>

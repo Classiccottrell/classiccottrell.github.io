@@ -27,7 +27,7 @@ data/                 the content: edit these, then npm run build
   drawings.json       drawings, with credits and alt text
   hire.json           Work with me: standfirst, what I help with, how it works
 assets/
-  css/site.css        the whole stylesheet, tokens first
+  css/site.css        the whole stylesheet, tokens first (the build stamps its url(/assets/…) ?v= hashes)
   js/site.js          the optional layer
   js/terry-symbols.js Terry Time's footer, running live on its case study (only that page loads it)
   fonts/              Familjen Grotesk, Newsreader, Red Hat Mono (OFL)
@@ -124,7 +124,7 @@ already installed, set `PW_CHROMIUM=/path/to/chrome`.
   the drawing takes 7 of 12 columns and the caption sits beside it, swapping sides band to band; on a phone the drawing sits
   above its caption. Nothing is sticky and nothing moves with the scroll. Every drawing keeps its original colours: `ground`
   picks the band (`black` = white ink knocked out with `screen`, `white` = black ink on paper with `multiply`). White bands
-  are real paper in both colour schemes.
+  are real paper in both colour schemes. A last white band, From the sketchbook, closes the page.
 - **Inline marks:** text in `data/` can use `` `code` ``, `*emphasis*` and
   `[a link](/work/forma/)` to another page on this site. The build fails if a
   link doesn't land on a page it writes.
@@ -139,10 +139,10 @@ already installed, set `PW_CHROMIUM=/path/to/chrome`.
   -threshold 42% -statistic median 7 -negate -alpha copy -fill '#111111' -colorize 100 <name>-ink.png` (the desk
   uses `-blur 0x2 -threshold 40%` and is turned 90°). Try two or three thresholds and pick by eye, then
   `npm run images`. The text is in `hire.json` → `figure` and `site.json` → `desk`.
-- **The sketchbook:** the pair under the bio on About is `drawings.json` → `sketchbook` (it sits on About, not
-  /drawings/, because the drawings page has a 400 KB budget). Originals are `source/sketchbook/<name>.jpg`; the
-  cleaned page (`<name>.png`, black ink on transparent, cropped to the drawing, light ink in the dark scheme like
-  the desk) is `-colorspace Gray -auto-level -clahe 20x20%+128+1.5 -blur 0x1 -threshold 26-30% -statistic median 3
+- **The sketchbook:** the pair in the white band after the portraits on /drawings/ is `drawings.json` → `sketchbook`
+  (lazy-loaded; the page still fits its 400 KB budget). Originals are `source/sketchbook/<name>.jpg`; the
+  cleaned page (`<name>.png`, black ink on transparent, cropped to the drawing; the band is paper in both schemes, so
+  the ink stays black) is `-colorspace Gray -auto-level -clahe 20x20%+128+1.5 -blur 0x1 -threshold 26-30% -statistic median 3
   -trim`, then the same `-negate -alpha copy …` tail as the stencils.
   Strip photo metadata (`-strip`) before anything goes in `source/`.
 - **A drawing's year or medium:** `drawn` and `medium` in `data/drawings.json`
@@ -152,7 +152,8 @@ already installed, set `PW_CHROMIUM=/path/to/chrome`.
 
 - **Netlify** (`netlify.toml`): publishes the folder as-is, 301s the old
   `.html` addresses, and caches `assets/` for a year (every asset URL carries a
-  content hash). The form on /work-with-me/ is a Netlify form (name, email,
+  content hash; the build stamps the same `?v=` into `url()`s in `site.css`, in
+  place, so a page's font preloads and its `@font-face` rules fetch one file). The form on /work-with-me/ is a Netlify form (name, email,
   what's broken): in the Netlify
   dashboard, turn on **Forms → form detection**, then add an email notification
   for the `brief` form.

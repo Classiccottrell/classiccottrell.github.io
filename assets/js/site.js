@@ -389,65 +389,34 @@
     paintPlay(); schedule();
   }
 
-  // ------------------------------------------------------------ the brief: a work order that writes itself
+  // ------------------------------------------------------------ the form on Work with me
+  // Netlify takes the POST. A static copy of the site (GitHub Pages) can't, so it offers the message to copy instead.
   var form = $('form.bf');
   if (form) {
-    var wo = $('[data-wo]'), status = $('[data-bf-status]'), orderField = form.elements.order;
-    var field = function (key) { return $('[data-wo="' + key + '"]', wo); };
-    var val = function (name) { var el = form.elements[name]; return el ? String(el.value || '').trim() : ''; };
-    var number = function () {
-      var seed = ['name', 'company', 'broken', 'kind', 'when', 'team'].map(val).join('|'), h = 7;
-      for (var i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
-      return 'CC-' + new Date().getFullYear() + '-' + String(100 + h % 900);
-    };
-    var update = function () {
-      if (!wo) return;
-      field('from').textContent = [val('name'), val('company')].filter(Boolean).join(', ') || 'Your name, your company';
-      field('kind').textContent = val('kind') || 'Not chosen yet';
-      field('when').textContent = val('when') || 'Not chosen yet';
-      field('team').textContent = val('team') || 'Not chosen yet';
-      field('broken').textContent = val('broken') || 'Tell me what’s broken. One sentence is enough.';
-      var no = number(); $('[data-wo-no]', wo).textContent = no; orderField.value = no;
-      $$('[data-wo-s]').forEach(function (el) { var k = el.getAttribute('data-wo-s'); el.textContent = k === 'no' ? no : k === 'from' ? field('from').textContent : field(k).textContent; });
-    };
-    var orderText = function () {
-      return ['WORK ORDER ' + orderField.value, 'From: ' + [val('name'), val('company')].filter(Boolean).join(', '), 'Email: ' + val('email'),
-        'Bringing: ' + val('kind'), 'Needed: ' + val('when'), 'Team: ' + val('team'), 'What is broken: ' + val('broken')].join('\n');
-    };
-    var pick = function (kind) { $$('input[name="kind"]', form).forEach(function (r) { r.checked = r.value === kind; }); update(); };
-    form.addEventListener('input', update); form.addEventListener('change', update);
-    // The open work-order strip is tall: close it when a field takes focus so it never covers what is being typed.
-    form.addEventListener('focusin', function () { var st = $('.wo-strip'); if (st && st.open) st.open = false; });
-    $$('[data-kind]').forEach(function (b) {
-      b.addEventListener('click', function (e) {
-        e.preventDefault(); pick(b.getAttribute('data-kind'));
-        $('#brief').scrollIntoView({ behavior: reduce.matches ? 'auto' : 'smooth', block: 'start' });
-        setTimeout(function () { form.elements.broken.focus({ preventScroll: true }); }, reduce.matches ? 0 : 450);
-      });
-    });
+    var status = $('[data-bf-status]');
+    var val = function (name) { return String(form.elements[name].value || '').trim(); };
     form.addEventListener('submit', function (e) {
-      e.preventDefault(); update();
+      e.preventDefault();
       var send = $('button[type="submit"]', form); send.disabled = true; status.textContent = 'Sending…';
       fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(new FormData(form)).toString() })
         .then(function (res) {
           if (!res.ok) throw new Error(res.status);
-          $('[data-wo-stamp]').classList.add('on');
-          status.textContent = 'Received. Work order ' + orderField.value + ' is in, and I’ll reply to ' + val('email') + '.';
+          status.textContent = 'Sent. I’ll reply to ' + val('email') + '.';
         })
         .catch(function () {
           var linkedIn = $('.foot-grid a[href*="linkedin"]');
           status.innerHTML = '';
-          status.appendChild(document.createTextNode('This copy of the site can’t send the brief. Copy the work order and send it to me on '));
+          status.appendChild(document.createTextNode('This copy of the site can’t send messages. Copy yours and send it to me on '));
           var a = document.createElement('a'); a.href = linkedIn ? linkedIn.href : 'https://www.linkedin.com/'; a.textContent = 'LinkedIn'; status.appendChild(a);
           status.appendChild(document.createTextNode('. '));
-          var copy = document.createElement('button'); copy.type = 'button'; copy.className = 'tool'; copy.textContent = 'Copy work order';
-          copy.addEventListener('click', function () { copyText(orderText(), status, 'Copied. Paste it into a message to me on LinkedIn.', wo); });
+          var copy = document.createElement('button'); copy.type = 'button'; copy.className = 'tool'; copy.textContent = 'Copy message';
+          copy.addEventListener('click', function () {
+            copyText([val('name') + ' (' + val('email') + ')', val('broken')].join('\n\n'), status, 'Copied. Paste it into a message to me on LinkedIn.');
+          });
           status.appendChild(copy);
         })
         .then(function () { send.disabled = false; });
     });
-    var preset = new URLSearchParams(location.search).get('kind');
-    if (preset) pick(preset); else update();
   }
 
   // ------------------------------------------------------------ copy a link

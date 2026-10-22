@@ -386,7 +386,7 @@ for (const [width, height] of [[390, 800], [768, 1024]]) {
       await page.goto(path);
       expect(await page.evaluate(() => getComputedStyle(document.documentElement).scrollPaddingTop), path).toBe('auto');
     }
-    for (const [path, id] of [['/work-with-me/', 'offers-h'], ['/work-with-me/', 'offer-teardown'], ['/about/', 'rules']]) {
+    for (const [path, id] of [['/work-with-me/', 'help-h'], ['/work-with-me/', 'brief'], ['/about/', 'rules']]) {
       await page.goto(`${path}#${id}`);
       await page.waitForTimeout(150);
       const top = await page.evaluate((i) => document.getElementById(i).getBoundingClientRect().top, id);

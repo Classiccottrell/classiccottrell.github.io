@@ -51,31 +51,30 @@ test('the phone menu closes with Escape', async ({ page }) => {
   await expect(page.locator('.menu')).not.toHaveAttribute('open', '');
 });
 
-test('the brief writes a work order, and falls back where forms can’t be sent', async ({ page }) => {
+test('the form is three labelled fields, and falls back where forms can’t be sent', async ({ page }) => {
   await page.goto('/work-with-me/');
-  await page.locator('#offer-rulebook [data-kind]').click();
-  await expect(page.locator('input[name="kind"][value="A design system"]')).toBeChecked();
-  await expect(page.locator('#bf-what')).toBeFocused();
-  await page.locator('#bf-what').fill('Our tokens drift between web and mobile.');
-  await page.locator('#bf-name').fill('Dana Example');
-  await page.locator('#bf-co').fill('Northwind');
-  await page.locator('#bf-email').fill('dana@example.com');
-  await expect(page.locator('[data-wo="from"]')).toHaveText('Dana Example, Northwind');
-  await expect(page.locator('[data-wo="kind"]')).toHaveText('A design system');
-  await expect(page.locator('[data-wo-no]')).toHaveText(/^CC-\d{4}-\d{3}$/);
-  expect(await page.locator('input[name="order"]').inputValue()).toMatch(/^CC-\d{4}-\d{3}$/);
+  const form = page.locator('form[name="brief"]');
+  await expect(form.getByLabel('Name')).toHaveAttribute('name', 'name');
+  await expect(form.getByLabel('Email')).toHaveAttribute('type', 'email');
+  await expect(form.getByLabel('What’s broken?')).toHaveAttribute('name', 'broken');
+  await expect(form.locator('select, input[type="radio"], fieldset')).toHaveCount(0);
+  await form.getByLabel('Name').fill('Dana Example');
+  await form.getByLabel('Email').fill('dana@example.com');
+  await form.getByLabel('What’s broken?').fill('Our tokens drift between web and mobile.');
   // The local server refuses POST like GitHub Pages does.
-  await page.locator('.bf button[type="submit"]').click();
-  await expect(page.locator('[data-bf-status]')).toContainText('can’t send the brief');
-  await expect(page.locator('[data-bf-status] button')).toHaveText('Copy work order');
+  await form.getByRole('button', { name: 'Send' }).click();
+  await expect(page.locator('[data-bf-status]')).toContainText('can’t send messages');
+  await expect(page.locator('[data-bf-status] button')).toHaveText('Copy message');
 });
 
-test('the brief is ready for Netlify Forms', async ({ page }) => {
+test('the form is ready for Netlify Forms', async ({ page }) => {
   await page.goto('/work-with-me/');
   const form = page.locator('form[name="brief"]');
   await expect(form).toHaveAttribute('data-netlify', 'true');
+  await expect(form).toHaveAttribute('netlify-honeypot', 'website');
+  await expect(form).toHaveAttribute('action', '/work-with-me/thanks/');
   await expect(form.locator('input[name="form-name"]')).toHaveValue('brief');
-  for (const name of ['kind', 'broken', 'when', 'team', 'name', 'company', 'email', 'order']) await expect(form.locator(`[name="${name}"]`).first()).toBeAttached();
+  for (const name of ['name', 'email', 'broken', 'website']) await expect(form.locator(`[name="${name}"]`)).toHaveCount(1);
 });
 
 test('the colophon runs axe against itself', async ({ page }) => {
@@ -198,19 +197,6 @@ test('phone: Menu is a disclosure that keeps every link reachable', async ({ pag
   await page.locator('.menu summary').click();
   await expect(page.locator('.menu-panel a')).toHaveText(['Work', 'Takes', 'Writing', 'Drawings', 'About', 'Work with me']);
   for (const a of await page.locator('.menu-panel a').all()) await expect(a).toBeVisible();
-});
-
-test('work with me on a phone keeps a one-line work order in view while typing', async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto('/work-with-me/');
-  await page.locator('#bf-name').scrollIntoViewIfNeeded();
-  await page.locator('#bf-name').fill('Dana Example');
-  const strip = page.locator('.wo-strip');
-  await expect(strip).toBeVisible();
-  expect((await strip.boundingBox()).y).toBeLessThan(120);
-  await expect(strip.locator('[data-wo-s="kind"]')).toHaveText('A complicated workflow');
-  await strip.locator('summary').click();
-  await expect(strip.locator('[data-wo-s="from"]')).toHaveText('Dana Example');
 });
 
 test('the portrait is signed once the ink is down, and is already signed with reduced motion', async ({ page }) => {

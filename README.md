@@ -13,7 +13,7 @@ exactly as it is, with no build step on the host. There is no framework and no
 bundler, and every page reads with JavaScript turned off. `assets/js/site.js`
 only adds the optional layer: the portrait's ink and signature, take it apart (on the home page,
 where page scroll and the slider are one control, and on the Terry guide, whose layers follow the step being read), prompt copy buttons, hot takes,
-the brief's work order, Pencils (redline) mode and Run the checks.
+sending the Work with me form, Pencils (redline) mode and Run the checks.
 
 ```
 data/                 the content: edit these, then npm run build
@@ -24,7 +24,7 @@ data/                 the content: edit these, then npm run build
   rules.json          the rules, R-01 onward
   writing.json        essays (they live on Substack)
   drawings.json       drawings, with credits and alt text
-  hire.json           Work with me: offers, brief options, next steps, quotes
+  hire.json           Work with me: standfirst, what I help with, how it works
 assets/
   css/site.css        the whole stylesheet, tokens first
   js/site.js          the optional layer
@@ -136,12 +136,13 @@ already installed, set `PW_CHROMIUM=/path/to/chrome`.
 
 - **Netlify** (`netlify.toml`): publishes the folder as-is, 301s the old
   `.html` addresses, and caches `assets/` for a year (every asset URL carries a
-  content hash). The brief on /work-with-me/ is a Netlify form: in the Netlify
+  content hash). The form on /work-with-me/ is a Netlify form (name, email,
+  what's broken): in the Netlify
   dashboard, turn on **Forms → form detection**, then add an email notification
   for the `brief` form.
 - **GitHub Pages:** serves the same files (`.nojekyll` switches Jekyll off).
-  Static hosts can't receive forms, so on this copy the brief offers to copy
-  the work order and send it on LinkedIn instead.
+  Static hosts can't receive forms, so on this copy the form offers to copy
+  the message and send it on LinkedIn instead.
 - **The address:** `url` in `data/site.json` is https://classiccottrell.ca (on
   Netlify). It sets canonical links, share cards and the sitemap, so the GitHub
   Pages copy points search engines at the .ca address too. Change it, then

@@ -239,75 +239,31 @@ export function takePage(ctx, t) {
 }
 
 // ---------------------------------------------------------------- work with me
-const radios = (name, values, checked) => values.map((v, i) => h`<label class="opt"><input type="radio" name="${name}" value="${esc(v)}"${i === checked ? ' checked' : ''}><span>${esc(v)}</span></label>`);
-
 export function hire(ctx) {
   const { site, hire: H } = ctx;
   const main = h`
-${pageHead({ kicker: 'Work with me', title: esc(H.headline), lede: esc(H.standfirst) })}
-<section class="wrap sec avail-sec" id="availability" aria-labelledby="avail-h">
-  <h2 class="note" id="avail-h">Availability</h2>
-  <p class="avail-big">${status(site.availability)}</p>
-</section>
-
-<section class="wrap sec" aria-labelledby="offers-h">
-  <h2 class="h2" id="offers-h">Four ways in</h2>
-  <ol class="offers">${H.offers.map((o, i) => h`
-    <li class="offer" id="offer-${esc(o.id)}">
-      <p class="note">Offer ${pad2(i + 1)}</p>
-      <h3 class="h3">${esc(o.title)}</h3>
-      <p>${inline(o.text)}</p>
-      <dl><div><dt>Time</dt><dd>${esc(o.time)}</dd></div><div><dt>Proof</dt><dd>${o.proof.map((pr, j) => h`${j ? ', ' : ''}<a href="${esc(pr.href)}">${esc(pr.label)}</a>`)}</dd></div></dl>
-      <a class="btn" href="#brief" data-kind="${esc(o.kind)}" aria-label="Bring me this: ${esc(o.title)}">Bring me this ${arrow}</a>
-    </li>`)}
-  </ol>
-</section>
-
-<section class="wrap sec" id="brief" aria-labelledby="brief-h">
-  <details class="wo-strip" data-js>
-    <summary><span class="note">Work order</span><span class="wo-line"><b data-wo-s="no">CC-2026-100</b> · <span data-wo-s="kind">${esc(H.brief.kinds[0])}</span> · <span data-wo-s="when">${esc(H.brief.when[1])}</span></span></summary>
-    <dl class="wo-more"><div><dt>From</dt><dd data-wo-s="from">Your name, your company</dd></div><div><dt>Team</dt><dd data-wo-s="team">${esc(H.brief.team[1])}</dd></div><div><dt>What’s broken</dt><dd data-wo-s="broken">Tell me what’s broken. One sentence is enough.</dd></div></dl>
-  </details>
-  <div class="g12 brief">
-    <div class="s6">
-      <h2 class="h2" id="brief-h">The brief</h2>
-      <p class="sub-intro">Tell me what’s broken. While you type, the page writes it up as a work order.</p>
-      <form class="bf" name="brief" method="POST" action="/work-with-me/thanks/" data-netlify="true" netlify-honeypot="website">
-        <input type="hidden" name="form-name" value="brief">
-        <input type="hidden" name="order" value="">
-        <p hidden><label>Leave this empty <input name="website" tabindex="-1" autocomplete="off"></label></p>
-        <fieldset><legend>What are you bringing?</legend><div class="opts">${radios('kind', H.brief.kinds, 0)}</div></fieldset>
-        <div class="fld"><label for="bf-what">What’s broken?</label><textarea id="bf-what" name="broken" rows="4" required placeholder="One sentence is enough. “Our change-approval flow takes nine screens.”"></textarea></div>
-        <fieldset><legend>When does it need to work?</legend><div class="opts">${radios('when', H.brief.when, 1)}</div></fieldset>
-        <fieldset><legend>Who’s on your side?</legend><div class="opts">${radios('team', H.brief.team, 1)}</div></fieldset>
-        <div class="pair">
-          <div class="fld"><label for="bf-name">Your name</label><input type="text" id="bf-name" name="name" autocomplete="name" required></div>
-          <div class="fld"><label for="bf-co">Company <span class="opt-l">(optional)</span></label><input type="text" id="bf-co" name="company" autocomplete="organization"></div>
-        </div>
-        <div class="fld"><label for="bf-email">Email for my reply</label><input type="email" id="bf-email" name="email" autocomplete="email" required></div>
-        <p class="bf-send"><button type="submit" class="btn">Send the brief ${arrow}</button></p>
-        <p class="note bf-status" role="status" data-bf-status></p>
-      </form>
-    </div>
-    <div class="s6 wo-col" data-js>
-      <div class="wo" data-wo aria-hidden="true">
-        <div class="wo-head"><div><p class="note">Work order</p><p class="wo-no" data-wo-no>CC-2026-100</p></div><div class="stamp" data-wo-stamp>Received<br>Classic Cottrell</div></div>
-        <dl class="tblock">
-          <div><dt>From</dt><dd data-wo="from">Your name, your company</dd></div>
-          <div><dt>Bringing</dt><dd data-wo="kind">${esc(H.brief.kinds[0])}</dd></div>
-          <div><dt>Needed</dt><dd data-wo="when">${esc(H.brief.when[1])}</dd></div>
-          <div class="wide"><dt>What’s broken</dt><dd class="wo-what" data-wo="broken">Tell me what’s broken. One sentence is enough.</dd></div>
-          <div><dt>Team</dt><dd data-wo="team">${esc(H.brief.team[1])}</dd></div>
-          <div class="wide2"><dt>First step</dt><dd>A 30-minute teardown call. I bring three questions and one sketch.</dd></div>
-        </dl>
-      </div>
-    </div>
-  </div>
+${pageHead({ kicker: 'Work with me', title: esc(H.headline), lede: esc(H.standfirst), extra: h`<p class="note hire-avail" id="availability">${status(site.availability)}</p>` })}
+<section class="wrap sec" aria-labelledby="help-h">
+  <h2 class="h2" id="help-h">What I help with</h2>
+  <ul class="help">${H.help.map((t) => h`<li>${inline(t)}</li>`)}</ul>
 </section>
 
 <section class="wrap sec" aria-labelledby="next-h">
-  <h2 class="h2" id="next-h">What happens next</h2>
+  <h2 class="h2" id="next-h">How it works</h2>
   <ol class="steps">${H.steps.map((s) => h`<li>${inline(s)}</li>`)}</ol>
+</section>
+
+<section class="wrap sec" id="brief" aria-labelledby="brief-h">
+  <h2 class="h2" id="brief-h">Tell me about it</h2>
+  <form class="bf" name="brief" method="POST" action="/work-with-me/thanks/" data-netlify="true" netlify-honeypot="website">
+    <input type="hidden" name="form-name" value="brief">
+    <p hidden><label>Leave this empty <input name="website" tabindex="-1" autocomplete="off"></label></p>
+    <div class="fld"><label for="bf-name">Name</label><input type="text" id="bf-name" name="name" autocomplete="name" required></div>
+    <div class="fld"><label for="bf-email">Email</label><input type="email" id="bf-email" name="email" autocomplete="email" required></div>
+    <div class="fld"><label for="bf-what">What’s broken?</label><textarea id="bf-what" name="broken" rows="5" required></textarea></div>
+    <p class="bf-send"><button type="submit" class="btn">Send ${arrow}</button></p>
+    <p class="note bf-status" role="status" data-bf-status></p>
+  </form>
   <p class="sub-intro">Rather talk first? ${link(site.contact.url, `Message me on ${site.contact.label}`)}.</p>
 </section>`;
   return page(ctx, { path: '/work-with-me/', title: 'Work with me', description: `${H.headline} ${H.standfirst}`, card: 'work-with-me', bodyClass: 'hire', main });
@@ -316,7 +272,7 @@ ${pageHead({ kicker: 'Work with me', title: esc(H.headline), lede: esc(H.standfi
 export function thanks(ctx) {
   const { hire: H } = ctx;
   const main = h`
-${pageHead({ kicker: 'Work with me · received', title: 'Received.', lede: 'Your brief is in. Here’s what happens next.' })}
+${pageHead({ kicker: 'Work with me · received', title: 'Received.', lede: 'Your message is in. Here’s what happens next.' })}
 <div class="wrap"><ol class="steps">${H.steps.map((s) => h`<li>${inline(s)}</li>`)}</ol>
 <p class="sub-intro"><a class="lnk" href="/work/">Back to the work</a></p></div>`;
   return page(ctx, { path: '/work-with-me/thanks/', title: 'Received', card: 'work-with-me', main, noindex: true });
@@ -376,7 +332,7 @@ ${pageHead({ kicker: 'About', title: esc(site.name), lede: inline(site.headline)
 </section>
 <section class="wrap sec" aria-labelledby="what-h">
   <h2 class="h2" id="what-h">What I work on</h2>
-  <ul class="what">${H.offers.map((o) => h`<li><a href="/work-with-me/#offer-${esc(o.id)}"><b>${esc(o.title)}</b></a> ${inline(o.text)}</li>`)}</ul>
+  <ul class="what">${H.help.map((t) => h`<li>${inline(t)}</li>`)}</ul>
 </section>`;
   return page(ctx, { path: '/about/', title: 'About', description: plain(site.bio[0]), card: 'about', main });
 }
@@ -456,7 +412,7 @@ ${pageHead({ kicker: 'Colophon', title: 'Colophon', lede: 'How this site is made
   <h2 class="h2" id="a11y-h">Accessibility</h2>
   <p>This site aims to meet WCAG 2.2 at level AA. Every page is checked with axe-core in the test suite, every text colour pair is checked by a script at build time, and every page works with a keyboard and with JavaScript turned off.</p>
   <p>Motion is optional. With reduced motion turned on in your system settings, drawings arrive inked, the hot takes stop rotating, and the linefield piece holds still. The take-it-apart figure on the home page is an illustration; its text description says what it shows.</p>
-  <p>If something doesn’t work for you, tell me through ${link(site.contact.url, site.contact.label)} or <a href="/work-with-me/#brief">the brief</a>, and I’ll fix it.</p>
+  <p>If something doesn’t work for you, tell me through ${link(site.contact.url, site.contact.label)} or the form on <a href="/work-with-me/#brief">Work with me</a>, and I’ll fix it.</p>
 </div></section>
 
 <section class="wrap sec" aria-labelledby="credits-h"><div class="prose">

@@ -85,7 +85,7 @@ const cards = [
   ['guide-terry-home-lab', card({ kicker: 'Work / Terry: Home AI Lab · Guide', title: 'Build a home AI lab from a retired computer', size: 's', sub: 'A step-by-step guide, with the prompts to give your AI assistant.', img: json('data/work.json').find((p) => p.slug === 'terry-home-lab').cardImage, right: 'Guide', ink: false })],
   ['takes', card({ kicker: `Takes · ${takes.length}, with receipts`, title: 'Takes', sub: 'Opinions I’ll defend in a meeting, each backed by work you can check.', ink: true, terry: true })],
   ...takes.map((t) => [`take-${t.slug}`, card({ kicker: `${esc(t.id)}${heat(t.heat)}`, title: plain(t.text), size: 's', ink: true, right: 'Takes, with receipts' })]),
-  ['work-with-me', card({ kicker: 'Work with me', title: 'Bring me a problem.', size: 'm', sub: `${site.availability.label}. Four ways in, and a brief that writes itself.`, terry: true })],
+  ['work-with-me', card({ kicker: 'Work with me', title: 'Bring me a problem.', size: 'm', sub: `${site.availability.label}. Tell me what’s broken, and I’ll read it myself.`, terry: true })],
   ['writing', card({ kicker: 'Writing · on Substack', title: 'Writing', sub: 'Essays on design, AI, and the occasional roll of packing tape.', terry: true })],
   ['drawings', card({ kicker: `Drawings · ${drawings.drawings.length} portraits in ink`, title: 'Drawings', sub: 'One film, one face, one line of dialogue.', img: kurtz.image, drawing: true, ink: true })],
   ['about', card({ kicker: 'About', title: site.name, size: 'm', sub: plain(site.headline), img: site.portrait.ink, drawing: true, slab: true })],

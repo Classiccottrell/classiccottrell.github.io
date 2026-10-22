@@ -285,3 +285,34 @@ test('take it apart: the button reaches 100% on a phone with reduced motion, and
   await page.locator('#explode-btn').click();
   await expect(page.locator('#explode')).toHaveValue('35');
 });
+
+// Keyboard on the scroll-linked slider: the page scrolls to match, and the
+// value has to survive that scroll landing (it used to settle at 97 after End).
+for (const motion of ['no-preference', 'reduce']) {
+  test(`take it apart: End and Home on the slider land on 100 and 0 at 390x844 (${motion} motion)`, async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.emulateMedia({ reducedMotion: motion });
+    await page.goto('/');
+    const range = page.locator('#explode');
+    const run = page.locator('[data-xv-run]');
+    await run.evaluate((el) => {
+      const dock = el.querySelector('.xv-dock'), top = parseFloat(getComputedStyle(dock).top);
+      window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - top + (el.offsetHeight - dock.offsetHeight) * 0.05, behavior: 'instant' });
+    });
+    await expect(range).toHaveValue(/^3[5-9]$/);
+    const settled = () => page.evaluate(() => new Promise((done) => {
+      let last = -1, still = 0;
+      const tick = () => { if (window.scrollY === last) still++; else { still = 0; last = window.scrollY; } if (still > 20) done(); else requestAnimationFrame(tick); };
+      requestAnimationFrame(tick);
+    }));
+    await range.focus();
+    await page.keyboard.press('End');
+    await settled(); await page.waitForTimeout(400);
+    await expect(range).toHaveValue('100');
+    await expect(range).toHaveAttribute('aria-valuetext', '100 percent apart');
+    await page.keyboard.press('Home');
+    await settled(); await page.waitForTimeout(400);
+    await expect(range).toHaveValue('0');
+    await expect(range).toHaveAttribute('aria-valuetext', '0 percent apart');
+  });
+}

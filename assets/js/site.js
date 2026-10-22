@@ -180,7 +180,7 @@
       xv._raf = requestAnimationFrame(st);
     };
     // Where the pinned dock sits in its run: top is where it pins, span how far it can travel.
-    var lock = 0, sraf = 0;
+    var lock = 0, sraf = 0, gen = 0;
     var geo = function () {
       if (!scrollRun) return null;
       var cs = getComputedStyle(scrollRun.dock), top = parseFloat(cs.top), r = scrollRun.run.getBoundingClientRect();
@@ -189,11 +189,35 @@
       return { top: top, rel: r.top, span: span };
     };
     var frac = function (v) { return Math.min(1, Math.max(0, (v - START) / (100 - START))); };
-    var jump = function (g, v) { window.scrollTo(0, window.scrollY + g.rel - g.top + g.span * frac(v)); };
+    // Moves the page to match v and holds the slider at v until that scroll lands (smooth scroll
+    // outlasts any fixed delay), so End, Home and the arrows end exactly where they were sent.
+    // Only the latest input releases the hold.
+    var jump = function (g, v) {
+      var root = document.documentElement, my = ++gen, t0 = Date.now(), last = -1, still = 0;
+      var y = Math.round(Math.min(Math.max(0, window.scrollY + g.rel - g.top + g.span * frac(v)), root.scrollHeight - window.innerHeight));
+      var done = function () {
+        window.removeEventListener('scrollend', done);
+        if (my !== gen) return;
+        gen++;
+        if (sraf) { cancelAnimationFrame(sraf); sraf = 0; }
+        setX(v); lock = Date.now() + 100;
+      };
+      var poll = function () {
+        if (my !== gen) return;
+        still = window.scrollY === last ? still + 1 : 0; last = window.scrollY;
+        if ((still > 2 && Math.abs(window.scrollY - y) < 1) || Date.now() - t0 > 1500) done(); else requestAnimationFrame(poll);
+      };
+      lock = Infinity;
+      window.addEventListener('scrollend', done);
+      window.scrollTo(0, y);
+      requestAnimationFrame(poll);
+    };
     xr.addEventListener('input', function () {
       if (xv._raf) cancelAnimationFrame(xv._raf);
-      var v = +xr.value, g = geo();
-      setX(v); lock = Date.now() + 300;
+      // Geometry after setX: the label change can resize the dock, and a target worked out
+      // before that lands a few percent short.
+      var v = +xr.value; setX(v);
+      var g = geo(); gen++; lock = Date.now() + 300;
       // Drag moves the page only while the dock is pinned, so the slider stays under the pointer.
       if (g) { var p = (g.top - g.rel) / g.span; if (p > -0.01 && p < 1.01) jump(g, v); }
     });
@@ -201,7 +225,7 @@
       var to = +xr.value > 50 ? (scrollRun ? START : 0) : 100, g = geo();
       if (!g) { animX(to); return; }
       if (xv._raf) cancelAnimationFrame(xv._raf);
-      lock = 0;
+      gen++; lock = 0;
       var y = window.scrollY + g.rel - g.top + g.span * frac(to);
       window.scrollTo({ top: y, behavior: reduce.matches ? 'auto' : 'smooth' });
       // The dock can change height as the label changes, so the scroll geometry may land a hair short: settle on the value asked for.
@@ -210,7 +234,10 @@
     var follow = function () {
       sraf = 0;
       var g = geo(); if (!g || Date.now() < lock) return;
-      setX(START + (100 - START) * Math.min(1, Math.max(0, (g.top - g.rel) / g.span)));
+      var f = Math.min(1, Math.max(0, (g.top - g.rel) / g.span));
+      // Already where the slider says (a late scroll event, or a value under START at the top): leave it.
+      if (Math.abs(f - frac(+xr.value)) * g.span < 2) return;
+      setX(START + (100 - START) * f);
     };
     if (scrollRun) {
       var queue = function () { if (!sraf) sraf = requestAnimationFrame(follow); };

@@ -123,6 +123,7 @@ await drawing('kurtz', '#000000');
 await drawing('travis', '#FFFFFF');
 await drawing('coach', '#FFFFFF');
 await plate('linefield', 'webp');
+await plate('linefield-home', 'png', { quality: 72 });
 await plate('forma', 'webp');
 await plate('agentic-light', 'webp');
 await plate('vpat-vault', 'png', { quality: 72 });

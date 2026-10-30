@@ -77,7 +77,7 @@ const kurtz = drawings.drawings.find((d) => d.slug === 'kurtz');
 
 const cards = [
   ['home', card({ kicker: 'Product designer · Enterprise IT · Design systems', title: site.headline, size: 'm', img: site.portrait.ink, drawing: true, slab: true })],
-  ['work', card({ kicker: `Work · ${work.length} projects`, title: 'Work', sub: 'Products, systems, agents and tools, each with a title block and the take it proves.', terry: true })],
+  ['work', card({ kicker: `Work · ${work.length} projects`, title: 'Work', sub: 'Products, agents, systems and tools, each opening with a title block.', terry: true })],
   ...work.map((p) => [`work-${p.slug}`, card({
     kicker: `Work / ${pad2(p.number)} · ${esc(p.kind)}`, title: plain(p.title), size: p.title.length > 14 ? 's' : 'm', sub: plain(p.summary),
     img: p.cardImage || (p.plate && p.plate.src), right: p.status.label, terry: !p.plate,

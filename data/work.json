@@ -45,7 +45,7 @@
     "sections": [
       {
         "paragraphs": [
-          "I built VPAT Vault to make a VPAT simple enough that more websites can publish one. The prompt toolkit and a free Chrome scanner are live and for sale. The command-line scanner I'm building now is early and not released, and it takes the same idea from one page to a whole site."
+          "I built VPAT Vault to make a VPAT simple enough that more websites can publish one. The prompt toolkit is on sale and the Chrome scanner is free. The command-line scanner I’m building now is early and unreleased, and takes the same idea from one page to a whole site."
         ]
       },
       {
@@ -62,15 +62,15 @@
       },
       {
         "paragraphs": [
-          "What is live: nine prompts with explicit output contracts, a validator with no dependencies, a 50-record reference dataset, a fixed HTML report template that checks its fields and ITI labels before it renders, and a deterministic ZIP for the buyer. The free Chrome extension, VPAT Vault Scanner, runs axe-core on the active tab, on your machine, and exports normalized findings plus manual-review items as JSON. You can install it locally today; a Chrome Web Store listing comes later.",
-          "What I'm building is wcag-toolkit, a command-line scanner at v0.1 that is not released. It scans one page, a whole site, or pages behind a sign-in using a browser session you save yourself. The site scan follows links from a start page, opens addresses only, never clicks, skips risky links and reads a sitemap. A static scan of a codebase or a git diff looks for what axe can't see: missing alt text, non-native interactive elements, ARIA misuse, contrast tricks.",
-          "Results go into a bug sheet in Markdown, CSV or JSON, one row per defect with its WCAG criterion, severity, confidence and a default disposition. From that sheet the tool writes a VPAT draft, or one command does the scan, the sheet and the draft together. The draft is capped at Partially Supports, because scan data alone can't say Supports or Does Not Support. A settle delay, redirect and CSP guards and checkpointing mean a page that failed to load never gets reported as zero violations. Type wcag for a guided terminal menu; there is also a thin Claude Code skill and a short how-to micro site.",
-          "The limits, plainly: I've tested signed-in scanning only on a practice page, a scan finds some problems and a person tests the rest, and I haven't measured the false-positive rate of the code scan yet."
+          "What is live: nine prompts with explicit output contracts, a validator with no dependencies, a 50-record reference dataset, a fixed HTML report template that checks its fields and ITI labels before it renders, and a deterministic ZIP for the buyer. The free Chrome extension, VPAT Vault Scanner, runs axe-core on the active tab, on your machine, and exports normalized findings plus manual-review items as JSON or a CSV bug sheet. You can install it locally today; a Chrome Web Store listing comes later.",
+          "What I’m building is wcag-toolkit, a command-line scanner at v0.1 that is not released. It scans one page, a whole site, or pages behind a sign-in using a browser session you save yourself. The site scan follows links from a start page, opens addresses only, never clicks, skips risky links and reads a sitemap. A static scan of a codebase or a git diff looks for what axe can’t see: missing alt text, non-native interactive elements, ARIA misuse, contrast tricks.",
+          "Results go into a bug sheet in Markdown, CSV or JSON, one row per defect with its WCAG criterion, severity, confidence and a default disposition. From that sheet the tool writes a VPAT draft, or one command does the scan, the sheet and the draft together. The draft is capped at Partially Supports, because scan data alone can’t say Supports or Does Not Support. A settle delay, redirect and CSP guards and checkpointing mean a page that failed to load never gets reported as zero violations. Type wcag for a guided terminal menu; there is also a thin Claude Code skill and a short how-to microsite.",
+          "The limits, plainly: I’ve tested signed-in scanning only on a practice page, a scan finds some problems and a person tests the rest, and I haven’t measured the false-positive rate of the code scan yet."
         ]
       },
       {
         "heading": "Roadmap",
-        "intro": "What is shipped, what is being built, and what doesn't exist yet.",
+        "intro": "What is shipped, what is being built, and what doesn’t exist yet.",
         "roadmap": [
           {
             "label": "Foundation",
@@ -80,7 +80,7 @@
           {
             "label": "Local scanner extension",
             "status": "Shipped",
-            "detail": "Free Chrome extension runs axe on the active tab and exports findings and manual-review items as JSON."
+            "detail": "Free Chrome extension runs axe on the active tab and exports findings and manual-review items as JSON or CSV."
           },
           {
             "label": "Command-line scanner: scan to bug sheet to VPAT draft",
@@ -95,7 +95,7 @@
           {
             "label": "Hardening on real sites",
             "status": "Next",
-            "detail": "A first real run on Windows, the false-positive rate of the code scan, and a real signed-in scan on a real site."
+            "detail": "A first run on Windows, a measured false-positive rate for the code scan, and a signed-in scan on a live site."
           },
           {
             "label": "Reviewed reports and hand-offs",
@@ -191,7 +191,7 @@
         "items": [
           {
             "lead": "Monochrome by default.",
-            "text": "Near-white hairlines on near-black, one subject per frame, and room left for your headline. Brightness comes from lines crossing, not from colour. Colour is still one preset away. It just isn't the default any more."
+            "text": "Near-white hairlines on near-black, one subject per frame, and room left for your headline. Brightness comes from lines crossing, not from colour. Colour is still one preset away. It isn’t the default any more."
           },
           {
             "lead": "Framed by one slider.",
@@ -203,7 +203,7 @@
           },
           {
             "lead": "Five ways out.",
-            "text": "A baked HTML file with every shared module inlined, the untouched source, PNG at 2x or 4x, SVG, and a written prompt describing the current settings. The baked file is the point. It has zero external references, so it runs from any folder on any host. For decks and mockups there is also a pack of square stills of every piece, and a catalogue listing each piece's empty zone and controls."
+            "text": "A baked HTML file with every shared module inlined, the untouched source, PNG at 2x or 4x, SVG, and a written prompt describing the current settings. The baked file is the point. It has zero external references, so it runs from any folder on any host. For decks and mockups there is also a pack of square stills of every piece, and a catalogue listing each piece’s empty zone and controls."
           },
           {
             "lead": "Two new materials.",
@@ -211,7 +211,7 @@
           },
           {
             "lead": "Two themed series.",
-            "text": "Space is five pieces: a planet's magnetic tail pinching where it reconnects, a galaxy seen edge-on with its dust lane turning, a stream of stars torn between two galaxies, a cratered planet's dawn line seen from low orbit, and a dust cloud cut out of a starfield. Old Roads is mythic landscape: signal fires lighting peak to peak along a range, snow streaming off a high pass, and an old road you travel along as it drops behind each rise. No glowing planets, no spirals. Each one started as a throwaway sketch and was only built once it held up at full width and in motion."
+            "text": "Space is five pieces: a planet’s magnetic tail pinching where it reconnects, a galaxy seen edge-on with its dust lane turning, a stream of stars torn between two galaxies, a cratered planet’s dawn line seen from low orbit, and a dust cloud cut out of a starfield. Old Roads is mythic landscape: signal fires lighting peak to peak along a range, snow streaming off a high pass, and an old road you travel along as it drops behind each rise. No glowing planets, no spirals. Each one started as a throwaway sketch and was only built once it held up at full width and in motion."
           },
           {
             "lead": "A gallery that will not cook your laptop.",
@@ -233,7 +233,7 @@
           "Version one worked and still looked like a demo. Laid out side by side, the problem was colour. Every piece had its own saturated hue, so eighteen pieces read as eighteen different products instead of one collection.",
           "So version two is monochrome first. Every piece was redrawn as one object: hairlines, one bright point, and a lot of empty space for whatever sits on top of it. A new gate fails the build if a default carries colour or marks too much or too little of the frame.",
           "Then it went too far the other way. On a wide screen most pieces were an island in the middle of the dark, so Scale became the framing control and the defaults moved up until each piece uses the canvas.",
-          "Later, a galaxy I loved as a still turned out to move like a smudge. Every star faded on its own cycle, and a thousand separate fades average into a boil the eye can't follow. So now every sketch gets a motion pass and an ink measurement before anyone picks it, because the version you fall for should be the version that can ship.",
+          "Later, a galaxy I loved as a still turned out to move like a smudge. Every star faded on its own cycle, and a thousand separate fades average into a boil the eye can’t follow. So now every sketch gets a motion pass and an ink measurement before anyone picks it, because the version you fall for should be the version that can ship.",
           "There is no target count. A new piece ships when it clears the same gates as the rest."
         ]
       }
@@ -343,7 +343,7 @@
     "group": "Products",
     "featured": true,
     "summary": "The online store for Terry Terry Larry Berry, an art project. Embroidered pieces, made to order.",
-    "standfirst": "Terry Terry Larry Berry is an art project. Terry Time is its online store, and I designed it and built it.",
+    "standfirst": "Terry Terry Larry Berry is an art project. Terry Time is its online store. I designed and built it.",
     "take": "T-08",
     "year": 2026,
     "role": "Design and build",
@@ -411,8 +411,8 @@
     "sections": [
       {
         "paragraphs": [
-          "Terry Terry Larry Berry is an art project. Terry is the face that keeps turning up on East Van walls.",
-          "Terry Time is the project’s online store. It sells three pieces, a polo, a hoodie and a dad hat, each with Terry’s face embroidered on it and made to order. Checkout runs on Stripe, and a paid order goes to Printful as a draft to be made."
+          "Terry is the face that keeps turning up on East Van walls.",
+          "Terry Time is the online store for Terry Terry Larry Berry. It sells three pieces, a polo, a hoodie and a dad hat, each with Terry’s face embroidered on it and made to order. Checkout runs on Stripe, and a paid order goes to Printful as a draft to be made."
         ]
       },
       {
@@ -600,7 +600,7 @@
         "items": [
           {
             "lead": "One owner per layer.",
-            "text": "Delivery owns the projects, automation owns the schedule, knowledge owns the vault. Nothing falls between the cracks because every crack has a name on it."
+            "text": "Delivery owns the projects, automation owns the schedule, knowledge owns the vault. Nothing falls through the cracks, because every crack has a name on it."
           },
           {
             "lead": "Boring formats win.",
@@ -637,7 +637,7 @@
           },
           {
             "lead": "A second brain that knows the project.",
-            "text": "Plain Markdown records with offline full-text search and optional Ollama embeddings. When you ask for it, a context packet gets prepended to the coder's prompt. The index is disposable and rebuilds from the files, so the Markdown stays the store."
+            "text": "Plain Markdown records with offline full-text search and optional Ollama embeddings. When you ask for it, a context packet gets prepended to the coder’s prompt. The index is disposable and rebuilds from the files, so the Markdown stays the store."
           },
           {
             "lead": "A dashboard that reads its own config.",
@@ -654,7 +654,7 @@
           },
           {
             "lead": "Specialize once, commit the result.",
-            "text": "Specializing writes three config files: the active roles, the gate list and the selected skills. In a fork you commit them, so the setup lives in the repo, not in anyone's memory."
+            "text": "Specializing writes three config files: the active roles, the gate list and the selected skills. In a fork you commit them, so the setup lives in the repo, not in anyone’s memory."
           },
           {
             "lead": "One human gate, and it does not auto-approve.",
@@ -753,7 +753,7 @@
           },
           {
             "lead": "A repeatable process.",
-            "text": "A short skill that mirrors any repo to the lab, decides whether it is a web app or a native app, and launches it the right way. It has been through two very different projects with no steps re-invented."
+            "text": "A short skill that mirrors any repo to the lab, decides whether it is a web app or a native app, and launches it the right way. It has run two very different projects without re-inventing a step."
           }
         ]
       },
@@ -803,7 +803,7 @@
       {
         "heading": "Build your own",
         "paragraphs": [
-          "I turned the whole process into a step-by-step guide with the prompts I would give an AI assistant at each stage. It works for any old computer, and you do not need to be a sysadmin."
+          "I turned the whole process into a step-by-step guide with the prompts I would give an AI assistant at each stage. It works for any old computer that can run Ubuntu Server, and you do not need to be a sysadmin."
         ],
         "cta": {
           "label": "Build your own: the step-by-step guide",
@@ -845,7 +845,7 @@
       {
         "paragraphs": [
           "Ask a general AI to review your interface and you get a pep talk: make it feel simpler, tighten the hierarchy, smooth out the flow. It sounds like feedback. It changes nothing, because the model has no floor to hold itself to and no way to prove its advice actually works.",
-          "UX Skill Repo is the fix: twelve narrowly scoped AI agent skills, strategists, critics, writers, builders, run by one orchestrator and held to a single measurable standard instead of general-purpose opinion."
+          "UX Skill Repo is the fix: twelve narrowly scoped AI agent skills (strategists, critics, writers, builders), run by one orchestrator and held to a single measurable standard instead of general-purpose opinion."
         ]
       },
       {
@@ -932,8 +932,8 @@
     "sections": [
       {
         "paragraphs": [
-          "Most redesigns dial decoration down a little: a smaller shadow, a tighter radius, one fewer gradient. Brutal UX asks a blunter question: what's actually load-bearing if you remove all of it at once? No rounded corners. No shadows. No gradients. No easing. No custom font.",
-          "The bet is that hierarchy doesn't disappear when you strip the decoration. It just moves, from the channel your eye scans automatically to the one you have to read."
+          "Most redesigns dial decoration down a little: a smaller shadow, a tighter radius, one fewer gradient. Brutal UX asks a blunter question: what’s actually load-bearing if you remove all of it at once? No rounded corners. No shadows. No gradients. No easing. No custom font.",
+          "The bet is that hierarchy doesn’t disappear when you strip the decoration. It just moves, from the channel your eye scans automatically to the one you have to read."
         ]
       },
       {
@@ -945,12 +945,12 @@
             "text": "Zero border-radius, zero box-shadow, zero transition duration, system monospace only, all forced with `!important` at the root so no component can quietly opt back in."
           },
           {
-            "lead": "Hierarchy still exists, it just moved.",
+            "lead": "Hierarchy still exists. It just moved.",
             "text": "A five-step type scale (48/32/24/16/13px) and 2-3px black borders carry the entire structure that shadow and rounding used to carry."
           },
           {
             "lead": "Color is rationed like a budget, not a palette.",
-            "text": "Red for alerts, green for live data, blue for raw hyperlinks, never decoration, never the only signal a state changed."
+            "text": "Red for alerts, green for live data, blue for raw hyperlinks. Never decoration, never the only signal that a state changed."
           }
         ]
       },
@@ -958,22 +958,22 @@
         "heading": "The UX thinking",
         "items": [
           {
-            "lead": "Removing polish doesn't remove hierarchy, it relocates it.",
-            "text": "From the pre-attentive visual channel to the semantic one. The system's own validation pass names the trade directly: novices pay a visual-search penalty, experts get near-zero-friction spatial memory."
+            "lead": "Removing polish doesn’t remove hierarchy, it relocates it.",
+            "text": "From the pre-attentive visual channel to the semantic one. The system’s own validation pass names the trade directly: novices pay a visual-search penalty, experts get near-zero-friction spatial memory."
           },
           {
             "lead": "Instant feedback is a decision, not a missing feature.",
-            "text": "Every transition and animation duration is zeroed globally. State changes land in the same frame instead of easing into existence, an anvil dropping, not a soft landing."
+            "text": "Every transition and animation duration is zeroed globally. State changes land in the same frame instead of easing into existence: an anvil dropping, not a soft landing."
           },
           {
-            "lead": "A brutal system still has to pass accessibility, or it's just ugly.",
-            "text": "The manifesto ships its own amendments: a loud, instant focus ring, uppercase capped at short labels only, and color always paired with text so it's never the sole carrier of meaning."
+            "lead": "A brutal system still has to pass accessibility, or it’s just ugly.",
+            "text": "The manifesto ships its own amendments: a loud, instant focus ring, uppercase capped at short labels only, and color always paired with text so it’s never the sole carrier of meaning."
           }
         ]
       },
       {
         "paragraphs": [
-          "Most design systems soften over time. This one is the control group. Building the extreme version first makes it obvious which comfort you're actually buying when you add rounding, shadow, or motion back in.",
+          "Most design systems soften over time. This one is the control group. Building the extreme version first makes it obvious which comfort you’re actually buying when you add rounding, shadow, or motion back in.",
           "[Terry Time](/work/terry-time/) is built on it, in cobalt."
         ]
       }
@@ -1029,7 +1029,7 @@
         "items": [
           {
             "lead": "A warm, editorial baseline.",
-            "text": "A cream canvas, a single forest-green accent, and a Rosarivo-serif / Red Hat Display-sans pairing, defined once as CSS variables in globals.css and mapped to light and dark themes."
+            "text": "A cream canvas, a single forest-green accent, and a Rosarivo serif paired with a Red Hat Display sans, defined once as CSS variables in globals.css and mapped to light and dark themes."
           },
           {
             "lead": "Primitives, not one-off pages.",
@@ -1037,7 +1037,7 @@
           },
           {
             "lead": "The showcase is the documentation.",
-            "text": "The home page renders the tokens, type, and components live, so what you see is what you get, not a static style guide that drifts out of sync with the code."
+            "text": "The home page renders the tokens, type, and components live, so it can’t drift out of sync with the code the way a static style guide does."
           }
         ]
       }
@@ -1095,7 +1095,7 @@
           },
           {
             "lead": "Terminal color that actually degrades.",
-            "text": "The success/warning/error/info helpers detect truecolor, 256-color, or 16-color terminals automatically, fall back to plain text under NO_COLOR or a pipe, and never assume a capability that isn't there."
+            "text": "The success/warning/error/info helpers detect truecolor, 256-color, or 16-color terminals automatically, fall back to plain text under NO_COLOR or a pipe, and never assume a capability that isn’t there."
           },
           {
             "lead": "Three bundled apps prove the framework holds up.",
@@ -1112,7 +1112,7 @@
           },
           {
             "lead": "Degrade honestly instead of assuming a terminal.",
-            "text": "Color support is detected, not assumed, so the same command reads correctly whether it's a modern terminal, an old one, or a log file redirected to disk."
+            "text": "Color support is detected, not assumed, so the same command reads correctly whether it’s a modern terminal, an old one, or a log file redirected to disk."
           },
           {
             "lead": "White-labeling should never require a fork.",
@@ -1126,21 +1126,21 @@
         "items": [
           {
             "lead": "Automated shortlisting, not manual triage.",
-            "text": "Point it at a shoot folder and it scores every frame, then ranks a keep/reject shortlist automatically, so the first pass is done before you'd have finished scrubbing through the near-duplicates by eye."
+            "text": "Point it at a shoot folder and it scores every frame and ranks a keep/reject shortlist, so the first pass is done before you’d have finished scrubbing through the near-duplicates by eye."
           },
           {
             "lead": "Thresholds you set, not a black box.",
-            "text": "Keep/reject cutoffs are configurable, so the tool's judgment stays tunable to how strict a pass you actually want."
+            "text": "Keep/reject cutoffs are configurable, so you decide how strict the pass is."
           },
           {
             "lead": "Built on the same branded shell as everything else.",
-            "text": "It ships as a command-line tool on the Classic Cottrell CLI toolkit, so it inherits the same welcome page, terminal styling, and fallback behavior as ccasset, ccsync, and cctokens for free."
+            "text": "It ships as a command-line tool on ClassicCottrell CLI, so it inherits the same welcome page, terminal styling, and fallback behavior as ccasset, ccsync, and cctokens for free."
           }
         ]
       },
       {
         "paragraphs": [
-          "The first tool built on a framework proves little; the fifth is the real test. Three internal apps and one shipped product in, the pattern's held: brand a class, register a command, ship."
+          "The first tool built on a framework proves little; the fifth is the real test. Three internal apps and one shipped product in, the pattern’s held: brand a class, register a command, ship."
         ]
       }
     ]
@@ -1231,7 +1231,7 @@
           },
           {
             "lead": "E.D. Smith: TasteCreator.",
-            "text": "The 133-year-old Canadian brand had an out-of-date website and no social presence. Over three years we built TasteCreator, an online community that became the new face of the brand, with new social channels, a new website and 14 seasonal campaigns aimed at a younger audience."
+            "text": "The Canadian brand, then 133 years old, had an out-of-date website and no social presence. Over three years we built TasteCreator, an online community that became the new face of the brand, with new social channels, a new website and 14 seasonal campaigns aimed at a younger audience."
           }
         ],
         "image": {

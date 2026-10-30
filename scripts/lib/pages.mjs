@@ -115,7 +115,7 @@ export function workIndex(ctx) {
   // The guide hangs off its case study's row, so it can be found from here.
   const legacy = Object.fromEntries(work.flatMap((p) => p.legacyIds.map((id) => [id, p.slug])));
   const main = h`
-${pageHead({ kicker: `Work · ${work.length} projects`, title: 'Work', lede: 'Products, systems, agents and tools, and the client work before them. Each case study opens with a title block and the take it proves, and ends with what it actually took.' })}
+${pageHead({ kicker: `Work · ${work.length} projects`, title: 'Work', lede: 'Products, agents, systems and tools, and the client work before them. Every case study opens with a title block, so the role, status and numbers come first.' })}
 <div class="wrap groups">${GROUPS.map((g) => {
     const items = work.filter((p) => p.group === g);
     const id = `g-${g.toLowerCase().replace(/\s+/g, '-')}`;
@@ -411,7 +411,7 @@ ${pageHead({ kicker: 'About this site', title: 'About this site', lede: 'How thi
     <div class="part"><p class="note">Buttons and links</p><p class="ctas">${btn('/work-with-me/', 'Work with me')}<a class="lnk" href="/work/">See the work</a></p></div>
     <div class="part"><p class="note">Availability</p><p>${avail(site)}</p></div>
     <div class="part"><p class="note">Index row</p><ol class="idx">${idxRow(ctx.work[2])}</ol></div>
-    <div class="part"><p class="note">Title block</p>${tblock([{ dt: 'Role', dd: 'Design and build' }, { dt: 'Status', dd: status({ mark: 'live', label: 'Live, v2' }) }, { dt: 'Numbers', dd: '20 pieces · 299 controls' }])}</div>
+    <div class="part"><p class="note">Title block</p>${tblock([{ dt: 'Role', dd: 'Design and build' }, { dt: 'Status', dd: status({ mark: 'live', label: 'Live, v2' }) }, { dt: 'Numbers', dd: '32 pieces · 479 controls' }])}</div>
     <div class="part"><p class="note">Pull quote</p><blockquote class="pq"><p>So the checks are scripts now instead of opinions.</p></blockquote></div>
     <div class="part"><p class="note">Rule</p><ol class="rules">${rule(ctx.rules[4])}</ol></div>
   </div>
@@ -420,7 +420,7 @@ ${pageHead({ kicker: 'About this site', title: 'About this site', lede: 'How thi
 <section class="wrap sec" aria-labelledby="a11y-h"><div class="prose">
   <h2 class="h2" id="a11y-h">Accessibility</h2>
   <p>This site aims to meet WCAG 2.2 at level AA. Every page is checked with axe-core in the test suite, every text colour pair is checked by a script at build time, and every page works with a keyboard and with JavaScript turned off.</p>
-  <p>Motion is optional. With reduced motion turned on in your system settings, drawings arrive inked, the hot takes stop rotating, and the linefield piece holds still. The take-it-apart figure on the home page is an illustration; its text description says what it shows.</p>
+  <p>Motion is optional. With reduced motion turned on in your system settings, drawings arrive inked, the hot takes stop rotating, and the linefield pieces hold still. The take-it-apart figure on the home page is an illustration; its text description says what it shows.</p>
   <p>If something doesn’t work for you, tell me through ${link(site.contact.url, site.contact.label)} or the form on <a href="/work-with-me/#brief">Work with me</a>, and I’ll fix it.</p>
 </div></section>
 

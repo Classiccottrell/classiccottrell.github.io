@@ -95,7 +95,7 @@
           {
             "label": "Hardening on real sites",
             "status": "Next",
-            "detail": "A first run on Windows, a measured false-positive rate for the code scan, and a signed-in scan on a live site."
+            "detail": "A first real run on Windows, a measured false-positive rate for the code scan, and a signed-in scan on a live site."
           },
           {
             "label": "Reviewed reports and hand-offs",
@@ -1037,7 +1037,7 @@
           },
           {
             "lead": "The showcase is the documentation.",
-            "text": "The home page renders the tokens, type, and components live, so it can’t drift out of sync with the code the way a static style guide does."
+            "text": "The home page renders the tokens, type, and components live, so it stays in step with the code instead of drifting the way a static style guide does."
           }
         ]
       }

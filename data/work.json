@@ -142,6 +142,7 @@
         "url": "https://github.com/Classiccottrell/linefield"
       }
     ],
+    "homeImage": { "src": "/assets/img/work/linefield-home.webp", "width": 1360, "height": 765 },
     "plate": {
       "src": "/assets/img/work/linefield.webp",
       "width": 1360,

@@ -39,7 +39,7 @@ export function home(ctx) {
   <div class="sel-head"><h2 class="note" id="sel-h">Selected work</h2><a class="note" href="/work/">All ${work.length} projects ${arrow}</a></div>
   <ol class="sel-list">${pick.map((p) => {
     return h`<li><a class="item" href="/work/${esc(p.slug)}/">
-      <div class="pic">${img({ src: p.plate.src, width: p.plate.width, height: p.plate.height, alt: '' })}</div>
+      <div class="pic">${img({ src: (p.homeImage || p.plate).src, width: (p.homeImage || p.plate).width, height: (p.homeImage || p.plate).height, alt: '' })}</div>
       <div class="cap"><h3>${inline(p.title)}</h3><p>${inline(p.summary)}</p><span class="arr" aria-hidden="true">→</span></div>
     </a></li>`;
   })}</ol>

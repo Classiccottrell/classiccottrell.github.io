@@ -6,22 +6,20 @@
     "kind": "Product",
     "group": "Products",
     "featured": true,
-    "summary": "Accessibility evidence in, a VPAT 2.5 draft out, a person signing every row.",
-    "standfirst": "Nine Claude prompts and a free Chrome scanner are live. A command-line scanner that turns a site into a bug sheet and a VPAT draft is in early build.",
+    "summary": "Scan a site, get a bug sheet and a VPAT 2.5 draft. A person signs off every row.",
+    "standfirst": "A free-beta accessibility toolkit: a terminal scanner, a Chrome extension and nine Claude prompts that turn real evidence into a VPAT 2.5 draft without inventing a single rating.",
     "take": "T-04",
     "year": 2026,
     "role": "Design and build",
     "status": {
       "mark": "prog",
-      "label": "In production"
+      "label": "Free beta"
     },
-    "note": "VPAT Vault is in production and changing week to week, so this page is a snapshot from October 2026.",
-    "stack": "Claude prompts · Chrome extension (Manifest V3) · axe-core · command-line scanner",
+    "stack": "Python CLI · Playwright + axe-core · Chrome extension (Manifest V3) · Claude prompts",
     "numbers": [
+      "3 tools, one pipeline",
       "9 prompts",
-      "50-record reference dataset",
-      "VPAT 2.5",
-      "Command-line scanner at v0.1"
+      "VPAT 2.5"
     ],
     "links": [
       {
@@ -30,13 +28,14 @@
       }
     ],
     "plate": {
-      "src": "/assets/img/work/vpat-vault.webp",
-      "width": 1600,
-      "height": 900,
-      "alt": "Illustration in red and green on cream paper: a woman holds an open laptop that shows a conformance checklist table.",
-      "caption": "Evidence, scan, bug sheet, draft, then a person signs every row.",
+      "src": "/assets/img/work/vpat-vault-cli.webp",
+      "width": 1360,
+      "height": 741,
+      "alt": "The WCAG CLI home screen in a terminal: a large WCAG logo, Accessibility scanner, wcag-toolkit 0.1.2, Setup ready, and a menu: 1 Check my setup (selected), 2 Sign in and save a session, 3 Scan a whole site, 4 Scan one page, 5 Scan code, 6 Make a VPAT draft from a bug sheet, 7 Open the how-to site, 0 Quit.",
+      "caption": "The WCAG CLI home screen. Type wcag, pick a number, and it walks you from setup to a VPAT draft.",
       "callouts": []
     },
+    "cardImage": "/source/work/vpat-vault-card.webp",
     "pullQuote": null,
     "live": null,
     "legacyIds": [
@@ -45,62 +44,52 @@
     "sections": [
       {
         "paragraphs": [
-          "I built VPAT Vault to make a VPAT simple enough that more websites can publish one. The prompt toolkit is on sale and the Chrome scanner is free. The command-line scanner I’m building now is early and unreleased, and takes the same idea from one page to a whole site."
+          "A VPAT is a promise someone else relies on. A buyer reads \"Supports\" and assumes a person checked. Most teams either pay for an audit they can't repeat, or paste scan results into a template and hope. I built VPAT Vault so the evidence and the claim never come apart."
         ]
       },
       {
-        "heading": "Why I made it",
+        "heading": "A clean scan is not a clean bill of health",
         "image": {
-          "src": "/assets/img/work/vpat-vault-evidence.webp",
-          "width": 1672,
-          "height": 941,
-          "alt": "Illustration: two hands hold a magnifying glass over a bug on a web page covered in accessibility checks."
+          "src": "/assets/img/work/vpat-vault-site.webp",
+          "width": 1100,
+          "height": 619,
+          "alt": "The VPAT Vault site: the headline Evidence in, Claims checked, beside a framed terminal capture of a WCAG CLI scan."
         },
         "paragraphs": [
-          "A VPAT is a table of claims, and every row needs evidence behind it. I wanted the scan, the bug list and the draft to sit in one chain, so the evidence follows the work instead of ending up in a separate folder. The last link is always a person: ITI labels only, Supports only when there are no known defects, and every defect remark says what fails, who is affected and where."
+          "Automated checks find some accessibility problems, not all of them. So the rule the whole toolkit is built on is simple: a scan can draft \"Partially Supports\" at most. It never writes \"Supports\". On the demo store, one crawl found 30 problems on 5 pages and drafted 5 criteria. The other 50 were left out, not rated, because no tool can see them. A reviewer still owns every row."
         ]
       },
       {
+        "heading": "Three tools, one pipeline",
         "paragraphs": [
-          "What is live: nine prompts with explicit output contracts, a validator with no dependencies, a 50-record reference dataset, a fixed HTML report template that checks its fields and ITI labels before it renders, and a deterministic ZIP for the buyer. The free Chrome extension, VPAT Vault Scanner, runs axe-core on the active tab, on your machine, and exports normalized findings plus manual-review items as JSON or a CSV bug sheet. You can install it locally today; a Chrome Web Store listing comes later.",
-          "What I’m building is wcag-toolkit, a command-line scanner at v0.1 that is not released. It scans one page, a whole site, or pages behind a sign-in using a browser session you save yourself. The site scan follows links from a start page, opens addresses only, never clicks, skips risky links and reads a sitemap. A static scan of a codebase or a git diff looks for what axe can’t see: missing alt text, non-native interactive elements, ARIA misuse, contrast tricks.",
-          "Results go into a bug sheet in Markdown, CSV or JSON, one row per defect with its WCAG criterion, severity, confidence and a default disposition. From that sheet the tool writes a VPAT draft, or one command does the scan, the sheet and the draft together. The draft is capped at Partially Supports, because scan data alone can’t say Supports or Does Not Support. A settle delay, redirect and CSP guards and checkpointing mean a page that failed to load never gets reported as zero violations. Type wcag for a guided terminal menu; there is also a thin Claude Code skill and a short how-to microsite.",
-          "The limits, plainly: I’ve tested signed-in scanning only on a practice page, a scan finds some problems and a person tests the rest, and I haven’t measured the false-positive rate of the code scan yet."
+          "The WCAG CLI crawls a site, a signed-in app or a codebase on your own machine and writes a bug sheet, a whole-site summary, reviewer files and a VPAT draft, with PDF, Excel and Word exports.",
+          "The Chrome extension scans the page you're on with axe-core, keeps everything local, and exports JSON. `wcag-scan --from-evidence` turns those exports into the same bug sheet and draft.",
+          "Nine prompts run inside Claude Code or Codex. They turn reviewed evidence into ITI-labelled rows, and a small renderer escapes them into fixed HTML. Every tool is free while it's in beta."
         ]
       },
       {
         "heading": "Roadmap",
-        "intro": "What is shipped, what is being built, and what doesn’t exist yet.",
+        "intro": "From working tools to a VPAT a team can publish with confidence.",
         "roadmap": [
           {
-            "label": "Foundation",
+            "label": "Prompt workflow",
             "status": "Shipped",
-            "detail": "Nine prompts, validator, 50-record dataset, HTML report template and buyer ZIP."
+            "detail": "Nine prompts, a validator, a report schema and a renderer that escapes everything."
           },
           {
-            "label": "Local scanner extension",
+            "label": "WCAG CLI",
             "status": "Shipped",
-            "detail": "Free Chrome extension runs axe on the active tab and exports findings and manual-review items as JSON or CSV."
+            "detail": "Pages, whole sites, signed-in apps and codebases. Bug sheet, site summary, VPAT draft, PDF, Excel and Word."
           },
           {
-            "label": "Command-line scanner: scan to bug sheet to VPAT draft",
-            "status": "Done",
-            "detail": "Scans a page, a whole site, pages behind a sign-in, or code into a bug sheet, and turns a bug sheet into a VPAT draft. Now one command does both. Still early and not released."
-          },
-          {
-            "label": "VPAT report V1",
+            "label": "Chrome scanner",
             "status": "In progress",
-            "detail": "The draft becomes a real standalone document: a cover, a summary at a glance, a criteria table, remarks you can read, and a print layout that saves cleanly as a PDF."
+            "detail": "Works today as an unpacked extension. Chrome Web Store listing is next."
           },
           {
-            "label": "Hardening on real sites",
-            "status": "Next",
-            "detail": "A first real run on Windows, a measured false-positive rate for the code scan, and a signed-in scan on a live site."
-          },
-          {
-            "label": "Reviewed reports and hand-offs",
+            "label": "Attach context",
             "status": "Planned",
-            "detail": "Front matter that says what was scanned, opt-in reviewed flows so a scan can click, type and scroll, AI-proposed ratings a person signs off row by row, Word export in the VPAT 2.5 layout, handing a bug to an AI agent to fix and verify, and sending a bug sheet to a ticket tracker."
+            "detail": "Bring manual test notes, screen reader results and screenshots in beside the scan."
           }
         ]
       }
@@ -108,7 +97,8 @@
     "roadmapLink": {
       "label": "vpat.classiccottrell.ca",
       "url": "https://vpat.classiccottrell.ca/"
-    }
+    },
+    "note": "VPAT Vault is in free beta and changing week to week, so this page is a snapshot from November 2026."
   },
   {
     "slug": "linefield",
@@ -142,7 +132,11 @@
         "url": "https://github.com/Classiccottrell/linefield"
       }
     ],
-    "homeImage": { "src": "/assets/img/work/linefield-home.webp", "width": 1360, "height": 765 },
+    "homeImage": {
+      "src": "/assets/img/work/linefield-home.webp",
+      "width": 1360,
+      "height": 765
+    },
     "plate": {
       "src": "/assets/img/work/linefield.webp",
       "width": 1360,
@@ -359,7 +353,7 @@
     ],
     "links": [
       {
-        "label": "www.terryterry\u200blarryberry.com",
+        "label": "www.terryterry​larryberry.com",
         "url": "https://www.terryterrylarryberry.com/"
       },
       {

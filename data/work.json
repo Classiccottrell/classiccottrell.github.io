@@ -31,7 +31,7 @@
       "src": "/assets/img/work/vpat-vault-cli.webp",
       "width": 1360,
       "height": 741,
-      "alt": "The WCAG CLI home screen in a terminal: a large WCAG logo, Accessibility scanner, wcag-toolkit 0.1.2, Setup ready, and a menu: 1 Check my setup (selected), 2 Sign in and save a session, 3 Scan a whole site, 4 Scan one page, 5 Scan code, 6 Make a VPAT draft from a bug sheet, 7 Open the how-to site, 0 Quit.",
+      "alt": "The WCAG CLI home screen in a terminal: a large WCAG logo, Accessibility scanner, wcag-toolkit 0.2.0, Setup ready, and a menu: 1 Check my setup (selected), 2 Sign in and save a session, 3 Scan a whole site, 4 Scan one page, 5 Scan code, 6 Make a VPAT draft from a bug sheet, 7 Open the how-to site, 0 Quit.",
       "caption": "The WCAG CLI home screen. Type wcag, pick a number, and it walks you from setup to a VPAT draft.",
       "callouts": []
     },
@@ -66,6 +66,23 @@
           "The Chrome extension scans the page you're on with axe-core, keeps everything local, and exports JSON. `wcag-scan --from-evidence` turns those exports into the same bug sheet and draft.",
           "Nine prompts run inside Claude Code or Codex. They turn reviewed evidence into ITI-labelled rows, and a small renderer escapes them into fixed HTML. Every tool is free while it's in beta."
         ]
+      },
+      {
+        "heading": "A design system the agents can check",
+        "paragraphs": [
+          "Most of VPAT Vault was built with agents doing the typing, so the design system had to work for a reader that can't eyeball a page. Every rule comes with its reason, the voice is a list of words to use and words to never use, the images are recipes that capture real output, and 33 tests run on every change. When an agent took the buying language off the site, a test caught the word \"price\" hiding in a CSS class before I did."
+        ],
+        "cta": {
+          "href": "/work/vpat-vault/design-system/",
+          "label": "Read the design system write-up"
+        },
+        "image": {
+          "src": "/assets/img/work/vpat-vault-ds.webp",
+          "width": 1360,
+          "height": 765,
+          "alt": "The top of the design system write-up: the headline A design system an agent can follow. And prove it did., above the story of a test catching the word price in a CSS class.",
+          "caption": "The idea: write the rule, then write the check. A rule an agent can't verify is still a wish."
+        }
       },
       {
         "heading": "Roadmap",

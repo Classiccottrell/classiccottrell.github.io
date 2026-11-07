@@ -13,6 +13,7 @@ import { gzipSync } from 'node:zlib';
 import { checkContrast, ratio } from './check-contrast.mjs';
 import * as P from './lib/pages.mjs';
 import { guidePage } from './lib/guide.mjs';
+import { DS_PATH, designSystemPage } from './lib/agentic.mjs';
 import { resolveSignature } from './lib/signature.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -108,6 +109,7 @@ const pages = [
   ['work/index.html', () => P.workIndex(ctx)],
   ...ctx.work.map((p) => [`work/${p.slug}/index.html`, () => P.caseStudy(ctx, p)]),
   [`work/${ctx.guide.slug}/guide/index.html`, () => guidePage(ctx)],
+  [`${DS_PATH.slice(1)}index.html`, () => designSystemPage(ctx)],
   ['takes/index.html', () => P.takesIndex(ctx)],
   ...ctx.takes.filter((t) => !t.retired).map((t) => [`takes/${t.slug}/index.html`, () => P.takePage(ctx, t)]),
   ['work-with-me/index.html', () => P.hire(ctx)],

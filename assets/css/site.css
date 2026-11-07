@@ -700,6 +700,34 @@ a.avail:hover{background:var(--highlight)}
 }
 
 /* ---------- print: a case study becomes a spec sheet */
+/* /work/vpat-vault/design-system/: ruled rows, label left, evidence right. The swatches are VPAT Vault's colours shown as content. */
+.ads-row{display:grid;gap:14px var(--gap);padding-block:clamp(36px,5vw,64px);border-top:1.5px solid var(--fg)}
+@media (min-width:900px){.ads-row{grid-template-columns:minmax(0,4fr) minmax(0,8fr)}}
+.ads-label{display:grid;gap:10px;align-content:start}
+.ads-body{display:grid;gap:18px;min-width:0;max-width:68ch}
+.ads-body>*{margin:0}
+.ads-why{color:var(--muted);border-left:3px solid var(--pencil);padding-left:14px}
+.ads-sw{display:grid;grid-template-columns:repeat(auto-fill,minmax(8.5rem,1fr));gap:12px;list-style:none;margin:0;padding:0}
+.ads-sw li{border:1.5px solid var(--fg);background:var(--mat)}
+.ads-sw i{display:block;height:52px;border-bottom:1.5px solid var(--fg)}
+.ads-sw span{display:block;padding:8px 10px;font:400 .75rem/1.4 var(--f-pencil)}
+.ads-sw b{display:block;font-weight:600}
+.ads-two{display:grid;gap:12px}
+@media (min-width:640px){.ads-two{grid-template-columns:1fr 1fr}}
+.ads-card{border:1.5px solid var(--fg);padding:14px 16px;background:var(--mat)}
+.ads-card ul{margin:8px 0 0;padding-left:1.1rem;display:grid;gap:4px;font-size:.95rem}
+.ads-pre{margin:0;background:var(--band);color:var(--band-fg);padding:16px 18px;overflow-x:auto;font:400 .8rem/1.6 var(--f-pencil);white-space:pre}
+.ads-pre code{font-size:1em}
+.ads-pre .c{color:var(--band-muted)}
+.ads-tests{columns:2 15rem;column-gap:24px;margin:0;padding:0;list-style:none}
+.ads-tests li{break-inside:avoid;padding:3px 0;overflow-wrap:anywhere}
+.ads-gate{border:1.5px solid var(--fg);background:var(--mat);padding:16px;display:grid;gap:12px}
+.ads-gate textarea{width:100%;min-height:7rem;resize:vertical;font:inherit;color:var(--fg);background:var(--ground);border:1.5px solid var(--fg);padding:12px}
+.ads-out{display:flex;flex-wrap:wrap;gap:8px;min-height:2rem;margin:0}
+.ads-chip{font:600 .72rem/1 var(--f-pencil);letter-spacing:.04em;padding:7px 9px;border:1.5px solid var(--fg)}
+.ads-chip.ok{background:var(--highlight)}
+.ads-act{display:flex;flex-wrap:wrap;gap:8px;margin:0}
+.ads-row :focus-visible{outline:2px solid var(--proof);outline-offset:3px}
 @media print{
   :root{--ground:#fff;--fg:#000;--muted:#333;--proof:#1B62A0;--pencil:#A4DDED}
   body{font-size:11pt}

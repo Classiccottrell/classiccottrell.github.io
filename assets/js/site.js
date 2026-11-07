@@ -524,4 +524,29 @@
     requestAnimationFrame(function () { requestAnimationFrame(function () { pop.classList.add('on'); }); });
     clearTimeout(terryTimer); terryTimer = setTimeout(function () { pop.classList.remove('on'); }, 3800);
   });
+  // ------------------------------------------------------------ the copy gate on /work/vpat-vault/design-system/
+  // ponytail: a small copy of VPAT Vault's banned-copy test, enough to show the idea.
+  (function () {
+    var ta = document.getElementById('ads-copy'), out = document.getElementById('ads-out');
+    if (!ta || !out) return;
+    var GOOD = 'Scan a site, get a bug sheet and a VPAT 2.5 draft. A person signs off every row.', BAD = ta.value;
+    var NEVER = ['compliant', 'compliance', 'guaranteed', 'audit-ready', 'ai-powered', 'ai drafts', 'fix accessibility', 'buy', 'purchase', 'checkout', 'pricing',
+      'seamless', 'robust', 'journey', 'unlock', 'elevate', 'empower', 'innovative', 'cutting-edge', 'delve', 'pip install', 'npm install', 'brew install'];
+    function chip(text, ok) { var s = document.createElement('span'); s.className = 'ads-chip' + (ok ? ' ok' : ''); s.textContent = text; return s; }
+    function check() {
+      var t = ta.value, low = t.toLowerCase(), hits = [];
+      NEVER.forEach(function (w) { if (new RegExp('(^|[^a-z-])' + w.replace(/-/g, '\\-') + '([^a-z]|$)').test(low)) hits.push(w); });
+      if (/\$\s?\d/.test(t)) hits.push('price ($)');
+      if (/—/.test(t)) hits.push('em dash');
+      var m, re = /certif/g;
+      while ((m = re.exec(low))) { if (!/\b(not|no|never|nor|neither)\b/.test(low.slice(Math.max(0, m.index - 120), m.index).split(/[.!?]/).pop())) { hits.push('certif outside a disclaimer'); break; } }
+      if (!/(person|human|reviewer)/.test(low)) hits.push('no human sign-off named');
+      out.textContent = '';
+      if (hits.length) hits.forEach(function (x) { out.appendChild(chip('✕ ' + x)); });
+      else out.appendChild(chip('✓ passes the copy gate', true));
+    }
+    ta.addEventListener('input', check);
+    $$('[data-ads-load]').forEach(function (b) { b.addEventListener('click', function () { ta.value = b.getAttribute('data-ads-load') === 'good' ? GOOD : BAD; check(); }); });
+    check();
+  })();
 })();

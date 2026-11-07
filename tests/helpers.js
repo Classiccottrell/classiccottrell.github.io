@@ -9,7 +9,7 @@ export const AXE = read('node_modules/axe-core/axe.min.js');
 export const GUIDE = '/work/terry-home-lab/guide/';
 
 export const PAGES = [
-  '/', '/work/', ...work.map((p) => `/work/${p.slug}/`), GUIDE,
+  '/', '/work/', ...work.map((p) => `/work/${p.slug}/`), GUIDE, '/work/vpat-vault/design-system/',
   '/takes/', ...takes.map((t) => `/takes/${t.slug}/`),
   '/work-with-me/', '/work-with-me/thanks/', '/writing/', '/drawings/', '/about/', '/about-this-site/', '/404.html',
 ];

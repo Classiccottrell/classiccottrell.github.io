@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A design system an agent can follow · Matthew A. Cottrell</title>
+<meta name="description" content="What a design system looks like when agents read it too: tokens, rules with reasons, voice as data, image recipes and tests, with VPAT Vault as the worked example.">
+<link rel="canonical" href="https://classiccottrell.ca/work/vpat-vault/design-system/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Matthew A. Cottrell">
+<meta property="og:title" content="A design system an agent can follow">
+<meta property="og:description" content="What a design system looks like when agents read it too: tokens, rules with reasons, voice as data, image recipes and tests, with VPAT Vault as the worked example.">
+<meta property="og:url" content="https://classiccottrell.ca/work/vpat-vault/design-system/">
+<meta property="og:image" content="https://classiccottrell.ca/assets/cards/work-vpat-vault.png?v=722a0e0834">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFFFFF">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0A0A0A">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" href="/assets/fonts/familjen-grotesk.woff2?v=414d5dfe5f" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/newsreader.woff2?v=62981321d9" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/site.css?v=ef22a07b73">
+<script>document.documentElement.className='js'</script>
+<script src="/assets/js/site.js?v=5590f29ced" defer></script>
+
+</head>
+<body class="case">
+
+<a class="skip" href="#main">Skip to content</a>
+<header class="mast">
+  <div class="wrap mast-in">
+    <a class="mast-name" href="/">Matthew A. Cottrell</a>
+    <nav class="mast-nav" aria-label="Main"><ul><li><a href="/work/" aria-current="true">Work</a></li><li><a href="/takes/">Takes</a></li><li><a href="/writing/">Writing</a></li><li><a href="/drawings/">Drawings</a></li><li><a href="/about/">About</a></li><li class="mast-cta"><a href="/work-with-me/">Work with me</a></li></ul></nav>
+    <details class="menu">
+      <summary>Menu</summary>
+      <nav class="menu-panel" aria-label="Menu"><ul><li><a href="/work/" aria-current="true">Work</a></li><li><a href="/takes/">Takes</a></li><li><a href="/writing/">Writing</a></li><li><a href="/drawings/">Drawings</a></li><li><a href="/about/">About</a></li><li class="mast-cta"><a href="/work-with-me/">Work with me</a></li></ul></nav>
+    </details>
+  </div>
+</header>
+<main id="main">
+
+<article class="ads">
+  <div class="wrap">
+    <header class="ph">
+      <p class="note"><a href="/work/">Work</a> / <a href="/work/vpat-vault/">VPAT Vault</a> / Design system</p>
+      <h1 class="h1">A design system an agent can follow. And prove it did.</h1>
+      <p class="lede">Most design systems are written for designers. They assume a reader who can look at a page and feel that something is off. Agents can't feel it. They can read a rule and run a check. This is what a design system looks like when it is built for that reader too.</p>
+      <p class="note">Every example is real, from the VPAT Vault build, November 2026.</p>
+    </header>
+
+    <section class="ads-row ads-story" aria-labelledby="moment-h">
+      <div class="ads-label"><p class="note ads-tag">The moment</p><h2 class="vh" id="moment-h">The moment</h2></div>
+      <div class="ads-body">
+        <blockquote class="pq"><p>I asked an agent to remove every line on the VPAT Vault site that talked about buying it. It did. Then a test failed.</p></blockquote>
+        <p>The test bans commerce words on every page, and it had found "price" inside a CSS class called <code>.price</code>. The rule was right, it was just too blunt. We narrowed it to how the word shows up in copy, and now "no commerce language while it's a free beta" isn't a line in a style guide hoping to be read. It runs on every change.</p>
+        <p>That's the whole idea. Right now we hand agents the same brand book we hand people, then review their output by eye. Review is the slow part. An agentic design system moves the review into the system.</p>
+      </div>
+    </section>
+
+    
+<section class="ads-row" id="tokens" aria-labelledby="tokens-h">
+  <div class="ads-label"><p class="note ads-tag">Layer 1 · Tokens</p><h2 class="cs-h" id="tokens-h">The look, as values.</h2></div>
+  <div class="ads-body">
+      <p>Tokens live in the stylesheet that ships, not in a separate library that can drift. A test fails if any page adds inline styles or a second stylesheet.</p>
+      <ul class="ads-sw" aria-label="VPAT Vault colour tokens"><li><i style="background:#EFEBE4"></i><span><b>--bg</b> #EFEBE4 paper</span></li><li><i style="background:#F8F5EF"></i><span><b>--surface</b> #F8F5EF sheet</span></li><li><i style="background:#0E0E0C"></i><span><b>--ink</b> #0E0E0C type</span></li><li><i style="background:#55514A"></i><span><b>--muted</b> #55514A captions</span></li><li><i style="background:#A3402B"></i><span><b>--signal</b> #A3402B one accent</span></li><li><i style="background:#CCD8CA"></i><span><b>--field-2</b> #CCD8CA quiet field</span></li></ul>
+      <p class="ads-why">"Calm type" is a number, not an adjective. VPAT Vault's display face tops out at 4.75rem, so an agent making a social card knows the headline is about 64px on 1200 × 630 and nothing is bigger.</p></div>
+</section>
+
+    
+<section class="ads-row" id="rules" aria-labelledby="rules-h">
+  <div class="ads-label"><p class="note ads-tag">Layer 2 · Rules</p><h2 class="cs-h" id="rules-h">Rules that carry their reason.</h2></div>
+  <div class="ads-body">
+      <ul class="items">
+        <li><strong>Real before drawn.</strong> The hero, the share card and product shots are captures of real tool output. Illustration supports, it never proves.</li>
+        <li><strong>Calm type.</strong> Headlines lead, they don't shout. No poster-scale display type, no giant numbers.</li>
+        <li><strong>Honest claims.</strong> Every image and line must survive a reviewer asking "is that true?"</li>
+      </ul>
+      <p class="ads-why">The reason is the part agents need most. A rule covers the cases you thought of. Its reason covers the one you didn't, like whether an AI-generated illustration can sit in the hero. (It can't. Rule one says why.)</p></div>
+</section>
+
+    
+<section class="ads-row" id="voice" aria-labelledby="voice-h">
+  <div class="ads-label"><p class="note ads-tag">Layer 3 · Voice</p><h2 class="cs-h" id="voice-h">Voice as data, not adjectives.</h2></div>
+  <div class="ads-body">
+      <p>"Friendly but professional" gives an agent nothing to act on. A names table, two lists and fixed-length boilerplate do.</p>
+      <div class="ads-two">
+        <div class="ads-card"><p class="note">Must say</p><ul>
+          <li>Pair every scan claim with its limit</li><li>A person signs off every row</li>
+          <li>It runs on your computer</li><li>It is not an audit, certification or legal advice</li>
+        </ul></div>
+        <div class="ads-card"><p class="note">Never say</p><ul>
+          <li>compliant, certified, guaranteed, audit-ready</li><li>AI-powered, AI drafts</li>
+          <li>buy, price, checkout, shop links</li><li>seamless, robust, journey, unlock</li>
+        </ul></div>
+      </div>
+      <p class="ads-why">Boilerplate comes at one line, 50 words and 100 words. An agent trims an approved sentence instead of writing a new one, and new sentences are where claims creep in.</p></div>
+</section>
+
+    
+<section class="ads-row" id="recipes" aria-labelledby="recipes-h">
+  <div class="ads-label"><p class="note ads-tag">Layer 4 · Recipes</p><h2 class="cs-h" id="recipes-h">Recipes, not mockups.</h2></div>
+  <div class="ads-body">
+      <p>A mockup shows what an image should look like. A recipe makes it. The VPAT Vault hero is real scanner output, rendered to HTML and screenshotted, so an agent can remake it after every release and it can't drift from the truth.</p>
+      <pre class="ads-pre" tabindex="0" aria-label="Capture recipe"><code><span class="c"># 1. Run a real scan of the demo store</span>
+$ script -q tty.log wcag-scan --crawl http://127.0.0.1:8799/ --yes \
+    --report-dir ~/wcag-runs/brightside-goods
+<span class="c"># 2. Turn the terminal's colour codes into styled HTML</span>
+$ python3 render_terminal.py tty.log term.html
+<span class="c"># 3. Shoot it at the asset size</span>
+$ node shoot.js term.html term.png 1400 788</code></pre>
+      <figure class="cs-fig"><div class="panel"><img src="/assets/img/work/vpat-vault-site.webp?v=d7295575d7" width="1100" height="619" alt="The VPAT Vault site: the headline Evidence in, Claims checked, beside a framed terminal capture of a WCAG CLI scan." loading="lazy" decoding="async"></div>
+      <figcaption class="note cap">The recipe's output in place on the VPAT Vault site. The numbers in the terminal come from a real run on the bundled demo store, unedited.</figcaption></figure></div>
+</section>
+
+    
+<section class="ads-row" id="gates" aria-labelledby="gates-h">
+  <div class="ads-label"><p class="note ads-tag">Layer 5 · Gates</p><h2 class="cs-h" id="gates-h">If a rule matters, it's a test.</h2></div>
+  <div class="ads-body">
+      <p>The VPAT Vault site runs 33 checks on every change. These are the ones that guard the design system, by their real names:</p>
+      <ul class="ads-tests"><li><code>stylesheet_defines_token_set</code></li><li><code>all_pages_share_one_stylesheet</code></li><li><code>motion_only_inside_no_preference</code></li><li><code>no_flashing_or_webgl</code></li><li><code>banned_copy</code></li><li><code>no_purchasing_language_or_shop_links</code></li><li><code>no_external_font_or_script_urls</code></li><li><code>h1_skip_link_landmarks_and_alt</code></li><li><code>nav_identical_on_every_page</code></li><li><code>pipeline_has_human_signoff_gate</code></li><li><code>extension_copy_matches_manifest</code></li><li><code>states_nothing_uploaded</code></li></ul>
+      <div class="ads-gate" data-js>
+        <label class="note" for="ads-copy">Try the copy gate. Edit the text and watch the checks.</label>
+        <textarea id="ads-copy" rows="4" spellcheck="false">VPAT Vault is an AI-powered, seamless way to get audit-ready. Certified WCAG compliance for just $49.</textarea>
+        <p class="ads-out" id="ads-out" role="status" aria-live="polite"></p>
+        <p class="ads-act"><button type="button" class="tool" data-ads-load="good">Load the approved one-liner</button> <button type="button" class="tool" data-ads-load="bad">Load the bad example</button></p>
+      </div>
+      <p class="ads-why">The box runs a small version of the real check in your browser. The real one also scans the CSS, catches "certif" outside a disclaimer, and blocks install commands that don't exist.</p></div>
+</section>
+
+    
+<section class="ads-row" id="package" aria-labelledby="package-h">
+  <div class="ads-label"><p class="note ads-tag">Layer 6 · Package</p><h2 class="cs-h" id="package-h">One folder, one command.</h2></div>
+  <div class="ads-body">
+      <p>The art direction, the writing guide, the product facts, the real assets, the fonts with their licences and the capture scripts ship together. The build fails if a guide or a font licence is missing.</p>
+      <pre class="ads-pre" tabindex="0" aria-label="Brand kit build"><code>$ bash vpat-optimizer/scripts/build_brand_kit.sh
+vpat-vault-brand-kit/
+  design.md            <span class="c"># art direction</span>
+  writing-guide.md     <span class="c"># names, must say, never say, boilerplate</span>
+  product.md           <span class="c"># facts and the required disclaimer</span>
+  assets/              <span class="c"># share card, hero capture, icon</span>
+  fonts/               <span class="c"># three OFL faces + LICENSES.txt</span>
+  launch-assets/       <span class="c"># the recipes</span></code></pre></div>
+</section>
+
+    
+<section class="ads-row" id="compare" aria-labelledby="compare-h">
+  <div class="ads-label"><p class="note ads-tag">Side by side</p><h2 class="cs-h" id="compare-h">What changes when agents read it.</h2></div>
+  <div class="ads-body">
+      <table class="kt">
+        <caption class="vh">A design system built for people compared with one built for agents too</caption>
+        <thead><tr><th scope="col">Part</th><th scope="col">Built for people</th><th scope="col">Built for agents too</th></tr></thead>
+        <tbody><tr><td data-label="Part">Look</td><td data-label="Built for people">A component library beside the product</td><td data-label="Built for agents too">Tokens in the stylesheet that ships, one stylesheet enforced</td></tr><tr><td data-label="Part">Guidelines</td><td data-label="Built for people">Principles to interpret</td><td data-label="Built for agents too">Rules with reasons and numbers</td></tr><tr><td data-label="Part">Voice</td><td data-label="Built for people">Tone adjectives</td><td data-label="Built for agents too">Names table, must say, never say, fixed-length boilerplate</td></tr><tr><td data-label="Part">Imagery</td><td data-label="Built for people">Mockups and stock</td><td data-label="Built for agents too">Recipes that capture real output</td></tr><tr><td data-label="Part">Review</td><td data-label="Built for people">By eye, at the end</td><td data-label="Built for agents too">Tests on every change</td></tr><tr><td data-label="Part">Done means</td><td data-label="Built for people">It looks right</td><td data-label="Built for agents too">It looks right, and the checks pass</td></tr></tbody>
+      </table></div>
+</section>
+
+    <section class="ads-row ads-close" aria-labelledby="move-h">
+      <div class="ads-label"><p class="note ads-tag">The move</p></div>
+      <div class="ads-body">
+        <h2 class="cs-h" id="move-h">Write the rule, then write the check. A rule an agent can't verify is still a wish.</h2>
+        <p>Start with the rule that hurts most when it breaks. For VPAT Vault it was honest claims. Give it a reason, a list and a test, then the next one.</p>
+      </div>
+    </section>
+  </div>
+  <nav class="wrap pn-wrap" aria-label="More work"><div class="pn-nav">
+    <a class="lnk" href="/work/vpat-vault/"><span aria-hidden="true">←</span> VPAT Vault</a>
+    <a class="lnk" href="/work/">All work</a>
+  </div></nav>
+</article>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-cta">
+      <p class="foot-h">Bring me a problem.</p>
+      <p class="foot-row"><a class="btn" href="/work-with-me/">Work with me <span aria-hidden="true">→</span></a><a class="avail" href="/work-with-me/#availability"><i class="sm sm-live" aria-hidden="true"></i>Open to new projects</a></p>
+    </div>
+    <div class="foot-grid">
+      <nav aria-label="Elsewhere"><p class="note">Elsewhere</p><ul><li><a class="lnk" href="https://www.linkedin.com/in/classiccottrell/">LinkedIn<span class="ext" aria-hidden="true"> ↗</span></a></li><li><a class="lnk" href="https://github.com/Classiccottrell">GitHub<span class="ext" aria-hidden="true"> ↗</span></a></li><li><a class="lnk" href="https://classiccottrell.substack.com/">Substack<span class="ext" aria-hidden="true"> ↗</span></a></li><li><a class="lnk" href="https://www.instagram.com/classiccottrell">Instagram<span class="ext" aria-hidden="true"> ↗</span></a></li></ul></nav>
+      <nav aria-label="This site"><p class="note">This site</p><ul><li><a class="lnk" href="/work/" aria-current="true">Work</a></li><li><a class="lnk" href="/takes/">Takes</a></li><li><a class="lnk" href="/writing/">Writing</a></li><li><a class="lnk" href="/drawings/">Drawings</a></li><li><a class="lnk" href="/about/">About</a></li><li><a class="lnk" href="/work-with-me/">Work with me</a></li><li><a class="lnk" href="/about-this-site/">About this site</a></li></ul></nav>
+    </div>
+    <div class="foot-base">
+      <a class="terry-a" href="/work/terry-time/" aria-label="Terry Time, Terry’s shop"><span class="terry" aria-hidden="true"></span></a>
+      <p>Product designer. Enterprise IT, design systems, accessibility and AI tooling.</p>
+      <p class="note">© 2009–<span data-year>2026</span> Matthew A. Cottrell</p>
+      <button type="button" class="tool" data-pencils aria-pressed="false" hidden>Pencils</button>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

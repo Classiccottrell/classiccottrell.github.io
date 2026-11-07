@@ -129,6 +129,7 @@ await plate('agentic-light', 'webp');
 await plate('vpat-vault-cli', 'png', { lossless: true });
 await plate('photo-curator-cli', 'jpg', { grey: true });
 await plate('vpat-vault-site', 'png', { width: 1100, quality: 78 });
+await plate('vpat-vault-ds', 'png', { quality: 78 });
 await plate('terry-time', 'webp');
 await plate('terry-time-exhibit', 'webp', { width: 1100, quality: 72 });
 await plate('terry-time-after-hours', 'webp', { width: 1100, quality: 72 });

@@ -29,6 +29,8 @@ data/                 the content: edit these, then npm run build
 assets/
   css/site.css        the whole stylesheet, tokens first (the build stamps its url(/assets/…) ?v= hashes)
   js/site.js          the optional layer
+  arcade/<release>/  versioned runtime-only office arcade export, including music and font licence
+  js/cartridge.js    home-only lazy loader; game owns keyboard/touch controls and expansion
   js/terry-symbols.js Terry Time's footer, running live on its case study (only that page loads it)
   fonts/              Familjen Grotesk, Newsreader, Red Hat Mono (OFL)
   img/                images the site serves (made by npm run images)
@@ -71,6 +73,28 @@ npm test                 # build check, contrast check, then the Playwright suit
 `npm run cards`, `npm run contact-sheet` and `npm test` use Playwright's
 Chromium (`npx playwright install chromium` once). To use a Chromium that's
 already installed, set `PW_CHROMIUM=/path/to/chrome`.
+
+## Arcade release
+
+The home footer loads the office arcade on intersection (phones and data saver wait for
+Tap to play). Sound starts on a game gesture; the visible sound control follows the
+expanded game. Without JavaScript, project links remain available.
+
+Build `cc-sidescroller` with `npm run build`, then run from this checkout:
+
+```bash
+npm run vendor:arcade -- ../cc-sidescroller/dist
+npm run build
+npm test
+```
+
+`data/arcade.json` selects the release manifest. `assets/arcade/<manifest.id>/` is
+an exact copy of its runtime export: ES modules, selected game art, font licence and
+Matt Cottrell’s authorized music, made with Google Flow. Private development files,
+raw art and prompts stay in the game checkout. Versioned directories preserve nested
+module/image/music URLs under the site's immutable asset cache. The vendor command
+rejects a changed export reusing an existing release ID. Commit the manifest, runtime
+folder and regenerated pages together; keep prior release directories for cached pages.
 
 ## Common edits
 

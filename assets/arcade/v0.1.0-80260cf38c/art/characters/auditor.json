@@ -1,0 +1,258 @@
+{
+  "version": 2,
+  "density": 2,
+  "image": "auditor.png",
+  "cell": {
+    "w": 128,
+    "h": 128
+  },
+  "anchor": {
+    "x": 64,
+    "y": 128
+  },
+  "animations": {
+    "idle": {
+      "fps": 8,
+      "frames": [
+        {
+          "name": "auditor_idle_00.png",
+          "x": 0,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "auditor_idle_01.png",
+          "x": 128,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "auditor_idle_02.png",
+          "x": 256,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "auditor_idle_03.png",
+          "x": 384,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        }
+      ]
+    },
+    "walk": {
+      "fps": 8,
+      "frames": [
+        {
+          "name": "auditor_walk_00.png",
+          "x": 512,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "auditor_walk_01.png",
+          "x": 640,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "auditor_walk_02.png",
+          "x": 768,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "auditor_walk_03.png",
+          "x": 896,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "auditor_walk_04.png",
+          "x": 1024,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "auditor_walk_05.png",
+          "x": 1152,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        }
+      ]
+    },
+    "windup": {
+      "fps": 8,
+      "frames": [
+        {
+          "name": "auditor_windup_00.png",
+          "x": 1280,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "auditor_windup_01.png",
+          "x": 1408,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "auditor_windup_02.png",
+          "x": 1536,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        }
+      ]
+    },
+    "attack": {
+      "fps": 8,
+      "frames": [
+        {
+          "name": "auditor_attack_00.png",
+          "x": 1664,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "auditor_attack_01.png",
+          "x": 1792,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "auditor_attack_02.png",
+          "x": 1920,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "auditor_attack_03.png",
+          "x": 2048,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        }
+      ]
+    },
+    "hurt": {
+      "fps": 8,
+      "frames": [
+        {
+          "name": "auditor_hurt_00.png",
+          "x": 2176,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "auditor_hurt_01.png",
+          "x": 2304,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        }
+      ]
+    },
+    "knockdown": {
+      "fps": 8,
+      "frames": [
+        {
+          "name": "auditor_knockdown_00.png",
+          "x": 2432,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "auditor_knockdown_01.png",
+          "x": 2560,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "auditor_knockdown_02.png",
+          "x": 2688,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        }
+      ]
+    },
+    "dead": {
+      "fps": 8,
+      "frames": [
+        {
+          "name": "auditor_dead_00.png",
+          "x": 2816,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        }
+      ]
+    },
+    "signature": {
+      "fps": 8,
+      "frames": [
+        {
+          "name": "auditor_signature_00.png",
+          "x": 2944,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "auditor_signature_01.png",
+          "x": 3072,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "auditor_signature_02.png",
+          "x": 3200,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "auditor_signature_03.png",
+          "x": 3328,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "auditor_signature_04.png",
+          "x": 3456,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "auditor_signature_05.png",
+          "x": 3584,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        }
+      ]
+    }
+  }
+}

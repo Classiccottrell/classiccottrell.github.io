@@ -37,6 +37,7 @@ const ctx = {
   guide: json('data/guide.json'),
   year: 2026,
 };
+ctx.arcade = existsSync(path.join(ROOT, 'data/arcade.json')) ? json('data/arcade.json') : null;
 ctx.ratio = ratio;
 ctx.site.portrait.signature = resolveSignature(ROOT, ctx.site.portrait.signature);
 

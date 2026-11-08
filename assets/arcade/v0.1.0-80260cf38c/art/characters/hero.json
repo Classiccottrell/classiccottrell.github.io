@@ -1,0 +1,304 @@
+{
+  "version": 2,
+  "density": 2,
+  "image": "hero.png",
+  "cell": {
+    "w": 128,
+    "h": 128
+  },
+  "anchor": {
+    "x": 64,
+    "y": 128
+  },
+  "animations": {
+    "idle": {
+      "fps": 5,
+      "frames": [
+        {
+          "name": "hero_idle_00.png",
+          "x": 0,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero_idle_01.png",
+          "x": 128,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero_idle_02.png",
+          "x": 256,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero_idle_03.png",
+          "x": 384,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        }
+      ]
+    },
+    "walk": {
+      "fps": 9,
+      "frames": [
+        {
+          "name": "hero_walk_00.png",
+          "x": 512,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero_walk_01.png",
+          "x": 640,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero_walk_02.png",
+          "x": 768,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero_walk_03.png",
+          "x": 896,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero_walk_04.png",
+          "x": 1024,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero_walk_05.png",
+          "x": 1152,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        }
+      ]
+    },
+    "punch1": {
+      "fps": 12,
+      "frames": [
+        {
+          "name": "hero_punch1_00.png",
+          "x": 1280,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero_punch1_01.png",
+          "x": 1408,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero_punch1_02.png",
+          "x": 1536,
+          "y": 0,
+          "w": 128,
+          "h": 128,
+          "hitboxHint": {
+            "x": 4,
+            "y": -32,
+            "w": 18,
+            "h": 14
+          }
+        },
+        {
+          "name": "hero_punch1_03.png",
+          "x": 1664,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        }
+      ]
+    },
+    "punch2": {
+      "fps": 12,
+      "frames": [
+        {
+          "name": "hero_punch2_00.png",
+          "x": 1792,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero_punch2_01.png",
+          "x": 1920,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero_punch2_02.png",
+          "x": 2048,
+          "y": 0,
+          "w": 128,
+          "h": 128,
+          "hitboxHint": {
+            "x": 4,
+            "y": -32,
+            "w": 20,
+            "h": 14
+          }
+        },
+        {
+          "name": "hero_punch2_03.png",
+          "x": 2176,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        }
+      ]
+    },
+    "kick": {
+      "fps": 12,
+      "frames": [
+        {
+          "name": "hero_kick_00.png",
+          "x": 2304,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero_kick_01.png",
+          "x": 2432,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero_kick_02.png",
+          "x": 2560,
+          "y": 0,
+          "w": 128,
+          "h": 128,
+          "hitboxHint": {
+            "x": 8,
+            "y": -27,
+            "w": 23,
+            "h": 12
+          }
+        },
+        {
+          "name": "hero_kick_03.png",
+          "x": 2688,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        }
+      ]
+    },
+    "hit": {
+      "fps": 8,
+      "frames": [
+        {
+          "name": "hero_hit_00.png",
+          "x": 2816,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero_hit_01.png",
+          "x": 2944,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        }
+      ]
+    },
+    "dodge": {
+      "fps": 18,
+      "frames": [
+        {
+          "name": "hero_dodge_00.png",
+          "x": 3072,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero_dodge_01.png",
+          "x": 3200,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero_dodge_02.png",
+          "x": 3328,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero_dodge_03.png",
+          "x": 3456,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero_dodge_04.png",
+          "x": 3584,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        }
+      ]
+    },
+    "knockdown": {
+      "fps": 8,
+      "frames": [
+        {
+          "name": "hero_knockdown_00.png",
+          "x": 3712,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero_knockdown_01.png",
+          "x": 3840,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero_knockdown_02.png",
+          "x": 3968,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero_knockdown_03.png",
+          "x": 4096,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        }
+      ]
+    }
+  }
+}

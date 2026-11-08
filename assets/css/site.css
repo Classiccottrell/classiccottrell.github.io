@@ -711,3 +711,18 @@ a.avail:hover{background:var(--highlight)}
   .plate,.cs-sec,.take,.rule{break-inside:avoid}
   a{text-decoration:none}
 }
+
+/* Home arcade: canvas height reserved; game-owned touch controls flow below it. */
+.cartridge{margin-top:clamp(28px,4vw,48px)}
+.cart-head{display:flex;gap:8px 16px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:10px}
+.cart-tools{display:flex;gap:6px 16px;align-items:center;flex-wrap:wrap}
+.cart-frame{position:relative;border-block:1px solid var(--pencil);background:var(--band);color:var(--band-fg)}
+.cart-screen{height:180px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+@media(min-width:700px){.cart-screen{height:360px}}
+.cart-screen[hidden],.cart-poster[hidden],.cart-fallback[hidden]{display:none}
+.cart-fallback{display:flex;gap:.3em;flex-wrap:wrap;align-items:center;justify-content:center;text-align:center;padding:24px 16px;min-height:180px;color:var(--band-fg)}
+.cart-fallback .lnk{color:var(--band-fg)}
+.cart-poster{width:100%;min-height:180px;display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center;border:0;border-radius:0;background:var(--band);color:var(--band-fg);font:600 .85rem/1 var(--f-pencil);letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
+.cart-poster span+span{color:var(--band-proof);border-bottom:1px solid var(--band-proof);padding-bottom:4px}
+.cart-poster:focus-visible,.cart-screen canvas:focus-visible{outline:2px solid var(--band-proof);outline-offset:-4px}
+@media print{.cartridge{display:none!important}}

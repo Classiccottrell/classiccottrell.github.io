@@ -14,7 +14,6 @@ const masthead = (ctx, path) => {
   const items = site.nav.map((n) => h`<li><a href="${esc(n.href)}"${current(n.href, path)}>${esc(n.label)}</a></li>`);
   const cta = h`<li class="mast-cta"><a href="/work-with-me/"${current('/work-with-me/', path)}>Work with me</a></li>`;
   return h`
-<a class="skip" href="#main">Skip to content</a>
 <header class="mast">
   <div class="wrap mast-in">
     <a class="mast-name" href="/"${path === '/' ? ' aria-current="page"' : ''}>${esc(site.name)}</a>
@@ -31,21 +30,15 @@ const masthead = (ctx, path) => {
 const cartridge = (ctx) => {
   if (!ctx.arcade) return '';
   const base = `/assets/arcade/${ctx.arcade.id}/`;
-  return h`<section class="cartridge" aria-label="Arcade strip" data-cartridge data-src="${base}${esc(ctx.arcade.entry)}" data-music-src="${base}${esc(ctx.arcade.music)}">
-  <div class="wrap cart-head">
-    <p class="note">Classic Cottrell · Office arcade</p>
-    <div class="cart-tools" data-js>
-      <a class="lnk" href="#foot-end">Skip game</a>
-      <button type="button" class="tool" data-cart-mute aria-pressed="false" disabled title="Sound starts when you play">Sound off</button>
-      <button type="button" class="tool" data-cart-expand aria-expanded="false">Expand</button>
+  return h`<section class="cartridge" aria-label="Office arcade" data-cartridge data-src="${base}${esc(ctx.arcade.entry)}" data-music-src="${base}${esc(ctx.arcade.music)}">
+  <button type="button" class="cart-seam" data-cart-reveal data-js aria-expanded="false" aria-controls="arcade-aperture"><span>Play arcade <span aria-hidden="true">↗</span></span></button>
+  <div class="cart-aperture" id="arcade-aperture" data-cart-panel hidden>
+    <div class="cart-frame">
+      <div class="wrap cart-head" data-js><p class="note">Classic Cottrell · Office arcade</p><button type="button" class="tool" data-cart-close>Close arcade <span aria-hidden="true">×</span></button></div>
+      <div class="cart-screen" data-cart-screen hidden></div>
+      <p class="cart-fallback wrap" data-cart-fallback>Explore <a class="lnk" href="/work/vpat-vault/">VPAT Vault</a>, <a class="lnk" href="/work/linefield/">linefield</a> or <a class="lnk" href="/work/terry-time/">Terry Time</a>.</p>
     </div>
   </div>
-  <div class="cart-frame">
-    <div class="cart-screen" data-cart-screen hidden inert></div>
-    <button type="button" class="cart-poster" data-cart-poster hidden><span>Classic Cottrell</span><span>Tap to play</span></button>
-    <p class="cart-fallback" data-cart-fallback>An office arcade. It needs JavaScript. Explore <a class="lnk" href="/work/vpat-vault/">VPAT Vault</a>, <a class="lnk" href="/work/linefield/">linefield</a> or <a class="lnk" href="/work/terry-time/">Terry Time</a>.</p>
-  </div>
-  <p class="wrap note">Arrows move · Space ×3: punch, punch, kick · L/C: dodge · Beat the boss, then walk right to loop.</p>
   <script src="/assets/js/cartridge.js" defer></script>
 </section>`;
 };
@@ -59,13 +52,13 @@ const footer = (ctx, path) => {
     </div>`;
   const pages = [...site.nav, { label: 'Work with me', href: '/work-with-me/' }, { label: 'About this site', href: '/about-this-site/' }];
   return h`
-${path === '/' && ctx.arcade ? cartridge(ctx) + '\n' : ''}<footer class="foot">
+<footer class="foot">
   <div class="wrap">${cta}
     <div class="foot-grid">
       <nav aria-label="Elsewhere"><p class="note">Elsewhere</p><ul>${site.social.map((s) => h`<li>${link(s.url, s.label)}</li>`)}</ul></nav>
       <nav aria-label="This site"><p class="note">This site</p><ul>${pages.map((p) => h`<li><a class="lnk" href="${esc(p.href)}"${current(p.href, path)}>${esc(p.label)}</a></li>`)}</ul></nav>
     </div>
-    <div class="foot-base"${path === '/' ? ' id="foot-end" tabindex="-1"' : ''}>
+    <div class="foot-base">
       <a class="terry-a" href="/work/terry-time/" aria-label="Terry Time, Terry’s shop"${current('/work/terry-time/', path)}><span class="terry" aria-hidden="true"></span></a>
       <p>${esc(site.footerLine)}</p>
       <p class="note">© ${site.since}–<span data-year>${ctx.year}</span> ${esc(site.name)}</p>
@@ -113,6 +106,8 @@ ${meta.noindex ? '<meta name="robots" content="noindex">' : h`<link rel="canonic
 ${meta.head || ''}
 </head>
 <body${meta.bodyClass ? h` class="${meta.bodyClass}"` : ''}>
+<a class="skip" href="#main">Skip to content</a>
+${meta.path === '/' ? cartridge(ctx) : ''}
 ${masthead(ctx, meta.path)}
 <main id="main">
 ${meta.main}

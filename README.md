@@ -30,7 +30,7 @@ assets/
   css/site.css        the whole stylesheet, tokens first (the build stamps its url(/assets/…) ?v= hashes)
   js/site.js          the optional layer
   arcade/<release>/  versioned runtime-only office arcade export, including music and font licence
-  js/cartridge.js    home-only lazy loader; game owns keyboard/touch controls and expansion
+  js/cartridge.js    home-only click reveal; game owns sound, help, touch controls and expansion
   js/terry-symbols.js Terry Time's footer, running live on its case study (only that page loads it)
   fonts/              Familjen Grotesk, Newsreader, Red Hat Mono (OFL)
   img/                images the site serves (made by npm run images)
@@ -76,9 +76,11 @@ already installed, set `PW_CHROMIUM=/path/to/chrome`.
 
 ## Arcade release
 
-The home footer loads the office arcade on intersection (phones and data saver wait for
-Tap to play). Sound starts on a game gesture; the visible sound control follows the
-expanded game. Without JavaScript, project links remain available.
+A cracked seam above the home masthead opens the office arcade on an explicit click.
+The opening pushes the site down in normal flow; scrolling remains native. Collapsed,
+no runtime or music downloads. Close destroys the game and returns focus to Play arcade.
+The game owns sound, controls/help and fullscreen buttons. Reduced motion opens immediately;
+without JavaScript or on a load failure, compact project links remain available.
 
 Build `cc-sidescroller` with `npm run build`, then run from this checkout:
 

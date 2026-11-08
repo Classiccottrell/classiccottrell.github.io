@@ -9,11 +9,13 @@ function specFor(typeId) {
   return specs[typeId] ??= makeSpec({ id: typeId, hp: t.hp, hurt:t.hurt, speed: t.speed, moves: t.moves,poise:!!t.boss });
 }
 export const windupFrames = (typeId,pattern,feedback=ENEMY_TYPES[typeId].feedback) => Math.max(MIN_TELEGRAPH,Math.min(180,(feedback?.length??0)*3),pattern==='flurry'?ENEMY_TYPES[typeId].flurryWindup:ENEMY_TYPES[typeId].windup);
+function say(e,text,kind){if(text)e.speech={text,kind,frames:180};}
 
 export function createEnemy(typeId, x, id, facing = -1) {
   const e = createFighter(specFor(typeId), { id, x, facing, team: 'enemy' });
   e.type = typeId;
   e.ai = { phase: 'approach', t: 0,pattern:ENEMY_TYPES[typeId].boss?'dash':null };
+  say(e,ENEMY_TYPES[typeId].dialogue?.enter,'enter');
   return e;
 }
 
@@ -21,6 +23,9 @@ export const isTelegraphing = (e) => e.ai.phase === 'windup';
 
 export function stepEnemy(e, target, env = {}) {
   const ai = e.ai, type = ENEMY_TYPES[e.type];
+  if(e.speech?.frames>0)e.speech.frames--;
+  if(e.state==='dead'&&!e.defeatSpoken){say(e,type.dialogue?.defeat,'defeat');e.defeatSpoken=true;}
+  const previousPhase=ai.phase;
   const dx = target.x - e.x, toward = Math.sign(dx) || e.facing;
   const intent = {};
   if(type.boss&&ai.phase==='recovery'){
@@ -52,4 +57,8 @@ export function stepEnemy(e, target, env = {}) {
   }
   // Walk in from the spawn edge; once inside, retreat and knockback obey the arena.
   stepFighter(e, intent, { minX: Math.min(e.x, env.minX ?? -Infinity), maxX: Math.max(e.x, env.maxX ?? Infinity) });
+  if(ai.phase!==previousPhase){
+    if(ai.phase==='windup')say(e,type.dialogue?.[ai.pattern]??type.dialogue?.windup??e.feedback??type.feedback,'windup');
+    if(ai.phase==='recovery')say(e,type.dialogue?.recovery,'recovery');
+  }
 }

@@ -1,3 +1,4 @@
+import {createDialogue} from './dialogue.js';
 import { BASE_W, BASE_H, applyScale, applyWide, WORLD_ZOOM, worldViewWidth } from './scale.js';
 import { createMusic } from '../music.js';
 import {play,startTitleMusic,stopTitleMusic,stopEffects,setMuted as muteEffects} from '../audio/audio.js';
@@ -23,7 +24,7 @@ import { createProjectCaption } from '../rooms/card.js';
 import { markFound, TOTAL_ROOMS } from '../rooms/found.js';
 import { createCombat } from '../combat/combat.js';
 import {drawTerryPickup} from '../combat/terry.js';
-import { drawFighters } from '../combat/draw.js';
+import { drawFighters,feedbackSpeech } from '../combat/draw.js';
 import {loadEnemySprites} from '../combat/sprites.js';
 import { drawHud } from '../combat/hud.js';
 import { createSequence, drawSequence, drawTitleCard } from '../title/sequence.js';
@@ -57,12 +58,15 @@ export function mountGame(container, {
   const canvas = document.createElement('canvas');
   canvas.tabIndex = 0;
   canvas.setAttribute('role', 'application');
-  canvas.setAttribute('aria-label', 'Side-scrolling game. Press Enter to start, arrows or A and D to walk, Escape to leave.');
+  canvas.setAttribute('aria-label', 'Side-scrolling game. Press Enter to start, arrows or A and D to move, Space three times for punch, punch, kick, L or C to dodge, Escape to leave fullscreen. Controls help is below.');
   canvas.style.display = 'block';
+  canvas.style.flexShrink = '0';
+  container.style.display='flex';container.style.flexDirection='column';container.style.justifyContent='flex-start';
   canvas.style.margin = '0 auto';
   canvas.style.outlineOffset = '2px';
   container.appendChild(canvas);
-  if (wide) container.style.overflow = 'hidden';
+  if (wide) container.style.overflowX = 'hidden';
+  container.style.overflowY='auto';
   const ctx = canvas.getContext('2d');
   ctx.imageSmoothingEnabled = false;
   const makeCanvas = (w, h) => { const c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d'); g.imageSmoothingEnabled = false; return [c, g]; };
@@ -110,7 +114,8 @@ export function mountGame(container, {
     const st = flow.name === 'intro' ? seq.stage().name : visibleScene(flow);
     if (canvas.dataset.stage !== st) { canvas.dataset.stage = st; container.dataset.stage = st; }
     container.dataset.attract=demo?.phase||'off';
-    controls.update({scene:visibleScene(flow),blocked:flow.name==='transition',skip:combat.skip,replay:flow.name==='overworld'&&!!combat.flags.loopComplete&&!nearDoor()});
+    dialogue.update(visibleScene(flow)==='overworld'?feedbackSpeech(combat,camX,viewW):null);
+    controls.update({scene:visibleScene(flow),blocked:flow.name==='transition',skip:combat.skip,replay:flow.name==='overworld'&&!!combat.flags.loopComplete&&!nearDoor(),muted:soundMuted,activated:audioUnlocked,canInteract:roomsEnabled});
   };
   let time = 0;
   let camX = 0, prevCam = 0;
@@ -268,10 +273,10 @@ export function mountGame(container, {
 
   function drawToast() {
     if (!toast || toastT <= 0) return;
-    const w = toastWidth(toast) + 10, x = Math.floor((W - w) / 2), y = 34;
-    ctx.fillStyle = PALETTE[0]; ctx.fillRect(x - 1, y - 1, w + 2, 15);
-    ctx.fillStyle = PALETTE[16]; ctx.fillRect(x, y, w, 13);
-    ctx.fillStyle = PALETTE[12]; ctx.fillRect(x, y, w, 1); ctx.fillRect(x, y + 12, w, 1);
+    const w = toastWidth(toast) + 10, x = Math.floor((W - w) / 2), y = 76;
+    ctx.fillStyle = PALETTE[0]; ctx.fillRect(x - 1, y - 1, w + 2, 21);
+    ctx.fillStyle = PALETTE[16]; ctx.fillRect(x, y, w, 19);
+    ctx.fillStyle = PALETTE[12]; ctx.fillRect(x, y, w, 1); ctx.fillRect(x, y + 18, w, 1);
     drawToastText(ctx, toast, x + 5, y + 4, '#ffe27a');
   }
 
@@ -313,7 +318,7 @@ export function mountGame(container, {
         const rim = roomsEnabled && gap < RIM_RANGE ? { side: Math.sign(doorCx - heroCx) || 1, index: Math.min(3, Math.floor((1 - gap / RIM_RANGE) * 4)) } : {side:1,index:0};
         drawFighters(ctx, combat, cam, { hx: heroCx, frame, sprite:heroSprite, enemySprites, seconds:moving?walkT:time, reducedMotion, rim,viewW });
       } else {
-        if (titleArt) drawTitleCard(ctx,titleArt,W,reducedMotion || Math.floor(time*2)%2===0);
+        if (titleArt) drawTitleCard(ctx,titleArt,W,reducedMotion || Math.floor(time*2)%2===0,{seconds:time,reducedMotion});
         else {
           const s = 'PRESS ENTER';
           const x = Math.floor((W - textWidth(s)) / 2), y = 84;
@@ -377,6 +382,17 @@ export function mountGame(container, {
   }
   canvas.addEventListener('click',clickGame);
 
+  function setMuted(b) {
+      soundMuted=!!b;muteEffects(soundMuted);
+      try{globalThis.localStorage?.setItem('cc-sidescroller:muted',soundMuted?'1':'0');}catch{}
+      const resumeLevel=!demo&&(flow.name==='overworld'||flow.name==='room');
+      bgm?.setMuted(soundMuted,{resume:resumeLevel}).then(s=>{if(bgm.started&&resumeLevel)setMusicState(s);});
+      if(!soundMuted){audioUnlocked=true;if(flow.name==='intro'||flow.name==='title')introSound();}
+      else setMusicState('muted');
+      onMuteChange(soundMuted);
+    }
+
+  const dialogue=createDialogue(container);
   const controls=createTouchControls(container,canvas,input,{
     onPress(){
       if(demo){demo.stop();demo=null;restoreDemoCombat();}
@@ -390,6 +406,9 @@ export function mountGame(container, {
       else if(flow.name==='overworld'||flow.name==='room')musicGesture();
     },
     onClose:()=>collapse(),
+    onExpand:()=>expand(),
+    onMute:()=>setMuted(audioUnlocked&&!soundMuted),
+    onLayout:()=>resize(),
   });
 
   // Expand: fixed, dimmed overlay; the canvas integer-scales to the viewport (letterboxed).
@@ -404,7 +423,7 @@ export function mountGame(container, {
     placeholder.setAttribute('aria-hidden', 'true');
     container.before(placeholder);
     savedCss = container.style.cssText;
-    container.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:2147483000;display:flex;align-items:center;justify-content:center;overflow:hidden;background:rgba(14,11,26,0.97);';
+    container.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:2147483000;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;overflow-x:hidden;overflow-y:auto;background:rgba(14,11,26,0.97);';
     canvas.style.margin = 'auto';
     controls.setExpanded(true);
     caption?.setExpanded(true);
@@ -475,12 +494,12 @@ export function mountGame(container, {
   ro?.observe(container);
   function resize() {
     const w = container.clientWidth || BASE_W;
-    if(expanded){container.style.paddingBottom=`${controls.height}px`;container.style.paddingTop=`${caption?.height||0}px`;container.style.boxSizing='border-box';}
-    const availableH=Math.max(1,(container.clientHeight||BASE_H*2)-(expanded?controls.height+(caption?.height||0):0));
+    if(expanded){container.style.paddingTop=`${caption?.height||0}px`;container.style.boxSizing='border-box';}
+    const availableH=Math.max(1,(container.clientHeight||BASE_H*2)-controls.height-dialogue.height-(expanded?(caption?.height||0):0));
     if (wide) {
       W = applyWide(canvas, w, availableH).width;
     } else {
-      applyScale(canvas, w, expanded?availableH:container.clientHeight || 1e6); // unconstrained height: fit by width
+      applyScale(canvas, w, availableH);
     }
     viewW = worldViewWidth(W);
     const arena=combat.resize(viewW);
@@ -500,15 +519,7 @@ export function mountGame(container, {
     collapse,
     isExpanded: () => expanded,
     isMuted: () => soundMuted,
-    setMuted(b) {
-      soundMuted=!!b;muteEffects(soundMuted);
-      try{globalThis.localStorage?.setItem('cc-sidescroller:muted',soundMuted?'1':'0');}catch{}
-      const resumeLevel=!demo&&(flow.name==='overworld'||flow.name==='room');
-      bgm?.setMuted(soundMuted,{resume:resumeLevel}).then(s=>{if(bgm.started&&resumeLevel)setMusicState(s);});
-      if(!soundMuted){audioUnlocked=true;if(flow.name==='intro'||flow.name==='title')introSound();}
-      else setMusicState('muted');
-      onMuteChange(soundMuted);
-    },
+    setMuted,
     destroy() {
       destroyed = true; heroSprite = null;enemySprites=null;
       demo?.stop(); demo = null; restoreDemoCombat();
@@ -522,6 +533,7 @@ export function mountGame(container, {
       document.removeEventListener('visibilitychange', onVis);
       input.destroy();
       controls.destroy();
+      dialogue.destroy();
       canvas.remove();
     },
   };

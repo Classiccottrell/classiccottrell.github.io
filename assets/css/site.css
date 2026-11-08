@@ -712,17 +712,28 @@ a.avail:hover{background:var(--highlight)}
   a{text-decoration:none}
 }
 
-/* Home arcade: canvas height reserved; game-owned touch controls flow below it. */
-.cartridge{margin-top:clamp(28px,4vw,48px)}
-.cart-head{display:flex;gap:8px 16px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:10px}
-.cart-tools{display:flex;gap:6px 16px;align-items:center;flex-wrap:wrap}
-.cart-frame{position:relative;border-block:1px solid var(--pencil);background:var(--band);color:var(--band-fg)}
-.cart-screen{height:180px;display:flex;align-items:center;justify-content:center;overflow:hidden}
-@media(min-width:700px){.cart-screen{height:360px}}
-.cart-screen[hidden],.cart-poster[hidden],.cart-fallback[hidden]{display:none}
-.cart-fallback{display:flex;gap:.3em;flex-wrap:wrap;align-items:center;justify-content:center;text-align:center;padding:24px 16px;min-height:180px;color:var(--band-fg)}
+/* A torn pixel seam opens the arcade above the home page, in normal flow. */
+.cartridge{position:relative}
+.home .cartridge~.mast{top:auto}
+.cart-seam{position:relative;display:block;width:100%;min-height:44px;border:0;border-radius:0;padding:8px max(24px,calc((100vw - var(--max))/2));background:var(--ground);color:var(--fg);text-align:right;font:500 .72rem/1.4 var(--f-pencil);cursor:pointer;isolation:isolate}
+.cart-seam::before,.cart-seam::after{content:"";position:absolute;left:0;right:0;bottom:0;pointer-events:none}
+.cart-seam::before{height:20px;background:var(--band);clip-path:polygon(0 30%,6% 30%,6% 5%,12% 5%,12% 40%,24% 40%,24% 0,28% 0,28% 30%,37% 30%,37% 10%,42% 10%,42% 45%,53% 45%,53% 20%,64% 20%,64% 40%,70% 40%,70% 5%,79% 5%,79% 35%,85% 35%,85% 0,94% 0,94% 25%,100% 25%,100% 100%,0 100%)}
+.cart-seam::after{height:4px;background:var(--signal);clip-path:polygon(0 75%,14% 75%,14% 25%,22% 25%,22% 50%,34% 50%,34% 0,39% 0,39% 50%,51% 50%,51% 75%,65% 75%,65% 25%,73% 25%,73% 50%,84% 50%,84% 0,91% 0,91% 75%,100% 75%,100% 100%,0 100%)}
+.cart-seam>span{position:relative;transform:translateY(-6px);display:inline-flex;gap:12px;align-items:center}
+.cart-seam:focus-visible{outline:2px solid var(--proof);outline-offset:-4px}
+.cart-seam:hover>span{text-decoration:underline;text-underline-offset:4px}
+.cart-seam[aria-expanded=true]{background:var(--signal);color:var(--slab-ink)}
+.cart-aperture[hidden],.cart-screen[hidden],.cart-fallback[hidden]{display:none}
+.cart-frame{position:relative;background:var(--band);color:var(--band-fg);border-bottom:4px solid var(--signal)}
+.cart-head{display:flex;gap:12px;align-items:center;justify-content:space-between;padding-block:8px}
+.cart-head .note{color:var(--band-proof)}
+.cart-head .tool{color:var(--band-fg);background:var(--band);border-color:var(--band-fg);min-height:44px}
+.cart-head .tool:hover{background:var(--band-highlight)}
+.cart-screen{height:520px;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
+@media(min-width:700px){.cart-screen{height:580px}}
+.cart-fallback{padding-block:16px;color:var(--band-fg)}
 .cart-fallback .lnk{color:var(--band-fg)}
-.cart-poster{width:100%;min-height:180px;display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center;border:0;border-radius:0;background:var(--band);color:var(--band-fg);font:600 .85rem/1 var(--f-pencil);letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
-.cart-poster span+span{color:var(--band-proof);border-bottom:1px solid var(--band-proof);padding-bottom:4px}
-.cart-poster:focus-visible,.cart-screen canvas:focus-visible{outline:2px solid var(--band-proof);outline-offset:-4px}
+.no-js .cart-aperture[hidden]{display:block}
+.cart-screen canvas:focus-visible{outline:2px solid var(--band-proof);outline-offset:-4px}
+@media(prefers-reduced-motion:no-preference){.cart-aperture:not([hidden]){animation:cart-open .24s ease-out}@keyframes cart-open{from{clip-path:inset(0 0 100%)}to{clip-path:inset(0)}}}
 @media print{.cartridge{display:none!important}}

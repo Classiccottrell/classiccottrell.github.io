@@ -1,3 +1,4 @@
+import {drawTitleShine} from './shine.js';
 // Title sequence: CRT wipe -> wordmark reveal -> credit card -> title card (PRESS ENTER).
 // Pure timeline (stageAt / createSequence) + a canvas drawer on a 180-high canvas of any width. No audio:
 // `onBeat(name)` fires once on entering each stage so the audio layer can hook in later.
@@ -95,9 +96,9 @@ export function drawSequence(ctx, seq, { backdrop, titleArt, blinkOn = true, wid
   if (titleArt && name === 'wordmark') {
     ctx.save();
     ctx.beginPath();ctx.rect(0,0,Math.ceil(W*(rm?1:progress)),BASE_H);ctx.clip();
-    drawTitleCard(ctx,titleArt,W,true);ctx.restore();return;
+    drawTitleCard(ctx,titleArt,W,true,{seconds:seq.t,reducedMotion:rm});ctx.restore();return;
   }
-  if (titleArt && name === 'title') {drawTitleCard(ctx,titleArt,W,rm||blinkOn);return;}
+  if (titleArt && name === 'title') {drawTitleCard(ctx,titleArt,W,rm||blinkOn,{seconds:seq.t,reducedMotion:rm});return;}
   if (name === 'wordmark') {
     const n = lettersShown(progress, rm);
     const full = WORDMARK;
@@ -125,17 +126,18 @@ export function drawSequence(ctx, seq, { backdrop, titleArt, blinkOn = true, wid
   if (!rm) scanlines(ctx, 0.18, W);
 }
 
-export function drawTitleCard(ctx,art,width,blinkOn=true) {
+export function drawTitleCard(ctx,art,width,blinkOn=true,{seconds=0,reducedMotion=true}={}) {
   const image=width>=480&&art.wide?art.wide:width<320?art.compact:art.full;
   const x=Math.floor((width-image.width)/2);
   ctx.fillStyle='#19232D';ctx.fillRect(0,0,width,BASE_H);
   ctx.imageSmoothingEnabled=false;ctx.drawImage(image,x,0);
+  drawTitleShine(ctx,art.shine?.get(image),x,seconds,reducedMotion);
   // Extend the landscape edge colours; the central wordmark stays at its authored pixel size.
   if (x>0) ctx.drawImage(image,0,0,1,BASE_H,0,0,x,BASE_H);
   const right=x+image.width;
   if (right<width) ctx.drawImage(image,image.width-1,0,1,BASE_H,right,0,width-right,BASE_H);
   // Keep the approved illustrated wordmark; set the prompt and credit in the licensed game face.
-  ctx.fillStyle='#19232D';ctx.fillRect(0,154,width,26);
-  if(blinkOn)drawText(ctx,'PRESS ENTER',Math.floor((width-textWidth('PRESS ENTER'))/2),157,'#FFE778');
-  drawText(ctx,CREDIT,Math.floor((width-textWidth(CREDIT))/2),171,'#F5E6C8');
+  ctx.fillStyle='#19232D';ctx.fillRect(0,145,width,35);
+  if(blinkOn)drawText(ctx,'PRESS ENTER',Math.floor((width-textWidth('PRESS ENTER'))/2),149,'#FFE778');
+  drawText(ctx,CREDIT,Math.floor((width-textWidth(CREDIT))/2),165,'#F5E6C8');
 }

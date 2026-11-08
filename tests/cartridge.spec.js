@@ -1,94 +1,170 @@
 import { expect, test } from '@playwright/test';
 import { axeViolations } from './helpers.js';
 
-const bottom = (page) => page.locator('[data-cartridge]').evaluate(section => section.scrollIntoView({ block: 'center', behavior: 'instant' }));
+const reveal = (page) => page.getByRole('button', { name: 'Play arcade' });
+const open = async (page) => {
+  await page.goto('/');
+  await reveal(page).click();
+  await expect(page.locator('[data-cart-screen] canvas')).toBeVisible();
+};
 
 test.describe('without JavaScript', () => {
   test.use({ javaScriptEnabled: false });
-  test('arcade keeps project links available', async ({ page }) => {
+  test('compact project links remain without an empty game shell', async ({ page }) => {
     await page.goto('/');
-    const section = page.locator('[data-cartridge]');
     for (const slug of ['vpat-vault', 'linefield', 'terry-time']) {
-      await expect(section.locator(`a[href="/work/${slug}/"]`)).toBeVisible();
+      await expect(page.locator(`[data-cart-fallback] a[href="/work/${slug}/"]`)).toBeVisible();
     }
-    await expect(section.locator('[data-cart-screen]')).toBeHidden();
-    await expect(section.locator('[data-cart-expand]')).toBeHidden();
+    await expect(reveal(page)).toBeHidden();
+    await expect(page.locator('[data-cart-screen]')).toBeHidden();
+    expect((await page.locator('[data-cartridge]').boundingBox()).height).toBeLessThan(140);
   });
 });
 
-test('arcade is home only and loads on intersection', async ({ page }) => {
+test('home seam precedes masthead and collapsed never downloads runtime or music', async ({ page }, testInfo) => {
+  const requests = [];
+  page.on('request', (request) => { if (request.url().includes('/assets/arcade/')) requests.push(request.url()); });
+  await page.goto('/');
+  await expect(reveal(page)).toHaveAttribute('aria-expanded', 'false');
+  const seam = await reveal(page).boundingBox();
+  const masthead = await page.locator('.mast').boundingBox();
+  expect(seam.height).toBeGreaterThanOrEqual(44);
+  expect(seam.y + seam.height).toBeLessThanOrEqual(masthead.y);
+  await page.screenshot({ path: testInfo.outputPath('desktop-collapsed.png'), animations: 'disabled' });
+  await page.mouse.wheel(0, 600);
+  await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(0);
+  await page.evaluate(() => scrollTo(0, document.body.scrollHeight));
+  await expect(page.locator('[data-cart-screen] canvas')).toHaveCount(0);
+  expect(requests).toEqual([]);
   await page.goto('/work/');
   await expect(page.locator('[data-cartridge]')).toHaveCount(0);
+});
+
+test('reveal pushes content down, Enter stays in page, close destroys game and returns focus', async ({ page }, testInfo) => {
   await page.goto('/');
-  await expect(page.locator('[data-cartridge] canvas')).toHaveCount(0);
-  await bottom(page);
-  await expect(page.locator('[data-cartridge] canvas')).toBeVisible();
-  await expect(page.locator('[data-cart-screen]')).toHaveAttribute('data-music', 'idle');
-  await expect(page.locator('[data-cart-mute]')).toBeDisabled();
+  const before = await page.locator('.mast').boundingBox();
+  await reveal(page).click();
+  const canvas = page.locator('[data-cart-screen] canvas');
+  await expect(canvas).toBeVisible();
+  await expect(reveal(page)).toHaveAttribute('aria-expanded', 'true');
+  const after = await page.locator('.mast').boundingBox();
+  expect(after.y).toBeGreaterThan(before.y + 300);
+  await expect(canvas).toHaveAttribute('data-stage', 'title', { timeout: 15000 });
+  await page.screenshot({ path: testInfo.outputPath('desktop-revealed.png'), animations: 'disabled' });
+  await canvas.focus();
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('dialog', { name: 'Game', exact: true })).toHaveCount(0);
+  const help = page.getByRole('button', { name: 'Controls', exact: true });
+  await help.click();
+  await expect(help).toHaveAttribute('aria-expanded', 'true');
+  await help.click();
+  await expect(page.getByRole('button', { name: /^Sound (on|off)$/ })).toBeVisible();
+  await page.getByRole('button', { name: 'Fullscreen', exact: true }).click();
+  await expect(page.getByRole('dialog', { name: 'Game', exact: true })).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('dialog', { name: 'Game', exact: true })).toHaveCount(0);
+  await page.getByRole('button', { name: 'Close arcade' }).click();
+  await expect(reveal(page)).toBeFocused();
+  await expect(reveal(page)).toHaveAttribute('aria-expanded', 'false');
+  await expect(canvas).toHaveCount(0);
+  expect((await page.locator('.mast').boundingBox()).y).toBe(before.y);
+  await reveal(page).click();
+  await expect(canvas).toHaveCount(1);
+});
+
+test('reduced motion has an immediate static opening and accessible controls', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await open(page);
+  await expect(page.locator('[data-cart-panel]')).toHaveCSS('animation-name', 'none');
   expect(await axeViolations(page)).toEqual([]);
 });
 
-test('expanded dialog retains sound and close controls, then restores focus', async ({ page }) => {
-  await page.goto('/');
-  await bottom(page);
-  const button = page.locator('[data-cart-expand]');
-  await button.click();
-  const dialog = page.getByRole('dialog', { name: 'Game', exact: true });
-  await expect(dialog).toBeVisible();
-  await expect(dialog.locator('[data-cart-mute]')).toBeVisible();
-  await expect(dialog.getByRole('button', { name: 'Close game', exact: true })).toBeVisible();
-  await page.keyboard.press('Escape');
-  await expect(button).toHaveAttribute('aria-expanded', 'false');
-  await expect(button).toBeFocused();
-  await expect(page.locator('.cart-tools [data-cart-mute]')).toBeVisible();
-});
-
-test('mobile waits for a tap and keeps touch controls below the canvas', async ({ browser }) => {
+test('phone opens in normal layout and scroll remains native', async ({ browser }, testInfo) => {
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
   const page = await context.newPage();
   await page.goto('/');
-  await bottom(page);
-  await expect(page.locator('[data-cartridge] canvas')).toHaveCount(0);
-  await page.locator('[data-cart-poster]').click();
-  await expect(page.locator('[data-cartridge] canvas')).toBeVisible();
-  const canvas = await page.locator('[data-cartridge] canvas').boundingBox();
+  await page.screenshot({ path: testInfo.outputPath('phone-collapsed.png'), animations: 'disabled' });
+  await reveal(page).click();
+  const canvas = page.locator('[data-cart-screen] canvas');
+  await expect(canvas).toHaveAttribute('data-stage', 'title', { timeout: 15000 });
+  await page.screenshot({ path: testInfo.outputPath('phone-revealed.png'), animations: 'disabled' });
   const controls = await page.locator('.cc-touch-controls').boundingBox();
-  expect(controls.y).toBeGreaterThanOrEqual(canvas.y + canvas.height - 1);
-  await page.getByRole('button', { name: 'Close game', exact: true }).click();
-  await expect(page.locator('[data-cart-expand]')).toHaveAttribute('aria-expanded', 'false');
-  await expect(page.locator('[data-cartridge]')).toBeVisible();
+  const picture = await canvas.boundingBox();
+  expect(controls.y).toBeGreaterThanOrEqual(picture.y + picture.height - 1);
+  await expect(page.locator('[data-cart-screen]')).not.toHaveCSS('position', 'fixed');
+  const size = await page.evaluate(() => ({ width: document.documentElement.clientWidth, scroll: document.documentElement.scrollWidth }));
+  expect(size.scroll).toBeLessThanOrEqual(size.width);
+  await page.evaluate(() => scrollTo(0, 500));
+  expect(await page.evaluate(() => scrollY)).toBeGreaterThan(0);
   await context.close();
 });
 
-test('failed runtime import restores fallback links', async ({ page }) => {
+test('failed import leaves compact project links and a working close button', async ({ page }) => {
   await page.route('**/assets/arcade/**/game.js*', (route) => route.abort());
   await page.goto('/');
-  await bottom(page);
+  await reveal(page).click();
   await expect(page.locator('[data-cart-fallback]')).toBeVisible();
   await expect(page.locator('[data-cart-screen]')).toBeHidden();
+  await page.getByRole('button', { name: 'Close arcade' }).click();
+  await expect(reveal(page)).toBeFocused();
 });
 
-test('release fills the browser width and reduced motion stays at a silent title until play', async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.clock.install();
-  const requests = [];
-  page.on('request', request => requests.push(new URL(request.url()).pathname));
+test('closing during download cannot mount a hidden game', async ({ page }) => {
+  let release;
+  const wait = new Promise((resolve) => { release = resolve; });
+  await page.route('**/assets/arcade/**/game.js*', async (route) => { await wait; await route.continue(); });
   await page.goto('/');
-  await bottom(page);
-  const canvas = page.locator('[data-cart-screen] canvas');
-  await expect(canvas).toBeVisible();
-  await page.clock.runFor(30000);
-  await expect(canvas).toHaveAttribute('data-stage', 'title');
-  const width = await page.evaluate(() => innerWidth);
-  const bounds = await canvas.boundingBox();
-  expect(bounds.x).toBe(0);
-  expect(bounds.width).toBe(width);
-  expect(requests.filter(path => path.endsWith('.mp3'))).toEqual([]);
-  expect(requests.filter(path => path.includes('/rooms/') && path.endsWith('.json'))).toEqual([]);
-  await canvas.focus();
-  await page.keyboard.press('Enter');
-  await expect(page.locator('[data-cart-screen]')).toHaveAttribute('data-music', 'playing');
-  expect(requests.some(path => path.endsWith('/audio/level-3-shadow-fortress.mp3'))).toBe(true);
-  await page.locator('[data-cart-mute]').click();
-  await expect(page.locator('[data-cart-screen]')).toHaveAttribute('data-music', 'muted');
+  const requested = page.waitForRequest((request) => /\/assets\/arcade\/.+\/game\.js/.test(request.url()));
+  await reveal(page).click();
+  await requested;
+  await page.getByRole('button', { name: 'Close arcade' }).click();
+  release();
+  await page.waitForLoadState('networkidle');
+  await expect(page.locator('[data-cart-screen] canvas')).toHaveCount(0);
+  await expect(reveal(page)).toHaveAttribute('aria-expanded', 'false');
 });
+
+for (const [name,width,touch,motion] of [['desktop',1440,false,'reduce'],['phone',390,true,'no-preference']]) {
+  test(`${name}: game utilities and help remain inside the frame, fullscreen closes cleanly`, async ({ browser }) => {
+    const context = await browser.newContext({viewport:{width,height:900},hasTouch:touch,isMobile:touch,reducedMotion:motion});
+    const page = await context.newPage();
+    const rooms=[];
+    page.on('request',request=>{if(/\/rooms\/.*\.json/.test(request.url()))rooms.push(request.url());});
+    await page.clock.install();
+    await open(page);
+    const frame=page.locator('.cart-frame'), screen=page.locator('[data-cart-screen]');
+    const canvas=screen.locator('canvas');
+    await page.waitForLoadState('networkidle');await page.clock.runFor(14000);
+    await expect(canvas).toHaveAttribute('data-stage','title');
+    for(const label of [/^Sound (on|off)$/, /^Controls$/, /^Fullscreen$/])await expect(frame.getByRole('button',{name:label})).toBeVisible();
+    const controls=frame.getByRole('button',{name:'Controls',exact:true});
+    await controls.click();await expect(controls).toHaveAttribute('aria-expanded','true');
+    const help=screen.locator('.cc-control-help');
+    await expect(help).toBeVisible();await expect(help).toContainText('Tap Punch three times');
+    expect(await help.evaluate(el=>parseFloat(getComputedStyle(el).fontSize))).toBeGreaterThanOrEqual(11);
+    const screenBox=await screen.boundingBox(), panelBox=await screen.locator('.cc-touch-controls').boundingBox();
+    expect(panelBox.x).toBeGreaterThanOrEqual(screenBox.x);
+    expect(panelBox.y+panelBox.height).toBeLessThanOrEqual(screenBox.y+screenBox.height+1);
+    const panel=screen.locator('.cc-touch-controls');
+    await expect(panel).toHaveCSS('overflow-y','auto');
+    await help.evaluate(el=>el.scrollIntoView({block:'end',behavior:'instant'}));
+    const helpBox=await help.boundingBox(), scrolledPanelBox=await panel.boundingBox();
+    expect(helpBox.y+helpBox.height).toBeLessThanOrEqual(scrolledPanelBox.y+scrolledPanelBox.height+1);
+    const dialogue=screen.locator('.cc-dialogue'), dialogueBox=await dialogue.boundingBox();
+    await expect(dialogue).toHaveAttribute('role','status');
+    expect(await dialogue.locator('p').evaluate(el=>parseFloat(getComputedStyle(el).fontSize))).toBe(22);
+    const bubbleSize=await dialogue.locator('.cc-dialogue-bubble').evaluate(el=>({height:el.clientHeight,content:el.scrollHeight}));
+    expect(bubbleSize.content).toBeLessThanOrEqual(bubbleSize.height);
+    expect(dialogueBox.y).toBeGreaterThanOrEqual((await canvas.boundingBox()).y+(await canvas.boundingBox()).height-1);
+    expect(dialogueBox.y+dialogueBox.height).toBeLessThanOrEqual(scrolledPanelBox.y+1);
+    await page.screenshot({path:`/private/tmp/cc-site-arcade-${name}.png`});
+    await controls.click();
+    await frame.getByRole('button',{name:'Fullscreen',exact:true}).click();
+    await expect(page.getByRole('dialog',{name:'Game',exact:true})).toBeVisible();
+    await expect(page.getByRole('button',{name:/^Sound (on|off)$/})).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('dialog',{name:'Game',exact:true})).toHaveCount(0);
+    expect(rooms).toEqual([]);
+    await context.close();
+  });
+}

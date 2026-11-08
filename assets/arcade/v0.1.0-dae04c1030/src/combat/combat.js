@@ -92,7 +92,7 @@ export function createCombat({ reducedMotion = false, worldW = 1600, waves = WAV
         if (ev.target !== c.hero) { c.target = ev.target; c.targetT = TARGET_SHOW; }
       }
       if(c.hero.hp<=0)c.projectiles=[];
-      c.enemies = c.enemies.filter((e) => !(e.state === 'dead' && e.t > DEAD_LINGER));
+      c.enemies = c.enemies.filter((e) => !(e.state === 'dead' && e.t > DEAD_LINGER && !(e.speech?.kind==='defeat'&&e.speech.frames>0)));
       if (c.hero.state === 'dead' && c.hero.t >= RESPAWN_DELAY) {
         const x = director.respawnX() ?? heroX;
         director.abort();

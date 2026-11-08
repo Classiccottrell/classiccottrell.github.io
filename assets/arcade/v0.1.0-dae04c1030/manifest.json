@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "id": "v0.1.0-80260cf38c",
+  "id": "v0.1.0-dae04c1030",
   "entry": "game.js",
   "music": "audio/level-3-shadow-fortress.mp3",
   "files": [
@@ -24,8 +24,10 @@
     "art/characters/small-change-reviewer.png",
     "art/characters/warlord-z-index.json",
     "art/characters/warlord-z-index.png",
+    "art/font/DepartureMono-OFL.txt",
+    "art/font/DepartureMono-Regular.woff2",
     "art/font/OFL.txt",
-    "art/font/silkscreen.js",
+    "art/font/departure.js",
     "art/overworld/far.png",
     "art/overworld/ground.png",
     "art/overworld/sky.png",
@@ -54,6 +56,7 @@
     "src/combat/terry.js",
     "src/combat/wave.js",
     "src/engine/camera.js",
+    "src/engine/dialogue.js",
     "src/engine/floor.js",
     "src/engine/font.js",
     "src/engine/game.js",
@@ -76,6 +79,7 @@
     "src/rooms/room.js",
     "src/rooms/sprites.js",
     "src/rooms/toast.js",
-    "src/title/sequence.js"
+    "src/title/sequence.js",
+    "src/title/shine.js"
   ]
 }

@@ -38,10 +38,12 @@ export const ENEMY_TYPES = {
     moves: { attack1: { startup: 4, active: 3, recovery: 12, damage: 5, hitbox: { x: 6, y: -16, w: 14, h: 8 }, knockback: 1, hitstop: 2 } },
   },
   'lord-overlay': {
+    name:'LORD OVERLAY',dialogue:{enter:'This needs another layer.',windup:'I can cover that.',defeat:'I was on top of this.'},
     hp:90,hurt:{w:22,h:50},speed:.65,range:30,windup:28,retreat:44,color:'#294B58',
     moves:{attack1:{startup:8,active:4,recovery:24,damage:16,hitbox:{x:8,y:-38,w:28,h:30},knockback:3,hitstop:4,heavy:true,knockdown:true}},
   },
   'warlord-z-index': {
+    dialogue:{enter:'This needs my approval.',dash:'Let me push this through.',flurry:'Three more changes.',recovery:"That wasn't in the brief.",defeat:'Can we roll that back?'},
     boss:true,name:'WARLORD Z-INDEX',hp:140,hurt:{w:24,h:52},speed:1.2,range:52,windup:42,flurryWindup:60,bossRecovery:60,retreat:0,color:'#9E9B8C',
     moves:{
       attack1:{startup:8,active:6,recovery:22,damage:8,hitbox:{x:8,y:-34,w:28,h:24},lunge:3.2,knockback:.5,hitstop:3,next:'attack2'},
@@ -73,7 +75,7 @@ export const ENEMY_TYPES = {
 
 export const ARENA_PAD = 8;
 export const WAVES = [
-  {id:'overworld-1',at:320,enemies:[{type:'contrast-bandit',side:'right'},{type:'alt-text-gremlin',side:'left'},{type:'alt-text-gremlin',side:'right'}]},
+  {id:'overworld-1',at:320,enemies:[{type:'contrast-bandit',side:'right'},{type:'alt-text-gremlin',side:'left'},{type:'logo-reviewer',side:'right'}]},
   ...[
     ['feedback-round',480,['Make the logo bigger.',"It doesn't pop.",'Can we try a few options?','Just one small change.']],
     ['product-review',720,['Could this feel a little more premium?',"This doesn't quite meet our users' needs.",'Can you explain why you made the button this way?',"I've got one more change for you."]],

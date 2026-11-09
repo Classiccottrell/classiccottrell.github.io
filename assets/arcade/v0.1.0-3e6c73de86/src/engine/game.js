@@ -58,13 +58,14 @@ export function mountGame(container, {
   const canvas = document.createElement('canvas');
   canvas.tabIndex = 0;
   canvas.setAttribute('role', 'application');
-  canvas.setAttribute('aria-label', 'Side-scrolling game. Press Enter to start, arrows or A and D to move, Space three times for punch, punch, kick, L or C to dodge, Escape to leave fullscreen. Controls help is below.');
+  canvas.setAttribute('aria-label', 'Side-scrolling game. Press Enter to start, arrows or A and D to move, Space three times for punch, punch, kick, L or C to dodge, Escape to leave fullscreen. Controls help is in the top right.');
   canvas.style.display = 'block';
   canvas.style.flexShrink = '0';
   container.style.display='flex';container.style.flexDirection='column';container.style.justifyContent='flex-start';
   canvas.style.margin = '0 auto';
   canvas.style.outlineOffset = '2px';
-  container.appendChild(canvas);
+  const stage=document.createElement('div');stage.className='cc-game-stage';
+  container.classList.add('cc-game-shell');stage.appendChild(canvas);container.appendChild(stage);
   if (wide) container.style.overflowX = 'hidden';
   container.style.overflowY='auto';
   const ctx = canvas.getContext('2d');
@@ -425,6 +426,7 @@ export function mountGame(container, {
     savedCss = container.style.cssText;
     container.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:2147483000;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;overflow-x:hidden;overflow-y:auto;background:rgba(14,11,26,0.97);';
     canvas.style.margin = 'auto';
+    container.dataset.expanded='true';
     controls.setExpanded(true);
     caption?.setExpanded(true);
     for(let node=container;node&&node!==document.body;node=node.parentElement){
@@ -442,6 +444,7 @@ export function mountGame(container, {
   function collapse() {
     if (!expanded) return;
     expanded = false;
+    delete container.dataset.expanded;
     controls.setExpanded(false);
     caption?.setExpanded(false);
     document.removeEventListener('keydown', onEsc, true);
@@ -464,6 +467,7 @@ export function mountGame(container, {
       return;
     }
     if (e.key !== 'Escape') return;
+    if(controls.closeHelp()){e.preventDefault();e.stopPropagation();return;}
     if(document.activeElement?.closest('.cc-project-caption'))return;
     e.preventDefault(); e.stopPropagation();
     collapse();
@@ -491,11 +495,12 @@ export function mountGame(container, {
   document.addEventListener('visibilitychange', onVis);
 
   const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(resize) : null;
-  ro?.observe(container);
+  ro?.observe(container);ro?.observe(stage);
   function resize() {
     const w = container.clientWidth || BASE_W;
     if(expanded){container.style.paddingTop=`${caption?.height||0}px`;container.style.boxSizing='border-box';}
-    const availableH=Math.max(1,(container.clientHeight||BASE_H*2)-controls.height-dialogue.height-(expanded?(caption?.height||0):0));
+    stage.style.minHeight=`${BASE_H/(globalThis.devicePixelRatio||1)}px`;
+    const availableH=stage.clientHeight||BASE_H;
     if (wide) {
       W = applyWide(canvas, w, availableH).width;
     } else {
@@ -534,7 +539,7 @@ export function mountGame(container, {
       input.destroy();
       controls.destroy();
       dialogue.destroy();
-      canvas.remove();
+      stage.remove();container.classList.remove('cc-game-shell');
     },
   };
 }

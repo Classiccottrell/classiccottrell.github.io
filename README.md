@@ -76,10 +76,19 @@ already installed, set `PW_CHROMIUM=/path/to/chrome`.
 
 ## Arcade release
 
-A cracked seam above the home masthead opens the office arcade on an explicit click.
+A cracked seam above the home masthead opens the office arcade on a click or an intentional
+vertical wheel/touch gesture from the very top. The first gesture reveals it silently;
+further scrolling remains native. Scrolling elsewhere, zooming, horizontal gestures and
+form controls do not reveal it. Close briefly ignores residual scroll momentum.
 The opening pushes the site down in normal flow; scrolling remains native. Collapsed,
-no runtime or music downloads. Close destroys the game and returns focus to Play arcade.
-The game owns sound, controls/help and fullscreen buttons. Reduced motion opens immediately;
+no runtime or music downloads until a reveal gesture. Only a later game gesture can
+unlock sound after a scroll reveal. Close destroys the game and returns focus to Play arcade.
+The game owns three accessible SVG utility buttons in its top-right header: sound, controls/help
+and fullscreen. The host follows the game’s natural height: a 52px header, a stable 180px
+phone / 360px desktop stage, touch actions on coarse pointers, and an auto-height speech
+bubble only while a character speaks. Controls help is a compact overlay and adds no height.
+Six decorative pixel drips
+and fracture chips shimmer while visible; reduced motion keeps them static and opens immediately;
 without JavaScript or on a load failure, compact project links remain available.
 
 Build `cc-sidescroller` with `npm run build`, then run from this checkout:
@@ -96,7 +105,7 @@ Matt Cottrell’s authorized music, made with Google Flow. Private development f
 raw art and prompts stay in the game checkout. Versioned directories preserve nested
 module/image/music URLs under the site's immutable asset cache. The vendor command
 rejects a changed export reusing an existing release ID. Commit the manifest, runtime
-folder and regenerated pages together; keep prior release directories for cached pages.
+folder and regenerated pages together. This preview retains only the selected runtime release.
 
 ## Common edits
 

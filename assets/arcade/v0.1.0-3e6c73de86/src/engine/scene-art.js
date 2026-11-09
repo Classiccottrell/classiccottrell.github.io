@@ -1,6 +1,6 @@
 import {createTitleShine} from '../title/shine.js';
 export async function loadSceneArt() {
-  const sources=['../../art/overworld/sky.png','../../art/overworld/far.png','../../art/overworld/water.png','../../art/overworld/ground.png','../boot/title-v2.png','../boot/title-v2-compact.png','../boot/title-v2-wide.png','../../art/pickups/terry.png'];
+  const sources=['../../art/overworld/sky.png','../../art/overworld/far.png','../../art/overworld/water.png','../../art/overworld/ground.png','../boot/title-v2.png','../boot/title-v2-compact.png','../boot/title-v2-wide.png','../../art/pickups/terry-v2.png'];
   const images=await Promise.all(sources.map(path=>new Promise((resolve,reject)=>{
     const image=new Image();image.onload=()=>resolve(image);image.onerror=()=>reject(new Error(`Scene art unavailable: ${path}`));
     image.src=new URL(path,import.meta.url).href;

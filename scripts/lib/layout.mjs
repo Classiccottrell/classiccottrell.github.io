@@ -31,7 +31,8 @@ const cartridge = (ctx) => {
   if (!ctx.arcade) return '';
   const base = `/assets/arcade/${ctx.arcade.id}/`;
   return h`<section class="cartridge" aria-label="Office arcade" data-cartridge data-src="${base}${esc(ctx.arcade.entry)}" data-music-src="${base}${esc(ctx.arcade.music)}">
-  <button type="button" class="cart-seam" data-cart-reveal data-js aria-expanded="false" aria-controls="arcade-aperture"><span>Play arcade <span aria-hidden="true">↗</span></span></button>
+  <span class="cart-hint" id="arcade-gesture-hint" data-js>Scroll down to reveal</span>
+  <button type="button" class="cart-seam" data-cart-reveal data-js aria-label="Play arcade" aria-describedby="arcade-gesture-hint" aria-expanded="false" aria-controls="arcade-aperture"><span>Play arcade <span aria-hidden="true">↗</span></span></button>
   <div class="cart-aperture" id="arcade-aperture" data-cart-panel hidden>
     <div class="cart-frame">
       <div class="wrap cart-head" data-js><p class="note">Classic Cottrell · Office arcade</p><button type="button" class="tool" data-cart-close>Close arcade <span aria-hidden="true">×</span></button></div>
@@ -39,6 +40,7 @@ const cartridge = (ctx) => {
       <p class="cart-fallback wrap" data-cart-fallback>Explore <a class="lnk" href="/work/vpat-vault/">VPAT Vault</a>, <a class="lnk" href="/work/linefield/">linefield</a> or <a class="lnk" href="/work/terry-time/">Terry Time</a>.</p>
     </div>
   </div>
+  <span class="cart-effects" aria-hidden="true" data-js>${Array.from({ length: 6 }, () => '<i class="cart-fracture"></i>').join('')}</span>
   <script src="/assets/js/cartridge.js" defer></script>
 </section>`;
 };

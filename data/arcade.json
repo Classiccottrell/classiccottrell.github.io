@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "id": "v0.1.0-dae04c1030",
+  "id": "v0.1.0-3e6c73de86",
   "entry": "game.js",
   "music": "audio/level-3-shadow-fortress.mp3",
   "files": [
@@ -35,7 +35,7 @@
     "art/overworld/tools/floor.gen.js",
     "art/overworld/tools/gen-util.js",
     "art/overworld/water.png",
-    "art/pickups/terry.png",
+    "art/pickups/terry-v2.png",
     "art/rooms/vpat-vault/backdrop.js",
     "audio/level-3-shadow-fortress.mp3",
     "game.js",

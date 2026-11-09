@@ -31,6 +31,7 @@ test('home seam precedes masthead and collapsed never downloads runtime or music
   expect(seam.height).toBeGreaterThanOrEqual(44);
   expect(seam.y + seam.height).toBeLessThanOrEqual(masthead.y);
   await page.screenshot({ path: testInfo.outputPath('desktop-collapsed.png'), animations: 'disabled' });
+  await page.evaluate(() => scrollTo({top:500,behavior:'instant'}));
   await page.mouse.wheel(0, 600);
   await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(0);
   await page.evaluate(() => scrollTo(0, document.body.scrollHeight));
@@ -58,7 +59,7 @@ test('reveal pushes content down, Enter stays in page, close destroys game and r
   await help.click();
   await expect(help).toHaveAttribute('aria-expanded', 'true');
   await help.click();
-  await expect(page.getByRole('button', { name: /^Sound (on|off)$/ })).toBeVisible();
+  await expect(page.getByRole('button', { name: /^(Mute|Unmute) sound$/ })).toBeVisible();
   await page.getByRole('button', { name: 'Fullscreen', exact: true }).click();
   await expect(page.getByRole('dialog', { name: 'Game', exact: true })).toBeVisible();
   await page.keyboard.press('Escape');
@@ -136,35 +137,148 @@ for (const [name,width,touch,motion] of [['desktop',1440,false,'reduce'],['phone
     const canvas=screen.locator('canvas');
     await page.waitForLoadState('networkidle');await page.clock.runFor(14000);
     await expect(canvas).toHaveAttribute('data-stage','title');
-    for(const label of [/^Sound (on|off)$/, /^Controls$/, /^Fullscreen$/])await expect(frame.getByRole('button',{name:label})).toBeVisible();
-    const controls=frame.getByRole('button',{name:'Controls',exact:true});
-    await controls.click();await expect(controls).toHaveAttribute('aria-expanded','true');
-    const help=screen.locator('.cc-control-help');
-    await expect(help).toBeVisible();await expect(help).toContainText('Tap Punch three times');
-    expect(await help.evaluate(el=>parseFloat(getComputedStyle(el).fontSize))).toBeGreaterThanOrEqual(11);
-    const screenBox=await screen.boundingBox(), panelBox=await screen.locator('.cc-touch-controls').boundingBox();
-    expect(panelBox.x).toBeGreaterThanOrEqual(screenBox.x);
-    expect(panelBox.y+panelBox.height).toBeLessThanOrEqual(screenBox.y+screenBox.height+1);
+    const tools=screen.getByRole('group',{name:'Game utilities'});
+    const icons=tools.locator(':scope > button');
+    await expect(icons).toHaveCount(3);
+    for(const label of [/^(Mute|Unmute) sound$/, /^Controls$/, /^Fullscreen$/]){
+      const button=tools.getByRole('button',{name:label});
+      await expect(button).toBeVisible();await expect(button.locator('svg')).toBeVisible();
+      const box=await button.boundingBox(), header=await tools.boundingBox();
+      expect(box.x).toBeGreaterThanOrEqual(header.x+header.width-156);
+      expect(box.y).toBeGreaterThanOrEqual(header.y);
+      expect(box.y+box.height).toBeLessThanOrEqual(header.y+header.height);
+    }
+    const stage=screen.locator('.cc-game-stage'), screenBox=await screen.boundingBox();
+    expect((await stage.boundingBox()).height).toBe(touch?180:360);
+    expect((await tools.boundingBox()).y+52).toBe((await stage.boundingBox()).y);
+    const dialogue=screen.locator('.cc-dialogue');
+    await expect(dialogue).toHaveAttribute('role','status');await expect(dialogue).toBeHidden();
     const panel=screen.locator('.cc-touch-controls');
-    await expect(panel).toHaveCSS('overflow-y','auto');
-    await help.evaluate(el=>el.scrollIntoView({block:'end',behavior:'instant'}));
-    const helpBox=await help.boundingBox(), scrolledPanelBox=await panel.boundingBox();
-    expect(helpBox.y+helpBox.height).toBeLessThanOrEqual(scrolledPanelBox.y+scrolledPanelBox.height+1);
-    const dialogue=screen.locator('.cc-dialogue'), dialogueBox=await dialogue.boundingBox();
-    await expect(dialogue).toHaveAttribute('role','status');
-    expect(await dialogue.locator('p').evaluate(el=>parseFloat(getComputedStyle(el).fontSize))).toBe(22);
-    const bubbleSize=await dialogue.locator('.cc-dialogue-bubble').evaluate(el=>({height:el.clientHeight,content:el.scrollHeight}));
-    expect(bubbleSize.content).toBeLessThanOrEqual(bubbleSize.height);
-    expect(dialogueBox.y).toBeGreaterThanOrEqual((await canvas.boundingBox()).y+(await canvas.boundingBox()).height-1);
-    expect(dialogueBox.y+dialogueBox.height).toBeLessThanOrEqual(scrolledPanelBox.y+1);
+    if(touch){
+      await expect(panel).toBeVisible();
+      expect((await panel.boundingBox()).y).toBeGreaterThanOrEqual((await stage.boundingBox()).y+(await stage.boundingBox()).height);
+    }else await expect(panel).toBeHidden();
+    const controls=tools.getByRole('button',{name:'Controls',exact:true});
+    await controls.click();await expect(controls).toHaveAttribute('aria-expanded','true');
+    const help=screen.getByRole('region',{name:'Controls help'});
+    await expect(help).toBeVisible();await expect(help).toContainText('Punch, punch, kick');
+    await expect(help.getByRole('button',{name:'Skip fights'})).toBeVisible();
+    await expect(help).toHaveCSS('position','absolute');
+    expect((await help.boundingBox()).height).toBeLessThanOrEqual(240);
+    expect((await screen.boundingBox()).height).toBe(screenBox.height);
     await page.screenshot({path:`/private/tmp/cc-site-arcade-${name}.png`});
     await controls.click();
     await frame.getByRole('button',{name:'Fullscreen',exact:true}).click();
     await expect(page.getByRole('dialog',{name:'Game',exact:true})).toBeVisible();
-    await expect(page.getByRole('button',{name:/^Sound (on|off)$/})).toBeVisible();
+    await expect(page.getByRole('button',{name:'Exit fullscreen',exact:true})).toBeVisible();
+    await expect(page.getByRole('button',{name:/^(Mute|Unmute) sound$/})).toBeVisible();
     await page.keyboard.press('Escape');
     await expect(page.getByRole('dialog',{name:'Game',exact:true})).toHaveCount(0);
     expect(rooms).toEqual([]);
+    await tools.getByRole('button',{name:'Mute sound',exact:true}).click();
+    await canvas.focus();await page.keyboard.press('Enter');await page.clock.runFor(100);
+    await expect(canvas).toHaveAttribute('data-stage','overworld');
+    await page.keyboard.down('ArrowRight');await page.clock.runFor(1800);await page.keyboard.up('ArrowRight');
+    await page.screenshot({path:`/private/tmp/cc-compact-terry-${name}.png`});
     await context.close();
   });
 }
+
+
+test('top wheel reveals silently without focus and subsequent wheel scrolls normally', async ({ page }) => {
+  await page.clock.install();
+  const music=[];
+  page.on('request',request=>{if(/\.mp3(?:\?|$)/.test(request.url()))music.push(request.url());});
+  await page.addInitScript(()=>{
+    window.__audioAttempts=0;
+    for(const name of ['AudioContext','webkitAudioContext']){
+      if(window[name])window[name]=new Proxy(window[name],{construct(target,args){window.__audioAttempts++;return Reflect.construct(target,args);}});
+    }
+    window.Audio=new Proxy(window.Audio,{construct(target,args){window.__audioAttempts++;return Reflect.construct(target,args);}});
+    const play=HTMLMediaElement.prototype.play;
+    HTMLMediaElement.prototype.play=function(...args){window.__audioAttempts++;return play.apply(this,args);};
+  });
+  await page.goto('/');
+  await reveal(page).hover();
+  await page.mouse.wheel(0,100);
+  await expect(page.locator('[data-cart-screen] canvas')).toBeVisible();
+  await page.waitForLoadState('networkidle');
+  await page.clock.runFor(14000);
+  await expect(page.locator('[data-cart-screen] canvas')).toHaveAttribute('data-stage','title');
+  expect(await page.evaluate(()=>document.activeElement===document.body)).toBe(true);
+  expect(await page.evaluate(()=>window.__audioAttempts)).toBe(0);
+  expect(music).toEqual([]);
+  await page.mouse.wheel(0,500);
+  await expect.poll(()=>page.evaluate(()=>scrollY)).toBeGreaterThan(0);
+});
+
+test('wheel ignores zoom, horizontal and form controls; negative and pause reset intent', async ({ page }) => {
+  await page.clock.install();
+  await page.goto('/');
+  const wheel=(delta)=>page.locator('.hero').dispatchEvent('wheel',{deltaY:delta,deltaMode:0});
+  await page.locator('.hero').dispatchEvent('wheel',{deltaY:120,ctrlKey:true});
+  await page.locator('.hero').dispatchEvent('wheel',{deltaY:120,metaKey:true});
+  await page.locator('.hero').dispatchEvent('wheel',{deltaY:10,deltaX:120});
+  await page.evaluate(()=>{const field=document.createElement('input');field.type='range';field.id='gesture-range';document.querySelector('.hero').append(field);});
+  await page.locator('#gesture-range').dispatchEvent('wheel',{deltaY:120});
+  await expect(reveal(page)).toHaveAttribute('aria-expanded','false');
+  await wheel(60);await wheel(-10);await wheel(60);
+  await expect(reveal(page)).toHaveAttribute('aria-expanded','false');
+  await page.clock.runFor(200);await wheel(40);
+  await expect(reveal(page)).toHaveAttribute('aria-expanded','false');
+  await page.locator('.hero').dispatchEvent('wheel',{deltaY:4,deltaMode:1});
+  await expect(reveal(page)).toHaveAttribute('aria-expanded','true');
+});
+
+test('close rejects residual momentum then permits a fresh reveal', async ({ page }) => {
+  await page.clock.install();
+  await open(page);
+  await page.getByRole('button',{name:'Close arcade'}).click();
+  await page.locator('.hero').dispatchEvent('wheel',{deltaY:150});
+  await expect(reveal(page)).toHaveAttribute('aria-expanded','false');
+  await page.clock.runFor(401);
+  await page.locator('.hero').dispatchEvent('wheel',{deltaY:1,deltaMode:2});
+  await expect(reveal(page)).toHaveAttribute('aria-expanded','true');
+});
+
+for(const direction of [-1,1]){
+  test(`top touch ${direction<0?'swipe up':'pull down'} reveals without focus`,async({browser})=>{
+    const context=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+    const page=await context.newPage(), music=[];
+    page.on('request',request=>{if(/\.mp3(?:\?|$)/.test(request.url()))music.push(request.url());});
+    await page.goto('/');
+    const cdp=await context.newCDPSession(page);
+    await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:160,y:400}]});
+    for(const distance of [15,40,85,100])await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:160,y:400+direction*distance}]});
+    await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+    await expect(page.locator('[data-cart-screen] canvas')).toBeVisible();
+    await page.waitForLoadState('networkidle');
+    expect(await page.evaluate(()=>document.activeElement===document.body)).toBe(true);
+    expect(music).toEqual([]);
+    await context.close();
+  });
+}
+
+test('effects stay bounded, pause offscreen and become static under reduced motion',async({page})=>{
+  await page.emulateMedia({reducedMotion:'reduce'});
+  await page.goto('/');
+  await expect(page.locator('.cart-fracture')).toHaveCount(6);
+  expect(await page.locator('.cart-fracture').first().evaluate(el=>getComputedStyle(el,'::before').animationName)).toBe('none');
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+  await page.evaluate(()=>scrollTo({top:document.body.scrollHeight,behavior:'instant'}));
+  await expect(page.locator('[data-cartridge]')).toHaveAttribute('data-cart-fx','paused');
+});
+
+
+test('pulling directly on the seam reveals silently',async({browser})=>{
+  const context=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+  const page=await context.newPage();
+  await page.goto('/');
+  const cdp=await context.newCDPSession(page);
+  await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:100,y:15}]});
+  for(const y of [30,55,95,115])await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:100,y}]});
+  await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+  await expect(reveal(page)).toHaveAttribute('aria-expanded','true');
+  expect(await page.evaluate(()=>document.activeElement===document.body)).toBe(true);
+  await context.close();
+});

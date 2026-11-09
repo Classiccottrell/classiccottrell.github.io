@@ -186,6 +186,20 @@ for (const [name,width,touch,motion] of [['desktop',1440,false,'reduce'],['phone
     await expect(canvas).toHaveAttribute('data-stage','overworld');
     await page.keyboard.down('ArrowRight');await page.clock.runFor(1800);await page.keyboard.up('ArrowRight');
     await page.screenshot({path:`/private/tmp/cc-compact-terry-${name}.png`});
+    await page.keyboard.down('ArrowRight');
+    await expect.poll(async()=>{
+      await page.clock.runFor(100);
+      return page.evaluate(()=>window.__arcade.combat.director.active?.id);
+    },{intervals:[10]}).toBe('feedback-round');
+    await page.keyboard.up('ArrowRight');
+    const opening=await page.evaluate(()=>window.__arcade.combat.enemies.map(e=>e.type));
+    expect(opening).toHaveLength(4);expect(opening.every(type=>type.endsWith('-reviewer'))).toBe(true);
+    await expect.poll(async()=>{
+      await page.clock.runFor(100);
+      return dialogue.isVisible();
+    },{intervals:[10]}).toBe(true);
+    await expect(dialogue.locator('p')).toHaveText(/Make the logo bigger\.|It doesn't pop\.|Can we try a few options\?|Just one small change\./);
+    await page.screenshot({path:`/private/tmp/cc-office-opening-${name}.png`});
     const speech='Can you explain why you made the button this way?';
     await page.evaluate(async text=>{
       const entry=document.querySelector('[data-cartridge]').dataset.src;

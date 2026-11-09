@@ -75,9 +75,14 @@ export const ENEMY_TYPES = {
 
 export const ARENA_PAD = 8;
 export const WAVES = [
-  {id:'overworld-1',at:320,enemies:[{type:'contrast-bandit',side:'right'},{type:'alt-text-gremlin',side:'left'},{type:'logo-reviewer',side:'right'}]},
+  {id:'feedback-round',at:320,enemies:[
+    {type:'logo-reviewer',side:'right',feedback:'Make the logo bigger.'},
+    {type:'pop-reviewer',side:'left',feedback:"It doesn't pop."},
+    {type:'options-reviewer',side:'right',feedback:'Can we try a few options?'},
+    {type:'small-change-reviewer',side:'left',feedback:'Just one small change.'},
+  ]},
+  {id:'overworld-1',at:480,enemies:[{type:'contrast-bandit',side:'right'},{type:'alt-text-gremlin',side:'left'},{type:'pop-reviewer',side:'right'},{type:'small-change-reviewer',side:'left'}]},
   ...[
-    ['feedback-round',480,['Make the logo bigger.',"It doesn't pop.",'Can we try a few options?','Just one small change.']],
     ['product-review',720,['Could this feel a little more premium?',"This doesn't quite meet our users' needs.",'Can you explain why you made the button this way?',"I've got one more change for you."]],
     ['final-signoff',960,["Let's revisit the version from yesterday.",'Can we squeeze this into the release?','Can we get one more stakeholder in here?',"It's a tiny change. Should be quick."]],
   ].map(([id,at,lines])=>({id,at,enemies:['logo-reviewer','pop-reviewer','options-reviewer','small-change-reviewer'].map((type,i)=>({type,side:i%2?'left':'right',feedback:lines[i]}))})),

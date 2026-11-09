@@ -15,7 +15,7 @@ export function createTerryPickup() {
 export function drawTerryPickup(ctx,pickup,cam,time,reduced,image) {
   if(pickup.collected)return;
   const x=TERRY_X-cam,y=133+(reduced?0:Math.round(Math.sin(time*2)*2));
-  if(image)ctx.drawImage(image,x-20,y-26,40,40); // Reference SVG rasterized at 2x density.
+  if(image)ctx.drawImage(image,x-18,y-24,36,36); // Reference SVG rasterized at 2x density.
   else{ctx.fillStyle='#FFD400';ctx.fillRect(x-9,y-9,18,18);ctx.fillStyle='#19232D';ctx.fillRect(x-8,y-8,16,16);}
-  ctx.fillStyle='#FFE778';ctx.fillRect(x+20,y-26,2,1);
+  ctx.fillStyle='#FFE778';ctx.fillRect(x+18,y-24,2,1);
 }

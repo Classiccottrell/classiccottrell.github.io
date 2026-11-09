@@ -28,8 +28,8 @@ const titleVoices = new Set();
 const effectVoices = new Set();
 let effectRequest = 0;
 
-async function ready() {
-  if (muted || !globalThis.navigator?.userActivation?.hasBeenActive) return false;
+async function ready(allowAutoplay = false) {
+  if (muted || (!allowAutoplay && !globalThis.navigator?.userActivation?.hasBeenActive)) return false;
   const AudioContext = globalThis.AudioContext || globalThis.webkitAudioContext;
   if (!AudioContext) return false;
   if (!context) {
@@ -111,13 +111,16 @@ function titleHat(at) {
 }
 
 /** Call from a focused game gesture. Repeated starts share the current loop. */
-export function startTitleMusic() {
+export function isAudioRunning(){return !muted && context?.state==='running';}
+export function resumeAudioFromGesture(){if(globalThis.navigator?.userActivation?.hasBeenActive && context?.state==='suspended')context.resume().catch(()=>{});}
+
+export function startTitleMusic({allowAutoplay=false}={}) {
   if (titlePending) return titlePending;
   if (titleTimer !== undefined) return Promise.resolve(true);
   const request = ++titleRequest;
   const pending = (async () => {
     try {
-      if (!await ready() || request !== titleRequest) return false;
+      if (!await ready(allowAutoplay) || request !== titleRequest) return false;
       let next = context.currentTime + .02;
       const schedule = () => {
         if (context.state !== 'running') return;

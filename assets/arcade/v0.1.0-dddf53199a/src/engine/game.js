@@ -1,7 +1,7 @@
 import {createDialogue} from './dialogue.js';
 import { BASE_W, BASE_H, applyScale, applyWide, WORLD_ZOOM, worldViewWidth } from './scale.js';
 import { createMusic } from '../music.js';
-import {play,startTitleMusic,stopTitleMusic,stopEffects,setMuted as muteEffects} from '../audio/audio.js';
+import {play,isAudioRunning,resumeAudioFromGesture,startTitleMusic,stopTitleMusic,stopEffects,setMuted as muteEffects} from '../audio/audio.js';
 import {createFootsteps} from '../audio/footsteps.js';
 import { createLoop } from './loop.js';
 import { createInput } from './input.js';
@@ -117,7 +117,7 @@ export function mountGame(container, {
     if (canvas.dataset.stage !== st) { canvas.dataset.stage = st; container.dataset.stage = st; }
     container.dataset.attract=demo?.phase||'off';
     dialogue.update(visibleScene(flow)==='overworld'?feedbackSpeech(combat,camX,viewW):null);
-    controls.update({scene:visibleScene(flow),blocked:flow.name==='transition',skip:combat.skip,replay:flow.name==='overworld'&&!!combat.flags.loopComplete&&!nearDoor(),muted:soundMuted,activated:audioUnlocked,canInteract:roomsEnabled});
+    controls.update({scene:visibleScene(flow),blocked:flow.name==='transition',skip:combat.skip,replay:flow.name==='overworld'&&!!combat.flags.loopComplete&&!nearDoor(),muted:soundMuted,activated:audioUnlocked,needsGesture:audioUnlocked&&!soundMuted&&!isAudioRunning()&&container.dataset.music!=='playing',canInteract:roomsEnabled});
   };
   let time = 0;
   let camX = 0, prevCam = 0;
@@ -349,16 +349,21 @@ export function mountGame(container, {
   const setMusicState = (s) => { container.dataset.music = s; onMusicState(s); };
   const atTitleCard = () => flow.name === 'title' || (flow.name === 'intro' && seq.atTitle());
   function musicGesture() {
-    audioUnlocked=true;muteEffects(soundMuted);
+    audioUnlocked=true;resumeAudioFromGesture();muteEffects(soundMuted);
     if(!soundMuted&&bgm){
       if(!bgm.started)bgm.start().then(setMusicState);
       else bgm.fadeIn(0)?.then(setMusicState);
     }
     onMuteChange(soundMuted);
   }
-  function introSound(){
+  function introSound(allowAutoplay=false){
     audioUnlocked=true;muteEffects(soundMuted);
-    if(!soundMuted)startTitleMusic().then(ok=>{if(ok&&!destroyed&&!demo&&(flow.name==='intro'||flow.name==='title'))setMusicState('playing');});
+    if(!allowAutoplay)resumeAudioFromGesture();
+    if(!soundMuted){
+      const started=startTitleMusic({allowAutoplay});
+      if(!isAudioRunning())setMusicState('blocked');
+      started.then(ok=>{if(!destroyed&&!demo&&(flow.name==='intro'||flow.name==='title'))setMusicState(ok?'playing':'blocked');});
+    }
   }
   const needsSoundRestart=()=>flow.name==='intro'&&!seq.atTitle()&&!audioUnlocked;
   canvas.addEventListener('keydown', (e) => {
@@ -394,7 +399,7 @@ export function mountGame(container, {
       onMuteChange(soundMuted);
     }
 
-  const dialogue=createDialogue(container);
+  const dialogue=createDialogue(stage,canvas);
   const controls=createTouchControls(container,canvas,input,{
     onPress(){
       if(demo){demo.stop();demo=null;restoreDemoCombat();}
@@ -410,7 +415,7 @@ export function mountGame(container, {
     onClose:()=>collapse(),
     onExit,
     onExpand:()=>expand(),
-    onMute:()=>setMuted(audioUnlocked&&!soundMuted),
+    onMute:()=>setMuted(audioUnlocked&&!soundMuted&&(isAudioRunning()||container.dataset.music==='playing')),
     onLayout:()=>resize(),
   });
 
@@ -521,7 +526,7 @@ export function mountGame(container, {
     input,
     get combat(){return combat;},
     playIntro() { startIntro(); sync(); },
-    enableSound(){soundMuted=false;audioUnlocked=true;muteEffects(false);bgm?.setMuted(false,{resume:false});try{globalThis.localStorage?.setItem('cc-sidescroller:muted','0');}catch{}if(flow.name==='intro'||flow.name==='title')introSound();onMuteChange(false);},
+    enableSound(){soundMuted=false;audioUnlocked=true;muteEffects(false);bgm?.setMuted(false,{resume:false});try{globalThis.localStorage?.setItem('cc-sidescroller:muted','0');}catch{}if(flow.name==='intro'||flow.name==='title')introSound(true);onMuteChange(false);},
     expand,
     collapse,
     isExpanded: () => expanded,

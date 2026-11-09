@@ -59,7 +59,7 @@ test('reveal pushes content down, Enter stays in page, close destroys game and r
   await help.click();
   await expect(help).toHaveAttribute('aria-expanded', 'true');
   await help.click();
-  await expect(page.getByRole('button', { name: /^(Mute|Unmute) sound$/ })).toBeVisible();
+  await expect(page.getByRole('button', { name: /^(Mute|Unmute|Start) sound$/ })).toBeVisible();
   await page.getByRole('button', { name: 'Fullscreen', exact: true }).click();
   await expect(page.getByRole('dialog', { name: 'Game', exact: true })).toBeVisible();
   await page.keyboard.press('Escape');
@@ -131,6 +131,10 @@ for (const [name,width,touch,motion] of [['desktop',1440,false,'reduce'],['phone
     const page = await context.newPage();
     const rooms=[];
     page.on('request',request=>{if(/\/rooms\/.*\.json/.test(request.url()))rooms.push(request.url());});
+    await page.route('**/assets/arcade/**/game.js*',async route=>{
+      const response=await route.fetch();
+      await route.fulfill({response,body:(await response.text()).replace('return mountSource(', 'return window.__arcade = mountSource(')});
+    });
     await page.clock.install();
     await open(page);
     const frame=page.locator('.cart-frame'), screen=page.locator('[data-cart-screen]');
@@ -140,7 +144,7 @@ for (const [name,width,touch,motion] of [['desktop',1440,false,'reduce'],['phone
     const tools=screen.getByRole('group',{name:'Game utilities'});
     const icons=tools.locator(':scope > button');
     await expect(icons).toHaveCount(4);
-    for(const label of [/^(Mute|Unmute) sound$/, /^Controls$/, /^Fullscreen$/, /^Close arcade$/]){
+    for(const label of [/^(Mute|Unmute|Start) sound$/, /^Controls$/, /^Fullscreen$/, /^Close arcade$/]){
       const button=tools.getByRole('button',{name:label});
       await expect(button).toBeVisible();await expect(button.locator('svg')).toBeVisible();
       const box=await button.boundingBox(), header=await tools.boundingBox();
@@ -173,7 +177,7 @@ for (const [name,width,touch,motion] of [['desktop',1440,false,'reduce'],['phone
     await frame.getByRole('button',{name:'Fullscreen',exact:true}).click();
     await expect(page.getByRole('dialog',{name:'Game',exact:true})).toBeVisible();
     await expect(page.getByRole('button',{name:'Exit fullscreen',exact:true})).toBeVisible();
-    await expect(page.getByRole('button',{name:/^(Mute|Unmute) sound$/})).toBeVisible();
+    await expect(page.getByRole('button',{name:/^(Mute|Unmute|Start) sound$/})).toBeVisible();
     await page.keyboard.press('Escape');
     await expect(page.getByRole('dialog',{name:'Game',exact:true})).toHaveCount(0);
     expect(rooms).toEqual([]);
@@ -182,6 +186,31 @@ for (const [name,width,touch,motion] of [['desktop',1440,false,'reduce'],['phone
     await expect(canvas).toHaveAttribute('data-stage','overworld');
     await page.keyboard.down('ArrowRight');await page.clock.runFor(1800);await page.keyboard.up('ArrowRight');
     await page.screenshot({path:`/private/tmp/cc-compact-terry-${name}.png`});
+    const speech='Can you explain why you made the button this way?';
+    await page.evaluate(async text=>{
+      const entry=document.querySelector('[data-cartridge]').dataset.src;
+      const {createEnemy}=await import(new URL('./src/combat/enemy.js',new URL(entry,location.href)));
+      const combat=window.__arcade.combat;
+      const actor=createEnemy('options-reviewer',combat.hero.x+35,'speech-fixture');
+      actor.ai.phase='windup';actor.speech={text,frames:180,kind:'windup'};
+      combat.enemies=[actor];
+    },speech);
+    await page.clock.runFor(100);
+    await expect(dialogue).toBeVisible();await expect(dialogue.locator('p')).toHaveText(speech);
+    await expect(dialogue).toHaveAttribute('data-speaker','options reviewer');
+    await expect(dialogue).toHaveAttribute('aria-label',`options reviewer: ${speech}`);
+    await expect(stage.locator('.cc-dialogue')).toHaveCSS('position','absolute');
+    await expect(dialogue.locator('svg.cc-dialogue-tail')).toBeVisible();
+    const bubble=await dialogue.boundingBox(), picture=await canvas.boundingBox();
+    expect(bubble.x).toBeGreaterThanOrEqual(picture.x);
+    expect(bubble.x+bubble.width).toBeLessThanOrEqual(picture.x+picture.width+1);
+    expect(bubble.y).toBeGreaterThanOrEqual(picture.y);
+    expect(bubble.y+bubble.height).toBeLessThanOrEqual(picture.y+picture.height);
+    expect(await dialogue.evaluate(el=>el.scrollWidth<=el.clientWidth)).toBe(true);
+    const head=await page.evaluate(()=>{const e=window.__arcade.combat.enemies.find(e=>e.id==='speech-fixture');return 150+2*(e.y-e.spec.hurt.h);});
+    expect(bubble.y+bubble.height).toBeLessThanOrEqual(picture.y+(head+8)*picture.height/180);
+    expect((await screen.boundingBox()).height).toBe(screenBox.height);
+    await page.screenshot({path:`/private/tmp/cc-actor-speech-${name}.png`});
     await tools.getByRole('button',{name:'Close arcade',exact:true}).click();
     await expect(reveal(page)).toBeFocused();await expect(canvas).toHaveCount(0);
     await reveal(page).click();await expect(canvas).toBeVisible();
@@ -194,7 +223,7 @@ for (const [name,width,touch,motion] of [['desktop',1440,false,'reduce'],['phone
 }
 
 
-test('top wheel reveals silently without focus and subsequent wheel scrolls normally', async ({ page }) => {
+test('top wheel requests sound without focus and subsequent wheel scrolls normally', async ({ page }) => {
   await page.clock.install();
   const music=[];
   page.on('request',request=>{if(/\.mp3(?:\?|$)/.test(request.url()))music.push(request.url());});
@@ -208,6 +237,7 @@ test('top wheel reveals silently without focus and subsequent wheel scrolls norm
     HTMLMediaElement.prototype.play=function(...args){window.__audioAttempts++;return play.apply(this,args);};
   });
   await page.goto('/');
+  expect(await page.evaluate(()=>window.__audioAttempts)).toBe(0);
   await reveal(page).hover();
   await page.mouse.wheel(0,100);
   await expect(page.locator('[data-cart-screen] canvas')).toBeVisible();
@@ -215,10 +245,17 @@ test('top wheel reveals silently without focus and subsequent wheel scrolls norm
   await page.clock.runFor(14000);
   await expect(page.locator('[data-cart-screen] canvas')).toHaveAttribute('data-stage','title');
   expect(await page.evaluate(()=>document.activeElement===document.body)).toBe(true);
-  expect(await page.evaluate(()=>window.__audioAttempts)).toBe(0);
+  expect(await page.evaluate(()=>window.__audioAttempts)).toBeGreaterThan(0);
+  await expect(page.getByRole('button',{name:'Unmute sound',exact:true})).toHaveCount(0);
+  const startSound=page.getByRole('button',{name:'Start sound',exact:true});
+  await expect(page.getByRole('button',{name:/^(Start|Mute) sound$/})).toBeVisible();
   expect(music).toEqual([]);
   await page.mouse.wheel(0,500);
   await expect.poll(()=>page.evaluate(()=>scrollY)).toBeGreaterThan(0);
+  if(await startSound.isVisible()){
+    await startSound.click();await page.clock.runFor(100);
+    await expect(page.getByRole('button',{name:'Mute sound',exact:true})).toBeVisible();
+  }
 });
 
 test('wheel ignores zoom, horizontal and form controls; negative and pause reset intent', async ({ page }) => {
@@ -279,7 +316,7 @@ test('reveal stays bounded without decorative effects under reduced motion',asyn
 });
 
 
-test('pulling directly on the seam reveals silently',async({browser})=>{
+test('pulling directly on the seam reveals without focus',async({browser})=>{
   const context=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
   const page=await context.newPage();
   await page.goto('/');

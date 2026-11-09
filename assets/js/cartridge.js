@@ -45,7 +45,7 @@
         onEnterDoor: function () {},
         onExit: collapse,
       });
-      if (activate) game.enableSound?.();
+      game.enableSound?.();
       var shouldFocus = activate && document.activeElement === close;
       loading.hidden = true;
       if (shouldFocus) screen.querySelector('canvas')?.focus({ preventScroll: true });

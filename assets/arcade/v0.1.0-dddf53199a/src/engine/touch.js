@@ -68,14 +68,14 @@ export function createTouchControls(container,canvas,input,{onPress,onGesture,on
  return {
   release,closeHelp,
   get height(){return header.getBoundingClientRect().height+panel.getBoundingClientRect().height;},
-  update({scene,blocked,skip,replay=false,muted=false,activated=false,canInteract=true}){
-   const state=`${scene}:${blocked}:${skip}:${replay}:${muted}:${activated}:${canInteract}`;if(state===last)return;last=state;
+  update({scene,blocked,skip,replay=false,muted=false,activated=false,needsGesture=false,canInteract=true}){
+   const state=`${scene}:${blocked}:${skip}:${replay}:${muted}:${activated}:${needsGesture}:${canInteract}`;if(state===last)return;last=state;
    const playing=scene==='overworld'||scene==='room';
    for(const [action,button] of Object.entries(buttons))button.disabled=blocked||(!playing&&action!=='enter');
    buttons.enter.textContent=replay||playing&&!canInteract?'NEXT LAP':playing?'USE':'START';
    buttons.enter.setAttribute('aria-label',replay||playing&&!canInteract?'Next lap':playing?(scene==='room'?'Interact':'Enter door'):'Start game');
    if(playing&&!replay&&!canInteract)buttons.enter.disabled=true;
-   const on=activated&&!muted;icon(sound,on?'sound':'muted',on?'Mute sound':'Unmute sound');sound.setAttribute('aria-pressed',String(on));
+   const on=activated&&!muted&&!needsGesture;icon(sound,on||needsGesture?'sound':'muted',needsGesture?'Start sound':on?'Mute sound':'Unmute sound');sound.setAttribute('aria-pressed',String(on));
    buttons.skip.setAttribute('aria-pressed',String(skip));buttons.skip.textContent=skip?'Fights skipped':'Skip fights';if(blocked)release();
   },
   setExpanded(value){release();expanded=value;closeHelp();icon(fullscreen,expanded?'exit':'fullscreen',expanded?'Exit fullscreen':'Fullscreen');},

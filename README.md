@@ -77,17 +77,17 @@ already installed, set `PW_CHROMIUM=/path/to/chrome`.
 ## Arcade release
 
 A quiet bordered reveal above the home masthead opens the office arcade on a click or an intentional
-vertical wheel/touch gesture from the very top. The first gesture reveals it silently;
+vertical wheel/touch gesture from the very top. The first gesture reveals it and requests sound;
 further scrolling remains native. Scrolling elsewhere, zooming, horizontal gestures and
 form controls do not reveal it. Close briefly ignores residual scroll momentum.
 The opening pushes the site down in normal flow; scrolling remains native. Collapsed,
-no runtime or music downloads until a reveal gesture. Only a later game gesture can
-unlock sound after a scroll reveal. Close destroys the game and returns focus to Play arcade.
+no runtime or music downloads until a reveal gesture. Every reveal requests sound; if browser autoplay policy blocks it, Start sound retries
+on a direct click. Close destroys the game and returns focus to Play arcade.
 The game owns four accessible SVG utility buttons in its top-right header: sound, controls/help,
 fullscreen and Close arcade. Close sits beside fullscreen and returns focus to Play arcade;
 the host close button appears only while loading or after a load failure. The host follows the game’s natural height: a 52px header, a stable 180px
-phone / 360px desktop stage, touch actions on coarse pointers, and an auto-height speech
-bubble only while a character speaks. Controls help is a compact overlay and adds no height.
+phone / 360px desktop stage and touch actions on coarse pointers. Speech sits above
+the speaking actor inside the stage, with a pixel tail and no extra layout height. Controls help is a compact overlay and adds no height.
 The reveal uses a neutral border without crack, drip or chip decorations; reduced motion opens immediately;
 without JavaScript or on a load failure, compact project links remain available.
 

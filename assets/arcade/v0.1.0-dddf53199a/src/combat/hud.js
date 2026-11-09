@@ -33,17 +33,16 @@ export function drawHud(ctx, combat, viewW = 320, atDoor=false) {
     bar(ctx, viewW - 66, 18, 60, t.hp / t.maxHp, '#f6c726');
   }
   const d = combat.director;
-  const wave = `LAP ${combat.lap} ${d.cleared}/${d.total}`;
-  drawToastText(ctx, wave, Math.floor((viewW - toastWidth(wave)) / 2), 4, d.arena ? '#ffe27a' : '#b3a9ae');
-  if(d.active?.enemies.every(e=>e.type.endsWith('-reviewer')))drawToastText(ctx,'FEEDBACK ROUND',Math.floor((viewW-toastWidth('FEEDBACK ROUND'))/2),30,'#FFD400');
   const boss=combat.enemies.find(e=>e.spec.poise&&e.state!=='dead');
+  const wave = boss?ENEMY_TYPES[boss.type].name:`LAP ${combat.lap} ${d.cleared}/${d.total}`;
+  drawToastText(ctx, wave, Math.floor((viewW - toastWidth(wave)) / 2), 4, d.arena ? '#ffe27a' : '#b3a9ae');
+
   if(boss){
-    const name=ENEMY_TYPES[boss.type].name,width=Math.min(180,viewW-24),x=Math.floor((viewW-width)/2);
-    drawToastText(ctx,name,Math.floor((viewW-toastWidth(name))/2),29,'#FFD400');
-    bar(ctx,x,43,width,boss.hp/boss.maxHp,'#FFD400');
+    const width=Math.min(180,viewW-148),x=Math.floor((viewW-width)/2);
+    bar(ctx,x,18,width,boss.hp/boss.maxHp,'#FFD400');
     const tell=boss.ai.phase==='windup'?(boss.ai.pattern==='flurry'?'Dodge: three hits':'Dodge the dash'):boss.ai.phase==='recovery'?'Recovering: strike now':'';
-    if(tell)drawToastText(ctx,tell,Math.floor((viewW-toastWidth(tell))/2),54,'#F5E6C8');
+    if(tell)drawToastText(ctx,tell,Math.floor((viewW-toastWidth(tell))/2),166,'#F5E6C8');
   }
   if(combat.flags.loopComplete){const text=atDoor?'LOOP COMPLETE - ENTER VAULT':'SHIFT CLEAR - WALK RIGHT';drawToastText(ctx,text,Math.floor((viewW-toastWidth(text))/2),29,'#FFD400');}
-  drawToastText(ctx, `SKIP FIGHTS F ${combat.skip ? 'ON' : 'OFF'}`, 6, 166, combat.skip ? '#ffe27a' : '#b3a9ae');
+  if(combat.skip)drawToastText(ctx,'FIGHTS SKIPPED',6,166,'#ffe27a');
 }

@@ -20,7 +20,7 @@ export function feedbackSpeech(combat,cam,viewW){
   const e=combat.enemies.filter(e=>e.x>=cam-8&&e.x<=cam+viewW+8&&((e.speech?.frames>0&&(e.state!=='dead'||e.speech.kind==='defeat'))||(ENEMY_TYPES[e.type].feedback&&isTelegraphing(e)&&['idle','walk'].includes(e.state))))
     .sort((a,b)=>Number(!!ENEMY_TYPES[b.type].dialogue)-Number(!!ENEMY_TYPES[a.type].dialogue)||Math.abs(a.x-combat.hero.x)-Math.abs(b.x-combat.hero.x))[0];
   if(!e)return null;
-  return {speaker:ENEMY_TYPES[e.type].name??e.type.replaceAll('-',' '),text:e.speech?.frames>0?e.speech.text:e.feedback??ENEMY_TYPES[e.type].feedback};
+  return {actorId:e.id,x:e.x-cam,y:GROUND_Y+2*(e.y-e.spec.hurt.h),speaker:ENEMY_TYPES[e.type].name??e.type.replaceAll('-',' '),text:e.speech?.frames>0?e.speech.text:e.feedback??ENEMY_TYPES[e.type].feedback};
 }
 
 export function drawFighters(ctx, combat, cam, { hx, frame, sprite, enemySprites=null, seconds=0, reducedMotion=false, rim=null,viewW=320 }) {

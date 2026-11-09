@@ -35,12 +35,11 @@ const cartridge = (ctx) => {
   <button type="button" class="cart-seam" data-cart-reveal data-js aria-label="Play arcade" aria-describedby="arcade-gesture-hint" aria-expanded="false" aria-controls="arcade-aperture"><span>Play arcade <span aria-hidden="true">↗</span></span></button>
   <div class="cart-aperture" id="arcade-aperture" data-cart-panel hidden>
     <div class="cart-frame">
-      <div class="wrap cart-head" data-js><p class="note">Classic Cottrell · Office arcade</p><button type="button" class="tool" data-cart-close>Close arcade <span aria-hidden="true">×</span></button></div>
+      <div class="wrap cart-head" data-js><p class="note">Loading arcade…</p><button type="button" class="tool" data-cart-close>Close arcade <span aria-hidden="true">×</span></button></div>
       <div class="cart-screen" data-cart-screen hidden></div>
       <p class="cart-fallback wrap" data-cart-fallback>Explore <a class="lnk" href="/work/vpat-vault/">VPAT Vault</a>, <a class="lnk" href="/work/linefield/">linefield</a> or <a class="lnk" href="/work/terry-time/">Terry Time</a>.</p>
     </div>
   </div>
-  <span class="cart-effects" aria-hidden="true" data-js>${Array.from({ length: 6 }, () => '<i class="cart-fracture"></i>').join('')}</span>
   <script src="/assets/js/cartridge.js" defer></script>
 </section>`;
 };

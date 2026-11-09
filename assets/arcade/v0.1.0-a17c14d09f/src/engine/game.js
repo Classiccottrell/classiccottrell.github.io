@@ -47,6 +47,7 @@ export function mountGame(container, {
   autoplayIntro = false,
   onBeat = () => {}, // title-sequence stage names, for the audio layer to hook later
   onExpandChange = () => {},
+  onExit = null, // host closes the embedded arcade, distinct from leaving fullscreen
   fit = 'fixed',            // 'wide': internal width follows the container (height stays 180)
   music = null,            // audio URL; starts on the title-card gesture only, never autoplays
   onMuteChange = () => {},
@@ -407,6 +408,7 @@ export function mountGame(container, {
       else if(flow.name==='overworld'||flow.name==='room')musicGesture();
     },
     onClose:()=>collapse(),
+    onExit,
     onExpand:()=>expand(),
     onMute:()=>setMuted(audioUnlocked&&!soundMuted),
     onLayout:()=>resize(),

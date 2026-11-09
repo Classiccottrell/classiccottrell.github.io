@@ -712,37 +712,16 @@ a.avail:hover{background:var(--highlight)}
   a{text-decoration:none}
 }
 
-/* A torn pixel seam opens the arcade above the home page, in normal flow. */
+/* The arcade opens above the home page, in normal flow. */
 .cartridge{position:relative}
 .home .cartridge~.mast{top:auto}
-.cart-seam{position:relative;display:block;width:100%;min-height:44px;border:0;border-radius:0;padding:8px max(24px,calc((100vw - var(--max))/2));background:var(--ground);color:var(--fg);text-align:right;font:500 .72rem/1.4 var(--f-pencil);cursor:pointer;isolation:isolate}
-.cart-seam::before,.cart-seam::after{content:"";position:absolute;left:0;right:0;bottom:0;pointer-events:none}
-.cart-seam::before{height:20px;background:var(--band);clip-path:polygon(0 30%,6% 30%,6% 5%,12% 5%,12% 40%,24% 40%,24% 0,28% 0,28% 30%,37% 30%,37% 10%,42% 10%,42% 45%,53% 45%,53% 20%,64% 20%,64% 40%,70% 40%,70% 5%,79% 5%,79% 35%,85% 35%,85% 0,94% 0,94% 25%,100% 25%,100% 100%,0 100%)}
-.cart-seam::after{height:4px;background:var(--signal);clip-path:polygon(0 75%,14% 75%,14% 25%,22% 25%,22% 50%,34% 50%,34% 0,39% 0,39% 50%,51% 50%,51% 75%,65% 75%,65% 25%,73% 25%,73% 50%,84% 50%,84% 0,91% 0,91% 75%,100% 75%,100% 100%,0 100%)}
-.cart-seam>span{position:relative;transform:translateY(-6px);display:inline-flex;gap:12px;align-items:center}
+.cart-seam{position:relative;display:block;width:100%;min-height:44px;border:0;border-bottom:1px solid var(--pencil);border-radius:0;padding:8px max(24px,calc((100vw - var(--max))/2));background:var(--ground);color:var(--fg);text-align:right;font:500 .72rem/1.4 var(--f-pencil);cursor:pointer;isolation:isolate}
+.cart-seam>span{position:relative;display:inline-flex;gap:12px;align-items:center}
 .cart-hint{position:absolute;z-index:1;pointer-events:none;left:var(--gx);top:4px;font:.68rem/1.4 var(--f-pencil);color:var(--fg)}
-.cart-effects{position:absolute;inset:0;z-index:45;pointer-events:none;--cart-cream:#FFF6DC;--cart-teal:#294B58}
-.cart-fracture{position:absolute;inset:0;--x:8%;--drop:16px;--delay:0s}
-.cart-fracture:nth-child(2){--x:21%;--drop:24px;--delay:-1s;--cart-base:var(--cart-cream)}
-.cart-fracture:nth-child(3){--x:37%;--drop:12px;--delay:-3s;--cart-base:var(--cart-teal)}
-.cart-fracture:nth-child(4){--x:49%;--drop:20px;--delay:-2s}
-.cart-fracture:nth-child(5){--x:64%;--drop:8px;--delay:-4s;--cart-base:var(--cart-cream)}
-.cart-fracture:nth-child(6){--x:78%;--drop:16px;--delay:-5s;--cart-base:var(--cart-teal)}
-.cart-fracture::before,.cart-fracture::after{content:"";position:absolute;left:var(--x);background:var(--cart-base,var(--signal))}
-.cart-fracture::before{top:calc(100% - 1px);width:12px;height:var(--drop);border-right:3px solid var(--band);box-shadow:4px 0 0 var(--band);clip-path:polygon(0 0,100% 0,100% 45%,75% 45%,75% 100%,25% 100%,25% 65%,0 65%)}
-.cart-fracture::after{top:22px;width:4px;height:4px;box-shadow:8px 4px 0 var(--band)}
-@media(prefers-reduced-motion:no-preference){
-  .cart-fracture::before,.cart-fracture::after{animation:cart-shimmer 6s steps(1,end) var(--delay) infinite}
-  .cart-fracture::after{animation-name:cart-chip}
-  [data-cart-fx=paused] .cart-fracture::before,[data-cart-fx=paused] .cart-fracture::after{animation-play-state:paused}
-  @keyframes cart-shimmer{0%,70%,100%{background:var(--cart-base,var(--signal))}75%,85%{background:var(--cart-cream)}90%,95%{background:var(--cart-teal)}}
-  @keyframes cart-chip{0%,70%,100%{background:var(--cart-base,var(--signal));transform:translateY(0)}75%,85%{background:var(--cart-cream);transform:translateY(-3px)}90%,95%{background:var(--cart-teal);transform:translateY(-1px)}}
-}
 .cart-seam:focus-visible{outline:2px solid var(--proof);outline-offset:-4px}
 .cart-seam:hover>span{text-decoration:underline;text-underline-offset:4px}
-.cart-seam[aria-expanded=true]{background:var(--signal);color:var(--slab-ink)}
-.cart-aperture[hidden],.cart-screen[hidden],.cart-fallback[hidden]{display:none}
-.cart-frame{position:relative;background:var(--band);color:var(--band-fg);border-bottom:4px solid var(--signal)}
+.cart-head[hidden],.cart-aperture[hidden],.cart-screen[hidden],.cart-fallback[hidden]{display:none}
+.cart-frame{position:relative;background:var(--band);color:var(--band-fg);border-bottom:1px solid var(--pencil)}
 .cart-head{display:flex;gap:12px;align-items:center;justify-content:space-between;padding-block:8px}
 .cart-head .note{color:var(--band-proof)}
 .cart-head .tool{color:var(--band-fg);background:var(--band);border-color:var(--band-fg);min-height:44px}

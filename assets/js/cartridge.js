@@ -7,6 +7,7 @@
   var panel = section.querySelector('[data-cart-panel]');
   var screen = section.querySelector('[data-cart-screen]');
   var close = section.querySelector('[data-cart-close]');
+  var loading = section.querySelector('.cart-head');
   var fallback = section.querySelector('[data-cart-fallback]');
   var game = null, generation = 0, guardUntil = 0, wheelTotal = 0, lastWheel = 0, touch = null;
 
@@ -30,6 +31,8 @@
     reveal.setAttribute('aria-expanded', 'true');
     panel.hidden = false;
     screen.hidden = false;
+    loading.hidden = false;
+    loading.querySelector('p').textContent = 'Loading arcade…';
     fallback.hidden = true;
     if (activate) close.focus({ preventScroll: true });
     import(section.getAttribute('data-src')).then(function (module) {
@@ -40,15 +43,20 @@
         fit: 'wide',
         music: section.getAttribute('data-music-src'),
         onEnterDoor: function () {},
+        onExit: collapse,
       });
       if (activate) game.enableSound?.();
-      if (activate && document.activeElement === close) screen.querySelector('canvas')?.focus({ preventScroll: true });
+      var shouldFocus = activate && document.activeElement === close;
+      loading.hidden = true;
+      if (shouldFocus) screen.querySelector('canvas')?.focus({ preventScroll: true });
     }).catch(function (error) {
       if (request !== generation) return;
       if (game) game.destroy();
       game = null;
       screen.replaceChildren();
       screen.hidden = true;
+      loading.hidden = false;
+      loading.querySelector('p').textContent = 'Arcade unavailable';
       fallback.hidden = false;
       console.warn('[cartridge] game unavailable', error && error.message);
     });
@@ -85,11 +93,4 @@
   window.addEventListener('touchend', function () { touch = null; }, { passive: true });
   window.addEventListener('touchcancel', function () { touch = null; }, { passive: true });
 
-  var visible = true;
-  function motion() { section.dataset.cartFx = visible && !document.hidden ? 'running' : 'paused'; }
-  if ('IntersectionObserver' in window) {
-    new IntersectionObserver(function (entries) { visible = entries[0].isIntersecting; motion(); }).observe(section);
-  }
-  document.addEventListener('visibilitychange', motion);
-  motion();
 })();

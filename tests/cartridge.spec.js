@@ -118,7 +118,7 @@ test('closing during download cannot mount a hidden game', async ({ page }) => {
   const requested = page.waitForRequest((request) => /\/assets\/arcade\/.+\/game\.js/.test(request.url()));
   await reveal(page).click();
   await requested;
-  await page.getByRole('button', { name: 'Close arcade' }).click();
+  await page.locator('[data-cart-close]').click();
   release();
   await page.waitForLoadState('networkidle');
   await expect(page.locator('[data-cart-screen] canvas')).toHaveCount(0);
@@ -139,15 +139,17 @@ for (const [name,width,touch,motion] of [['desktop',1440,false,'reduce'],['phone
     await expect(canvas).toHaveAttribute('data-stage','title');
     const tools=screen.getByRole('group',{name:'Game utilities'});
     const icons=tools.locator(':scope > button');
-    await expect(icons).toHaveCount(3);
-    for(const label of [/^(Mute|Unmute) sound$/, /^Controls$/, /^Fullscreen$/]){
+    await expect(icons).toHaveCount(4);
+    for(const label of [/^(Mute|Unmute) sound$/, /^Controls$/, /^Fullscreen$/, /^Close arcade$/]){
       const button=tools.getByRole('button',{name:label});
       await expect(button).toBeVisible();await expect(button.locator('svg')).toBeVisible();
       const box=await button.boundingBox(), header=await tools.boundingBox();
-      expect(box.x).toBeGreaterThanOrEqual(header.x+header.width-156);
+      expect(box.x).toBeGreaterThanOrEqual(header.x+header.width-204);
       expect(box.y).toBeGreaterThanOrEqual(header.y);
       expect(box.y+box.height).toBeLessThanOrEqual(header.y+header.height);
     }
+    await expect(frame.locator('.cart-head')).toBeHidden();
+    await expect(tools.getByRole('button',{name:'Fullscreen',exact:true}).locator('xpath=following-sibling::button[1]')).toHaveAccessibleName('Close arcade');
     const stage=screen.locator('.cc-game-stage'), screenBox=await screen.boundingBox();
     expect((await stage.boundingBox()).height).toBe(touch?180:360);
     expect((await tools.boundingBox()).y+52).toBe((await stage.boundingBox()).y);
@@ -180,6 +182,13 @@ for (const [name,width,touch,motion] of [['desktop',1440,false,'reduce'],['phone
     await expect(canvas).toHaveAttribute('data-stage','overworld');
     await page.keyboard.down('ArrowRight');await page.clock.runFor(1800);await page.keyboard.up('ArrowRight');
     await page.screenshot({path:`/private/tmp/cc-compact-terry-${name}.png`});
+    await tools.getByRole('button',{name:'Close arcade',exact:true}).click();
+    await expect(reveal(page)).toBeFocused();await expect(canvas).toHaveCount(0);
+    await reveal(page).click();await expect(canvas).toBeVisible();
+    await page.getByRole('button',{name:'Fullscreen',exact:true}).click();
+    await page.getByRole('dialog',{name:'Game',exact:true}).getByRole('button',{name:'Close arcade',exact:true}).click();
+    await expect(page.getByRole('dialog',{name:'Game',exact:true})).toHaveCount(0);
+    await expect(reveal(page)).toBeFocused();await expect(canvas).toHaveCount(0);
     await context.close();
   });
 }
@@ -259,14 +268,14 @@ for(const direction of [-1,1]){
   });
 }
 
-test('effects stay bounded, pause offscreen and become static under reduced motion',async({page})=>{
+test('reveal stays bounded without decorative effects under reduced motion',async({page})=>{
   await page.emulateMedia({reducedMotion:'reduce'});
   await page.goto('/');
-  await expect(page.locator('.cart-fracture')).toHaveCount(6);
-  expect(await page.locator('.cart-fracture').first().evaluate(el=>getComputedStyle(el,'::before').animationName)).toBe('none');
+  await expect(page.locator('.cart-effects,.cart-fracture')).toHaveCount(0);
+  expect(await reveal(page).evaluate(el=>getComputedStyle(el,'::before').content)).toBe('none');
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
   await page.evaluate(()=>scrollTo({top:document.body.scrollHeight,behavior:'instant'}));
-  await expect(page.locator('[data-cartridge]')).toHaveAttribute('data-cart-fx','paused');
+  await expect(page.locator('[data-cartridge]')).not.toHaveAttribute('data-cart-fx');
 });
 
 

@@ -4,9 +4,10 @@ const icons={
  muted:'<path d="M1 6h3l4-3v10l-4-3H1zM10 5h2v2h-2zM12 7h2v2h-2zM10 9h2v2h-2zM14 5h1v2h-1zM14 9h1v2h-1z"/>',
  controls:'<path d="M2 3h12v1H2zM1 4h1v8H1zM14 4h1v8h-1zM2 12h12v1H2zM4 6h1v4H4zM3 7h3v1H3zM9 7h2v2H9zM12 6h1v2h-1z"/>',
  fullscreen:'<path d="M1 1h5v2H3v3H1zM10 1h5v5h-2V3h-3zM1 10h2v3h3v2H1zM13 10h2v5h-5v-2h3z"/>',
+ close:'<path d="M3 2h2v2H3zM5 4h2v2H5zM7 6h2v2H7zM9 8h2v2H9zM11 10h2v2h-2zM11 2h2v2h-2zM9 4h2v2H9zM5 8h2v2H5zM3 10h2v2H3z"/>',
  exit:'<path d="M4 1h2v5H1V4h3zM10 1h2v3h3v2h-5zM1 10h5v5H4v-3H1zM10 10h5v2h-3v3h-2z"/>',
 };
-export function createTouchControls(container,canvas,input,{onPress,onGesture,onClose,onExpand,onMute}){
+export function createTouchControls(container,canvas,input,{onPress,onGesture,onClose,onExpand,onMute,onExit}){
  const panel=document.createElement('div');panel.className='cc-touch-controls';
  panel.setAttribute('role','group');panel.setAttribute('aria-label','Game touch controls');
  const header=document.createElement('div');header.className='cc-game-tools';
@@ -60,6 +61,7 @@ export function createTouchControls(container,canvas,input,{onPress,onGesture,on
  const sound=tool('muted','Unmute sound',onMute);
  const helpButton=tool('controls','Controls',()=>{help.hidden=!help.hidden;helpButton.setAttribute('aria-expanded',String(!help.hidden));});helpButton.setAttribute('aria-expanded','false');
  const fullscreen=tool('fullscreen','Fullscreen',()=>{if(expanded)onClose();else onExpand();});
+ if(onExit)tool('close','Close arcade',onExit);
  function closeHelp(){if(help.hidden)return false;help.hidden=true;helpButton.setAttribute('aria-expanded','false');if(help.contains(document.activeElement))helpButton.focus();return true;}
  header.addEventListener('keydown',event=>{if(event.key==='Escape'&&closeHelp()){event.preventDefault();event.stopPropagation();helpButton.focus();}});
  header.append(help);panel.append(style,row);container.prepend(header);container.appendChild(panel);canvas.addEventListener('blur',release);

@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { axeViolations } from './helpers.js';
 
-const reveal = (page) => page.getByRole('button', { name: 'Play arcade' });
+const reveal = (page) => page.getByRole('region',{name:'Office arcade'}).getByRole('button', { name: 'Play', exact: true });
 const open = async (page) => {
   await page.goto('/');
   await reveal(page).click();
@@ -26,6 +26,10 @@ test('home seam precedes masthead and collapsed never downloads runtime or music
   page.on('request', (request) => { if (request.url().includes('/assets/arcade/')) requests.push(request.url()); });
   await page.goto('/');
   await expect(reveal(page)).toHaveAttribute('aria-expanded', 'false');
+  await expect(page.locator('.cart-hint')).toHaveCount(0);
+  await expect(reveal(page)).toHaveText('Play');
+  await expect(reveal(page)).toHaveCSS('background-color','rgb(36, 33, 29)');
+  expect(await reveal(page).evaluate(el=>getComputedStyle(el,'::after').animationName)).toBe('cart-border-pulse');
   const seam = await reveal(page).boundingBox();
   const masthead = await page.locator('.mast').boundingBox();
   expect(seam.height).toBeGreaterThanOrEqual(44);
@@ -48,6 +52,7 @@ test('reveal pushes content down, Enter stays in page, close destroys game and r
   const canvas = page.locator('[data-cart-screen] canvas');
   await expect(canvas).toBeVisible();
   await expect(reveal(page)).toHaveAttribute('aria-expanded', 'true');
+  expect(await reveal(page).evaluate(el=>getComputedStyle(el,'::after').animationName)).toBe('none');
   const after = await page.locator('.mast').boundingBox();
   expect(after.y).toBeGreaterThan(before.y + 300);
   await expect(canvas).toHaveAttribute('data-stage', 'title', { timeout: 15000 });
@@ -75,7 +80,10 @@ test('reveal pushes content down, Enter stays in page, close destroys game and r
 
 test('reduced motion has an immediate static opening and accessible controls', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await open(page);
+  await page.goto('/');
+  expect(await reveal(page).evaluate(el=>getComputedStyle(el,'::after').animationName)).toBe('none');
+  await reveal(page).click();
+  await expect(page.locator('[data-cart-screen] canvas')).toBeVisible();
   await expect(page.locator('[data-cart-panel]')).toHaveCSS('animation-name', 'none');
   expect(await axeViolations(page)).toEqual([]);
 });
@@ -139,7 +147,9 @@ for (const [name,width,touch,motion] of [['desktop',1440,false,'reduce'],['phone
     await open(page);
     const frame=page.locator('.cart-frame'), screen=page.locator('[data-cart-screen]');
     const canvas=screen.locator('canvas');
-    await page.waitForLoadState('networkidle');await page.clock.runFor(14000);
+    await page.waitForLoadState('networkidle');await page.clock.runFor(6000);
+    await page.screenshot({path:`/private/tmp/cc-2c-credit-${name}.png`});
+    await page.clock.runFor(8000);
     await expect(canvas).toHaveAttribute('data-stage','title');
     const tools=screen.getByRole('group',{name:'Game utilities'});
     const icons=tools.locator(':scope > button');
@@ -199,6 +209,7 @@ for (const [name,width,touch,motion] of [['desktop',1440,false,'reduce'],['phone
       return dialogue.isVisible();
     },{intervals:[10]}).toBe(true);
     await expect(dialogue.locator('p')).toHaveText(/Make the logo bigger\.|It doesn't pop\.|Can we try a few options\?|Just one small change\./);
+    expect(await page.evaluate(()=>window.__arcade.combat.enemies.some(e=>e.speech?.kind==='enter'))).toBe(true);
     await page.screenshot({path:`/private/tmp/cc-office-opening-${name}.png`});
     const speech='Can you explain why you made the button this way?';
     await page.evaluate(async text=>{
@@ -206,6 +217,7 @@ for (const [name,width,touch,motion] of [['desktop',1440,false,'reduce'],['phone
       const {createEnemy}=await import(new URL('./src/combat/enemy.js',new URL(entry,location.href)));
       const combat=window.__arcade.combat;
       const actor=createEnemy('options-reviewer',combat.hero.x+35,'speech-fixture');
+      actor.feedback=text;
       actor.ai.phase='windup';actor.speech={text,frames:180,kind:'windup'};
       combat.enemies=[actor];
     },speech);

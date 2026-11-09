@@ -76,19 +76,19 @@ already installed, set `PW_CHROMIUM=/path/to/chrome`.
 
 ## Arcade release
 
-A quiet bordered reveal above the home masthead opens the office arcade on a click or an intentional
+A warm charcoal strip with a cream Play button above the home masthead opens the office arcade on a click or an intentional
 scroll up from the very top (negative wheel movement or a finger pulling down on touch screens). The first gesture reveals it and requests sound;
 further scrolling remains native. Scrolling elsewhere, zooming, horizontal gestures and
 form controls do not reveal it. Close briefly ignores residual scroll momentum.
 The opening pushes the site down in normal flow; scrolling remains native. Collapsed,
 no runtime or music downloads until a reveal gesture. Every reveal requests sound; if browser autoplay policy blocks it, Start sound retries
-on a direct click. Close destroys the game and returns focus to Play arcade.
+on a direct click. Close destroys the game and returns focus to Play.
 The game owns four accessible SVG utility buttons in its top-right header: sound, controls/help,
-fullscreen and Close arcade. Close sits beside fullscreen and returns focus to Play arcade;
+fullscreen and Close arcade. Close sits beside fullscreen and returns focus to Play;
 the host close button appears only while loading or after a load failure. The host follows the game’s natural height: a 52px header, a stable 180px
 phone / 360px desktop stage and touch actions on coarse pointers. Speech sits above
 the speaking actor inside the stage, with a pixel tail and no extra layout height. Controls help is a compact overlay and adds no height.
-The reveal uses a neutral border without crack, drip or chip decorations; reduced motion opens immediately;
+The gold bottom border pulses gently while collapsed. Reduced motion keeps it static and opens immediately;
 without JavaScript or on a load failure, compact project links remain available.
 
 Build `cc-sidescroller` with `npm run build`, then run from this checkout:

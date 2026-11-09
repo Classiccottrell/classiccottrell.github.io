@@ -18,23 +18,23 @@ export function createTouchControls(container,canvas,input,{onPress,onGesture,on
  .cc-game-stage{display:flex;align-items:center;justify-content:center;flex:none;width:100%;height:180px}
  @media(min-width:700px){.cc-game-stage{height:360px}}
  .cc-game-shell[data-expanded=true] .cc-game-stage{height:auto;flex:1 1 0}
- .cc-game-tools{position:relative;box-sizing:border-box;display:flex;justify-content:flex-end;gap:4px;flex:none;width:100%;height:52px;padding:4px 8px;background:#19232D;color:#FFF6DC;font:11px/16px "CC Arcade",monospace;z-index:2}
- .cc-game-tools button,.cc-touch-controls button{box-sizing:border-box;min-width:44px;min-height:44px;border:1px solid #48525A;border-radius:0;background:#19232D;color:#FFF6DC;font:11px "CC Arcade",monospace;cursor:pointer;touch-action:none;user-select:none;-webkit-user-select:none}
+ .cc-game-tools{position:relative;box-sizing:border-box;display:flex;justify-content:flex-end;gap:4px;flex:none;width:100%;height:52px;padding:4px 8px;background:#24211D;color:#FFF6DC;font:11px/16px "CC Arcade",monospace;z-index:2}
+ .cc-game-tools button,.cc-touch-controls button{box-sizing:border-box;min-width:44px;min-height:44px;border:1px solid #726653;border-radius:0;background:#24211D;color:#FFF6DC;font:11px "CC Arcade",monospace;cursor:pointer;touch-action:none;user-select:none;-webkit-user-select:none}
  .cc-game-tools .cc-icon{display:grid;place-items:center;width:44px;height:44px;padding:0}
  .cc-game-tools .cc-icon[aria-pressed=true]{color:#FFD400;border-color:#B98A24}
  .cc-game-tools button:focus-visible,.cc-touch-controls button:focus-visible{outline:2px solid #FFD400;outline-offset:-3px}
- .cc-game-tools button:hover{background:#294B58}
- .cc-game-tools button:active,.cc-touch-controls button:active,.cc-touch-controls button[data-held=true]{background:#FFD400;color:#19232D}
- .cc-touch-controls{display:none;box-sizing:border-box;flex:none;width:100%;padding:8px max(10px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left));background:#19232D;color:#F5E6C8;font:11px/16px "CC Arcade",monospace}
+ .cc-game-tools button:hover{background:#3A342B}
+ .cc-game-tools button:active,.cc-touch-controls button:active,.cc-touch-controls button[data-held=true]{background:#FFD400;color:#24211D}
+ .cc-touch-controls{display:none;box-sizing:border-box;flex:none;width:100%;padding:8px max(10px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left));background:#24211D;color:#F5E6C8;font:11px/16px "CC Arcade",monospace}
  .cc-touch-row{display:grid;grid-template-columns:repeat(5,minmax(44px,1fr));gap:8px;max-width:520px;margin:auto}
- .cc-touch-controls button{background:#294B58;border-color:#9E9B8C}
+ .cc-touch-controls button{background:#3A342B;border-color:#9E9B8C}
  .cc-touch-controls button[data-action=attack]{border-color:#FFD400;color:#FFD400}
  .cc-touch-controls button:disabled,.cc-game-tools button:disabled{opacity:.45;cursor:default}
- .cc-control-help{position:absolute;top:52px;right:8px;box-sizing:border-box;width:min(300px,calc(100% - 16px));max-height:240px;overflow:auto;padding:12px;border:2px solid #9E9B8C;background:#FFF6DC;color:#19232D}
+ .cc-control-help{position:absolute;top:52px;right:8px;box-sizing:border-box;width:min(300px,calc(100% - 16px));max-height:240px;overflow:auto;padding:12px;border:2px solid #9E9B8C;background:#FFF6DC;color:#24211D}
  .cc-control-help[hidden]{display:none}
  .cc-control-help p{margin:0 0 8px}
  .cc-control-help kbd{font:inherit;border:1px solid #9E9B8C;padding:1px 3px}
- .cc-control-help button{width:100%;background:#19232D;color:#FFF6DC}
+ .cc-control-help button{width:100%;background:#24211D;color:#FFF6DC}
  @media(any-pointer:coarse){.cc-touch-controls{display:block}}
  `;
  const row=document.createElement('div');row.className='cc-touch-row';

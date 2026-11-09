@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "id": "v0.1.0-ba7ae29fb7",
+  "id": "v0.1.0-c38103676b",
   "entry": "game.js",
   "music": "audio/level-3-shadow-fortress.mp3",
   "files": [
@@ -42,6 +42,7 @@
     "src/attract/demo.js",
     "src/audio/audio.js",
     "src/audio/footsteps.js",
+    "src/boot/developer-2c.png",
     "src/boot/title-v2-compact.png",
     "src/boot/title-v2-wide.png",
     "src/boot/title-v2.png",

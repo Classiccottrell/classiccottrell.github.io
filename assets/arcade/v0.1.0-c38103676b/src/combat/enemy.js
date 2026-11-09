@@ -24,6 +24,9 @@ export const isTelegraphing = (e) => e.ai.phase === 'windup';
 export function stepEnemy(e, target, env = {}) {
   const ai = e.ai, type = ENEMY_TYPES[e.type];
   if(e.speech?.frames>0)e.speech.frames--;
+  if(type.feedback&&!e.entrySpoken&&e.x>=(env.minX??-Infinity)&&e.x<=(env.maxX??Infinity)){
+    say(e,e.feedback??type.feedback,'enter');e.entrySpoken=true;
+  }
   if(e.state==='dead'&&!e.defeatSpoken){say(e,type.dialogue?.defeat,'defeat');e.defeatSpoken=true;}
   const previousPhase=ai.phase;
   const dx = target.x - e.x, toward = Math.sign(dx) || e.facing;

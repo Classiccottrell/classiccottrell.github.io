@@ -16,7 +16,7 @@ export const TOTAL = 12;
 // Reduced motion: static cards only, no wipe, no letter reveal, no blink.
 export const TIMES_REDUCED = { wipe: 0, wordmark: 0, credit: 3.5, title: 7 };
 
-const COLORS = { bg: '#0e0b1a', line: '#2d2250', text: '#f7f4e8', accent: '#ffe27a', dim: '#a1608a' };
+const COLORS = { bg: '#24211D', line: '#3A342B', text: '#f7f4e8', accent: '#ffe27a', dim: '#B98A24' };
 
 // Pure: which stage is active at time t, and 0..1 progress within it (title: always 1 progress capped).
 export function stageAt(t, reducedMotion = false) {
@@ -72,7 +72,7 @@ function big(ctx, s, cx, y, scale, color) {
 }
 
 function scanlines(ctx, alpha, W) {
-  ctx.fillStyle = `rgba(14,11,26,${alpha})`;
+  ctx.fillStyle = `rgba(36,33,29,${alpha})`;
   for (let y = 0; y < BASE_H; y += 2) ctx.fillRect(0, y, W, 1);
 }
 
@@ -113,7 +113,11 @@ export function drawSequence(ctx, seq, { backdrop, titleArt, blinkOn = true, wid
     ctx.fillStyle = COLORS.dim;
     ctx.fillRect(x0, 98, Math.floor(w * (rm ? 1 : Math.min(1, n / full.length))), 1);
   } else if (name === 'credit') {
-    big(ctx,CREDIT,cx,80,Math.max(1,Math.min(2,Math.floor((W-24)/textWidth(CREDIT)))),COLORS.text);
+    if(titleArt?.developer){
+      ctx.drawImage(titleArt.developer,Math.floor(cx-48),18,96,96);
+      big(ctx,'DEVELOPED BY',cx,126,1,COLORS.text);
+      big(ctx,WORDMARK,cx,144,1,COLORS.accent);
+    }else big(ctx,CREDIT,cx,80,Math.max(1,Math.min(2,Math.floor((W-24)/textWidth(CREDIT)))),COLORS.text);
   } else {
     backdrop?.(ctx);
     ctx.fillStyle = 'rgba(14,11,26,0.45)';

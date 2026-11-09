@@ -9,7 +9,7 @@ function specFor(typeId) {
   return specs[typeId] ??= makeSpec({ id: typeId, hp: t.hp, hurt:t.hurt, speed: t.speed, moves: t.moves,poise:!!t.boss });
 }
 export const windupFrames = (typeId,pattern,feedback=ENEMY_TYPES[typeId].feedback) => Math.max(MIN_TELEGRAPH,Math.min(180,(feedback?.length??0)*3),pattern==='flurry'?ENEMY_TYPES[typeId].flurryWindup:ENEMY_TYPES[typeId].windup);
-function say(e,text,kind){if(text)e.speech={text,kind,frames:180};}
+function say(e,text,kind){if(text)e.speech={text,kind,frames:Math.max(300,Math.min(420,text.length*8))};}
 
 export function createEnemy(typeId, x, id, facing = -1) {
   const e = createFighter(specFor(typeId), { id, x, facing, team: 'enemy' });

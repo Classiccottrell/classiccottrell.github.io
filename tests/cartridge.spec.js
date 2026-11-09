@@ -223,7 +223,7 @@ for (const [name,width,touch,motion] of [['desktop',1440,false,'reduce'],['phone
 }
 
 
-test('top wheel requests sound without focus and subsequent wheel scrolls normally', async ({ page }) => {
+test('scroll down stays native; scroll up at top reveals with sound without focus', async ({ page }) => {
   await page.clock.install();
   const music=[];
   page.on('request',request=>{if(/\.mp3(?:\?|$)/.test(request.url()))music.push(request.url());});
@@ -239,7 +239,13 @@ test('top wheel requests sound without focus and subsequent wheel scrolls normal
   await page.goto('/');
   expect(await page.evaluate(()=>window.__audioAttempts)).toBe(0);
   await reveal(page).hover();
-  await page.mouse.wheel(0,100);
+  await page.mouse.wheel(0,500);
+  await expect.poll(()=>page.evaluate(()=>scrollY)).toBeGreaterThan(0);
+  await expect(reveal(page)).toHaveAttribute('aria-expanded','false');
+  await page.mouse.wheel(0,-10000);
+  await expect.poll(()=>page.evaluate(()=>scrollY)).toBe(0);
+  await expect(reveal(page)).toHaveAttribute('aria-expanded','false');
+  await page.mouse.wheel(0,-100);
   await expect(page.locator('[data-cart-screen] canvas')).toBeVisible();
   await page.waitForLoadState('networkidle');
   await page.clock.runFor(14000);
@@ -258,21 +264,21 @@ test('top wheel requests sound without focus and subsequent wheel scrolls normal
   }
 });
 
-test('wheel ignores zoom, horizontal and form controls; negative and pause reset intent', async ({ page }) => {
+test('wheel ignores zoom, horizontal and form controls; positive and pause reset intent', async ({ page }) => {
   await page.clock.install();
   await page.goto('/');
   const wheel=(delta)=>page.locator('.hero').dispatchEvent('wheel',{deltaY:delta,deltaMode:0});
-  await page.locator('.hero').dispatchEvent('wheel',{deltaY:120,ctrlKey:true});
-  await page.locator('.hero').dispatchEvent('wheel',{deltaY:120,metaKey:true});
-  await page.locator('.hero').dispatchEvent('wheel',{deltaY:10,deltaX:120});
+  await page.locator('.hero').dispatchEvent('wheel',{deltaY:-120,ctrlKey:true});
+  await page.locator('.hero').dispatchEvent('wheel',{deltaY:-120,metaKey:true});
+  await page.locator('.hero').dispatchEvent('wheel',{deltaY:-10,deltaX:120});
   await page.evaluate(()=>{const field=document.createElement('input');field.type='range';field.id='gesture-range';document.querySelector('.hero').append(field);});
-  await page.locator('#gesture-range').dispatchEvent('wheel',{deltaY:120});
+  await page.locator('#gesture-range').dispatchEvent('wheel',{deltaY:-120});
   await expect(reveal(page)).toHaveAttribute('aria-expanded','false');
-  await wheel(60);await wheel(-10);await wheel(60);
+  await wheel(-60);await wheel(10);await wheel(-60);
   await expect(reveal(page)).toHaveAttribute('aria-expanded','false');
-  await page.clock.runFor(200);await wheel(40);
+  await page.clock.runFor(200);await wheel(-40);
   await expect(reveal(page)).toHaveAttribute('aria-expanded','false');
-  await page.locator('.hero').dispatchEvent('wheel',{deltaY:4,deltaMode:1});
+  await page.locator('.hero').dispatchEvent('wheel',{deltaY:-4,deltaMode:1});
   await expect(reveal(page)).toHaveAttribute('aria-expanded','true');
 });
 
@@ -280,30 +286,38 @@ test('close rejects residual momentum then permits a fresh reveal', async ({ pag
   await page.clock.install();
   await open(page);
   await page.getByRole('button',{name:'Close arcade'}).click();
-  await page.locator('.hero').dispatchEvent('wheel',{deltaY:150});
+  await page.locator('.hero').dispatchEvent('wheel',{deltaY:-150});
   await expect(reveal(page)).toHaveAttribute('aria-expanded','false');
   await page.clock.runFor(401);
-  await page.locator('.hero').dispatchEvent('wheel',{deltaY:1,deltaMode:2});
+  await page.locator('.hero').dispatchEvent('wheel',{deltaY:-1,deltaMode:2});
   await expect(reveal(page)).toHaveAttribute('aria-expanded','true');
 });
 
-for(const direction of [-1,1]){
-  test(`top touch ${direction<0?'swipe up':'pull down'} reveals without focus`,async({browser})=>{
-    const context=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
-    const page=await context.newPage(), music=[];
-    page.on('request',request=>{if(/\.mp3(?:\?|$)/.test(request.url()))music.push(request.url());});
-    await page.goto('/');
-    const cdp=await context.newCDPSession(page);
+test('touch swipe up scrolls natively; pull down at top reveals without focus',async({browser})=>{
+  const context=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+  const page=await context.newPage(), music=[];
+  page.on('request',request=>{if(/\.mp3(?:\?|$)/.test(request.url()))music.push(request.url());});
+  await page.goto('/');
+  const cdp=await context.newCDPSession(page);
+  const swipe=async(direction)=>{
     await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:160,y:400}]});
     for(const distance of [15,40,85,100])await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:160,y:400+direction*distance}]});
     await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
-    await expect(page.locator('[data-cart-screen] canvas')).toBeVisible();
-    await page.waitForLoadState('networkidle');
-    expect(await page.evaluate(()=>document.activeElement===document.body)).toBe(true);
-    expect(music).toEqual([]);
-    await context.close();
-  });
-}
+  };
+  await swipe(-1);
+  await expect.poll(()=>page.evaluate(()=>scrollY)).toBeGreaterThan(0);
+  await expect(reveal(page)).toHaveAttribute('aria-expanded','false');
+  await page.evaluate(()=>scrollTo({top:0,behavior:'instant'}));
+  await expect.poll(()=>page.evaluate(()=>scrollY)).toBe(0);
+  // Fresh document ends compositor fling from the preceding native swipe.
+  await page.reload();
+  await swipe(1);
+  await expect(page.locator('[data-cart-screen] canvas')).toBeVisible();
+  await page.waitForLoadState('networkidle');
+  expect(await page.evaluate(()=>document.activeElement===document.body)).toBe(true);
+  expect(music).toEqual([]);
+  await context.close();
+});
 
 test('reveal stays bounded without decorative effects under reduced motion',async({page})=>{
   await page.emulateMedia({reducedMotion:'reduce'});

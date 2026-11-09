@@ -77,7 +77,7 @@ already installed, set `PW_CHROMIUM=/path/to/chrome`.
 ## Arcade release
 
 A quiet bordered reveal above the home masthead opens the office arcade on a click or an intentional
-vertical wheel/touch gesture from the very top. The first gesture reveals it and requests sound;
+scroll up from the very top (negative wheel movement or a finger pulling down on touch screens). The first gesture reveals it and requests sound;
 further scrolling remains native. Scrolling elsewhere, zooming, horizontal gestures and
 form controls do not reveal it. Close briefly ignores residual scroll momentum.
 The opening pushes the site down in normal flow; scrolling remains native. Collapsed,

@@ -1,0 +1,258 @@
+{
+  "version": 2,
+  "density": 2,
+  "image": "warlord-z-index.png",
+  "cell": {
+    "w": 192,
+    "h": 192
+  },
+  "anchor": {
+    "x": 96,
+    "y": 192
+  },
+  "animations": {
+    "idle": {
+      "fps": 8,
+      "frames": [
+        {
+          "name": "warlord-z-index_idle_00.png",
+          "x": 0,
+          "y": 0,
+          "w": 192,
+          "h": 192
+        },
+        {
+          "name": "warlord-z-index_idle_01.png",
+          "x": 192,
+          "y": 0,
+          "w": 192,
+          "h": 192
+        },
+        {
+          "name": "warlord-z-index_idle_02.png",
+          "x": 384,
+          "y": 0,
+          "w": 192,
+          "h": 192
+        },
+        {
+          "name": "warlord-z-index_idle_03.png",
+          "x": 576,
+          "y": 0,
+          "w": 192,
+          "h": 192
+        }
+      ]
+    },
+    "walk": {
+      "fps": 8,
+      "frames": [
+        {
+          "name": "warlord-z-index_walk_00.png",
+          "x": 768,
+          "y": 0,
+          "w": 192,
+          "h": 192
+        },
+        {
+          "name": "warlord-z-index_walk_01.png",
+          "x": 960,
+          "y": 0,
+          "w": 192,
+          "h": 192
+        },
+        {
+          "name": "warlord-z-index_walk_02.png",
+          "x": 1152,
+          "y": 0,
+          "w": 192,
+          "h": 192
+        },
+        {
+          "name": "warlord-z-index_walk_03.png",
+          "x": 1344,
+          "y": 0,
+          "w": 192,
+          "h": 192
+        },
+        {
+          "name": "warlord-z-index_walk_04.png",
+          "x": 1536,
+          "y": 0,
+          "w": 192,
+          "h": 192
+        },
+        {
+          "name": "warlord-z-index_walk_05.png",
+          "x": 1728,
+          "y": 0,
+          "w": 192,
+          "h": 192
+        }
+      ]
+    },
+    "windup": {
+      "fps": 8,
+      "frames": [
+        {
+          "name": "warlord-z-index_windup_00.png",
+          "x": 1920,
+          "y": 0,
+          "w": 192,
+          "h": 192
+        },
+        {
+          "name": "warlord-z-index_windup_01.png",
+          "x": 2112,
+          "y": 0,
+          "w": 192,
+          "h": 192
+        },
+        {
+          "name": "warlord-z-index_windup_02.png",
+          "x": 2304,
+          "y": 0,
+          "w": 192,
+          "h": 192
+        }
+      ]
+    },
+    "attack": {
+      "fps": 8,
+      "frames": [
+        {
+          "name": "warlord-z-index_attack_00.png",
+          "x": 2496,
+          "y": 0,
+          "w": 192,
+          "h": 192
+        },
+        {
+          "name": "warlord-z-index_attack_01.png",
+          "x": 2688,
+          "y": 0,
+          "w": 192,
+          "h": 192
+        },
+        {
+          "name": "warlord-z-index_attack_02.png",
+          "x": 2880,
+          "y": 0,
+          "w": 192,
+          "h": 192
+        },
+        {
+          "name": "warlord-z-index_attack_03.png",
+          "x": 3072,
+          "y": 0,
+          "w": 192,
+          "h": 192
+        }
+      ]
+    },
+    "hurt": {
+      "fps": 8,
+      "frames": [
+        {
+          "name": "warlord-z-index_hurt_00.png",
+          "x": 3264,
+          "y": 0,
+          "w": 192,
+          "h": 192
+        },
+        {
+          "name": "warlord-z-index_hurt_01.png",
+          "x": 3456,
+          "y": 0,
+          "w": 192,
+          "h": 192
+        }
+      ]
+    },
+    "knockdown": {
+      "fps": 8,
+      "frames": [
+        {
+          "name": "warlord-z-index_knockdown_00.png",
+          "x": 3648,
+          "y": 0,
+          "w": 192,
+          "h": 192
+        },
+        {
+          "name": "warlord-z-index_knockdown_01.png",
+          "x": 3840,
+          "y": 0,
+          "w": 192,
+          "h": 192
+        },
+        {
+          "name": "warlord-z-index_knockdown_02.png",
+          "x": 4032,
+          "y": 0,
+          "w": 192,
+          "h": 192
+        }
+      ]
+    },
+    "dead": {
+      "fps": 8,
+      "frames": [
+        {
+          "name": "warlord-z-index_dead_00.png",
+          "x": 4224,
+          "y": 0,
+          "w": 192,
+          "h": 192
+        }
+      ]
+    },
+    "signature": {
+      "fps": 8,
+      "frames": [
+        {
+          "name": "warlord-z-index_signature_00.png",
+          "x": 4416,
+          "y": 0,
+          "w": 192,
+          "h": 192
+        },
+        {
+          "name": "warlord-z-index_signature_01.png",
+          "x": 4608,
+          "y": 0,
+          "w": 192,
+          "h": 192
+        },
+        {
+          "name": "warlord-z-index_signature_02.png",
+          "x": 4800,
+          "y": 0,
+          "w": 192,
+          "h": 192
+        },
+        {
+          "name": "warlord-z-index_signature_03.png",
+          "x": 4992,
+          "y": 0,
+          "w": 192,
+          "h": 192
+        },
+        {
+          "name": "warlord-z-index_signature_04.png",
+          "x": 5184,
+          "y": 0,
+          "w": 192,
+          "h": 192
+        },
+        {
+          "name": "warlord-z-index_signature_05.png",
+          "x": 5376,
+          "y": 0,
+          "w": 192,
+          "h": 192
+        }
+      ]
+    }
+  }
+}

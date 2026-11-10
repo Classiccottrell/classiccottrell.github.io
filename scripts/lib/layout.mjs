@@ -14,7 +14,6 @@ const masthead = (ctx, path) => {
   const items = site.nav.map((n) => h`<li><a href="${esc(n.href)}"${current(n.href, path)}>${esc(n.label)}</a></li>`);
   const cta = h`<li class="mast-cta"><a href="/work-with-me/"${current('/work-with-me/', path)}>Work with me</a></li>`;
   return h`
-<a class="skip" href="#main">Skip to content</a>
 <header class="mast">
   <div class="wrap mast-in">
     <a class="mast-name" href="/"${path === '/' ? ' aria-current="page"' : ''}>${esc(site.name)}</a>
@@ -25,6 +24,23 @@ const masthead = (ctx, path) => {
     </details>
   </div>
 </header>`;
+};
+
+// Home only; project links remain available if the optional game cannot load.
+const cartridge = (ctx) => {
+  if (!ctx.arcade) return '';
+  const base = `/assets/arcade/${ctx.arcade.id}/`;
+  return h`<section class="cartridge" aria-label="Office arcade" data-cartridge data-src="${base}${esc(ctx.arcade.entry)}" data-music-src="${base}${esc(ctx.arcade.music)}">
+  <button type="button" class="cart-seam" data-cart-reveal data-js aria-label="Play" aria-expanded="false" aria-controls="arcade-aperture"><span>Play</span></button>
+  <div class="cart-aperture" id="arcade-aperture" data-cart-panel hidden>
+    <div class="cart-frame">
+      <div class="wrap cart-head" data-js><p class="note">Loading arcade…</p><button type="button" class="tool" data-cart-close>Close arcade <span aria-hidden="true">×</span></button></div>
+      <div class="cart-screen" data-cart-screen hidden></div>
+      <p class="cart-fallback wrap" data-cart-fallback>Explore <a class="lnk" href="/work/vpat-vault/">VPAT Vault</a>, <a class="lnk" href="/work/linefield/">linefield</a> or <a class="lnk" href="/work/terry-time/">Terry Time</a>.</p>
+    </div>
+  </div>
+  <script src="/assets/js/cartridge.js" defer></script>
+</section>`;
 };
 
 const footer = (ctx, path) => {
@@ -90,6 +106,8 @@ ${meta.noindex ? '<meta name="robots" content="noindex">' : h`<link rel="canonic
 ${meta.head || ''}
 </head>
 <body${meta.bodyClass ? h` class="${meta.bodyClass}"` : ''}>
+<a class="skip" href="#main">Skip to content</a>
+${meta.path === '/' ? cartridge(ctx) : ''}
 ${masthead(ctx, meta.path)}
 <main id="main">
 ${meta.main}

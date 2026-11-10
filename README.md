@@ -29,6 +29,8 @@ data/                 the content: edit these, then npm run build
 assets/
   css/site.css        the whole stylesheet, tokens first (the build stamps its url(/assets/…) ?v= hashes)
   js/site.js          the optional layer
+  arcade/<release>/  versioned runtime-only office arcade export, including music and font licence
+  js/cartridge.js    home-only click reveal; game owns sound, help, touch controls and expansion
   js/terry-symbols.js Terry Time's footer, running live on its case study (only that page loads it)
   fonts/              Familjen Grotesk, Newsreader, Red Hat Mono (OFL)
   img/                images the site serves (made by npm run images)
@@ -71,6 +73,39 @@ npm test                 # build check, contrast check, then the Playwright suit
 `npm run cards`, `npm run contact-sheet` and `npm test` use Playwright's
 Chromium (`npx playwright install chromium` once). To use a Chromium that's
 already installed, set `PW_CHROMIUM=/path/to/chrome`.
+
+## Arcade release
+
+A warm charcoal strip with a cream Play button above the home masthead opens the office arcade on a click or an intentional
+scroll up from the very top (negative wheel movement or a finger pulling down on touch screens). The first gesture reveals it and requests sound;
+further scrolling remains native. Scrolling elsewhere, zooming, horizontal gestures and
+form controls do not reveal it. Close briefly ignores residual scroll momentum.
+The opening pushes the site down in normal flow; scrolling remains native. Collapsed,
+no runtime or music downloads until a reveal gesture. Every reveal requests sound; if browser autoplay policy blocks it, Start sound retries
+on a direct click. Close destroys the game and returns focus to Play.
+The game owns four accessible SVG utility buttons in its top-right header: sound, controls/help,
+fullscreen and Close arcade. Close sits beside fullscreen and returns focus to Play;
+the host close button appears only while loading or after a load failure. The host follows the game’s natural height: a 52px header, a stable 180px
+phone / 360px desktop stage and touch actions on coarse pointers. Speech sits above
+the speaking actor inside the stage, with a pixel tail and no extra layout height. Controls help is a compact overlay and adds no height.
+The gold bottom border pulses gently while collapsed. Reduced motion keeps it static and opens immediately;
+without JavaScript or on a load failure, compact project links remain available.
+
+Build `cc-sidescroller` with `npm run build`, then run from this checkout:
+
+```bash
+npm run vendor:arcade -- ../cc-sidescroller/dist
+npm run build
+npm test
+```
+
+`data/arcade.json` selects the release manifest. `assets/arcade/<manifest.id>/` is
+an exact copy of its runtime export: ES modules, selected game art, font licence and
+Matt Cottrell’s authorized music, made with Google Flow. Private development files,
+raw art and prompts stay in the game checkout. Versioned directories preserve nested
+module/image/music URLs under the site's immutable asset cache. The vendor command
+rejects a changed export reusing an existing release ID. Commit the manifest, runtime
+folder and regenerated pages together. This preview retains only the selected runtime release.
 
 ## Common edits
 

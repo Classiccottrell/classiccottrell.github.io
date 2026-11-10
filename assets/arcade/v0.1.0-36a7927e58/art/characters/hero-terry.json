@@ -1,0 +1,427 @@
+{
+  "version": 2,
+  "density": 2,
+  "image": "hero-terry.png",
+  "cell": {
+    "w": 128,
+    "h": 128
+  },
+  "anchor": {
+    "x": 64,
+    "y": 128
+  },
+  "animations": {
+    "idle": {
+      "fps": 5,
+      "frames": [
+        {
+          "name": "hero-terry_idle_00.png",
+          "x": 0,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero-terry_idle_01.png",
+          "x": 128,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero-terry_idle_02.png",
+          "x": 256,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero-terry_idle_03.png",
+          "x": 384,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        }
+      ]
+    },
+    "walk": {
+      "fps": 9,
+      "frames": [
+        {
+          "name": "hero-terry_walk_00.png",
+          "x": 512,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero-terry_walk_01.png",
+          "x": 640,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero-terry_walk_02.png",
+          "x": 768,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero-terry_walk_03.png",
+          "x": 896,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero-terry_walk_04.png",
+          "x": 1024,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero-terry_walk_05.png",
+          "x": 1152,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        }
+      ]
+    },
+    "punch1": {
+      "fps": 12,
+      "frames": [
+        {
+          "name": "hero-terry_punch1_00.png",
+          "x": 1280,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero-terry_punch1_01.png",
+          "x": 1408,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero-terry_punch1_02.png",
+          "x": 1536,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero-terry_punch1_03.png",
+          "x": 1664,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        }
+      ]
+    },
+    "punch2": {
+      "fps": 12,
+      "frames": [
+        {
+          "name": "hero-terry_punch2_00.png",
+          "x": 1792,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero-terry_punch2_01.png",
+          "x": 1920,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero-terry_punch2_02.png",
+          "x": 2048,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero-terry_punch2_03.png",
+          "x": 2176,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        }
+      ]
+    },
+    "kick": {
+      "fps": 12,
+      "frames": [
+        {
+          "name": "hero-terry_kick_00.png",
+          "x": 2304,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero-terry_kick_01.png",
+          "x": 2432,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero-terry_kick_02.png",
+          "x": 2560,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero-terry_kick_03.png",
+          "x": 2688,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        }
+      ]
+    },
+    "transform": {
+      "fps": 17,
+      "frames": [
+        {
+          "name": "hero-terry_transform_00.png",
+          "x": 2816,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero-terry_transform_01.png",
+          "x": 2944,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero-terry_transform_02.png",
+          "x": 3072,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero-terry_transform_03.png",
+          "x": 3200,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero-terry_transform_04.png",
+          "x": 3328,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero-terry_transform_05.png",
+          "x": 3456,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero-terry_transform_06.png",
+          "x": 3584,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero-terry_transform_07.png",
+          "x": 3712,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero-terry_transform_08.png",
+          "x": 3840,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero-terry_transform_09.png",
+          "x": 3968,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        }
+      ]
+    },
+    "aura": {
+      "fps": 5,
+      "frames": [
+        {
+          "name": "hero-terry_aura_00.png",
+          "x": 4096,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero-terry_aura_01.png",
+          "x": 4224,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero-terry_aura_02.png",
+          "x": 4352,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero-terry_aura_03.png",
+          "x": 4480,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        }
+      ]
+    },
+    "hit": {
+      "fps": 8,
+      "frames": [
+        {
+          "name": "hero-terry_hit_00.png",
+          "x": 4608,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero-terry_hit_01.png",
+          "x": 4736,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        }
+      ]
+    },
+    "dodge": {
+      "fps": 8,
+      "frames": [
+        {
+          "name": "hero-terry_dodge_00.png",
+          "x": 4864,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero-terry_dodge_01.png",
+          "x": 4992,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero-terry_dodge_02.png",
+          "x": 5120,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero-terry_dodge_03.png",
+          "x": 5248,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero-terry_dodge_04.png",
+          "x": 5376,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        }
+      ]
+    },
+    "knockdown": {
+      "fps": 8,
+      "frames": [
+        {
+          "name": "hero-terry_knockdown_00.png",
+          "x": 5504,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero-terry_knockdown_01.png",
+          "x": 5632,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero-terry_knockdown_02.png",
+          "x": 5760,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero-terry_knockdown_03.png",
+          "x": 5888,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        }
+      ]
+    },
+    "aura-front": {
+      "fps": 5,
+      "frames": [
+        {
+          "name": "hero-terry_aura-front_00.png",
+          "x": 6016,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero-terry_aura-front_01.png",
+          "x": 6144,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero-terry_aura-front_02.png",
+          "x": 6272,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "name": "hero-terry_aura-front_03.png",
+          "x": 6400,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        }
+      ]
+    }
+  }
+}

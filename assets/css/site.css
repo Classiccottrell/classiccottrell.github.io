@@ -711,3 +711,26 @@ a.avail:hover{background:var(--highlight)}
   .plate,.cs-sec,.take,.rule{break-inside:avoid}
   a{text-decoration:none}
 }
+
+/* The arcade opens above the home page, in normal flow. */
+.cartridge{position:relative}
+.home .cartridge~.mast{top:auto}
+.cart-seam{position:relative;display:block;width:100%;min-height:44px;border:0;border-bottom:1px solid var(--signal);border-radius:0;padding:8px max(24px,calc((100vw - var(--max))/2));background:#24211D;color:#FFF6DC;text-align:right;font:500 .72rem/1.4 var(--f-pencil);cursor:pointer;isolation:isolate}
+.cart-seam>span{position:relative;display:inline-flex;gap:12px;align-items:center}
+.cart-seam::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,transparent,#FFE778,transparent) -220px 0/220px 100% no-repeat;opacity:.65;pointer-events:none}
+.cart-seam:focus-visible{outline:2px solid var(--signal);outline-offset:-4px}
+.cart-seam:hover>span{text-decoration:underline;text-underline-offset:4px}
+.cart-head[hidden],.cart-aperture[hidden],.cart-screen[hidden],.cart-fallback[hidden]{display:none}
+.cart-frame{position:relative;background:var(--band);color:var(--band-fg);border-bottom:1px solid var(--pencil)}
+.cart-head{display:flex;gap:12px;align-items:center;justify-content:space-between;padding-block:8px}
+.cart-head .note{color:var(--band-proof)}
+.cart-head .tool{color:var(--band-fg);background:var(--band);border-color:var(--band-fg);min-height:44px}
+.cart-head .tool:hover{background:var(--band-highlight)}
+.cart-screen{height:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
+.cart-fallback{padding-block:16px;color:var(--band-fg)}
+.cart-fallback .lnk{color:var(--band-fg)}
+.no-js .cart-aperture[hidden]{display:block}
+.cart-screen canvas:focus-visible{outline:2px solid var(--band-proof);outline-offset:-4px}
+@media(prefers-reduced-motion:no-preference){.cart-seam[aria-expanded=false]::after{animation:cart-border-pulse 6s ease-in-out infinite}@keyframes cart-border-pulse{0%,15%{background-position:-220px 0;opacity:0}25%{opacity:.65}75%{background-position:calc(100% + 220px) 0;opacity:.65}85%,100%{background-position:calc(100% + 220px) 0;opacity:0}}}
+@media(prefers-reduced-motion:no-preference){.cart-aperture:not([hidden]){animation:cart-open .24s ease-out}@keyframes cart-open{from{clip-path:inset(0 0 100%)}to{clip-path:inset(0)}}}
+@media print{.cartridge{display:none!important}}

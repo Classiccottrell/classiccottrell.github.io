@@ -11,6 +11,7 @@
     "images": "node scripts/images.mjs",
     "cards": "node scripts/cards.mjs",
     "contact-sheet": "node scripts/contact-sheet.mjs",
+    "vendor:arcade": "node scripts/vendor-arcade.mjs",
     "serve": "node scripts/serve.mjs",
     "test": "npm run build:check && npm run check:contrast && playwright test"
   },

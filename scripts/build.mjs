@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url';
 import { gzipSync } from 'node:zlib';
 import { checkContrast, ratio } from './check-contrast.mjs';
 import * as P from './lib/pages.mjs';
-import { guidePage } from './lib/guide.mjs';
+import { guidePage, arcadeGuidePage } from './lib/guide.mjs';
 import { resolveSignature } from './lib/signature.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -35,6 +35,7 @@ const ctx = {
   drawings: json('data/drawings.json'),
   hire: json('data/hire.json'),
   guide: json('data/guide.json'),
+  arcadeGuide: json('data/arcade-guide.json'),
   year: 2026,
 };
 ctx.arcade = existsSync(path.join(ROOT, 'data/arcade.json')) ? json('data/arcade.json') : null;
@@ -117,13 +118,14 @@ const pages = [
   ['drawings/index.html', () => P.drawingsPage(ctx)],
   ['about/index.html', () => P.about(ctx)],
   ['about-this-site/index.html', () => P.aboutSite(ctx)],
+  ['how-to/build-a-browser-arcade/index.html', () => arcadeGuidePage(ctx)],
   ['404.html', () => P.notFound(ctx)],
 ];
 // Inline links in the data, [label](/path/), have to land on a page this build writes.
 const routes = new Set(pages.map(([f]) => `/${f.replace(/index\.html$/, '')}`));
 const linksIn = (v) => (typeof v === 'string' ? [...v.matchAll(/\]\((\/[^)\s]*)\)/g)].map((m) => m[1])
   : v && typeof v === 'object' ? Object.values(v).flatMap(linksIn) : []);
-for (const key of ['site', 'work', 'takes', 'rules', 'writing', 'drawings', 'hire', 'guide']) {
+for (const key of ['site', 'work', 'takes', 'rules', 'writing', 'drawings', 'hire', 'guide', 'arcadeGuide']) {
   for (const href of linksIn(ctx[key])) if (!routes.has(href.split('#')[0])) fail(`data/${key}.json links to missing ${href}`);
 }
 ctx.stats = {
@@ -148,7 +150,7 @@ outputs.set('colophon/index.html', P.moved(ctx, '/about-this-site/'));
 // No writing.html stub: it would hide writing/ (see below). Netlify 301s the
 // old address, and the 404 page forwards it on GitHub Pages.
 
-const indexable = pages.map(([f]) => f).filter((f) => f !== '404.html' && !f.includes('thanks'));
+const indexable = pages.map(([f]) => f).filter((f) => f !== '404.html' && !f.includes('thanks') && f !== 'how-to/build-a-browser-arcade/index.html');
 outputs.set('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${indexable.map((f) => `  <url><loc>${ctx.site.url}/${f.replace(/index\.html$/, '')}</loc></url>`).join('\n')}

@@ -101,3 +101,34 @@ export function guidePage(ctx) {
     path: g.path, title: g.title, description: g.description, card: `guide-${g.slug}`, type: 'article', bodyClass: 'case guide', main,
   });
 }
+
+// Unlisted arcade guide draft; shares the Terry guide's prompt and check blocks.
+export function arcadeGuidePage(ctx) {
+  const g = ctx.arcadeGuide;
+  const total = g.sections.filter((section) => section.prompt).length;
+  let n = 0;
+  const main = h`<article>
+  <header class="wrap ph"><div class="prose">
+    <p class="note">How-to · Draft for review</p>
+    <h1 class="h1">${esc(g.title)}</h1>
+    <p class="lede">${inline(g.lede)}</p>
+    <p class="note">Last updated: <time datetime="${esc(g.updated)}">${esc(g.updated)}</time></p>
+  </div></header>
+  <div class="wrap guide-rest">
+    ${g.sections.map((section) => h`<section class="guide-sec" id="${esc(section.id)}" aria-labelledby="${esc(section.id)}-h">
+      <h2 class="cs-h" id="${esc(section.id)}-h">${inline(section.heading)}</h2>
+      ${section.paragraphs.map((text) => h`<p>${inline(text)}</p>`)}
+      ${section.prompt ? promptBlock(section.prompt, ++n, total) : ''}
+      ${section.check ? h`<p class="check"><strong>Check:</strong> ${inline(section.check)}</p>` : ''}
+    </section>`)}
+    <section class="guide-sec" aria-labelledby="guide-resources">
+      <h2 class="cs-h" id="guide-resources">Resources</h2>
+      <ul class="items">${g.links.map((item) => h`<li>${link(item.href, item.label)}</li>`)}</ul>
+    </section>
+  </div>
+</article>`;
+  return page(ctx, {
+    path: '/how-to/build-a-browser-arcade/', title: g.title, description: g.description,
+    card: 'home', type: 'article', bodyClass: 'case', main, noindex: true,
+  });
+}

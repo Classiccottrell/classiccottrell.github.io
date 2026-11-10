@@ -107,6 +107,11 @@ module/image/music URLs under the site's immutable asset cache. The vendor comma
 rejects a changed export reusing an existing release ID. Commit the manifest, runtime
 folder and regenerated pages together. This preview retains only the selected runtime release.
 
+The unlisted arcade how-to draft is generated at `/how-to/build-a-browser-arcade/`
+from `data/arcade-guide.json` using the existing guide prompt/copy blocks. It is marked
+“Draft for review”, carries `noindex`, and is excluded from the sitemap, home and Writing.
+Keep that review state until publication is explicitly approved.
+
 ## Common edits
 
 - **The headline:** `data/site.json` → `headline`. `*simpler.*` is the inline-emphasis mark the build already

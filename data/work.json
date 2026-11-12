@@ -64,7 +64,8 @@
         "paragraphs": [
           "The WCAG CLI crawls a site, a signed-in app or a codebase on your own machine and writes a bug sheet, a whole-site summary, reviewer files and a VPAT draft, with PDF, Excel and Word exports.",
           "The Chrome extension scans the page you're on with axe-core, keeps everything local, and exports JSON. `wcag-scan --from-evidence` turns those exports into the same bug sheet and draft.",
-          "Nine prompts run inside Claude Code or Codex. They turn reviewed evidence into ITI-labelled rows, and a small renderer escapes them into fixed HTML. Every tool is free while it's in beta."
+          "Nine prompts run inside Claude Code or Codex. They turn reviewed evidence into ITI-labelled rows, and a small renderer escapes them into fixed HTML. The beta package leaves the 50-record reference dataset out until a privacy review clears it.",
+          "Every tool is free during the beta. The prompts are by request, the CLI is a download, and the Chrome scanner installs locally until its Chrome Web Store listing is up."
         ]
       },
       {
@@ -193,7 +194,7 @@
           },
           {
             "lead": "Sixteen controls on every piece.",
-            "text": "Scale, speed, stroke, opacity, saturation, color mode, two colors, two hues, invert, glow, angle, motion, phase and density, plus whatever each piece needs on its own. A script drives every control on every piece and diffs the rendered frames: 479 controls, none of them dead. It exists because twice a control shipped that read its value and changed nothing, and both times a human review passed it."
+            "text": "Scale, speed, stroke, opacity, saturation, colour mode, two colours, two hues, invert, glow, angle, motion, phase and density, plus whatever each piece needs on its own. A script drives every control on every piece and diffs the rendered frames: 479 controls, none of them dead. It exists because twice a control shipped that read its value and changed nothing, and both times a human review passed it."
           },
           {
             "lead": "Five ways out.",
@@ -856,7 +857,7 @@
           },
           {
             "lead": "A loop that finds its own bugs.",
-            "text": "improvement-loop runs audit, execute, systematize, re-audit, escalate, and won’t advance a round unless the rulebook itself learned something. Six rounds in, it’s caught its own accent color failing contrast as text, a selection state that broke in dark mode, and a fully built page nothing on the site linked to."
+            "text": "improvement-loop runs audit, execute, systematize, re-audit, escalate, and won’t advance a round unless the rulebook itself learned something. Six rounds in, it’s caught its own accent colour failing contrast as text, a selection state that broke in dark mode, and a fully built page nothing on the site linked to."
           }
         ],
         "outro": "I run the skills from .agents/skills/ in Claude Code and Cursor. The repository is private; this case study covers the rules and review loop."
@@ -870,7 +871,7 @@
           },
           {
             "lead": "The rulebook only grows from evidence.",
-            "text": "It started at nine color rules and six interaction rules. It’s grown because rounds kept finding real, unstaged bugs, not because someone guessed a rule might matter someday."
+            "text": "It started at nine colour rules and six interaction rules. It’s grown because rounds kept finding real, unstaged bugs, not because someone guessed a rule might matter someday."
           },
           {
             "lead": "A clean pass that teaches nothing doesn’t count.",
@@ -943,7 +944,7 @@
             "text": "A five-step type scale (48/32/24/16/13px) and 2-3px black borders carry the entire structure that shadow and rounding used to carry."
           },
           {
-            "lead": "Color is rationed like a budget, not a palette.",
+            "lead": "Colour is rationed like a budget, not a palette.",
             "text": "Red for alerts, green for live data, blue for raw hyperlinks. Never decoration, never the only signal that a state changed."
           }
         ]
@@ -961,7 +962,7 @@
           },
           {
             "lead": "A brutal system still has to pass accessibility, or it’s just ugly.",
-            "text": "The manifesto ships its own amendments: a loud, instant focus ring, uppercase capped at short labels only, and color always paired with text so it’s never the sole carrier of meaning."
+            "text": "The manifesto ships its own amendments: a loud, instant focus ring, uppercase capped at short labels only, and colour always paired with text so it’s never the sole carrier of meaning."
           }
         ]
       },
@@ -1014,7 +1015,7 @@
       {
         "paragraphs": [
           "Every new interface started as a fresh set of decisions: which green, which radius, which type pairing, made again from scratch each time and drifting a little further from the last one. Re-theming meant hunting down hardcoded values across a dozen components.",
-          "The Classic Cottrell Design System replaces that with one set of CSS custom properties for color, type, and spacing, and a library of primitives built on top of them, so re-theming is a values-only edit instead of a rewrite."
+          "The Classic Cottrell Design System replaces that with one set of CSS custom properties for colour, type, and spacing, and a library of primitives built on top of them, so re-theming is a values-only edit instead of a rewrite."
         ]
       },
       {
@@ -1055,7 +1056,7 @@
     },
     "stack": "Python",
     "numbers": [
-      "3 bundled apps",
+      "5 bundled apps",
       "1 shipped product"
     ],
     "links": [],
@@ -1075,7 +1076,7 @@
     "sections": [
       {
         "paragraphs": [
-          "Every new internal tool started the same way: a blank argparse script, a copy-pasted color function, a welcome message written once and never touched again. The branding lived in whichever script wrote it last.",
+          "Every new internal tool started the same way: a blank argparse script, a copy-pasted colour function, a welcome message written once and never touched again. The branding lived in whichever script wrote it last.",
           "ClassicCottrell CLI is the fix: subclass a Brand, register a few commands, and every tool that ships gets the same welcome page, the same terminal styling, and the same fallback behavior for free."
         ]
       },
@@ -1088,12 +1089,12 @@
             "text": "Subclass Brand with a name, tagline, and hex accent, and every command inherits a welcome page, an ASCII-rendered logo, and a branded first-run splash. No copy-paste between projects."
           },
           {
-            "lead": "Terminal color that actually degrades.",
-            "text": "The success/warning/error/info helpers detect truecolor, 256-color, or 16-color terminals automatically, fall back to plain text under NO_COLOR or a pipe, and never assume a capability that isn’t there."
+            "lead": "Terminal colour that actually degrades.",
+            "text": "The success/warning/error/info helpers detect truecolor, 256-colour, or 16-colour terminals automatically, fall back to plain text under NO_COLOR or a pipe, and never assume a capability that isn’t there."
           },
           {
-            "lead": "Three bundled apps prove the framework holds up.",
-            "text": "ccasset (responsive image variants and blurhash), ccsync (frontmatter validation and content indexing), and cctokens (CSS custom-property extraction) each ship in roughly 80 to 145 lines because the framework carries the shared parts."
+            "lead": "Five bundled apps prove the framework holds up.",
+            "text": "ccasset (responsive image variants and blurhash), ccsync (frontmatter validation and content indexing), cctokens (CSS custom-property extraction), ccformat (pasted text reformatted for email, Substack, Medium, LinkedIn, X and Instagram) and ccstyle (visual style pulled from an image into a prompt engine) each stay one module because the framework carries the shared parts."
           }
         ]
       },
@@ -1106,7 +1107,7 @@
           },
           {
             "lead": "Degrade honestly instead of assuming a terminal.",
-            "text": "Color support is detected, not assumed, so the same command reads correctly whether it’s a modern terminal, an old one, or a log file redirected to disk."
+            "text": "Colour support is detected, not assumed, so the same command reads correctly whether it’s a modern terminal, an old one, or a log file redirected to disk."
           },
           {
             "lead": "White-labeling should never require a fork.",
@@ -1128,13 +1129,13 @@
           },
           {
             "lead": "Built on the same branded shell as everything else.",
-            "text": "It ships as a command-line tool on ClassicCottrell CLI, so it inherits the same welcome page, terminal styling, and fallback behavior as ccasset, ccsync, and cctokens for free."
+            "text": "It ships as a command-line tool on ClassicCottrell CLI, so it inherits the same welcome page, terminal styling, and fallback behavior as the five bundled apps for free."
           }
         ]
       },
       {
         "paragraphs": [
-          "The first tool built on a framework proves little; the fifth is the real test. Three internal apps and one shipped product in, the pattern’s held: brand a class, register a command, ship."
+          "The first tool built on a framework proves little; the fifth is the real test. Five internal apps and one shipped product in, the pattern’s held: brand a class, register a command, ship."
         ]
       }
     ]

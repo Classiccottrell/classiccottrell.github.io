@@ -5,6 +5,8 @@ direction “Ink & Rule”: Bristol board, India ink, two blue pencils and one s
 
 The previous site is kept intact on the [`v1-classic`](https://github.com/Classiccottrell/classiccottrell.github.io/tree/v1-classic) branch.
 
+What's planned next lives in [ROADMAP.md](ROADMAP.md).
+
 ## How it works
 
 Every page is generated from the JSON files in `data/` by a small Node build

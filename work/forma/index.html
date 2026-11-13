@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Forma · Matthew A. Cottrell</title>
-<meta name="description" content="Pick a shape, set the light, export a transparent PNG.">
+<meta name="description" content="Pick a shape, set the light, export a transparent PNG, or run it live on your own page.">
 <link rel="canonical" href="https://classiccottrell.ca/work/forma/">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Matthew A. Cottrell">
 <meta property="og:title" content="Forma">
-<meta property="og:description" content="Pick a shape, set the light, export a transparent PNG.">
+<meta property="og:description" content="Pick a shape, set the light, export a transparent PNG, or run it live on your own page.">
 <meta property="og:url" content="https://classiccottrell.ca/work/forma/">
 <meta property="og:image" content="https://classiccottrell.ca/assets/cards/work-forma.png?v=f6fee882b1">
 <meta property="og:image:width" content="1200">
@@ -49,9 +49,9 @@
 <header class="wrap ph">
   <p class="note"><a href="/work/">Work</a> / 03 · Tool</p>
   <h1 class="splash">Forma</h1>
-  <p class="lede">Pick a shape, set the light, export a transparent PNG.</p>
+  <p class="lede">Pick a shape, set the light, export a transparent PNG, or run it live on your own page.</p>
   
-<dl class="tblock cs-tb"><div><dt>Role</dt><dd>Design and build</dd></div><div><dt>Year</dt><dd>2026</dd></div><div><dt>Status</dt><dd><i class="sm sm-ship" aria-hidden="true"></i>Shipped, MIT</dd></div><div><dt>Stack</dt><dd>Runs in the browser, no server</dd></div><div><dt>Numbers</dt><dd>18 shapes · 15 materials · 6 environments</dd></div><div><dt>Links</dt><dd><a class="lnk" href="https://github.com/Classiccottrell/forma">Source<span class="ext" aria-hidden="true"> ↗</span></a></dd></div></dl>
+<dl class="tblock cs-tb"><div><dt>Role</dt><dd>Design and build</dd></div><div><dt>Year</dt><dd>2026</dd></div><div><dt>Status</dt><dd><i class="sm sm-live" aria-hidden="true"></i>Live, v1 in review</dd></div><div><dt>Stack</dt><dd>Three.js · runs in the browser, no server</dd></div><div><dt>Numbers</dt><dd>30 shapes · 21 materials · Solid, liquid or gas</dd></div><div><dt>Links</dt><dd><a class="lnk" href="https://classiccottrell.github.io/forma/editor/">Open the editor<span class="ext" aria-hidden="true"> ↗</span></a> · <a class="lnk" href="https://github.com/Classiccottrell/forma">Source<span class="ext" aria-hidden="true"> ↗</span></a></dd></div></dl>
 </header>
   <div class="wrap">
 <figure class="plate has-legend">
@@ -64,7 +64,7 @@
 <section class="cs-sec">
   
   
-  <p>A 3D shape on a transparent background is a small ask, and it should not need an account.</p><p>Forma is a shape playground that runs in the browser. Pick a shape, give it a material, set the light, and export a transparent PNG. Nothing uploads and nothing needs a server, because the whole thing runs on your machine.</p><p>Under the editor is a typed engine that treats shape, material, environment and effect as four separate choices that compose. That is why the same composition can leave as a PNG or as a snippet you paste into a page.</p>
+  <p>A 3D shape on a transparent background is a small ask, and it should not need an account.</p><p>Forma is a shape playground that runs in the browser. Pick a shape, give it a material, set the light, and export a transparent PNG. The same composition can also become a live object on any page. Nothing uploads, and nothing needs a server.</p><p>Under the editor is a typed engine that treats shape, material, environment and effect as four separate choices that compose. That is why the same composition can leave as a PNG or as a snippet you paste into a page.</p>
   
   
   
@@ -73,9 +73,9 @@
 
 <section class="cs-sec">
   <h2 class="cs-h">What it is</h2>
-  <p class="cs-intro">One canvas, four choices:</p>
+  <p class="cs-intro">One canvas, four choices, and a way out:</p>
   
-  <ul class="items"><li><strong>Shape, material, environment, effect.</strong> Eighteen shapes, fifteen materials and six environments, plus effects and presets to start from. Paste an SVG and it extrudes into a shape of its own.</li><li><strong>Two ways out.</strong> A transparent PNG, or a self-contained embed snippet with a small browser bundle to sit beside it.</li><li><strong>Quiet controls.</strong> Search filters every picker. H hides the panel. Reset puts the default sphere back. On a phone the panel starts collapsed so the shape gets the screen.</li><li><strong>Free, and yours.</strong> MIT licensed, no signup, no server. Self-host it or fork it.</li></ul>
+  <ul class="items"><li><strong>Shape, material, environment, effect.</strong> Thirty shapes, twenty-one materials, eleven environments and nine effects, plus presets to start from. A shape can also turn into matter: solid, liquid or gas, pulled apart by the pointer or by the page's scroll.</li><li><strong>Three ways out.</strong> A transparent PNG, a copyable embed that runs live on a page, or a standalone HTML file that opens from disk.</li><li><strong>Quiet controls.</strong> Search filters every picker. H hides the panel. Reset returns to the opening scene. Arrow keys move through the shape grid. On a phone the panel starts collapsed so the shape gets the screen.</li><li><strong>Free, and yours.</strong> MIT licensed, no signup, no server. Self-host it or fork it.</li></ul>
   
   
   
@@ -85,6 +85,16 @@
   <h2 class="cs-h">What it actually took</h2>
   
   <p>The hard part is invisible. Every time you switch a shape or a material, the engine has to hand the old one back to the GPU. Miss one and the tab slowly eats memory. So the test suite cycles compositions at least fifty times across a stratified sample of 360 shape, material and environment combinations, and checks that nothing is left behind.</p><p>The render loop is the other quiet piece. One frame scheduler drives everything and pauses when the tab is hidden, so a tab you forgot about is not still rendering.</p>
+  
+  
+  
+  
+</section>
+
+<section class="cs-sec">
+  <h2 class="cs-h">What the rework changed</h2>
+  
+  <p>The first version was a sphere and a dropdown. The rework started with the object: framing that leaves room for dispersed matter, shapes that were inside out or looked alike, and reflections that exist in every environment instead of two. Each phase had a review page before the next one started.</p><p>Then the object got company. Matter lets a solid melt into liquid or gas, driven by a slider, a loop, the pointer, or scroll. Around it sit a soft haze and a field of dust, and the Deep Space backdrop is generated from a seed, so it looks the same on every visit.</p><p>The last stretch was delivery and finish. The embed used to point at a bundle nobody hosted. Now the site serves it, the snippet loads only when it nears the screen, and the export menu carries the view you set. A pass for phones, keyboards and contrast followed, checked with axe-core against the live editor. The homepage and gallery are next, and they are getting their own redesign.</p>
   
   
   

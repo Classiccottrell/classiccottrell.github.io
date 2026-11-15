@@ -474,6 +474,14 @@ a.avail:hover{background:var(--highlight)}
 .check strong{font:600 .72rem var(--f-pencil);letter-spacing:.07em;text-transform:uppercase;color:var(--proof);font-style:normal;margin-right:.3em}
 .guide-rest{display:grid;gap:clamp(40px,5vw,64px);margin-top:clamp(56px,7vw,96px)}
 .guide-wide{max-width:none}
+.arcade-guide .wrap{max-width:calc(960px + var(--gx) * 2)}
+.arcade-guide .guide-sec{max-width:none}
+.arcade-guide .guide-sec>:not(.arcade-figure){max-width:68ch}
+.arcade-figure{margin-block:1.4em}
+.arcade-figure img{display:block;width:100%;height:auto;border:1px solid var(--hair);background:var(--mat)}
+.arcade-figure--pixel img{image-rendering:pixelated}
+.arcade-invocation{font:400 .9rem/1.65 var(--f-pencil);padding:12px 14px 14px;white-space:pre-wrap;overflow-wrap:anywhere}
+.arcade-guide pre code{font:inherit}
 .guide-sec>*+*{margin-top:.9em}
 .kt{width:100%;border-collapse:collapse;border-top:1.5px solid var(--fg);font-size:.98rem;line-height:1.45;margin-top:14px}
 .kt th,.kt td{text-align:left;vertical-align:top;padding:12px 18px 12px 0;border-bottom:1px solid var(--pencil);font-weight:400}

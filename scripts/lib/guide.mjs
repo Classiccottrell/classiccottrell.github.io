@@ -105,9 +105,16 @@ export function guidePage(ctx) {
 // Unlisted arcade guide draft; shares the Terry guide's prompt and check blocks.
 export function arcadeGuidePage(ctx) {
   const g = ctx.arcadeGuide;
+  const figure = (f) => {
+    const image = h`<img src="${esc(f.src)}" width="${f.width}" height="${f.height}" alt="${esc(f.alt)}" loading="lazy" decoding="async">`;
+    return h`<figure class="arcade-figure${f.kind === 'pixel' ? ' arcade-figure--pixel' : ''}">
+      ${f.src.endsWith('.png') ? h`<a href="${esc(f.src)}" aria-label="Open full-size image: ${esc(f.alt)}">${image}</a>` : image}
+      <figcaption class="note cap">${inline(f.caption)}</figcaption>
+    </figure>`;
+  };
   const total = g.sections.filter((section) => section.prompt).length;
   let n = 0;
-  const main = h`<article>
+  const main = h`<article class="arcade-guide">
   <header class="wrap ph"><div class="prose">
     <p class="note">How-to · Draft for review</p>
     <h1 class="h1">${esc(g.title)}</h1>
@@ -115,9 +122,17 @@ export function arcadeGuidePage(ctx) {
     <p class="note">Last updated: <time datetime="${esc(g.updated)}">${esc(g.updated)}</time></p>
   </div></header>
   <div class="wrap guide-rest">
+    <section class="guide-sec" id="guide-skill" aria-labelledby="guide-skill-h">
+      <h2 class="cs-h" id="guide-skill-h">${esc(g.skill.title)}</h2>
+      <p>${inline(g.skill.description)}</p>
+      <p><a class="btn" href="${esc(g.skill.href)}" download="${esc(g.skill.filename)}">Download the skill (ZIP)</a></p>
+      <ol class="items">${g.skill.install.map((instruction) => h`<li>${inline(instruction)}</li>`)}</ol>
+      <div class="prompt"><p class="note prompt-k">Start a session</p><pre class="arcade-invocation"><code>${esc(g.skill.prompt)}</code></pre></div>
+    </section>
     ${g.sections.map((section) => h`<section class="guide-sec" id="${esc(section.id)}" aria-labelledby="${esc(section.id)}-h">
       <h2 class="cs-h" id="${esc(section.id)}-h">${inline(section.heading)}</h2>
       ${section.paragraphs.map((text) => h`<p>${inline(text)}</p>`)}
+${section.figure ? figure(section.figure) : ''}
       ${section.prompt ? promptBlock(section.prompt, ++n, total) : ''}
       ${section.check ? h`<p class="check"><strong>Check:</strong> ${inline(section.check)}</p>` : ''}
     </section>`)}

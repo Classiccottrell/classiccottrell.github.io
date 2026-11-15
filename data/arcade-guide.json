@@ -3,10 +3,27 @@
   "description": "A practical guide to making one playable pixel-art loop, reviewing the assets at game size, and embedding it in an existing website.",
   "lede": "Start with one character, one joke and one complete loop. Make those work before you build the next room.",
   "updated": "2026-11-10",
+  "skill": {
+    "title": "Use the build-browser-arcade skill",
+    "description": "Download the workflow we kept from this build. The ZIP contains the skill, its Codex metadata and project notes. It does not contain the private game source, artwork or music.",
+    "href": "/assets/downloads/build-browser-arcade-2026-11-10.zip",
+    "filename": "build-browser-arcade-2026-11-10.zip",
+    "install": [
+      "Download and unzip the file. Keep the whole `build-browser-arcade` folder together, including its `references` and `agents` folders.",
+      "Copy that folder into `~/.codex/skills/` on the machine where you run Codex. The result should be `~/.codex/skills/build-browser-arcade/SKILL.md`.",
+      "Start a new Codex session in your own project and use the prompt below. The skill gives you the workflow; it does not provide access to the private source repository."
+    ],
+    "prompt": "Use $build-browser-arcade to build a small arcade for my existing website. Start with one playable loop and show the art at desktop and phone sizes before making more assets."
+  },
   "sections": [
     {
       "id": "choose-the-loop",
       "heading": "1. Decide what the player gets to do",
+      "figure": {
+        "src": "/assets/img/arcade-guide/playable-loop.svg", "width": 560, "height": 420,
+        "alt": "A loop from office comments through people and monster waves, to the sixth-wave boss, then a fresh lap and pickup.",
+        "caption": "The first encounter delivers the joke. Five waves lead to the sixth-wave boss, then the player starts a fresh lap. The next room is outside this release."
+      },
       "paragraphs": [
         "The arcade on this site began as a game version of my portfolio, with project doors and themed rooms. The office-feedback enemies became the better first release. They arrive with comments such as “Make the logo bigger” and “It doesn't pop.” You fight through six waves and a boss, then walk right to start another lap.",
         "Write the first release in one sentence. Name the player's action, the first opponent, the reward and the restart. Put the distinctive part in the first encounter. Keep future rooms on a separate list so they don't become requirements for finishing this loop."
@@ -17,10 +34,15 @@
     {
       "id": "keep-the-source",
       "heading": "2. Give the game its own home",
+      "figure": {
+        "src": "/assets/img/arcade-guide/source-to-site.svg", "width": 560, "height": 580,
+        "alt": "Private game code, art and tests flow into a reviewed runtime export, then into the public website where Play loads it.",
+        "caption": "Two repositories, one reviewed export. The website receives what it needs to run the game; editable sources stay in the game repository."
+      },
       "paragraphs": [
         "Keep editable game code, art sources, prompts and tests in a standalone repository. The website should receive the runnable export. This lets you extend the game without moving the rest of the portfolio around.",
         "Our implementation uses Canvas 2D and native JavaScript modules, with no runtime packages. The main folders are src/engine, src/combat, src/audio, src/title, src/attract, art and tests. That was enough for this game's movement, fights, backgrounds and small room system. An existing engine may be the right choice for a different game; inspect what is already there before replacing it.",
-        "The complete Classic Cottrell source repository is private. This page provides the process and prompts, rather than a public source download. The reusable build-browser-arcade skill is kept with the game source."
+        "The complete Classic Cottrell source repository is private. This page provides the process and prompts, rather than a public game-source download. The reusable skill is available in the ZIP above so you can use the workflow in your own project."
       ],
       "prompt": "Set up the game separately from the website, or reuse its existing repository. Keep development assets and tests in the game repo. Define a small mountGame(container, options) interface with a destroy method. Document how the host closes the game and restores focus. Don't add an engine or package unless the agreed loop needs it.",
       "check": "You can run the game by itself, and closing the embedded version removes its listeners and audio."
@@ -28,6 +50,11 @@
     {
       "id": "approve-one-frame",
       "heading": "3. Approve one frame at the real size",
+      "figure": {
+        "src": "/assets/img/arcade-guide/hero-and-pickup.png", "width": 960, "height": 360, "kind": "pixel",
+        "alt": "The grey-haired hero in a hoodie stands beside the ink-and-gold Terry face emblem on the sunset causeway.",
+        "caption": "An in-game scale check: hero, pickup and background together. Terry draws at 24 by 24 world units; source-image pixels and browser display pixels are separate measurements."
+      },
       "paragraphs": [
         "Supply the actual character, face or logo reference. Ask the assistant to inspect it before making assets. If the task is to use an existing face, another interpretation of that face is a different task.",
         "Our game uses a 180-pixel internal height, a view that follows the browser width, a palette of no more than 32 colours, and hard pixels. The character sheets use a higher source density than the world coordinates. Decide those relationships before making animation sheets, or every scale adjustment becomes harder to judge.",
@@ -39,6 +66,11 @@
     {
       "id": "finish-one-fight",
       "heading": "4. Finish one fight before adding waves",
+      "figure": {
+        "src": "/assets/img/arcade-guide/office-feedback.png", "width": 960, "height": 360, "kind": "pixel",
+        "alt": "An office reviewer enters from the right saying Make the logo bigger in a bubble above him as the powered-up hero waits.",
+        "caption": "The opening encounter. The reviewer starts talking as he enters, and the bubble stays with the person speaking. This is captured from the running game."
+      },
       "paragraphs": [
         "Start with movement, facing, a hit, a reaction and a restart. Then build the approved combo and one opponent's attack. Our three Space presses produce punch, punch, hop-kick. The final loop mixes human reviewers and monsters before its boss.",
         "Attach speech to the person saying it. Keep the complete line within the viewport and use a font that is readable at the actual display size. A separate box below the action made it harder to tell who was speaking in our version.",
@@ -50,6 +82,11 @@
     {
       "id": "hear-the-real-file",
       "heading": "5. Test the sound you will ship",
+      "figure": {
+        "src": "/assets/img/arcade-guide/sound-workbench.png", "width": 960, "height": 800,
+        "alt": "The sound workbench with punch selected, crack and body sliders, Play and Combo buttons, and the parameter JSON below.",
+        "caption": "The punch workbench separates the crack of the impact from its lower body. Audition a cue or three-hit combo, then copy the chosen parameters into the game's sound definitions."
+      },
       "paragraphs": [
         "Our title music and cues are synthesized with WebAudio. The level uses a separate track I made in Google Flow. Sound previews are useful for comparing punch, footstep and pickup ideas before changing the mix heard during play.",
         "Keep mute shared across music and effects. Request sound from an intentional reveal or start action, then handle the browser refusing it. A scroll can reveal the game without granting audio playback. A Start sound button provides the next deliberate action.",
@@ -61,6 +98,11 @@
     {
       "id": "make-the-demo-play",
       "heading": "6. Let the attract demo use the real game",
+      "figure": {
+        "src": "/assets/img/arcade-guide/title-card.png", "width": 960, "height": 360, "kind": "pixel",
+        "alt": "The Classic Cottrell pixel-art title fills the sunset game window with PRESS ENTER below it.",
+        "caption": "The title is the start and return point for the attract reel. The automated fight uses the same combat as play; reduced motion keeps this title still."
+      },
       "paragraphs": [
         "Drive scripted input through the same movement and combat code the player uses. Our attract demo walks into the opening encounter, fights, fades out and returns to the intro. A real key or pointer action cancels the script so the player can take over.",
         "Test at more than one width. A fixed list of directions and times can work on one screen and miss an enemy on another. Reduced motion keeps the title still instead of starting automatic combat."
@@ -71,6 +113,11 @@
     {
       "id": "embed-the-reviewed-runtime",
       "heading": "7. Embed the reviewed runtime",
+      "figure": {
+        "src": "/assets/img/arcade-guide/website-embed.png", "width": 1440, "height": 900,
+        "alt": "The arcade title expanded above the Classic Cottrell website header, with Play at the top and the game utility icons inside its frame.",
+        "caption": "The final embed opens in the page above the portfolio. Sound, help, fullscreen and close stay inside the game. Open a screenshot to inspect it at full size."
+      },
       "paragraphs": [
         "Export an explicit list of runnable modules, selected sprites, fonts and authorized audio. Give the export a content-based version and manifest. Import that directory into the website, rather than copying the private repository.",
         "Load it only when someone opens the arcade. Keep the ordinary project links available without JavaScript and when the game cannot load. Let the game expand the page instead of covering the portfolio by default.",

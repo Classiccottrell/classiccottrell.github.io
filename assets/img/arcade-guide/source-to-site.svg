@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="580" viewBox="0 0 560 580">
+<rect width="560" height="580" fill="#FFF6DC"/>
+<g stroke="#24211D" stroke-width="3">
+<rect x="40" y="30" width="480" height="140" fill="#24211D"/>
+<rect x="40" y="220" width="480" height="140" fill="#FFD400"/>
+<rect x="40" y="410" width="480" height="140" fill="none"/>
+<path d="M280 175v37m-9-12 9 12 9-12M280 365v37m-9-12 9 12 9-12" fill="none"/>
+</g>
+<g font-family="monospace" text-anchor="middle">
+<g fill="#FFF6DC"><text x="280" y="88" font-size="32" font-weight="bold">PRIVATE GAME REPO</text><text x="280" y="130" font-size="22">Editable code, art and tests</text></g>
+<g fill="#24211D"><text x="280" y="278" font-size="32" font-weight="bold">RUNTIME EXPORT</text><text x="280" y="320" font-size="22">Reviewed modules and assets</text>
+<text x="280" y="468" font-size="32" font-weight="bold">PUBLIC WEBSITE</text><text x="280" y="510" font-size="22">Lazy load after Play</text></g>
+</g>
+</svg>

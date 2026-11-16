@@ -2,6 +2,8 @@
   "intro": "Essays on design, AI, and the occasional roll of packing tape.",
   "subscribe": "https://classiccottrell.substack.com/subscribe",
   "essays": [
+    { "number": 6, "title": "Emerging Agentic Workflows in Enterprise Software", "subtitle": "Architectural Patterns, Governance, and Design System Integration", "date": "2026-11-09",
+      "url": "https://classiccottrell.substack.com/p/emerging-agentic-workflows-in-enterprise", "image": "/assets/img/writing/emerging-agentic-workflows-in-enterprise.webp" },
     { "number": 5, "title": "Self-Hosting & Homelab Field Notes", "subtitle": "Notes from turning retired computers into a home AI lab.", "date": "2026-10-11",
       "url": "https://classiccottrell.substack.com/p/self-hosting-and-homelab-field-notes", "image": "/assets/img/writing/self-hosting-and-homelab-field-notes.webp",
       "related": { "label": "The guide on this site", "href": "/work/terry-home-lab/guide/" } },

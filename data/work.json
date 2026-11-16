@@ -240,22 +240,26 @@
     "kind": "Tool",
     "group": "Products",
     "featured": false,
-    "summary": "Pick a shape, set the light, export a transparent PNG.",
-    "standfirst": "Pick a shape, set the light, export a transparent PNG.",
+    "summary": "Pick a shape, set the light, export a transparent PNG, or run it live on your own page.",
+    "standfirst": "Pick a shape, set the light, export a transparent PNG, or run it live on your own page.",
     "take": null,
     "year": 2026,
     "role": "Design and build",
     "status": {
-      "mark": "ship",
-      "label": "Shipped, MIT"
+      "mark": "live",
+      "label": "Live, v1 in review"
     },
-    "stack": "Runs in the browser, no server",
+    "stack": "Three.js · runs in the browser, no server",
     "numbers": [
-      "18 shapes",
-      "15 materials",
-      "6 environments"
+      "30 shapes",
+      "21 materials",
+      "Solid, liquid or gas"
     ],
     "links": [
+      {
+        "label": "Open the editor",
+        "url": "https://classiccottrell.github.io/forma/editor/"
+      },
       {
         "label": "Source",
         "url": "https://github.com/Classiccottrell/forma"
@@ -294,25 +298,25 @@
       {
         "paragraphs": [
           "A 3D shape on a transparent background is a small ask, and it should not need an account.",
-          "Forma is a shape playground that runs in the browser. Pick a shape, give it a material, set the light, and export a transparent PNG. Nothing uploads and nothing needs a server, because the whole thing runs on your machine.",
+          "Forma is a shape playground that runs in the browser. Pick a shape, give it a material, set the light, and export a transparent PNG. The same composition can also become a live object on any page. Nothing uploads, and nothing needs a server.",
           "Under the editor is a typed engine that treats shape, material, environment and effect as four separate choices that compose. That is why the same composition can leave as a PNG or as a snippet you paste into a page."
         ]
       },
       {
         "heading": "What it is",
-        "intro": "One canvas, four choices:",
+        "intro": "One canvas, four choices, and a way out:",
         "items": [
           {
             "lead": "Shape, material, environment, effect.",
-            "text": "Eighteen shapes, fifteen materials and six environments, plus effects and presets to start from. Paste an SVG and it extrudes into a shape of its own."
+            "text": "Thirty shapes, twenty-one materials, eleven environments and nine effects, plus presets to start from. A shape can also turn into matter: solid, liquid or gas, pulled apart by the pointer or by the page's scroll."
           },
           {
-            "lead": "Two ways out.",
-            "text": "A transparent PNG, or a self-contained embed snippet with a small browser bundle to sit beside it."
+            "lead": "Three ways out.",
+            "text": "A transparent PNG, a copyable embed that runs live on a page, or a standalone HTML file that opens from disk."
           },
           {
             "lead": "Quiet controls.",
-            "text": "Search filters every picker. H hides the panel. Reset puts the default sphere back. On a phone the panel starts collapsed so the shape gets the screen."
+            "text": "Search filters every picker. H hides the panel. Reset returns to the opening scene. Arrow keys move through the shape grid. On a phone the panel starts collapsed so the shape gets the screen."
           },
           {
             "lead": "Free, and yours.",
@@ -325,6 +329,14 @@
         "paragraphs": [
           "The hard part is invisible. Every time you switch a shape or a material, the engine has to hand the old one back to the GPU. Miss one and the tab slowly eats memory. So the test suite cycles compositions at least fifty times across a stratified sample of 360 shape, material and environment combinations, and checks that nothing is left behind.",
           "The render loop is the other quiet piece. One frame scheduler drives everything and pauses when the tab is hidden, so a tab you forgot about is not still rendering."
+        ]
+      },
+      {
+        "heading": "What the rework changed",
+        "paragraphs": [
+          "The first version was a sphere and a dropdown. The rework started with the object: framing that leaves room for dispersed matter, shapes that were inside out or looked alike, and reflections that exist in every environment instead of two. Each phase had a review page before the next one started.",
+          "Then the object got company. Matter lets a solid melt into liquid or gas, driven by a slider, a loop, the pointer, or scroll. Around it sit a soft haze and a field of dust, and the Deep Space backdrop is generated from a seed, so it looks the same on every visit.",
+          "The last stretch was delivery and finish. The embed used to point at a bundle nobody hosted. Now the site serves it, the snippet loads only when it nears the screen, and the export menu carries the view you set. A pass for phones, keyboards and contrast followed, checked with axe-core against the live editor. The homepage and gallery are next, and they are getting their own redesign."
         ]
       }
     ]

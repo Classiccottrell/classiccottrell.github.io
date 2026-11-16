@@ -285,6 +285,7 @@ export function writingPage(ctx) {
   const main = h`
 ${pageHead({ kicker: `Writing · ${writing.essays.length} essays on Substack`, title: 'Writing', lede: esc(writing.intro) })}
 <div class="wrap"><ol class="essays big">${writing.essays.map((e) => essay(e, { big: true, heading: 'h2' }))}</ol>
+<section class="sub-box" aria-labelledby="writing-howto-h"><h2 class="h2" id="writing-howto-h">How-to guides</h2><p>${link('/how-to/build-a-browser-arcade/', ctx.arcadeGuide.title)}</p><p>${esc(ctx.arcadeGuide.description)}</p></section>
 <aside class="sub-box" aria-label="Subscribe"><p>New essays go to Substack first. Subscribe and they arrive when they publish.</p>${link(writing.subscribe, 'Subscribe on Substack', 'btn')}</aside></div>`;
   return page(ctx, { path: '/writing/', title: 'Writing', description: writing.intro, card: 'writing', main });
 }

@@ -107,6 +107,12 @@ module/image/music URLs under the site's immutable asset cache. The vendor comma
 rejects a changed export reusing an existing release ID. Commit the manifest, runtime
 folder and regenerated pages together. This preview retains only the selected runtime release.
 
+The arcade how-to is generated at `/how-to/build-a-browser-arcade/` from
+`data/arcade-guide.json` using the existing guide prompt/copy blocks. It is indexed,
+included in the sitemap and linked from Writing. Screenshots and diagrams live in
+`assets/img/arcade-guide/`; the text-only skill ZIP lives in `assets/downloads/`.
+The separate Substack article remains a draft in the private game repository.
+
 ## Common edits
 
 - **The headline:** `data/site.json` → `headline`. `*simpler.*` is the inline-emphasis mark the build already

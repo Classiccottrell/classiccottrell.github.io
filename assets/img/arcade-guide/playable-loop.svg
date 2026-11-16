@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="420" viewBox="0 0 560 420">
+<rect width="560" height="420" fill="#FFF6DC"/>
+<g fill="none" stroke="#24211D" stroke-width="3">
+<path d="M250 100h55m-12-8 12 8-12 8M420 165v78m-8-12 8 12 8-12M310 310h-55m12-8-12 8 12 8M140 245v-78m-8 12 8-12 8 12"/>
+<rect x="30" y="35" width="220" height="130" fill="#FFD400"/>
+<rect x="310" y="35" width="220" height="130"/>
+<rect x="310" y="245" width="220" height="130"/>
+<rect x="30" y="245" width="220" height="130"/>
+</g>
+<g fill="#24211D" font-family="monospace" text-anchor="middle">
+<text x="140" y="90" font-size="27" font-weight="bold">1. OFFICE</text>
+<text x="140" y="127" font-size="18">comments arrive</text>
+<text x="420" y="90" font-size="27" font-weight="bold">2. WAVES</text>
+<text x="420" y="127" font-size="18">people + monsters</text>
+<text x="420" y="300" font-size="27" font-weight="bold">3. BOSS</text>
+<text x="420" y="337" font-size="18">finish wave six</text>
+<text x="140" y="300" font-size="27" font-weight="bold">4. REPEAT</text>
+<text x="140" y="337" font-size="18">fresh lap + pickup</text>
+</g>
+</svg>

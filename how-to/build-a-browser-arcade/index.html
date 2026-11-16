@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Build a small browser arcade with AI · Matthew A. Cottrell</title>
+<meta name="description" content="A practical guide to making one playable pixel-art loop, reviewing the assets at game size, and embedding it in an existing website.">
+<link rel="canonical" href="https://classiccottrell.ca/how-to/build-a-browser-arcade/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Matthew A. Cottrell">
+<meta property="og:title" content="Build a small browser arcade with AI">
+<meta property="og:description" content="A practical guide to making one playable pixel-art loop, reviewing the assets at game size, and embedding it in an existing website.">
+<meta property="og:url" content="https://classiccottrell.ca/how-to/build-a-browser-arcade/">
+<meta property="og:image" content="https://classiccottrell.ca/assets/cards/home.png?v=490bd96ed6">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFFFFF">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0A0A0A">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" href="/assets/fonts/familjen-grotesk.woff2?v=414d5dfe5f" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/newsreader.woff2?v=62981321d9" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/site.css?v=9aac870d26">
+<script>document.documentElement.className='js'</script>
+<script src="/assets/js/site.js?v=a6db5622de" defer></script>
+
+</head>
+<body class="case">
+<a class="skip" href="#main">Skip to content</a>
+
+
+<header class="mast">
+  <div class="wrap mast-in">
+    <a class="mast-name" href="/">Matthew A. Cottrell</a>
+    <nav class="mast-nav" aria-label="Main"><ul><li><a href="/work/">Work</a></li><li><a href="/takes/">Takes</a></li><li><a href="/writing/">Writing</a></li><li><a href="/drawings/">Drawings</a></li><li><a href="/about/">About</a></li><li class="mast-cta"><a href="/work-with-me/">Work with me</a></li></ul></nav>
+    <details class="menu">
+      <summary>Menu</summary>
+      <nav class="menu-panel" aria-label="Menu"><ul><li><a href="/work/">Work</a></li><li><a href="/takes/">Takes</a></li><li><a href="/writing/">Writing</a></li><li><a href="/drawings/">Drawings</a></li><li><a href="/about/">About</a></li><li class="mast-cta"><a href="/work-with-me/">Work with me</a></li></ul></nav>
+    </details>
+  </div>
+</header>
+<main id="main">
+<article class="arcade-guide">
+  <header class="wrap ph"><div class="prose">
+    <p class="note">How-to</p>
+    <h1 class="h1">Build a small browser arcade with AI</h1>
+    <p class="lede">Start with one character, one joke and one complete loop. Make those work before you build the next room.</p>
+    <p class="note">Last updated: <time datetime="2026-11-15">2026-11-15</time></p>
+  </div></header>
+  <div class="wrap guide-rest">
+    <section class="guide-sec" id="guide-skill" aria-labelledby="guide-skill-h">
+      <h2 class="cs-h" id="guide-skill-h">Use the build-browser-arcade skill</h2>
+      <p>Download the workflow we kept from this build. The ZIP contains the skill, its Codex metadata and project notes. It does not contain the private game source, artwork or music.</p>
+      <p><a class="btn" href="/assets/downloads/build-browser-arcade-2026-11-10.zip?v=08000dd6a5" download="build-browser-arcade-2026-11-10.zip">Download the skill (ZIP)</a></p>
+      <ol class="items"><li>Download and unzip the file. Keep the whole <code>build-browser-arcade</code> folder together, including its <code>references</code> and <code>agents</code> folders.</li><li>Copy that folder into <code>~/.codex/skills/</code> on the machine where you run Codex. The result should be <code>~/.codex/skills/build-browser-arcade/SKILL.md</code>.</li><li>Start a new Codex session in your own project and use the prompt below. The skill gives you the workflow; it does not provide access to the private source repository.</li></ol>
+      <div class="prompt"><p class="note prompt-k">Start a session</p><pre class="arcade-invocation"><code>Use $build-browser-arcade to build a small arcade for my existing website. Start with one playable loop and show the art at desktop and phone sizes before making more assets.</code></pre></div>
+    </section>
+    <section class="guide-sec" id="choose-the-loop" aria-labelledby="choose-the-loop-h">
+      <h2 class="cs-h" id="choose-the-loop-h">1. Decide what the player gets to do</h2>
+      <p>The arcade on this site began as a game version of my portfolio, with project doors and themed rooms. The office-feedback enemies became the better first release. They arrive with comments such as “Make the logo bigger” and “It doesn't pop.” You fight through six waves and a boss, then walk right to start another lap.</p><p>Write the first release in one sentence. Name the player's action, the first opponent, the reward and the restart. Put the distinctive part in the first encounter. Keep future rooms on a separate list so they don't become requirements for finishing this loop.</p>
+<figure class="arcade-figure">
+      <img src="/assets/img/arcade-guide/playable-loop.svg?v=c318876437" width="560" height="420" alt="A loop from office comments through people and monster waves, to the sixth-wave boss, then a fresh lap and pickup." loading="lazy" decoding="async">
+      <figcaption class="note cap">The first encounter delivers the joke. Five waves lead to the sixth-wave boss, then the player starts a fresh lap. The next room is outside this release.</figcaption>
+    </figure>
+      
+<div class="prompt">
+  <p class="note prompt-k">Prompt 1 of 9</p>
+  <p class="prompt-t" id="prompt-1">Help me build a small browser arcade for my existing website. The player is [character], the first encounter is [opponent and joke], the main action is [action], and victory leads to [restart or finish]. Inspect the existing site and any game code first. Propose the smallest complete loop. Keep future rooms out of this pass.</p>
+  <p class="prompt-a" data-js><button type="button" class="tool" data-copy-prompt="prompt-1" aria-label="Copy prompt 1 of 9">Copy</button><span class="note prompt-s" role="status" aria-live="polite"></span></p>
+</div>
+      <p class="check"><strong>Check:</strong> You can describe the whole first loop without saying “and later we will add”.</p>
+    </section><section class="guide-sec" id="keep-the-source" aria-labelledby="keep-the-source-h">
+      <h2 class="cs-h" id="keep-the-source-h">2. Give the game its own home</h2>
+      <p>Keep editable game code, art sources, prompts and tests in a standalone repository. The website should receive the runnable export. This lets you extend the game without moving the rest of the portfolio around.</p><p>Our implementation uses Canvas 2D and native JavaScript modules, with no runtime packages. The main folders are src/engine, src/combat, src/audio, src/title, src/attract, art and tests. That was enough for this game's movement, fights, backgrounds and small room system. An existing engine may be the right choice for a different game; inspect what is already there before replacing it.</p><p>The complete Classic Cottrell source repository is private. This page provides the process and prompts, rather than a public game-source download. The reusable skill is available in the ZIP above so you can use the workflow in your own project.</p>
+<figure class="arcade-figure">
+      <img src="/assets/img/arcade-guide/source-to-site.svg?v=91e0e656ff" width="560" height="580" alt="Private game code, art and tests flow into a reviewed runtime export, then into the public website where Play loads it." loading="lazy" decoding="async">
+      <figcaption class="note cap">Two repositories, one reviewed export. The website receives what it needs to run the game; editable sources stay in the game repository.</figcaption>
+    </figure>
+      
+<div class="prompt">
+  <p class="note prompt-k">Prompt 2 of 9</p>
+  <p class="prompt-t" id="prompt-2">Set up the game separately from the website, or reuse its existing repository. Keep development assets and tests in the game repo. Define a small mountGame(container, options) interface with a destroy method. Document how the host closes the game and restores focus. Don't add an engine or package unless the agreed loop needs it.</p>
+  <p class="prompt-a" data-js><button type="button" class="tool" data-copy-prompt="prompt-2" aria-label="Copy prompt 2 of 9">Copy</button><span class="note prompt-s" role="status" aria-live="polite"></span></p>
+</div>
+      <p class="check"><strong>Check:</strong> You can run the game by itself, and closing the embedded version removes its listeners and audio.</p>
+    </section><section class="guide-sec" id="approve-one-frame" aria-labelledby="approve-one-frame-h">
+      <h2 class="cs-h" id="approve-one-frame-h">3. Approve one frame at the real size</h2>
+      <p>Supply the actual character, face or logo reference. Ask the assistant to inspect it before making assets. If the task is to use an existing face, another interpretation of that face is a different task.</p><p>Our game uses a 180-pixel internal height, a view that follows the browser width, a palette of no more than 32 colours, and hard pixels. The character sheets use a higher source density than the world coordinates. Decide those relationships before making animation sheets, or every scale adjustment becomes harder to judge.</p><p>Preview a hero, a pickup and the background together at desktop and phone widths. Our Terry emblem looked reasonable in an enlarged asset preview and still needed shrinking in the game. It now draws at 24 by 24 world units. Keep the source image and change the draw size when size is the problem.</p>
+<figure class="arcade-figure arcade-figure--pixel">
+      <a href="/assets/img/arcade-guide/hero-and-pickup.png?v=3507cbb84a" aria-label="Open full-size image: The grey-haired hero in a hoodie stands beside the ink-and-gold Terry face emblem on the sunset causeway."><img src="/assets/img/arcade-guide/hero-and-pickup.png?v=3507cbb84a" width="960" height="360" alt="The grey-haired hero in a hoodie stands beside the ink-and-gold Terry face emblem on the sunset causeway." loading="lazy" decoding="async"></a>
+      <figcaption class="note cap">An in-game scale check: hero, pickup and background together. Terry draws at 24 by 24 world units; source-image pixels and browser display pixels are separate measurements.</figcaption>
+    </figure>
+      
+<div class="prompt">
+  <p class="note prompt-k">Prompt 3 of 9</p>
+  <p class="prompt-t" id="prompt-3">Inspect [reference file]. Show one hero, one pickup and one background together at the proposed in-game size. Use [palette and internal resolution]. Preserve the supplied identity. Show desktop and phone layouts before producing the full animation sheets. Label source pixels, world units and display scale separately.</p>
+  <p class="prompt-a" data-js><button type="button" class="tool" data-copy-prompt="prompt-3" aria-label="Copy prompt 3 of 9">Copy</button><span class="note prompt-s" role="status" aria-live="polite"></span></p>
+</div>
+      <p class="check"><strong>Check:</strong> The selected frame looks right in the game window, including the pickup's size beside the hero.</p>
+    </section><section class="guide-sec" id="finish-one-fight" aria-labelledby="finish-one-fight-h">
+      <h2 class="cs-h" id="finish-one-fight-h">4. Finish one fight before adding waves</h2>
+      <p>Start with movement, facing, a hit, a reaction and a restart. Then build the approved combo and one opponent's attack. Our three Space presses produce punch, punch, hop-kick. The final loop mixes human reviewers and monsters before its boss.</p><p>Attach speech to the person saying it. Keep the complete line within the viewport and use a font that is readable at the actual display size. A separate box below the action made it harder to tell who was speaking in our version.</p><p>Have reviewers speak as they enter. Give short lines at least five seconds, with longer lines held for up to seven. Keep that timer separate from attack windup. Then check the sequence: first encounter, later waves, boss, victory and another lap with fresh enemies and pickups.</p>
+<figure class="arcade-figure arcade-figure--pixel">
+      <a href="/assets/img/arcade-guide/office-feedback.png?v=dffaaea3c9" aria-label="Open full-size image: An office reviewer enters from the right saying Make the logo bigger in a bubble above him as the powered-up hero waits."><img src="/assets/img/arcade-guide/office-feedback.png?v=dffaaea3c9" width="960" height="360" alt="An office reviewer enters from the right saying Make the logo bigger in a bubble above him as the powered-up hero waits." loading="lazy" decoding="async"></a>
+      <figcaption class="note cap">The opening encounter. The reviewer starts talking as he enters, and the bubble stays with the person speaking. This is captured from the running game.</figcaption>
+    </figure>
+      
+<div class="prompt">
+  <p class="note prompt-k">Prompt 4 of 9</p>
+  <p class="prompt-t" id="prompt-4">Build one testable fight using the approved assets. Keep dialogue duration separate from attack timing. Speech should appear over its speaker, start on arrival, remain readable through hit reactions and stay within phone and desktop viewports. Once it works, add [wave order] and verify that victory resets into another lap.</p>
+  <p class="prompt-a" data-js><button type="button" class="tool" data-copy-prompt="prompt-4" aria-label="Copy prompt 4 of 9">Copy</button><span class="note prompt-s" role="status" aria-live="polite"></span></p>
+</div>
+      <p class="check"><strong>Check:</strong> A new player sees the joke during the first encounter and can read the line while playing.</p>
+    </section><section class="guide-sec" id="hear-the-real-file" aria-labelledby="hear-the-real-file-h">
+      <h2 class="cs-h" id="hear-the-real-file-h">5. Test the sound you will ship</h2>
+      <p>Our title music and cues are synthesized with WebAudio. The level uses a separate track I made in Google Flow. Sound previews are useful for comparing punch, footstep and pickup ideas before changing the mix heard during play.</p><p>Keep mute shared across music and effects. Request sound from an intentional reveal or start action, then handle the browser refusing it. A scroll can reveal the game without granting audio playback. A Start sound button provides the next deliberate action.</p><p>Check the actual track in the active checkout. Ours disappeared from one preview because the ignored audio folder hadn't been copied into that clone. A test that turns music off or replaces it cannot catch that. Verify that the real file loads, plays, loops, mutes, resumes and stops when returning to the title. Confirm permission to include any supplied track in the public export.</p>
+<figure class="arcade-figure">
+      <a href="/assets/img/arcade-guide/sound-workbench.png?v=8d9d8967ce" aria-label="Open full-size image: The sound workbench with punch selected, crack and body sliders, Play and Combo buttons, and the parameter JSON below."><img src="/assets/img/arcade-guide/sound-workbench.png?v=8d9d8967ce" width="960" height="800" alt="The sound workbench with punch selected, crack and body sliders, Play and Combo buttons, and the parameter JSON below." loading="lazy" decoding="async"></a>
+      <figcaption class="note cap">The punch workbench separates the crack of the impact from its lower body. Audition a cue or three-hit combo, then copy the chosen parameters into the game's sound definitions.</figcaption>
+    </figure>
+      
+<div class="prompt">
+  <p class="note prompt-k">Prompt 5 of 9</p>
+  <p class="prompt-t" id="prompt-5">Use [authorized music file] for gameplay and [sound direction] for the title and effects. Verify the real file exists and plays from the dev server. Share mute across all audio, handle blocked playback visibly, and stop sound on close, replay and hide. Keep sound sketches separate from the integrated mix.</p>
+  <p class="prompt-a" data-js><button type="button" class="tool" data-copy-prompt="prompt-5" aria-label="Copy prompt 5 of 9">Copy</button><span class="note prompt-s" role="status" aria-live="polite"></span></p>
+</div>
+      <p class="check"><strong>Check:</strong> You can hear the real track, mute everything, return to the title and close the game without leaving audio running.</p>
+    </section><section class="guide-sec" id="make-the-demo-play" aria-labelledby="make-the-demo-play-h">
+      <h2 class="cs-h" id="make-the-demo-play-h">6. Let the attract demo use the real game</h2>
+      <p>Drive scripted input through the same movement and combat code the player uses. Our attract demo walks into the opening encounter, fights, fades out and returns to the intro. A real key or pointer action cancels the script so the player can take over.</p><p>Test at more than one width. A fixed list of directions and times can work on one screen and miss an enemy on another. Reduced motion keeps the title still instead of starting automatic combat.</p>
+<figure class="arcade-figure arcade-figure--pixel">
+      <a href="/assets/img/arcade-guide/title-card.png?v=15e37dacc6" aria-label="Open full-size image: The Classic Cottrell pixel-art title fills the sunset game window with PRESS ENTER below it."><img src="/assets/img/arcade-guide/title-card.png?v=15e37dacc6" width="960" height="360" alt="The Classic Cottrell pixel-art title fills the sunset game window with PRESS ENTER below it." loading="lazy" decoding="async"></a>
+      <figcaption class="note cap">The title is the start and return point for the attract reel. The automated fight uses the same combat as play; reduced motion keeps this title still.</figcaption>
+    </figure>
+      
+<div class="prompt">
+  <p class="note prompt-k">Prompt 6 of 9</p>
+  <p class="prompt-t" id="prompt-6">Build an attract demo using the existing input and combat interfaces. It should reach the opening fight, finish or time out safely, fade and reset. Real input must cancel pending scripted actions and the fade without swallowing that real input. Keep a static title under reduced motion.</p>
+  <p class="prompt-a" data-js><button type="button" class="tool" data-copy-prompt="prompt-6" aria-label="Copy prompt 6 of 9">Copy</button><span class="note prompt-s" role="status" aria-live="polite"></span></p>
+</div>
+      <p class="check"><strong>Check:</strong> The demo repeats without leaving held keys, and taking over works during both the fight and the fade.</p>
+    </section><section class="guide-sec" id="embed-the-reviewed-runtime" aria-labelledby="embed-the-reviewed-runtime-h">
+      <h2 class="cs-h" id="embed-the-reviewed-runtime-h">7. Embed the reviewed runtime</h2>
+      <p>Export an explicit list of runnable modules, selected sprites, fonts and authorized audio. Give the export a content-based version and manifest. Import that directory into the website, rather than copying the private repository.</p><p>Load it only when someone opens the arcade. Keep the ordinary project links available without JavaScript and when the game cannot load. Let the game expand the page instead of covering the portfolio by default.</p><p>Our final reveal is a charcoal Play strip with a small gold glint along its bottom border. Sound, help, fullscreen and close sit inside the game. The help is a compact panel. Close destroys the game and returns focus to Play. Reduced motion keeps the border still.</p>
+<figure class="arcade-figure">
+      <a href="/assets/img/arcade-guide/website-embed.png?v=22f5a6326e" aria-label="Open full-size image: The arcade title expanded above the Classic Cottrell website header, with Play at the top and the game utility icons inside its frame."><img src="/assets/img/arcade-guide/website-embed.png?v=22f5a6326e" width="1440" height="900" alt="The arcade title expanded above the Classic Cottrell website header, with Play at the top and the game utility icons inside its frame." loading="lazy" decoding="async"></a>
+      <figcaption class="note cap">The final embed opens in the page above the portfolio. Sound, help, fullscreen and close stay inside the game. Open a screenshot to inspect it at full size.</figcaption>
+    </figure>
+      
+<div class="prompt">
+  <p class="note prompt-k">Prompt 7 of 9</p>
+  <p class="prompt-t" id="prompt-7">Export only the reviewed runtime into the existing site. Mount it lazily after Play or the agreed reveal action. Keep ordinary content usable without JavaScript and on loading failure. Put sound, compact help, fullscreen and close inside the game. Honour reduced motion and restore focus to Play when closing.</p>
+  <p class="prompt-a" data-js><button type="button" class="tool" data-copy-prompt="prompt-7" aria-label="Copy prompt 7 of 9">Copy</button><span class="note prompt-s" role="status" aria-live="polite"></span></p>
+</div>
+      <p class="check"><strong>Check:</strong> The closed page makes no game or music requests, and the open game does not take away the site's ordinary links.</p>
+    </section><section class="guide-sec" id="check-the-change" aria-labelledby="check-the-change-h">
+      <h2 class="cs-h" id="check-the-change-h">8. Check the change, then check the release</h2>
+      <p>For a small revision, change the layer responsible and run the checks that reach it. A smaller pickup needs a draw-size change. A longer message needs a speech timer. Repeating a whole release process after every preview made this build more expensive than it needed to be.</p><p>Before publication, run the release checks together. Our game has npm test; PNG checks use python tools/check-pngs.py in a development environment with Pillow; npm run build writes the runtime. The source browser suite requires its dev server, Chrome and the real local song. The host has its own build, contrast and browser checks.</p><p>For the November 2026 release, 157 game tests and 15 arcade browser checks passed. We checked desktop, phone-sized and reduced-motion layouts in Chromium. That does not replace physical iPhone or Safari testing, which remains open.</p>
+
+      
+<div class="prompt">
+  <p class="note prompt-k">Prompt 8 of 9</p>
+  <p class="prompt-t" id="prompt-8">For this revision, identify the smallest affected tests and reuse the running dev server. For the release, verify real music, the first fight, boss/reset, desktop and phone layout, reduced motion, close/focus and exported asset requests. Report commands and results, and distinguish emulation from physical-device testing.</p>
+  <p class="prompt-a" data-js><button type="button" class="tool" data-copy-prompt="prompt-8" aria-label="Copy prompt 8 of 9">Copy</button><span class="note prompt-s" role="status" aria-live="polite"></span></p>
+</div>
+      <p class="check"><strong>Check:</strong> The report names the tested behaviour and the gaps, rather than just saying “all good”.</p>
+    </section><section class="guide-sec" id="publish-and-leave-a-handoff" aria-labelledby="publish-and-leave-a-handoff-h">
+      <h2 class="cs-h" id="publish-and-leave-a-handoff-h">9. Verify the public result and leave a handoff</h2>
+      <p>A branch push backs up work. A merged release and successful deployment make it public. Keep those actions separate in the conversation so everyone knows which result has been requested.</p><p>After an approved deployment, check the public URL for the expected runtime version. Open Play, start the game, reach a reviewer line and close it again. Our release went through website PR #36 and a live-site smoke check.</p><p>Leave the current commands, selected assets, music setup, known gaps and next small extension in the standalone game repo. Keep old experiments as history, with a current release note that makes clear which decisions replaced them. Then choose one new room or opponent to work on.</p>
+
+      
+<div class="prompt">
+  <p class="note prompt-k">Prompt 9 of 9</p>
+  <p class="prompt-t" id="prompt-9">Prepare the release for review and state whether you are pushing a branch or publishing. After authorized publication, verify the actual public page and expected runtime version. Update the standalone game handoff with the release, setup steps, asset provenance, known gaps and the next small task.</p>
+  <p class="prompt-a" data-js><button type="button" class="tool" data-copy-prompt="prompt-9" aria-label="Copy prompt 9 of 9">Copy</button><span class="note prompt-s" role="status" aria-live="polite"></span></p>
+</div>
+      <p class="check"><strong>Check:</strong> The live page runs the version you approved, and a fresh session can find the current source without reconstructing the chat.</p>
+    </section>
+    <section class="guide-sec" aria-labelledby="guide-resources">
+      <h2 class="cs-h" id="guide-resources">Resources</h2>
+      <ul class="items"><li><a class="lnk" href="/">Play the arcade</a></li><li><a class="lnk" href="https://github.com/Classiccottrell/classiccottrell.github.io/pull/36">Website release PR #36<span class="ext" aria-hidden="true"> ↗</span></a></li></ul>
+    </section>
+  </div>
+</article>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-cta">
+      <p class="foot-h">Bring me a problem.</p>
+      <p class="foot-row"><a class="btn" href="/work-with-me/">Work with me <span aria-hidden="true">→</span></a><a class="avail" href="/work-with-me/#availability"><i class="sm sm-live" aria-hidden="true"></i>Open to new projects</a></p>
+    </div>
+    <div class="foot-grid">
+      <nav aria-label="Elsewhere"><p class="note">Elsewhere</p><ul><li><a class="lnk" href="https://www.linkedin.com/in/classiccottrell/">LinkedIn<span class="ext" aria-hidden="true"> ↗</span></a></li><li><a class="lnk" href="https://github.com/Classiccottrell">GitHub<span class="ext" aria-hidden="true"> ↗</span></a></li><li><a class="lnk" href="https://classiccottrell.substack.com/">Substack<span class="ext" aria-hidden="true"> ↗</span></a></li><li><a class="lnk" href="https://www.instagram.com/classiccottrell">Instagram<span class="ext" aria-hidden="true"> ↗</span></a></li></ul></nav>
+      <nav aria-label="This site"><p class="note">This site</p><ul><li><a class="lnk" href="/work/">Work</a></li><li><a class="lnk" href="/takes/">Takes</a></li><li><a class="lnk" href="/writing/">Writing</a></li><li><a class="lnk" href="/drawings/">Drawings</a></li><li><a class="lnk" href="/about/">About</a></li><li><a class="lnk" href="/work-with-me/">Work with me</a></li><li><a class="lnk" href="/about-this-site/">About this site</a></li></ul></nav>
+    </div>
+    <div class="foot-base">
+      <a class="terry-a" href="/work/terry-time/" aria-label="Terry Time, Terry’s shop"><span class="terry" aria-hidden="true"></span></a>
+      <p>Product designer. Enterprise IT, design systems, accessibility and AI tooling.</p>
+      <p class="note">© 2009–<span data-year>2026</span> Matthew A. Cottrell</p>
+      <button type="button" class="tool" data-pencils aria-pressed="false" hidden>Pencils</button>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

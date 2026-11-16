@@ -9,12 +9,13 @@ const figures = guide.sections.filter((section) => section.figure).map((section)
 const prompts = guide.sections.filter((section) => section.prompt).map((section) => section.prompt);
 
 for (const width of [1440, 390]) {
-  test(`draft guide reads without overflow or accessibility violations at ${width}px`, async ({ page }, testInfo) => {
+  test(`published guide reads without overflow or accessibility violations at ${width}px`, async ({ page }, testInfo) => {
     await page.setViewportSize({ width, height: 900 });
     await page.goto(route);
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(guide.title);
-    await expect(page.getByText('How-to · Draft for review', { exact: true })).toBeVisible();
-    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex');
+    await expect(page.getByText('How-to', { exact: true })).toBeVisible();
+    await expect(page.getByText('Draft for review')).toHaveCount(0);
+    await expect(page.locator('meta[name="robots"][content*="noindex"]')).toHaveCount(0);
     for (const section of guide.sections) {
       await expect(page.locator(`#${section.id}-h`)).toHaveText(plain(section.heading));
     }
@@ -73,12 +74,10 @@ test('skill ZIP downloads with portable installation and invocation instructions
   await expect(page.locator('[data-copy-prompt]')).toHaveCount(prompts.length);
 });
 
-test('draft remains outside the sitemap and public indexes', async ({ page, request }) => {
-  expect(await (await request.get('/sitemap.xml')).text()).not.toContain(route);
-  for (const path of ['/', '/writing/']) {
-    await page.goto(path);
-    await expect(page.locator(`a[href="${route}"]`)).toHaveCount(0);
-  }
+test('published guide is in the sitemap and linked from Writing', async ({ page, request }) => {
+  expect(await (await request.get('/sitemap.xml')).text()).toContain(route);
+  await page.goto('/writing/');
+  await expect(page.getByRole('link',{name:guide.title,exact:true})).toHaveAttribute('href',route);
 });
 
 test.describe('without JavaScript', () => {

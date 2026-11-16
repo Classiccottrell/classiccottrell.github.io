@@ -102,7 +102,7 @@ export function guidePage(ctx) {
   });
 }
 
-// Unlisted arcade guide draft; shares the Terry guide's prompt and check blocks.
+// Arcade how-to; shares the Terry guide's prompt and check blocks.
 export function arcadeGuidePage(ctx) {
   const g = ctx.arcadeGuide;
   const figure = (f) => {
@@ -116,7 +116,7 @@ export function arcadeGuidePage(ctx) {
   let n = 0;
   const main = h`<article class="arcade-guide">
   <header class="wrap ph"><div class="prose">
-    <p class="note">How-to · Draft for review</p>
+    <p class="note">How-to</p>
     <h1 class="h1">${esc(g.title)}</h1>
     <p class="lede">${inline(g.lede)}</p>
     <p class="note">Last updated: <time datetime="${esc(g.updated)}">${esc(g.updated)}</time></p>
@@ -144,6 +144,6 @@ ${section.figure ? figure(section.figure) : ''}
 </article>`;
   return page(ctx, {
     path: '/how-to/build-a-browser-arcade/', title: g.title, description: g.description,
-    card: 'home', type: 'article', bodyClass: 'case', main, noindex: true,
+    card: 'home', type: 'article', bodyClass: 'case', main,
   });
 }

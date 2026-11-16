@@ -150,7 +150,7 @@ outputs.set('colophon/index.html', P.moved(ctx, '/about-this-site/'));
 // No writing.html stub: it would hide writing/ (see below). Netlify 301s the
 // old address, and the 404 page forwards it on GitHub Pages.
 
-const indexable = pages.map(([f]) => f).filter((f) => f !== '404.html' && !f.includes('thanks') && f !== 'how-to/build-a-browser-arcade/index.html');
+const indexable = pages.map(([f]) => f).filter((f) => f !== '404.html' && !f.includes('thanks'));
 outputs.set('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${indexable.map((f) => `  <url><loc>${ctx.site.url}/${f.replace(/index\.html$/, '')}</loc></url>`).join('\n')}

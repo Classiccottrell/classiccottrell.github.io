@@ -2,7 +2,7 @@
   "title": "Build a small browser arcade with AI",
   "description": "A practical guide to making one playable pixel-art loop, reviewing the assets at game size, and embedding it in an existing website.",
   "lede": "Start with one character, one joke and one complete loop. Make those work before you build the next room.",
-  "updated": "2026-11-10",
+  "updated": "2026-11-15",
   "skill": {
     "title": "Use the build-browser-arcade skill",
     "description": "Download the workflow we kept from this build. The ZIP contains the skill, its Codex metadata and project notes. It does not contain the private game source, artwork or music.",

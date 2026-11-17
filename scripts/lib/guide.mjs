@@ -91,6 +91,10 @@ export function guidePage(ctx) {
         <li>${inline(g.next.project)}</li>
       </ul>
     </section>
+    <section class="guide-sec" aria-labelledby="more-howto-h">
+      <h2 class="cs-h" id="more-howto-h">More how-to guides</h2>
+      <ul class="items">${howTos(ctx).filter((t) => t.href !== g.path).map((t) => h`<li>${link(t.href, t.title)}</li>`)}</ul>
+    </section>
   </div>
   <nav class="wrap pn-wrap" aria-label="More work"><div class="pn-nav">
     <a class="lnk" href="/work/${esc(g.slug)}/"><span aria-hidden="true">←</span> Terry: Home AI Lab</a>
@@ -100,6 +104,14 @@ export function guidePage(ctx) {
   return page(ctx, {
     path: g.path, title: g.title, description: g.description, card: `guide-${g.slug}`, type: 'article', bodyClass: 'case guide', main,
   });
+}
+
+// The how-to guides: found from Writing and from each other, not from the global nav.
+export function howTos(ctx) {
+  return [
+    { href: '/how-to/build-a-browser-arcade/', title: ctx.arcadeGuide.title, description: ctx.arcadeGuide.description },
+    { href: ctx.guide.path, title: ctx.guide.title, description: ctx.guide.description },
+  ];
 }
 
 // Arcade how-to; shares the Terry guide's prompt and check blocks.
@@ -116,6 +128,7 @@ export function arcadeGuidePage(ctx) {
   let n = 0;
   const main = h`<article class="arcade-guide">
   <header class="wrap ph"><div class="prose">
+    <p class="note"><a href="/writing/">Writing</a></p>
     <p class="note">How-to</p>
     <h1 class="h1">${esc(g.title)}</h1>
     <p class="lede">${inline(g.lede)}</p>
@@ -139,6 +152,10 @@ ${section.figure ? figure(section.figure) : ''}
     <section class="guide-sec" aria-labelledby="guide-resources">
       <h2 class="cs-h" id="guide-resources">Resources</h2>
       <ul class="items">${g.links.map((item) => h`<li>${link(item.href, item.label)}</li>`)}</ul>
+    </section>
+    <section class="guide-sec" aria-labelledby="more-howto-h">
+      <h2 class="cs-h" id="more-howto-h">More how-to guides</h2>
+      <ul class="items">${howTos(ctx).filter((t) => t.href !== '/how-to/build-a-browser-arcade/').map((t) => h`<li>${link(t.href, t.title)}</li>`)}</ul>
     </section>
   </div>
 </article>`;

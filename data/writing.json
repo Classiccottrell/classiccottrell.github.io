@@ -2,6 +2,8 @@
   "intro": "Essays on design, AI, and the occasional roll of packing tape.",
   "subscribe": "https://classiccottrell.substack.com/subscribe",
   "essays": [
+    { "number": 7, "title": "I Don't Start with a Blank Canvas Anymore", "subtitle": "A pencil sketch, a phone photo, and a conversation with an agent.", "date": "2026-11-24",
+      "url": "https://classiccottrell.substack.com/p/i-dont-start-with-a-blank-canvas", "image": "/assets/img/writing/i-dont-start-with-a-blank-canvas.webp" },
     { "number": 6, "title": "Emerging Agentic Workflows in Enterprise Software", "subtitle": "Architectural Patterns, Governance, and Design System Integration", "date": "2026-11-09",
       "url": "https://classiccottrell.substack.com/p/emerging-agentic-workflows-in-enterprise", "image": "/assets/img/writing/emerging-agentic-workflows-in-enterprise.webp" },
     { "number": 5, "title": "Self-Hosting & Homelab Field Notes", "subtitle": "Notes from turning retired computers into a home AI lab.", "date": "2026-10-11",
